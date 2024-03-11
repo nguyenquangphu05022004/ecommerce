@@ -1,14 +1,12 @@
 package com.example.ecommerce.dto;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
 @Getter
 @Data
+@NoArgsConstructor
 public abstract class BaseDto {
     private Long id;
     private String createdBy;

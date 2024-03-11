@@ -2,6 +2,7 @@ package com.example.ecommerce.entity;
 
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.cglib.core.Local;
@@ -19,21 +20,18 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor
+@Data
 public abstract class Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @CreatedBy
-    @Column(columnDefinition = "varchar(20)")
     private String createdBy;
     @LastModifiedBy
-    @Column(columnDefinition = "varchar(20)")
     private String modifiedBy;
     @CreatedDate
-    @Column(columnDefinition = "datetime2(2)")
     private LocalDateTime createdDate;
     @LastModifiedDate
-    @Column(columnDefinition = "datetime2(2)")
     private LocalDateTime modifiedDate;
 }

@@ -18,8 +18,11 @@ public class Vendor extends Base{
     vendor:
         id, nameShop, listProduct, perMoneyDelivery
      */
-    @Column(columnDefinition = "nvarchar(100)")
-    private String nameShop;
+    @Column(columnDefinition = "nvarchar(100)",nullable = false)
+    private String shopName;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
     @OneToMany(mappedBy = "vendor")
     private List<Product> products = new ArrayList<>();
     private Integer perMoneyDelivery;

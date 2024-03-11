@@ -26,7 +26,7 @@ public class Product extends Base{
     private Integer price;
     private Integer quantity;
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
     @ManyToOne
     @JoinColumn(name = "vendor_id")
@@ -37,4 +37,8 @@ public class Product extends Base{
     private List<Evaluation> evaluations = new ArrayList<>();
     @OneToMany(mappedBy = "product")
     private List<Order> orders = new ArrayList<>();
+    @OneToOne(mappedBy = "product")
+    private Basket basket;
+    @OneToOne(mappedBy = "product")
+    private TrackProductSeller productSeller;
 }

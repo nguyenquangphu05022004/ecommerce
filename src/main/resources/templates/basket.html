@@ -1,0 +1,137 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/layout.html}">
+<head>
+    <title>Giỏ Hàng</title>
+</head>
+<body layout:fragment="body" class="container-fluid" style="padding-top: 95px">
+<!-- Cart Page Start -->
+
+    <div class="container py-5">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Sản phẩm</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Giá</th>
+                    <th scope="col">Số lượng</th>
+                    <th scope="col">Tổng</th>
+                    <th scope="col">Xóa</th>
+                    <th scope="col">Mua</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="basket: ${baskets}" th:id="${basket.id}">
+                    <th scope="row">
+                        <div class="d-flex align-items-center">
+                            <img th:src="${basket.product.thumbnail}" class="img-fluid me-5 rounded-circle"
+                                 style="width: 80px; height: 80px;" alt="">
+                        </div>
+                    </th>
+                    <td>
+                        <p class="mb-0 mt-4" th:text="${basket.product.name}"></p>
+                    </td>
+                    <td>
+                        <p class="mb-0 mt-4" th:text="${basket.product.price}"></p>
+                    </td>
+                    <td>
+                        <div class="input-group quantity mt-4" style="width: 100px;">
+                            <div class="input-group-btn">
+                                <button
+                                        class="btn btn-sm btn-minus rounded-circle bg-light border"
+                                        th:onclick="updateQuantityProduct([[${basket}]], -1)"
+                                >
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <input type="text"
+                                   class="form-control form-control-sm text-center border-0"
+                                   th:value="${basket.quantity}"
+                                   id="productQuantity"
+                                   min=1>
+                            <div class="input-group-btn">
+                                <button
+                                        class="btn btn-sm btn-plus rounded-circle bg-light border"
+                                    th:onclick="updateQuantityProduct([[${basket}]], 1)"
+                                >
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <p class="mb-0 mt-4" th:text="${basket.totalPrice}" id = "totalPrice"></p>
+                    </td>
+                    <td>
+                        <button th:onclick="removeBasket([[${basket.id}]])"
+                                class="btn btn-md rounded-circle bg-light border mt-4">
+                            <i class="fa fa-times text-danger"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <a
+                                th:href="@{/orders/product/5/34}"
+                                class="btn btn-md rounded-circle bg-light border mt-4" >
+                            <i class="fab fa-btc"></i>
+                        </a>
+                    </td>
+
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-5">
+            <input type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code">
+            <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Apply Coupon</button>
+        </div>
+    </div>
+    <script th:inline="javascript">
+
+        function updateQuantityProduct(basket, number) {
+           const inputQuantity = document.getElementById("productQuantity");
+           let quantity = parseInt(inputQuantity.value)
+            console.log(quantity)
+           if(quantity + number >= 1) {
+               basket.quantity = quantity + number;
+               const theUrl = "[(@{/baskets})]";
+               callApi(
+                   "put",
+                   JSON.stringify(basket),
+                   theUrl,
+                   (data) => {
+                       console.log(data)
+                       $("#totalPrice").html(data.totalPrice)
+                   }
+               )
+           }
+        }
+        function removeBasket(basketId) {
+            const theUrl = `[(@{/baskets/${basketId}})]`
+            callApi("delete", "", theUrl, (data) => $(`#${basketId}`).html(""));
+        }
+        function callApi(type, data,  theUrl, success) {
+            const url = new URL(theUrl, document.location);
+            console.log(url.href)
+            $.ajax({
+                type: type,
+                url: url.href,
+                data: data,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                success: function (data) {
+                    success(data);
+                },
+                error: function () {
+                    alert("Error")
+                }
+            })
+        }
+    </script>
+<!-- Cart Page End -->
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/admin/layout.html}">
+<head>
+    <title>Danh sách thể loại</title>
+</head>
+<body>
+<section layout:fragment="body">
+    <!-- Table Start -->
+    <div class="container-fluid pt-4 px-4">
+
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Danh sách thể loại</h6>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Tên</th>
+                            <th scope="col">Ngày tạo</th>
+                            <th scope="col">Người tạo</th>
+                            <th scope="col">Sửa</th>
+                            <th scope="col">Xóa</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="category : ${categories}">
+                            <th scope="row" th:text="${category.name}"></th>
+                            <th scope="row" th:text="${category.createdDate}"></th>
+                            <th scope="row" th:text="${category.createdBy}"></th>
+                            <th scope="row" ><a th:href="@{/admin/categories/edit/{categoryId}(categoryId = ${category.id})}">Edit</a></th>
+                            <th scope="row" ><a th:href="@{/admin/categories/delete/{categoryId}(categoryId = ${category.id})}">Delete</a></th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- Table End -->
+</section>
+</body>
+</html>

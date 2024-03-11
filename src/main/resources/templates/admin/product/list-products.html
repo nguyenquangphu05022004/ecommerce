@@ -1,0 +1,52 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/admin/layout.html}">
+<head>
+    <title>Danh sách thể loại</title>
+</head>
+<body>
+<section layout:fragment="body">
+    <!-- Table Start -->
+    <div class="container-fluid pt-4 px-4">
+
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Danh sách thể loại</h6>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Tên sản phẩm</th>
+                            <th scope="col">Ảnh minh họa</th>
+                            <th scope="col">Giá</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Mô tả</th>
+                            <th scope="col">Thể loại</th>
+                            <th scope="col">Sửa</th>
+                            <th scope="col">Xóa</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="product : ${products}">
+                            <th scope="row" th:text="${product.name}"></th>
+                            <th scope="row" ><img th:src="${product.thumbnail}" height="100" ></th>
+                            <th scope="row" th:text="${product.price}"></th>
+                            <th scope="row" th:text="${product.quantity}"></th>
+                            <th scope="row" th:text="${product.description}"></th>
+                            <th scope="row" th:text="${product.category.name}"></th>
+                            <th scope="row" ><a th:href="@{/admin/vendor/products/edit/{productId}(productId = ${product.id})}">Edit</a></th>
+                            <th scope="row" ><a th:href="@{/admin/vendor/products/delete/{productId}(productId = ${product.id})}">Delete</a></th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- Table End -->
+</section>
+</body>
+</html>

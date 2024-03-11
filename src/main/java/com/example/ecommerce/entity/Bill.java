@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 public class Bill extends Base{
 
     private String name;
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Status status;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "order_id")
     private Order order;
+    //auto insert after order success
+
+
 }

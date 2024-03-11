@@ -1,0 +1,83 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/admin/layout}">
+
+<head>
+    <title>Product</title>
+</head>
+<body>
+<section layout:fragment="body">
+    <div class="col-sm-12 col-xl-12">
+        <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">Thêm sản phẩm</h6>
+            <form role="form" method="post" th:action="@{/admin/vendor/products/add}" th:object="${product}">
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           class="form-control"
+                           id="name"
+                           name="name"
+                           th:field = "*{name}"
+                           placeholder="Tên thể loại">
+                    <label for="name">Tên thể loại</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           class="form-control"
+                           id="thumbnail"
+                           name="thumbnail"
+                           th:field = "*{thumbnail}"
+                           placeholder="Link ảnh sản phẩm">
+                    <label for="thumbnail">Link ảnh sản phẩm</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="number"
+                           class="form-control"
+                           id="price"
+                           name="price"
+                           th:field = "*{price}"
+                           placeholder="Giá tiền">
+                    <label for="price">Giá tiền</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="number"
+                           class="form-control"
+                           id="quantity"
+                           name="quantity"
+                           th:field = "*{quantity}"
+                           placeholder="Số lượng">
+                    <label for="quantity">Số lượng</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <select class="form-select"
+                            id="categoryId"
+                            aria-label="Floating label select example"
+                            name="categoryId"
+                    >
+                        <option selected>Chọn thể loại</option>
+                        <span th:each="category :${categories}">
+                            <option th:value=${category.id} th:text="${category.name}"></option>
+                        </span>
+                    </select>
+                    <label for="categoryId">Thể loại</label>
+                </div>
+                <div class="form-floating mb-3">
+                                <textarea class="form-control"
+                                          placeholder="Mô tả về sản phầm"
+                                          id="description"
+                                          style="height: 150px;"
+                                          name="description"
+                                          th:field="*{description}"
+                                ></textarea>
+                    <label for="description">Mô tả về sản phầm</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <button type="submit" class="btn btn-primary w-100">Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>

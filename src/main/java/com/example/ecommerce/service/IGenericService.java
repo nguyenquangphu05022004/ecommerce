@@ -5,5 +5,6 @@ import java.util.List;
 public interface IGenericService<Dto> {
     List<Dto> records();
     void delete(Long id);
-    Integer count();
+    Long count();
+    Dto findById(Long id);
 }

@@ -1,0 +1,44 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/admin/layout.html}">
+<head>
+    <title>Người Dùng</title>
+</head>
+<body>
+<section layout:fragment="body">
+    <!-- Table Start -->
+    <div class="container-fluid pt-4 px-4">
+
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Danh sách người dùng</h6>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Username</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Sửa</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${users}">
+                            <th scope="row" th:text="${user.username}"></th>
+                            <th scope="row" th:text="${user.email}"></th>
+                            <th scope="row" th:text="${user.role}"></th>
+                            <th scope="row" ><a th:href="@{/admin/users/{userId}/vendor(userId = ${user.id})}">Edit</a></th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- Table End -->
+</section>
+</body>
+</html>

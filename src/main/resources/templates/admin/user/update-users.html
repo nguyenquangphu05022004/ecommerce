@@ -1,0 +1,73 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/admin/layout}">
+
+<head>
+    <title>Người dùng</title>
+</head>
+<body>
+<section layout:fragment="body">
+    <div class="col-sm-12 col-xl-12">
+        <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">Người Dùng</h6>
+            <form action="##" id="form-vendor">
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           class="form-control"
+                           id="shopName"
+                           name="shopName"
+                           placeholder="Link ảnh sản phẩm">
+                    <label for="shopName">Tên Shop</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <select class="form-select"
+                            id="role"
+                            aria-label="Floating label select example"
+                            name="role"
+                    >
+                        <option selected>Vai trò</option>
+                        <option value="VENDOR">Người bán hàng</option>
+                        <option value="ADMIN">Quản trị</option>
+                    </select>
+                    <label for="role">Vai trò</label>
+                </div>
+            </form>
+            <div class="form-floating mb-3">
+                <button th:onclick="updateRoleForUser([[${userId}]])" class="btn btn-primary w-100">Sửa</button>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        function updateRoleForUser(userId) {
+            const formVendor = document.getElementById("form-vendor");
+            const data = {
+                user: {
+                    id: userId,
+                    role: formVendor.elements["role"].value
+                },
+                shopName: formVendor.elements["shopName"].value
+            }
+            console.log(JSON.stringify(data))
+            const theUrl = "[(@{/vendors})]";
+            const url = new URL(theUrl, location);
+            $.ajax({
+                type:"post",
+                data: JSON.stringify(data),
+                url: url.href,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                success: function (data) {
+                    alert("Success");
+                },
+                error: function () {
+                    alert("Error")
+                }
+            })
+        }
+
+    </script>
+</section>
+</body>
+</html>

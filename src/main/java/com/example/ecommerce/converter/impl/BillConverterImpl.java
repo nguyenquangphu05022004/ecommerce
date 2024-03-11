@@ -8,7 +8,7 @@ public class BillConverterImpl implements IGenericConverter<Bill, BillDto> {
 
     @Override
     public Bill toEntity(BillDto billDto) {
-        return null;
+            return null;
     }
 
     @Override
