@@ -1,9 +1,8 @@
 package com.example.ecommerce.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Getter
+@SuperBuilder(toBuilder = true)
 public class Order extends Base{
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne
@@ -26,6 +26,7 @@ public class Order extends Base{
     private Payment payment;
     @OneToOne(mappedBy = "order")
     private Bill bill;
+    @Transient
     public Integer getTotalPrice() {
         if(quantity != null && product != null && product.getPrice() != null) {
             return quantity * product.getPrice();

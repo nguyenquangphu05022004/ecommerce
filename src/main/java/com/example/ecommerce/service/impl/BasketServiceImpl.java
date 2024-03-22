@@ -1,7 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.constant.Convert;
+import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.dto.BasketDto;
 import com.example.ecommerce.entity.Basket;
 import com.example.ecommerce.entity.User;
@@ -28,14 +28,9 @@ public class BasketServiceImpl implements IGenericService<BasketDto>, IBasketSer
 
     @Override
     public List<BasketDto> records() {
-//        String username = SecurityContextHolder
-//                .getContext()
-//                .getAuthentication()
-//                .getName();
-
-        List<Basket> baskets = basketRepository.findAll();
-
-        return baskets.stream()
+        return basketRepository
+                .findAllByUserUsername(SecurityUtils.username())
+                .stream()
                 .map(entity -> (BasketDto) Convert.BASKET.toDto(entity))
                 .collect(Collectors.toList());
     }
@@ -47,7 +42,7 @@ public class BasketServiceImpl implements IGenericService<BasketDto>, IBasketSer
 
     @Override
     public Long count() {
-        return basketRepository.count();
+        return basketRepository.countAllByUserUsername(SecurityUtils.username());
     }
 
     @Override

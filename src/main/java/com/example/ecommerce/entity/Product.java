@@ -1,9 +1,8 @@
 package com.example.ecommerce.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Data
+@SuperBuilder(toBuilder = true)
 public class Product extends Base{
 
     /*
@@ -21,7 +21,9 @@ public class Product extends Base{
             description, listEvaluation, listFeedBack
      */
 
-    private String name;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "language_id")
+    private Language language;
     private String thumbnail;
     private Integer price;
     private Integer quantity;

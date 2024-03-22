@@ -1,8 +1,7 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.config.SecurityConfig;
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.constant.Convert;
+import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.dto.CategoryDto;
 import com.example.ecommerce.entity.Category;
 import com.example.ecommerce.repository.CategoryRepository;
@@ -12,10 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Service
-public class CategoryServiceImpl implements IGenericService<CategoryDto>, ICategoryService {
+@Service("categoryService")
+public class CategoryServiceImpl implements ICategoryService {
 
     private final CategoryRepository categoryRepository;
 
@@ -48,7 +46,6 @@ public class CategoryServiceImpl implements IGenericService<CategoryDto>, ICateg
         );
     }
 
-    @Override
     public CategoryDto saveOrUpdate(CategoryDto categoryDto) {
         Category cate = null;
         if(categoryDto.getId() != null) {

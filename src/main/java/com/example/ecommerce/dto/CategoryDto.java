@@ -1,6 +1,7 @@
 package com.example.ecommerce.dto;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @ToString
+@SuperBuilder(toBuilder = true)
+
 @AllArgsConstructor
 public class CategoryDto extends BaseDto{
     private String name;

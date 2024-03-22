@@ -2,7 +2,9 @@ package com.example.ecommerce.converter.impl;
 
 import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.dto.BillDto;
+import com.example.ecommerce.dto.OrderDto;
 import com.example.ecommerce.entity.Bill;
+import com.example.ecommerce.utils.Convert;
 
 public class BillConverterImpl implements IGenericConverter<Bill, BillDto> {
 
@@ -13,7 +15,12 @@ public class BillConverterImpl implements IGenericConverter<Bill, BillDto> {
 
     @Override
     public BillDto toDto(Bill bill) {
-        return null;
+        BillDto billDto = BillDto.builder()
+                .name(bill.getName())
+                .order((OrderDto) Convert.ORDER.toDto(bill.getOrder()))
+                .status(bill.getStatus())
+                .build();
+        return billDto;
     }
 
     @Override

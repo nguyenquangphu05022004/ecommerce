@@ -21,7 +21,7 @@ public class VendorConverter implements IGenericConverter<Vendor, VendorDto> {
 
     @Override
     public VendorDto toDto(Vendor vendor) {
-        return null;
+        return mapper.map(vendor, VendorDto.class);
     }
 
     @Override

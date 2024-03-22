@@ -44,6 +44,7 @@
                                         <th scope="col">Số lượng</th>
                                         <th scope="col">Tổng</th>
                                         <th scope="col">Thể loại</th>
+                                        <th scope="col">Trạng thái</th>
                                         <th scope="col">Sửa</th>
                                     </tr>
                                     </thead>
@@ -76,12 +77,13 @@
                 value.forEach(order => {
                     html += `<tr>
                             <th scope="col">${order.id}</th>
-                            <th scope="col">${order.product.name}</th>
+                            <th scope="col">${order.product.language.nameVn}</th>
                             <th scope="col"><img src="${order.product.thumbnail}" height="100" ></th>
-                            <th scope="col">${order.product.price}</th>
+                            <th scope="col">${order.product.formatPrice}</th>
                             <th scope="col">${order.quantity}</th>
                             <th scope="col">${order.totalPrice}</th>
                             <th scope="col">${order.product.category.name}</th>
+                            <th scope="col">${order.status}</th>
                             <th scope="col">Sửa</th>
                         </tr>`
                 })

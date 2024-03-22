@@ -1,24 +1,21 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.constant.Convert;
-import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.Role;
+import com.example.ecommerce.utils.Convert;
+import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.User;
-import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IGenericService;
 import com.example.ecommerce.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-@Service
-public class UserServiceImpl implements IGenericService<UserDto>, IUserService {
+import java.util.stream.Collectors;
+
+@Service("userService")
+public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -63,7 +60,26 @@ public class UserServiceImpl implements IGenericService<UserDto>, IUserService {
 
     @Override
     public UserDto findUserByUsername(String username) {
-        return (UserDto) Convert.USER.toDto(userRepository.findByUsername(username));
+        return (UserDto) Convert.USER.toDto(userRepository.findByUsername(username).get());
+    }
+
+    @Override
+    public List<UserDto> getListUserByRole(Role role) {
+        List<User> users = userRepository.findAllByRole(role);
+        List<UserDto> userDtos =  users.stream()
+                .map(e -> (UserDto)Convert.USER.toDto(e))
+                .collect(Collectors.toList());
+        return userDtos;
+    }
+
+    @Override
+    public boolean changePassword(String oldPassword, String newPassword) {
+        return false;
+    }
+
+    @Override
+    public boolean forgetPassword(String email) {
+        return false;
     }
 
 }

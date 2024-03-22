@@ -1,14 +1,13 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.dto.UserDto;
+import com.example.ecommerce.entity.Role;
 import com.example.ecommerce.entity.User;
 import com.example.ecommerce.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,10 +21,16 @@ public class UserController {
     }
 
 
+    @GetMapping("/admin/users/role/{ROLE}")
+    @ResponseBody
+    public List<UserDto> getListUserByRole(@PathVariable("ROLE") Role role) {
+        return userService.getListUserByRole(role);
+    }
+
     @PostMapping("/register")
     public String registerAccount(@ModelAttribute UserDto userDto) {
         userService.saveOrUpdate(userDto);
-        return "redirect:/login";
+        return "redirect:/home";
     }
     @GetMapping("/admin/users")
     public String getListUser(Model model) {

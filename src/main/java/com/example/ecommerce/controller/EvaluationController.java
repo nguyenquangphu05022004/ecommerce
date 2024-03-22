@@ -22,6 +22,6 @@ public class EvaluationController {
     @PostMapping("/evaluations")
     @ResponseBody
     public EvaluationDto createEvaluation(@RequestBody EvaluationDto evaluationDto) {
-        return evaluationDto;
+        return evaluationService.saveOrUpdate(evaluationDto);
     }
 }

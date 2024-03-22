@@ -21,7 +21,7 @@ public class FactoryConverter {
                 genericConverter = new OrderConverter(mapper);
                 break;
             case EVALUATION:
-                genericConverter = new EvaluationConverter();
+                genericConverter = new EvaluationConverter(mapper);
                 break;
             case VENDOR:
                 genericConverter = new VendorConverter(mapper);

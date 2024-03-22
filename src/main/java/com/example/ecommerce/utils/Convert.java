@@ -1,4 +1,4 @@
-package com.example.ecommerce.constant;
+package com.example.ecommerce.utils;
 
 import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.converter.impl.Converter;

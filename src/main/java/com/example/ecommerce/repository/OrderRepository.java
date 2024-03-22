@@ -11,5 +11,5 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("select o from Order o where o.user.username = :username")
     List<Order> findAllByUserUsername(@Param("username") String username);
-    List<Order> findAllByBillStatus(Status status);
+    List<Order> findAllByUserUsernameAndBillStatus(String username, Status status);
 }

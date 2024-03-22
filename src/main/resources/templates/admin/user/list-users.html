@@ -13,6 +13,17 @@
         <div class="col-12">
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Danh sách người dùng</h6>
+                <select class="form-select"
+                        id="role"
+                        aria-label="Floating label select example"
+                        name="role"
+                        th:onchange="getUserByRole()"
+                >
+                    <option value="#" selected>Tất cả</option>
+                    <option value="VENDOR">Người bán hàng</option>
+                    <option value="USER">Người dùng</option>
+                    <option value="ADMIN">Quản trị</option>
+                </select>
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -24,8 +35,8 @@
 
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr th:each="user : ${users}">
+                        <tbody id="list-user">
+                        <tr th:each="user : ${users}" >
                             <th scope="row" th:text="${user.username}"></th>
                             <th scope="row" th:text="${user.email}"></th>
                             <th scope="row" th:text="${user.role}"></th>
@@ -39,6 +50,36 @@
     </div>
     </div>
     <!-- Table End -->
+    <script>
+        function getUserByRole() {
+            const selectRole = document.getElementById("role")
+            const theUrl = `[(@{/admin/users/role/${selectRole.value}})]`;
+            const url = new URL(theUrl, location)
+            console.log(url.href)
+            $.ajax({
+                type: "get",
+                url: url.href,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                success: function (data) {
+                    let html = ``;
+                    data.forEach(value => {
+                        html += `<tr" >
+                            <th scope="row" >${value.username}</th>
+                            <th scope="row" >${value.email}</th>
+                            <th scope="row">${value.role}</th>
+                            <th scope="row" ><a href='/admin/users/${value.id}/vendor'>Edit</a></th>
+                        </tr>`
+                    })
+                    $("#list-user").html(html)
+                },
+                error: function () {
+                    alert("Error")
+                }
+            })
+        }
+    </script>
 </section>
 </body>
 </html>

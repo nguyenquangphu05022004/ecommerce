@@ -26,8 +26,8 @@
                             aria-label="Floating label select example"
                             name="role"
                     >
-                        <option selected>Vai trò</option>
-                        <option value="VENDOR">Người bán hàng</option>
+                        <option value="VENDOR" selected>Người bán hàng</option>
+                        <option value="USER">Người dùng</option>
                         <option value="ADMIN">Quản trị</option>
                     </select>
                     <label for="role">Vai trò</label>
@@ -51,6 +51,7 @@
             console.log(JSON.stringify(data))
             const theUrl = "[(@{/vendors})]";
             const url = new URL(theUrl, location);
+            console.log(url.href)
             $.ajax({
                 type:"post",
                 data: JSON.stringify(data),
@@ -61,8 +62,9 @@
                 success: function (data) {
                     alert("Success");
                 },
-                error: function () {
+                error: function (message) {
                     alert("Error")
+                    console.log(message)
                 }
             })
         }

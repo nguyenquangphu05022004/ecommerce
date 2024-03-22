@@ -1,6 +1,10 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.constant.Convert;
+import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.entity.Product;
+import com.example.ecommerce.entity.User;
+import com.example.ecommerce.repository.UserRepository;
+import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.dto.OrderDto;
 import com.example.ecommerce.entity.Order;
 import com.example.ecommerce.entity.Status;
@@ -8,7 +12,6 @@ import com.example.ecommerce.repository.OrderRepository;
 import com.example.ecommerce.service.IGenericService;
 import com.example.ecommerce.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,19 +20,17 @@ import java.util.stream.Collectors;
 @Service
 public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderService {
     private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository) {
         this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public List<OrderDto> records() {
-//        String username = SecurityContextHolder
-//                .getContext()
-//                .getAuthentication()
-//                .getName();
-        return  orderRepository.findAll()
+        return  orderRepository.findAllByUserUsername(SecurityUtils.username())
                 .stream()
                 .map(entity -> (OrderDto)Convert.ORDER.toDto(entity))
                 .collect(Collectors.toList());
@@ -54,20 +55,24 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
 
     @Override
     public OrderDto saveOrUpdate(OrderDto orderDto) {
+        User user = userRepository.findByUsername(SecurityUtils.username()).get();
+        user.setUserContactDetails(orderDto.getUser().getUserContactDetails());
+        Product product = Product.builder()
+                .id(orderDto.getProduct().getId())
+                .build();
         Order order = (Order) Convert.ORDER.toEntity(orderDto);
-        return (OrderDto) Convert.ORDER.toDto(orderRepository.save(order));
+        order.setUser(user);
+        order.setProduct(product);
+        orderRepository.save(order);
+        return null;
     }
 
     @Override
     public List<OrderDto> records(Status status) {
-        //        String username = SecurityContextHolder
-//                .getContext()
-//                .getAuthentication()
-//                .getName();
-        return  orderRepository.findAllByBillStatus(status)
+        return  orderRepository
+                .findAllByUserUsernameAndBillStatus(SecurityUtils.username(), status)
                 .stream()
                 .map(entity -> (OrderDto)Convert.ORDER.toDto(entity))
                 .collect(Collectors.toList());
-//        return null;
     }
 }

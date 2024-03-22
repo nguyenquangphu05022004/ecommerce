@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.List;
 @Data
 @Getter
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
+
 public class Vendor extends Base{
     /*
     vendor:

@@ -1,7 +1,6 @@
 package com.example.ecommerce.config;
 
 import com.example.ecommerce.entity.Role;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +27,6 @@ public class SecurityConfig {
     public SecurityConfig(UserDetailsService userService) {
         this.userService = userService;
     }
-    private final org.apache.logging.log4j.Logger LOGGER =  LogManager.getLogger();
 
     @Bean
     public PasswordEncoder encoder() {
@@ -54,18 +52,22 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> {
             request
-                    .requestMatchers(HttpMethod.GET, "/shop", "/home",
-                            "/sign-up", "/login", "/user/**")
+                    .requestMatchers(HttpMethod.GET,"/shop", "/home",
+                            "/sign-up", "/login", "/user/**", "/products/**",
+                            "/admin/css/**", "/admin/js/**", "/admin/lib/**",
+                            "/admin/scss/**")
                     .permitAll()
+                    .requestMatchers("/admin/home").hasAnyAuthority(Role.VENDOR.getAuthority(), Role.ADMIN.getAuthority())
                     .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.getAuthority())
-                    .requestMatchers("/admin/vendor/**", "/vendors").hasAuthority(Role.VENDOR.getAuthority())
                     .requestMatchers(HttpMethod.POST, "/register").permitAll()
+                    .requestMatchers( "/vendor/**", "/vendors")
+                    .hasAnyAuthority(Role.VENDOR.getAuthority(), Role.ADMIN.getAuthority())
                     .anyRequest().authenticated();
 
         })
                 .formLogin(form -> {
                     form.loginPage("/login")
-                            .successForwardUrl("/home")
+                            .defaultSuccessUrl("/home")
                             .usernameParameter("username")
                             .passwordParameter("password")
                             .loginProcessingUrl("/login")
@@ -80,6 +82,9 @@ public class SecurityConfig {
                 .rememberMe(httpSecurityRememberMeConfigurer -> {
                     httpSecurityRememberMeConfigurer
                             .rememberMeParameter("rememberMe");
+                })
+                .exceptionHandling(exception -> {
+                    exception.accessDeniedPage("/404");
                 })
                 .build();
     }

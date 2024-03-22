@@ -3,9 +3,9 @@
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{/layout.html}">
 <head>
-    <title th:text="${product.name}"></title>
+    <title th:text="${product.language.nameVn}"></title>
 </head>
-<body layout:fragment="body">
+<body layout:fragment="body" th:onload="listEvaluations()">
 <!-- Single Product Start -->
 <div class="container-fluid mt-5" style="padding-top: 52px;">
     <div class="container py-5">
@@ -15,12 +15,12 @@
                     <div class="col-lg-6">
                         <div class="border rounded">
                             <a href="#">
-                                <img th:src="${product  .thumbnail}" class="img-fluid rounded" alt="Image">
+                                <img th:src="${product.thumbnail}" class="img-fluid rounded" alt="Image">
                             </a>
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <h4 class="fw-bold mb-3" th:text="${product.name}"></h4>
+                        <h4 class="fw-bold mb-3" th:text="${product.language.nameVn}"></h4>
                         <p class="mb-3" th:text="${product.category.name}">Category: </p>
                         <h5 class="fw-bold mb-3" th:text="${product.price}"></h5>
                         <div class="d-flex mb-4">
@@ -50,7 +50,7 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
-                                <a th:href="@{/orders/product/{productId}/{productName}(productId = ${product.id}, productName = ${product.name})}" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Mua ngay</a>
+                                <a th:href="@{/orders/product/{productId}/{productName}(productId = ${product.id}, productName = ${product.language.nameVn})}" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Mua ngay</a>
                             </div>
                             <div class="col-lg-6">
                                 <a href="##" th:onclick = "createBasket([[${product.id}]])"
@@ -125,42 +125,7 @@
                             </div>
                             <div class="tab-pane" id="nav-mission"
                                  role="tabpanel" aria-labelledby="nav-mission-tab">
-                                <div class="d-flex">
-                                    <img src="../../user/img/avatar.jpg" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
-                                    <div class="">
-                                        <p class="mb-2" style="font-size: 14px;">April 12, 2024</p>
-                                        <div class="d-flex justify-content-between">
-                                            <h5>Jason Smith</h5>
-                                            <div class="d-flex mb-3">
-                                                <i class="fa fa-star text-secondary"></i>
-                                                <i class="fa fa-star text-secondary"></i>
-                                                <i class="fa fa-star text-secondary"></i>
-                                                <i class="fa fa-star text-secondary"></i>
-                                                <i class="fa fa-star"></i>
-                                            </div>
-                                        </div>
-                                        <p>The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic
-                                            words etc. Susp endisse ultricies nisi vel quam suscipit </p>
-                                    </div>
-                                </div>
-                                <div class="d-flex">
-                                    <img src="../../user/img/avatar.jpg" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
-                                    <div class="">
-                                        <p class="mb-2" style="font-size: 14px;">April 12, 2024</p>
-                                        <div class="d-flex justify-content-between">
-                                            <h5>Sam Peters</h5>
-                                            <div class="d-flex mb-3">
-                                                <i class="fa fa-star text-secondary"></i>
-                                                <i class="fa fa-star text-secondary"></i>
-                                                <i class="fa fa-star text-secondary"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </div>
-                                        </div>
-                                        <p class="text-dark">The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic
-                                            words etc. Susp endisse ultricies nisi vel quam suscipit </p>
-                                    </div>
-                                </div>
+
                             </div>
                             <div class="tab-pane" id="nav-vision" role="tabpanel">
                                 <p class="text-dark">Tempor erat elitr rebum at clita. Diam dolor diam ipsum et tempor sit. Aliqu diam
@@ -171,24 +136,8 @@
                         </div>
                     </div>
                     <form id="form-comment"  method="post">
-                        <h4 class="mb-5 fw-bold">Để Lại Đánh Giá</h4>
+                        <h4 class="fw-bold">Để Lại Đánh Giá</h4>
                         <div class="row g-4">
-                            <div class="col-lg-6">
-                                <div class="border-bottom rounded">
-                                    <input type="text"
-                                           class="form-control border-0 me-4"
-                                           name="fullName"
-                                           placeholder="Họ và tên *">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="border-bottom rounded">
-                                    <input type="email"
-                                           class="form-control border-0"
-                                           name="email"
-                                           placeholder="Email của bạn *">
-                                </div>
-                            </div>
                             <div class="col-lg-12">
                                 <div class="border-bottom rounded my-4">
                                     <textarea name="content"
@@ -558,55 +507,74 @@
             }
         })
     }
-    function createEvaluation(productId) {
-        let theUrl = `[(@{/evaluations})]`;
-        const formEvaluation = document.getElementById("form-comment")
-        console.log(formEvaluation)
-        const evaluation = {
-            product: {
-                id: productId
-            },
-            user: {
-                customer: {
-                    fullName: formEvaluation.elements["fullName"].value,
-                },
-                email: formEvaluation.elements["email"].value
-            },
-            content: formEvaluation.elements["content"].value
-            // rating: formEvaluation
+    var valueRating = 1;
+    function listEvaluations() {
+        const product = [[${product}]]
+        let html = '';
+        product.evaluations.forEach(evaluation => {
+            html += evaluationHtml(evaluation)
+        })
+        $("#nav-mission").html(html);
+    }
+    function evaluationHtml(data) {
+        let rate = ``;
+        for (let i = 1; i <= data.rating; i++) {
+            rate += `<i class="fa fa-star text-secondary"></i>`
         }
-        callApi("post", JSON.stringify(evaluation), theUrl, (data) => {
-            formEvaluation.elements["email"].value = ""
-            formEvaluation.elements["fullName"].value = ""
-            formEvaluation.elements["content"].value = ""
-            $("#nav-mission").append(`<div class="d-flex">
+        for (let i = data.rating + 1; i <= 5; i++) {
+            rate += `<i class="fa fa-star"></i>`
+        }
+        let html = `<div class="d-flex">
                                     <img src="../../user/img/avatar.jpg" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
                                     <div class="">
                                         <p class="mb-2" style="font-size: 14px;">April 12, 2024</p>
                                         <div class="d-flex justify-content-between">
-                                            <h5>${data.user.customer.fullName}</h5>
+                                            <h5>${data.user.userContactDetails.fullName}</h5>
                                             <div class="d-flex mb-3">
                                                 <i class="fa fa-star text-secondary"></i>
                                                 <i class="fa fa-star text-secondary"></i>
                                                 <i class="fa fa-star text-secondary"></i>
                                                 <i class="fa fa-star text-secondary"></i>
-                                                <i class="fa fa-star"></i>
                                             </div>
                                         </div>
-                                        <p>${data.content}</p>
+                                        <p class="text-dark">${data.content}</p>
                                     </div>
-                                </div>`)
+                                </div>`
+        return html;
+    }
+    function createEvaluation(productId) {
+        let theUrl = `[(@{/evaluations})]`;
+        const formEvaluation = document.getElementById("form-comment")
+        const evaluation = {
+            product: {
+                id: productId
+            },
+            content: formEvaluation.elements["content"].value,
+            rating: valueRating,
+            numberOfLike: 0
+        }
+        console.log(evaluation)
+        callApi("post", JSON.stringify(evaluation), theUrl, (data) => {
+            rating(0)
+            console.log(rate)
+            formEvaluation.elements["email"].value = ""
+            formEvaluation.elements["fullName"].value = ""
+            formEvaluation.elements["content"].value = ""
+            $("#nav-mission").append(evaluationHtml(data))
         })
     }
+
     function rating(value) {
-        for(let i = 1; i <= value; i++) {
+        for (let i = 1; i <= value; i++) {
             const rate = document.getElementById("rate#" + i);
             rate.classList.add("text-primary")
         }
-        for(let i = value + 1; i <= 5; i++) {
+        for (let i = value + 1; i <= 5; i++) {
             const rate = document.getElementById("rate#" + i);
             rate.classList.remove("text-primary")
         }
+        valueRating = value
+        console.log("valueRating: ", valueRating)
     }
 </script>
 </body>

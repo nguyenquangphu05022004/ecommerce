@@ -2,6 +2,7 @@ package com.example.ecommerce.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +13,15 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @ToString
-@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class User extends Base{
-
-
     @Column(length = 20)
     private String username;
     private String password;
     @Column(length = 50)
     private String email;
+    @Column(columnDefinition = "text")
+    private String thumbnail;
     @Enumerated(EnumType.STRING)
     private Role role;
     @Embedded

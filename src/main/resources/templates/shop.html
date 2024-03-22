@@ -12,7 +12,7 @@
     </style>
 </head>
 
-<body layout:fragment="body" th:onload="getProductsByCategoryId()">
+<body layout:fragment="body">
 <!-- Fruits Shop Start-->
 <div class="container-fluid fruite" style="padding-top: 100px">
     <div class="container py-5">
@@ -20,23 +20,30 @@
             <div class="col-lg-12">
                 <div class="row g-4">
                     <div class="col-xl-3">
-                        <div class="input-group w-100 mx-auto d-flex">
-                            <input type="search" class="form-control p-3" placeholder="keywords"
+                        <div class="d-flex">
+                            <input type="search" class="form-control p-3"
+                                   placeholder="Tìm kiếm"
+                                   name="query"
+                                   id="searchProducts"
+                                   th:value="${keyword}"
                                    aria-describedby="search-icon-1">
-                            <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                            <button th:onclick="searchProductByKeyWordAndCategoryId()" id="search-icon-1"
+                                    class="input-group-text p-3">
+                                <i class="fa fa-search" style="cursor: pointer"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="col-6"></div>
                     <div class="col-xl-3">
                         <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
-                            <label for="fruits">Default Sorting:</label>
+                            <label for="fruits">Sắp xếp mặc định:</label>
                             <select id="fruits" name="fruitlist"
                                     class="border-0 form-select-sm bg-light me-3"
                             >
-                                <option value="volvo">Nothing</option>
-                                <option value="saab">Popularity</option>
-                                <option value="opel">Organic</option>
-                                <option value="audi">Fantastic</option>
+                                <option value="volvo">Không</option>
+                                <option value="saab">Phổ biến</option>
+                                <option value="opel">Mua nhiều</option>
+                                <option value="audi">Giá</option>
                             </select>
                         </div>
                     </div>
@@ -51,12 +58,16 @@
                                             id="categoryId"
                                             aria-label="Floating label select example"
                                             name="categoryId"
-                                            th:onchange="getProductsByCategoryId()"
+                                            th:onchange="searchProductByKeyWordAndCategoryId()"
                                     >
-                                        <option selected value="ALL">Chọn thể loại</option>
+                                        <option th:selected="${categoryId == '0'}" value="0">Chọn thể loại</option>
                                         <span th:each="category :${categories}">
                                             <option th:value=${category.id}
-                                                    th:text="${category.name}"></option>
+                                                    th:text="${category.name}"
+                                                    th:selected="${categoryId} == ${category.id}"
+                                            >
+
+                                            </option>
                                         </span>
                                     </select>
                                 </div>
@@ -178,48 +189,40 @@
                     </div>
                     <div class="col-lg-9">
                         <div class="row g-4 justify-content-center" id="products">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-    <!-- Fruits Shop End-->
-
-    <script>
-        function getProductsByCategoryId() {
-            const selectForm = document.getElementById("categoryId");
-            const valueOfSelect = selectForm.value
-            const objectForCall = {
-                type: "get",
-                theUrl: "",
-                data: "",
-                success: function (value) {
-                    console.log(value)
-                    let html = ``;
-                    value.forEach(product => {
-                        html += `<div class="col-md-6 col-lg-6 col-xl-4">
-                                 <div class="rounded position-relative fruite-item">
+                            <div class="col-md-6 col-lg-6 col-xl-4" th:each="product:${products}">
+                                <div class="rounded position-relative fruite-item">
                                     <div class="fruite-img">
-                                        <img src="${product.thumbnail}"
+                                        <img th:src="${product.thumbnail}"
                                              class="img-fluid-redesign w-100 rounded-top"
                                              alt=""
                                         >
                                     </div>
                                     <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                                         style="top: 10px; left: 10px;" >
-                                         ${product.category.name}
+                                         style="top: 10px; left: 10px;"
+
+                                    >
+                                        Thể loại: [[${product.category.name}]]
                                     </div>
                                     <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                        <h4>${product.shortName}</h4>
-                                        <p>${product.shortDescription}</p>
+                                        <div class="col-12 text-truncate h4">
+                                            Tên: [[${product.language.nameVn}]]
+                                        </div>
+                                        <p>
+                                        <div class="col-12 text-truncate">
+                                            Mô tả: [[${product.description}]]
+                                        </div>
+                                        </p>
                                         <div class="d-flex justify-content-between flex-lg-wrap mb-4">
-                                            <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
+                                            <p class="text-dark fs-5 fw-bold mb-0">Giá: [[${product.formatPrice}]]</p>
+                                        </div>
+                                        <div class="d-flex justify-content-between flex-lg-wrap mb-4">
+                                            <a th:href="@{/shop/vendor/{vendorId}(vendorId=${product.vendor.id})}"
+                                               class="text-dark fs-5 fw-bold mb-0">Shop:
+                                                [[${product.vendor.shopName}]]</a>
                                         </div>
                                         <div class="row text-center">
-                                            <div class="col-lg-6 mb-4">
-                                                <a href="/orders/product/${product.id}/${product.name}"
+                                            <div class="col-lg-6">
+                                                <a href="/orders/product/[[${product.id}]]/[[${product.name}]]"
                                                    class="btn border border-secondary rounded-pill px-3 text-primary w-100">
                                                     <i
                                                             class="fa fa-shopping-bag me-2 text-primary"></i>Mua</a>
@@ -234,56 +237,90 @@
                                     </div>
                                 </div>
                             </div>
-                          `
-                    })
-                    html += ` <div class="col-12">
-                                <div class="pagination d-flex justify-content-center mt-5">
-                                    <a href="#" class="rounded">&laquo;</a>
-                                    <a href="#" class="active rounded">1</a>
-                                    <a href="#" class="rounded">2</a>
-                                    <a href="#" class="rounded">3</a>
-                                    <a href="#" class="rounded">4</a>
-                                    <a href="#" class="rounded">5</a>
-                                    <a href="#" class="rounded">6</a>
-                                    <a href="#" class="rounded">&raquo;</a>
-                                </div>
-                            </div>`
-                    $("#products").html(html)
-                }
-            }
-            if (valueOfSelect === "ALL") {
-                objectForCall.theUrl = `[(@{/products})]`;
-            } else {
-                objectForCall.theUrl = `[(@{/category/products/${valueOfSelect}})]`;
-            }
-            callApi(
-                objectForCall.type,
-                objectForCall.data,
-                objectForCall.theUrl,
-                objectForCall.success
-            )
 
-        }
+                        </div>
+                        <div class="col-12">
+                            <div id="page" class="pagination d-flex justify-content-center mt-5">
+                                <script >
+                                    const pageElement = document.getElementById("page");
+                                    const total = [[${totalPage}]]
+                                    let html = ''
+                                    if(total > 0) {
+                                        html += `<a style="cursor: pointer" onclick='getPage(0)' class="rounded">&laquo;</a>`
+                                    }
+                                    for(let i = 0; i < total; i++) {
+                                        if(i === [[${page}]]) {
+                                           html +=  `<a class="rounded active disabled">${i + 1}</a>`
+                                        } else {
+                                            html +=  `<a style="cursor: pointer" onclick='getPage(${i})' class="rounded">${i + 1}</a>`
+                                        }
+                                    }
+                                    if(total > 0) {
+                                        html += `<a  style="cursor: pointer" onclick='getPage(${total - 1})' class="rounded">&raquo;</a>`
+                                    }
+                                    pageElement.innerHTML = html
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fruits Shop End-->
 
-        function callApi(type, data, theUrl, success) {
-            const url = new URL(theUrl, document.location);
-            console.log(url.href)
-            $.ajax({
-                type: type,
-                url: url.href,
-                data: data,
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                success: function (data) {
-                    success(data);
-                },
-                error: function () {
-                    alert("Error")
-                }
-            })
+<script th:inline="javascript">
+    function getDateSearch() {
+        const keyWord = document.getElementById("searchProducts").value;
+        const categoryId = document.getElementById("categoryId").value;
+        const dataSearch = {
+            query: keyWord,
+            categoryId: categoryId
         }
-    </script>
+        return dataSearch;
+    }
+    function getPage(page) {
+        window.location.href = getHrefSearch(getDateSearch(), page)
+    }
+    function searchProductByKeyWordAndCategoryId() {
+        window.location.href = getHrefSearch(getDateSearch(), 0)
+    }
+    function getHrefSearch(dataSearch, page) {
+        const host = document.location.origin
+        let path = document.location.pathname;
+        if(path.includes("vendor")) {
+            path = path.substring(0, 14) + `/products/category/${dataSearch.categoryId}/search`
+        } else {
+            path = `/shop/products/category/${dataSearch.categoryId}/search`
+        }
+        let search = `?query=${dataSearch.query}&page=${page + 1}`;
+        let url = host + path + search;
+        return url;
+
+    }
+
+
+
+    function callApi(type, data, theUrl, success) {
+        const url = new URL(theUrl, document.location);
+        console.log(url.href)
+        $.ajax({
+            type: type,
+            url: url.href,
+            data: data,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            success: function (data) {
+                success(data);
+            },
+            error: function () {
+                alert("Error")
+            }
+        })
+    }
+</script>
 </body>
 
 

@@ -1,31 +1,46 @@
 package com.example.ecommerce.service.impl;
 
+import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.dto.EvaluationDto;
-import com.example.ecommerce.service.IGenericService;
+import com.example.ecommerce.entity.Evaluation;
+import com.example.ecommerce.entity.User;
+import com.example.ecommerce.repository.EvaluationRepository;
+import com.example.ecommerce.repository.UserRepository;
+import com.example.ecommerce.service.IEvaluationService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class EvaluationServiceImpl  implements IGenericService<EvaluationDto> {
+public class EvaluationServiceImpl  implements IEvaluationService {
+    private final EvaluationRepository evaluationRepository;
+    private final UserRepository userRepository;
+    public EvaluationServiceImpl(EvaluationRepository evaluationRepository, UserRepository userRepository) {
+        this.evaluationRepository = evaluationRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
-    public List<EvaluationDto> records() {
-        return null;
+    public EvaluationDto saveOrUpdate(EvaluationDto evaluationDto) {
+        User user = userRepository.findByUsername(SecurityUtils.username()).get();
+        Evaluation evaluation = null;
+        if(evaluationDto.getId() != null) {
+            Evaluation old = evaluationRepository.findById(evaluationDto.getId()).get();
+            evaluation = (Evaluation) Convert.EVAL.toEntity(old, evaluationDto);
+        } else {
+            evaluation = (Evaluation) Convert.EVAL.toEntity(evaluationDto);
+        }
+        evaluation.setUser(user);
+        EvaluationDto evalDto =  (EvaluationDto) Convert.EVAL.toDto(evaluationRepository.save(evaluation));
+        return evalDto;
+    }
+
+    @Override
+    public long count() {
+        return evaluationRepository.count();
     }
 
     @Override
     public void delete(Long id) {
-
-    }
-
-    @Override
-    public Long count() {
-        return null;
-    }
-
-    @Override
-    public EvaluationDto findById(Long id) {
-        return null;
+        evaluationRepository.deleteById(id);
     }
 }

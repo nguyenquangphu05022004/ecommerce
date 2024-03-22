@@ -31,7 +31,7 @@
                         </div>
                     </th>
                     <td>
-                        <p class="mb-0 mt-4" th:text="${basket.product.name}"></p>
+                        <p class="mb-0 mt-4" th:text="${basket.product.language.nameVn}"></p>
                     </td>
                     <td>
                         <p class="mb-0 mt-4" th:text="${basket.product.price}"></p>
@@ -72,7 +72,7 @@
                     </td>
                     <td>
                         <a
-                                th:href="@{/orders/product/5/34}"
+                                th:href="@{/orders/product/{productId}/{productName}(productId = ${basket.product.id}, productName=${basket.product.language.nameVn})}"
                                 class="btn btn-md rounded-circle bg-light border mt-4" >
                             <i class="fab fa-btc"></i>
                         </a>

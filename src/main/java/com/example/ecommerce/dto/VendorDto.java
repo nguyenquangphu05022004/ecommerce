@@ -2,6 +2,7 @@ package com.example.ecommerce.dto;
 
 import com.example.ecommerce.entity.User;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
+
 public class VendorDto extends BaseDto{
     private String shopName;
     private UserDto user;

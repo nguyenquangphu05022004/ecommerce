@@ -6,27 +6,32 @@
 <head>
     <title>Product</title>
 </head>
-<body>
-<section layout:fragment="body">
+<body layout:fragment="body">
     <div class="col-sm-12 col-xl-12">
         <div class="bg-light rounded h-100 p-4">
             <h6 class="mb-4">Thêm sản phẩm</h6>
-            <form role="form" method="post" th:action="@{/admin/vendor/products/add}" th:object="${product}">
+            <form id = 'product'>
                 <div class="form-floating mb-3">
                     <input type="text"
                            class="form-control"
-                           id="name"
-                           name="name"
-                           th:field = "*{name}"
-                           placeholder="Tên thể loại">
-                    <label for="name">Tên thể loại</label>
+                           id="nameVn"
+                           name="nameVn"
+                           placeholder="Ví dụ: giày">
+                    <label for="nameVn">Tên tiếng việt</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           class="form-control"
+                           id="nameEn"
+                           name="nameEn"
+                           placeholder="Ví dụ: giay">
+                    <label for="nameEn">Tên không dấu</label>
                 </div>
                 <div class="form-floating mb-3">
                     <input type="text"
                            class="form-control"
                            id="thumbnail"
                            name="thumbnail"
-                           th:field = "*{thumbnail}"
                            placeholder="Link ảnh sản phẩm">
                     <label for="thumbnail">Link ảnh sản phẩm</label>
                 </div>
@@ -35,7 +40,6 @@
                            class="form-control"
                            id="price"
                            name="price"
-                           th:field = "*{price}"
                            placeholder="Giá tiền">
                     <label for="price">Giá tiền</label>
                 </div>
@@ -44,7 +48,6 @@
                            class="form-control"
                            id="quantity"
                            name="quantity"
-                           th:field = "*{quantity}"
                            placeholder="Số lượng">
                     <label for="quantity">Số lượng</label>
                 </div>
@@ -67,17 +70,46 @@
                                           id="description"
                                           style="height: 150px;"
                                           name="description"
-                                          th:field="*{description}"
                                 ></textarea>
                     <label for="description">Mô tả về sản phầm</label>
                 </div>
-
-                <div class="form-floating mb-3">
-                    <button type="submit" class="btn btn-primary w-100">Thêm</button>
-                </div>
             </form>
+            <div class="form-floating mb-3">
+                <button th:onclick="createProduct()" class="btn btn-primary w-100">Thêm</button>
+            </div>
         </div>
     </div>
-</section>
+    <script th:inline="javascript">
+        function createProduct() {
+            const form = document.getElementById("product")
+            const product = {
+                language: {
+                    nameVn: form.elements['nameVn'].value,
+                    nameEn: form.elements['nameEn'].value
+                },
+                price: form.elements['price'].value,
+                description: form.elements['description'].value,
+                category: {
+                    id: form.elements['categoryId'].value
+                },
+                thumbnail: form.elements['thumbnail'].value,
+                quantity: form.elements['quantity'].value
+            }
+            $.ajax({
+                type:'post',
+                url: new URL('[(@{/vendor/products/add})]', location).href,
+                data: JSON.stringify(product),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                success:function () {
+                    window.location.href=new URL("[(@{/vendor/products})]", location).href
+                },
+                error: function () {
+                    alert("error create product")
+                }
+            })
+        }
+    </script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.constant.Convert;
+import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.dto.VendorDto;
 import com.example.ecommerce.entity.User;
 import com.example.ecommerce.entity.Vendor;

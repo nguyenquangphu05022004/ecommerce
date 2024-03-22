@@ -31,6 +31,7 @@ public class UserConverterImpl implements IGenericConverter<User, UserDto> {
 
     @Override
     public UserDto toDto(User user) {
+        if(user.getVendor() != null) user.setVendor(null);
         UserDto userDto =  mapper.map(user, UserDto.class);
         return userDto;
     }

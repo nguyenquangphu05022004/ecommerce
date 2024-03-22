@@ -30,7 +30,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="product : ${products}">
-                            <th scope="row" th:text="${product.name}"></th>
+                            <th scope="row" th:text="${product.language.nameVn}"></th>
                             <th scope="row" ><img th:src="${product.thumbnail}" height="100" ></th>
                             <th scope="row" th:text="${product.price}"></th>
                             <th scope="row" th:text="${product.quantity}"></th>

@@ -4,12 +4,15 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "evaluations")
 @NoArgsConstructor
 @Data
 @Getter
+@SuperBuilder(toBuilder = true)
+
 public class Evaluation extends Base {
     @Column(columnDefinition = "tinyint")
     private Integer rating;

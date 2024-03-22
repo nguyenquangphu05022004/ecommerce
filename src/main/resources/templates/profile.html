@@ -1,0 +1,85 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:sec="http://thymeleaf.org"
+        layout:decorate="~{/layout.html}">
+<head>
+    <title>Thông tin cá nhân</title>
+</head>
+<body layout:fragment="body" class="mt-5" style="padding-top: 100px">
+<div class="container bootstrap snippet">
+    <div class="row">
+        <div class="col-sm-10"><h1><span sec:authentication="name"></span></h1></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3"><!--left col-->
+
+            <div class="text-center">
+                <img th:src="${user.thumbnail == null ? 'http://ssl.gstatic.com/accounts/ui/avatar_2x.png' : '${user.thumbnail}'}" class="avatar img-circle img-thumbnail"
+                     alt="avatar">
+                <h6>Tải ảnh lên</h6>
+                <input type="file" class="text-center center-block file-upload" >
+            </div>
+            </hr><br>
+            <ul class="list-group">
+                <li class="list-group-item text-muted">Hoạt động <i class="fa fa-dashboard fa-1x"></i></li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong>Thích: </strong></span> 13</li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong>Đánh giá: </strong></span> 37</li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong>Theo dõi: </strong></span> 78</li>
+            </ul>
+        </div><!--/col-3-->
+        <div class="col-sm-9">
+            <div class="tab-content">
+                <div class="tab-pane active" id="home">
+                    <form class="form" action="##" method="post" id="registrationForm" th:object="${user}">
+                        <div class="form-group mb-3">
+                            <div class="col-xs-6">
+                                <label for="first_name"><h5>Họ và tên</h5></label>
+                                <input type="text" class="form-control" name="first_name"
+                                       id="first_name"
+                                       th:value="${user.userContactDetails.fullName}"
+                                       placeholder="first name" title="enter your first name if any.">
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="col-xs-6">
+                                <label for="phone"><h5>Số điện thoại</h5></label>
+                                <input type="text" class="form-control" name="phone" id="phone"
+                                       th:value="${user.userContactDetails.phoneNumber}"
+                                       placeholder="enter phone" title="enter your phone number if any.">
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="col-xs-6">
+                                <label for="email"><h5>Email</h5></label>
+                                <input type="email" class="form-control" name="email" id="email"
+                                       th:value="${user.email}"
+                                       placeholder="you@email.com" title="enter your email.">
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="col-xs-6">
+                                <label for="email"><h5>Địa chỉ</h5></label>
+                                <input type="email" class="form-control" id="location" placeholder="somewhere"
+                                       th:value="${user.userContactDetails.address}"
+                                       title="enter a location">
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="col-xs-12">
+                                <br>
+                                <button class="btn btn-lg btn-success" type="submit"><i
+                                        class="glyphicon glyphicon-ok-sign"></i> Save
+                                </button>
+                                <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                </div><!--/tab-content-->
+            </div>
+        </div>
+    </div>
+</div>
+</body>

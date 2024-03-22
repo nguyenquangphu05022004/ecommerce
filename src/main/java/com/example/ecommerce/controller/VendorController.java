@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class VendorController {
     /**
@@ -31,7 +33,7 @@ public class VendorController {
     }
     @PostMapping("/vendors")
     public VendorDto updateUserToVendor(@RequestBody VendorDto vendorDto) {
-        VendorDto vendoer =  vendorService.saveOrUpdate(vendorDto);
-        return vendoer;
+        VendorDto vendor =  vendorService.saveOrUpdate(vendorDto);
+        return vendor;
     }
 }

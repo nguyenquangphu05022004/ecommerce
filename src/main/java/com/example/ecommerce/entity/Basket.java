@@ -4,12 +4,15 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.View;
 
 @Entity
 @Data
 @NoArgsConstructor
 @Getter
+@SuperBuilder(toBuilder = true)
+@Table(name = "basket")
 public class Basket extends Base{
 
     /*

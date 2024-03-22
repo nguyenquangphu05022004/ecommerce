@@ -1,8 +1,11 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.dto.OrderDto;
 import com.example.ecommerce.dto.ProductDto;
+import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.Status;
+import com.example.ecommerce.entity.UserContactDetails;
 import com.example.ecommerce.service.impl.OrderServiceImpl;
 import com.example.ecommerce.service.impl.ProductServiceImpl;
 import com.example.ecommerce.service.impl.UserServiceImpl;
@@ -28,10 +31,12 @@ public class OrderController {
         this.userService = userService;
     }
 
-    @GetMapping("/orders/product/{productId}/*")
+    @GetMapping("/orders/product/{productId}/**")
     public String getFormCheckOut(@PathVariable("productId") Long productId,
                                   Model model) {
         ProductDto productDto = productService.findById(productId);
+        UserDto userDto = userService.findUserByUsername(SecurityUtils.username());
+        model.addAttribute("user", userDto);
         model.addAttribute("product", productDto);
         return "order";
     }
@@ -48,8 +53,7 @@ public class OrderController {
     @PostMapping("/orders")
     @ResponseBody
     public OrderDto createOrder(@RequestBody OrderDto orderDto) {
-        OrderDto o = orderDto;
-        System.out.println(o);
+        orderService.saveOrUpdate(orderDto);
         return null;
     }
 }
