@@ -1,5 +1,6 @@
 package com.example.ecommerce.dto;
 
+import com.example.ecommerce.entity.Image;
 import com.example.ecommerce.entity.Role;
 import com.example.ecommerce.entity.UserContactDetails;
 import lombok.*;
@@ -16,7 +17,7 @@ public class UserDto extends BaseDto{
     private String username;
     private String password;
     private String email;
-    private String thumbnail;
+    private Image avatar;
     private Role role;
     private UserContactDetails userContactDetails;
     private BasketDto basket;

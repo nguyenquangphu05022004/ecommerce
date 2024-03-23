@@ -4,6 +4,7 @@ import com.example.ecommerce.entity.*;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class ProductDto extends BaseDto {
     private String description;
     private Language language;
     private List<EvaluationDto> evaluations = new ArrayList<>();
+    private MultipartFile multipartFile;
 
     public Integer getAverageEvaluation() {
         Integer totalRate = 0;

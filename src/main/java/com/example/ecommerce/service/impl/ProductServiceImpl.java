@@ -25,6 +25,7 @@ public class ProductServiceImpl implements IProductService {
 
     private final ProductRepository productRepository;
     private final VendorRepository vendorRepository;
+
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository,
                               VendorRepository vendorRepository) {
@@ -59,20 +60,25 @@ public class ProductServiceImpl implements IProductService {
     public ProductDto saveOrUpdate(ProductDto productDto) {
         Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username());
         Product product = new Product();
-        if(productDto.getId() != null) {
+        if (productDto.getId() != null) {
 
         } else {
             product = (Product) Convert.PRO.toEntity(productDto);
         }
+        SystemUtils.FILES_STORAGE_SERVICE
+                .saveFile(productDto.getMultipartFile(),
+                        SystemUtils.FOLDER_PRODUCT_IMAGE);
         product.setVendor(vendor);
+        product.setThumbnail(productDto.getMultipartFile().getOriginalFilename());
         return (ProductDto) Convert.PRO.toDto(productRepository.save(product));
     }
 
     @Override
     public List<ProductDto> searchProductsByName(String name) {
-        List<Product> products = productRepository.findAllByLanguageNameEnOrNameVn(name.toLowerCase());
+        List<Product> products = productRepository
+                .findAllByLanguageNameEnOrNameVn(name.toLowerCase());
         return products.stream()
-                .map(entity -> (ProductDto)Convert.PRO.toDto(entity))
+                .map(entity -> (ProductDto) Convert.PRO.toDto(entity))
                 .collect(Collectors.toList());
     }
 
@@ -80,7 +86,7 @@ public class ProductServiceImpl implements IProductService {
     public List<ProductDto> findProductByCategoryId(Long categoryId) {
         List<Product> products = productRepository.findByCategoryId(categoryId);
         return products.stream()
-                .map((entity) -> (ProductDto)Convert.PRO.toDto(entity))
+                .map((entity) -> (ProductDto) Convert.PRO.toDto(entity))
                 .collect(Collectors.toList());
     }
 
@@ -89,23 +95,24 @@ public class ProductServiceImpl implements IProductService {
                                                               Long categoryId,
                                                               int page,
                                                               Sort sort) {
-        return searchByCondition(name , categoryId, page, sort);
+        return searchByCondition(name, categoryId, page, sort);
     }
 
     @Override
     public List<ProductDto> searchProductsByNameAndCategoryId(String name, Long categoryId, int page) {
-        return searchByCondition(name , categoryId, page, null);
+        return searchByCondition(name, categoryId, page, null);
     }
+
     private List<ProductDto> searchByCondition(String name, Long categoryId, int page, Sort sort) {
         Pageable paging;
-        if(sort == null) paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
+        if (sort == null) paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
         else paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM, sort);
         Page<Product> pages = productRepository
                 .findAllByLanguageNameEnOrNameVnAAndCategory(name, categoryId, paging);
         SystemUtils.totalPage = pages.getTotalPages();
         List<Product> products = pages.getContent();
         return products.stream()
-                .map((entity) -> (ProductDto)Convert.PRO.toDto(entity))
+                .map((entity) -> (ProductDto) Convert.PRO.toDto(entity))
                 .collect(Collectors.toList());
     }
 
@@ -114,34 +121,35 @@ public class ProductServiceImpl implements IProductService {
         String username = SecurityUtils.username();
         return productRepository.findAllByVendorUserUsername(username)
                 .stream()
-                .map(e -> (ProductDto)Convert.PRO.toDto(e))
+                .map(e -> (ProductDto) Convert.PRO.toDto(e))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ProductDto> findAllByVendor(Long vendorId, Integer page, Sort sort) {
         Pageable paging = null;
-        if(sort == null) paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
+        if (sort == null) paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
         else paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM, sort);
         Page<Product> productPages = productRepository.findAllByVendorId(vendorId, paging);
         SystemUtils.totalPage = productPages.getTotalPages();
         return productPages.getContent()
                 .stream()
-                .map(e -> (ProductDto)Convert.PRO.toDto(e))
+                .map(e -> (ProductDto) Convert.PRO.toDto(e))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ProductDto> findAll(int page, Sort sort) {
         Pageable paging = null;
-        if(sort == null) paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
+        if (sort == null) paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
         else paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM, sort);
         Page<Product> productPages = productRepository.findAll(paging);
         SystemUtils.totalPage = productPages.getTotalPages();
         return productPages.getContent()
                 .stream()
-                .map(e -> (ProductDto)Convert.PRO.toDto(e))
+                .map(e -> (ProductDto) Convert.PRO.toDto(e))
                 .collect(Collectors.toList());
     }
+
 
 }

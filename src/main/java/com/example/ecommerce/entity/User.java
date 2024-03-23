@@ -20,8 +20,11 @@ public class User extends Base{
     private String password;
     @Column(length = 50)
     private String email;
-    @Column(columnDefinition = "text")
-    private String thumbnail;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private Image avatar;
+
     @Enumerated(EnumType.STRING)
     private Role role;
     @Embedded

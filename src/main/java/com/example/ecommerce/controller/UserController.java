@@ -38,4 +38,15 @@ public class UserController {
         model.addAttribute("users", userDtos);
         return "admin/user/list-users";
     }
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("oldPassword") String oldPass,
+                                 @RequestParam("newPassword") String newPass,
+                                 @RequestParam("reNewPassword") String reNewPassword) {
+      if(newPass.isEmpty() || reNewPassword.isEmpty() || !newPass.equals(reNewPassword)) {
+          return "redirect:/change-password?error=true";
+      } else {
+          userService.changePassword(oldPass, newPass);
+          return "redirect:/change-password?status=true";
+      }
+    }
 }

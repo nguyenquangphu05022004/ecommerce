@@ -55,6 +55,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET,"/shop", "/home",
                             "/sign-up", "/login", "/user/**", "/products/**",
                             "/admin/css/**", "/admin/js/**", "/admin/lib/**",
+                            "/forget-password",
                             "/admin/scss/**")
                     .permitAll()
                     .requestMatchers("/admin/home").hasAnyAuthority(Role.VENDOR.getAuthority(), Role.ADMIN.getAuthority())

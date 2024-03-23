@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class HomeController {
     private final ICategoryService categoryService;
     private final ITrackProductSellerService trackProductSellerService;
     private final IUserService userService;
+
     @Autowired
     public HomeController(@Qualifier("productService") IProductService productService,
                           @Qualifier("categoryService") ICategoryService categoryService,
@@ -37,10 +39,11 @@ public class HomeController {
         this.trackProductSellerService = trackProductSellerService;
         this.userService = userService;
     }
+
     /**
      * Chức năng:
-     *      1, Xem danh mục, sản phẩm
-     *      2, Tạo đơn hàng, giỏ hàng
+     * 1, Xem danh mục, sản phẩm
+     * 2, Tạo đơn hàng, giỏ hàng
      */
     @RequestMapping({"/", "/home"})
     public String getHomePage(Model model) {
@@ -51,6 +54,7 @@ public class HomeController {
         model.addAttribute("categories", categoryDtos);
         return "index";
     }
+
     @GetMapping("/shop")
     public String getShopPage(Model model,
                               @RequestParam(name = "page", defaultValue = "1", required = false) int page,
@@ -64,33 +68,47 @@ public class HomeController {
         model.addAttribute("page", page - 1);
         return "shop";
     }
+
     @GetMapping("/user/order")
     public String getOrderPageOfUser(Model model) {
         return "orders-user";
     }
+
     @GetMapping("/login")
     public String getLoginPage() {
         return "login";
     }
+
     @GetMapping("/sign-up")
     public String getRegisterPage(Model model) {
         UserDto userDto = new UserDto();
         model.addAttribute("user", userDto);
         return "register";
     }
+
     @GetMapping("/vendor/seller")
     public String getPageVendorSeller() {
 //        return "admin/user/vendor-seller";
         return "contact";
     }
+
     @GetMapping("/404")
     public String getPage404() {
         return "404";
     }
+
     @GetMapping("/user/profile")
     public String getPageUserProfile(Model model) {
         UserDto user = userService.findUserByUsername(SecurityUtils.username());
         model.addAttribute("user", user);
         return "profile";
+    }
+    @GetMapping("/change-password")
+    public String getPageChangePassword() {
+        return "change-password";
+    }
+    @GetMapping("/forget-password")
+    public String getPageForgetPassword() {
+        return "forget-password";
     }
 }
