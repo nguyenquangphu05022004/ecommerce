@@ -3,7 +3,10 @@ package com.example.ecommerce.dto;
 import com.example.ecommerce.entity.Image;
 import com.example.ecommerce.entity.Role;
 import com.example.ecommerce.entity.UserContactDetails;
-import lombok.*;
+import com.example.ecommerce.entity.Verify;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
@@ -22,5 +25,6 @@ public class UserDto extends BaseDto{
     private UserContactDetails userContactDetails;
     private BasketDto basket;
     private VendorDto vendor;
+    private Verify verify;
     private List<EvaluationDto> feedBacks = new ArrayList<>();
 }

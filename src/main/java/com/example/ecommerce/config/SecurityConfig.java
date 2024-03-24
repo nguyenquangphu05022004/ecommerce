@@ -56,11 +56,13 @@ public class SecurityConfig {
                             "/sign-up", "/login", "/user/**", "/products/**",
                             "/admin/css/**", "/admin/js/**", "/admin/lib/**",
                             "/forget-password",
-                            "/admin/scss/**")
+                            "/admin/scss/**", "/forget-password/new-pass")
                     .permitAll()
                     .requestMatchers("/admin/home").hasAnyAuthority(Role.VENDOR.getAuthority(), Role.ADMIN.getAuthority())
                     .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.getAuthority())
-                    .requestMatchers(HttpMethod.POST, "/register").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/register",
+                            "/send-email/forgot-password",
+                            "/forget-password/new-pass").permitAll()
                     .requestMatchers( "/vendor/**", "/vendors")
                     .hasAnyAuthority(Role.VENDOR.getAuthority(), Role.ADMIN.getAuthority())
                     .anyRequest().authenticated();

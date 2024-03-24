@@ -1,7 +1,10 @@
 package com.example.ecommerce.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
@@ -33,4 +36,6 @@ public class User extends Base{
     private Vendor vendor;
     @OneToMany(mappedBy = "user")
     private List<Evaluation> feedBacks = new ArrayList<>();
+    @OneToOne(mappedBy = "user")
+    private Verify verify;
 }

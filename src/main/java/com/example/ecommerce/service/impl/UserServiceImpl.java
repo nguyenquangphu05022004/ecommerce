@@ -3,6 +3,7 @@ package com.example.ecommerce.service.impl;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.entity.Image;
 import com.example.ecommerce.entity.Role;
+import com.example.ecommerce.entity.Verify;
 import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.User;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service("userService")
@@ -87,14 +89,12 @@ public class UserServiceImpl implements IUserService {
         return false;
     }
 
-    @Override
-    public boolean forgetPassword(String email) {
-        return false;
-    }
+
 
     @Override
     public void updateAvatar(MultipartFile multipartFile) {
         try {
+
             User user = userRepository.findByUsername(SecurityUtils.username()).get();
             SystemUtils.FILES_STORAGE_SERVICE
                     .deleteFile(user.getAvatar().getName(),
@@ -108,5 +108,10 @@ public class UserServiceImpl implements IUserService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public boolean isExistsEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }
