@@ -7,6 +7,9 @@ import com.example.ecommerce.repository.TrackProductSellerRepository;
 import com.example.ecommerce.service.ITrackProductSellerService;
 import com.example.ecommerce.utils.Convert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,23 +25,21 @@ public class TrackProductServiceImpl implements ITrackProductSellerService {
     }
 
     @Override
-    public List<TrackProductSellerDto> getListTop9ByNumberOfSold() {
-        List<TrackProductSeller> trackProductSellers =
-                trackProductSellerRepository
-                        .findAllBySelectTop9ByNumberOfProductsSoldDESQuC();
-        List<TrackProductSellerDto> results =
-                trackProductSellers
-                        .stream()
-                        .map(trackEntity -> {
-                            return TrackProductSellerDto
-                                    .builder()
-                                    .id(trackEntity.getId())
-                                    .product((ProductDto) Convert.PRO.
-                                            toDto(trackEntity.getProduct()))
-                                    .numberOfProductsSold(trackEntity.
-                                            getNumberOfProductsSold())
-                                    .build();
-                        }).collect(Collectors.toList());
-        return results;
+    public List<TrackProductSellerDto> getListTopNumberByNumberOfSold( int page, int size) {
+        Pageable paging = PageRequest.of(page - 1, size,
+                Sort.by("numberOfProductsSold").descending());
+        List<TrackProductSeller> trackProductSellers = trackProductSellerRepository
+                .findAll(paging).getContent();
+        return trackProductSellers.stream()
+                .map(trackEntity -> {
+                    return TrackProductSellerDto
+                            .builder()
+                            .id(trackEntity.getId())
+                            .product((ProductDto) Convert.PRO.
+                                    toDto(trackEntity.getProduct()))
+                            .numberOfProductsSold(trackEntity.
+                                    getNumberOfProductsSold())
+                            .build();
+                }).collect(Collectors.toList());
     }
 }

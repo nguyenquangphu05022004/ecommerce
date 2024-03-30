@@ -3,8 +3,10 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.dto.CategoryDto;
 import com.example.ecommerce.dto.ProductDto;
+import com.example.ecommerce.dto.SortProductType;
 import com.example.ecommerce.service.impl.CategoryServiceImpl;
 import com.example.ecommerce.service.impl.ProductServiceImpl;
+import com.example.ecommerce.utils.SortUtils;
 import com.example.ecommerce.utils.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -72,29 +74,23 @@ public class ProductController {
         return products;
     }
 
+
     @GetMapping("/shop/products/category/{categoryId}/search")
     public String getAllProductsByKeywordNameAndCategory(
             @RequestParam("query") String query,
             @PathVariable("categoryId") Long categoryId,
             @RequestParam(name = "page", defaultValue = "1", required = false) int page,
-            @RequestParam(name = "sortBy", required = false, defaultValue = "null") String sortBy,
-            @RequestParam(name = "sort", required = false, defaultValue = "DESC") String sort,
             Model model) {
-        Sort sortAble = null;
-        if(!sortBy.equals("null")) sortAble = Sort.by(sort);
-        getListProductBySearchCondition(query, categoryId, page, sortAble, model, -1l);
+        getListProductBySearchCondition(query, categoryId, page, model, -1l);
         return "shop";
     }
 
     @GetMapping("/shop/vendor/{vendorId}")
     public String getListProductOfVendorById(@PathVariable Long vendorId,
                                              @RequestParam(name = "page", defaultValue = "1", required = false) int page,
-                                             @RequestParam(name = "sortBy", required = false, defaultValue = "null") String sortBy,
-                                             @RequestParam(name = "sort", required = false, defaultValue = "DESC") String sort,
                                              Model model) {
         List<CategoryDto> categoryDtos = categoryService.records();
         Sort sortAble = null;
-        if(!sortBy.equals("null")) sortAble = Sort.by(sort);
         List<ProductDto> products = productService.findAllByVendor(vendorId, page - 1, sortAble);
         model.addAttribute("products", products);
         model.addAttribute("categories", categoryDtos);
@@ -108,19 +104,25 @@ public class ProductController {
                                                       @RequestParam("query") String query,
                                                       @PathVariable("categoryId") Long categoryId,
                                                       @RequestParam(name = "page", defaultValue = "1", required = false) int page,
-                                                      @RequestParam(name = "sortBy", required = false, defaultValue = "null") String sortBy,
-                                                      @RequestParam(name = "sort", required = false, defaultValue = "DESC") String sort,
                                                       Model model) {
-        if(sortBy.equals("null")) getListProductBySearchCondition(query, categoryId, page, null, model, vendorId);
-        else getListProductBySearchCondition(query, categoryId, page, Sort.by(sortBy) , model, vendorId);
+        getListProductBySearchCondition(query, categoryId, page , model, vendorId);
         return "shop";
     }
 
+    @PostMapping("/products/sort/**")
+    @ResponseBody
+    public List<ProductDto> sortProduct(@RequestParam("type") SortProductType type,
+                                        @RequestBody List<ProductDto> products
+                                        ) {
+       return  SortUtils.getListAfterSort(type, products);
+    }
+
+
+    
     private void getListProductBySearchCondition(
             String query,
             Long categoryId,
             int page,
-            Sort sort,
             Model model,
             Long vendorId
     ) {
@@ -129,7 +131,7 @@ public class ProductController {
         if (query.isEmpty() && categoryId == 0) productDtos = productService.records();
         else if (query.isEmpty() && categoryId != 0) productDtos = productService.findProductByCategoryId(categoryId);
         else if (!query.isEmpty() && categoryId == 0) productDtos = productService.searchProductsByName(query);
-        else productDtos = productService.searchProductsByNameAndCategoryId(query, categoryId, page - 1, sort);
+        else productDtos = productService.searchProductsByNameAndCategoryId(query, categoryId, page - 1);
         if(vendorId > 0) {
             List<ProductDto> products = new ArrayList<>();
             for(ProductDto pro : productDtos) {
@@ -146,4 +148,5 @@ public class ProductController {
         model.addAttribute("totalPage", SystemUtils.totalPage);
         model.addAttribute("page", page - 1);
     }
+
 }

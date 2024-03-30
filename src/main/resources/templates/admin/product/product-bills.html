@@ -1,0 +1,112 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/admin/layout.html}">
+<head>
+    <title>Danh sách thể loại</title>
+</head>
+<body>
+<section layout:fragment="body">
+    <!-- Table Start -->
+    <div class="container-fluid pt-4 px-4">
+
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Danh sách thể loại</h6>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Tên hóa đơn</th>
+                            <th scope="col">Tên sản phẩm</th>
+                            <th scope="col">Ảnh</th>
+                            <th scope="col">Giá</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Thể loại</th>
+                            <th scope="col">Thanh toán</th>
+                            <th scope="col">Đã thanh toán</th>
+                            <th scope="col">Khách hàng</th>
+                            <th scope="col">In hóa đơn</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${bills != null}" th:each="bill : ${bills}">
+                            <th scope="row" th:text="${bill.name}"></th>
+                            <th scope="row" th:text="${bill.order.product.language.nameVn}"></th>
+                            <th scope="row" ><img th:src="${bill.order.product.thumbnail}" height="100" ></th>
+                            <th scope="row" th:text="${bill.order.product.formatPrice}"></th>
+                            <th scope="row" th:text="${bill.order.product.quantity}"></th>
+                            <th scope="row" th:text="${bill.order.product.category.name}"></th>
+                            <th scope="row" th:text="${bill.order.payment.name}"></th>
+                            <th scope="row" th:if="${bill.status.name == 'SUCCESS'}">Đã thanh toán</th>
+                            <th scope="row" th:unless="${bill.status.name == 'SUCCESS'}">Chưa thanh toán</th>
+                            <th scope="row">
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Xem thông tin
+                                </a>
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Thông tin khách hàng</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th scope="col">Họ và tên</th>
+                                                            <th scope="col">Địa chỉ</th>
+                                                            <th scope="col">Số điện thoại</th>
+                                                            <th scope="col">Email</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr th:if="${bill.order.user != null && bill.order.user.userContactDetails != null}">
+                                                            <th scope="row" th:text="${bill.order.user.userContactDetails.fullName}"></th>
+                                                            <th scope="row" th:text="${bill.order.user.userContactDetails.address}"></th>
+                                                            <th scope="row" th:text="${bill.order.user.userContactDetails.phoneNumber}"></th>
+                                                            <th scope="row" th:text="${bill.order.user.email}"></th>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <th>
+                                <button class="btn btn-primary" onclick="printBill()">Print Bill</button>
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script>
+        function printBill() {
+            // Retrieve necessary data
+            // Construct bill content
+
+            // Open print dialog
+            var printWindow = window.open('', '_blank');
+            printWindow.document.open();
+            printWindow.document.write('<html><head><title>Print Bill</title></head><body>');
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            // Trigger print dialog
+            printWindow.print();
+            printWindow.close();
+        }
+    </script>
+    <!-- Table End -->
+</section>
+</body>
+</html>

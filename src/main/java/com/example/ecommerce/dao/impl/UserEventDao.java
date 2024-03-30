@@ -18,7 +18,7 @@ public class UserEventDao implements EventDAO<User> {
     public void createEvent(User user) {
         try {
             Connection connection = dataSource.getConnection();
-            String sql = "create event event_verify_code\n" +
+            String sql = "create event event_verify_code_" + user.getId() + "\n" +
                     "on schedule AT CURRENT_TIMESTAMP + INTERVAL 5 MINUTE\n" +
                     "DO\n" +
                     "    UPDATE verify SET status = 0 where user_id = ?";

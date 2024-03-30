@@ -15,6 +15,6 @@ public interface IProductService extends IGenericService<ProductDto> {
     List<ProductDto> searchProductsByNameAndCategoryId(String name, Long categoryId, int page);
     List<ProductDto> findAllByVendor();
     List<ProductDto> findAllByVendor(Long vendorId, Integer page, Sort sort);
-    List<ProductDto> findAll(int page, Sort sort);
+    List<ProductDto> findAll(int page);
 
 }

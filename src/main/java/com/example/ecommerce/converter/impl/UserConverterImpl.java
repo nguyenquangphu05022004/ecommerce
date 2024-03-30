@@ -4,6 +4,7 @@ import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.dto.BasketDto;
 import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.Basket;
+import com.example.ecommerce.entity.Image;
 import com.example.ecommerce.entity.Role;
 import com.example.ecommerce.entity.User;
 import org.modelmapper.ModelMapper;
@@ -32,12 +33,20 @@ public class UserConverterImpl implements IGenericConverter<User, UserDto> {
     @Override
     public UserDto toDto(User user) {
         if(user.getVendor() != null) user.setVendor(null);
+        if(user.getAvatar() != null) {
+            user = user.toBuilder()
+                    .avatar(user.getAvatar().toBuilder().user(null).build())
+                    .build();
+        }
         UserDto userDto =  mapper.map(user, UserDto.class);
         return userDto;
     }
 
     @Override
     public User toEntity(User user, UserDto userDto) {
-        return null;
+        return user.toBuilder()
+                .userContactDetails(userDto.getUserContactDetails())
+                .email(userDto.getEmail())
+                .build();
     }
 }

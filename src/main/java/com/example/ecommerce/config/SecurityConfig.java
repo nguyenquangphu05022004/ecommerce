@@ -62,7 +62,7 @@ public class SecurityConfig {
                     .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.getAuthority())
                     .requestMatchers(HttpMethod.POST, "/register",
                             "/send-email/forgot-password",
-                            "/forget-password/new-pass").permitAll()
+                            "/forget-password/new-pass", "/products/sort").permitAll()
                     .requestMatchers( "/vendor/**", "/vendors")
                     .hasAnyAuthority(Role.VENDOR.getAuthority(), Role.ADMIN.getAuthority())
                     .anyRequest().authenticated();

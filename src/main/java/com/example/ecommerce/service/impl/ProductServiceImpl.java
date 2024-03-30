@@ -139,11 +139,8 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductDto> findAll(int page, Sort sort) {
-        Pageable paging = null;
-        if (sort == null) paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
-        else paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM, sort);
-        Page<Product> productPages = productRepository.findAll(paging);
+    public List<ProductDto> findAll(int page) {
+        Page<Product> productPages = productRepository.findAll(PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM));
         SystemUtils.totalPage = productPages.getTotalPages();
         return productPages.getContent()
                 .stream()

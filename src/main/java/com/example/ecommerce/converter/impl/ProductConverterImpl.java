@@ -1,12 +1,10 @@
 package com.example.ecommerce.converter.impl;
 
 import com.example.ecommerce.converter.IGenericConverter;
-import com.example.ecommerce.dto.CategoryDto;
-import com.example.ecommerce.dto.EvaluationDto;
-import com.example.ecommerce.dto.ProductDto;
-import com.example.ecommerce.dto.VendorDto;
+import com.example.ecommerce.dto.*;
 import com.example.ecommerce.entity.Language;
 import com.example.ecommerce.entity.Product;
+import com.example.ecommerce.entity.TrackProductSeller;
 import com.example.ecommerce.entity.Vendor;
 import com.example.ecommerce.utils.Convert;
 import lombok.NoArgsConstructor;
@@ -29,8 +27,6 @@ public class ProductConverterImpl implements IGenericConverter<Product, ProductD
 
     @Override
     public ProductDto toDto(Product product) {
-        Language language = product.getLanguage()
-                .toBuilder().product(null).build();
         Vendor vendor = product.getVendor()
                 .toBuilder()
                 .products(null)
@@ -40,7 +36,9 @@ public class ProductConverterImpl implements IGenericConverter<Product, ProductD
                 .id(product.getId())
                 .description(product.getDescription())
                 .price(product.getPrice())
-                .language(language.toBuilder().product(null).build())
+                .language(LanguageDto.builder()
+                        .nameEn(product.getLanguage().getNameEn())
+                        .nameVn(product.getLanguage().getNameVn()).build())
                 .category((CategoryDto) Convert.CATE.toDto(product.getCategory()))
                 .thumbnail(product.getThumbnail())
                 .quantity(product.getQuantity())
@@ -49,6 +47,10 @@ public class ProductConverterImpl implements IGenericConverter<Product, ProductD
                                 (EvaluationDto)Convert.EVAL.toDto(evaluation))
                         .collect(Collectors.toList())
                 )
+                .trackProductSeller(TrackProductSeller.builder()
+                        .numberOfProductsSold(product.getProductSeller()
+                                .getNumberOfProductsSold())
+                        .build())
                 .vendor((VendorDto) Convert.VEND.toDto(vendor))
                 .build();
         return productDto;

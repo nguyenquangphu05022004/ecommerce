@@ -47,21 +47,20 @@ public class HomeController {
      */
     @RequestMapping({"/", "/home"})
     public String getHomePage(Model model) {
-        List<CategoryDto> categoryDtos = categoryService.records();
+        List<ProductDto> productDtos = productService.findAll(0);
         List<TrackProductSellerDto> trackProductSellerDtos =
-                trackProductSellerService.getListTop9ByNumberOfSold();
+                trackProductSellerService.getListTopNumberByNumberOfSold(1, 9);
         model.addAttribute("trackProductSellers", trackProductSellerDtos);
-        model.addAttribute("categories", categoryDtos);
+        model.addAttribute("products", productDtos);
         return "index";
     }
 
     @GetMapping("/shop")
     public String getShopPage(Model model,
                               @RequestParam(name = "page", defaultValue = "1", required = false) int page,
-                              @RequestParam(name = "sortBy", required = false, defaultValue = "null") String sortBy,
-                              @RequestParam(name = "sort", required = false, defaultValue = "DESC") String sort) {
+                              @RequestParam(name = "sortBy", required = false, defaultValue = "null") String sortBy) {
         List<CategoryDto> categoryDtos = categoryService.records();
-        List<ProductDto> productDtos = productService.findAll(page - 1, !sortBy.equals("null") ? Sort.by(sort) : null);
+        List<ProductDto> productDtos = productService.findAll(page - 1);
         model.addAttribute("categories", categoryDtos);
         model.addAttribute("products", productDtos);
         model.addAttribute("totalPage", SystemUtils.totalPage);

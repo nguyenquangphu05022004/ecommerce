@@ -14,21 +14,5 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @DataJpaTest
 class EcommerceApplicationTests {
 
-	@Autowired
-	private UserServiceImpl userService;
-	@Autowired
-	private UserRepository userRepository;
-	@Test
-	void isShouldCreateUserTrue() {
-//		UserDto user = new UserDto(
-//				"irohas2004",
-//				"123",
-//				"123@gmail.com",
-//				"ROLE_USER", null, null, null
-//		);
-//		UserDto userDto = userService.saveOrUpdate(user);
-//		System.out.println(userDto);
-
-	}
 
 }

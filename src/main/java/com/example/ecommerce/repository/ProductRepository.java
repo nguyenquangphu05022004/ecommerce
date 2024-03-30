@@ -20,6 +20,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findAllByLanguageNameEnOrNameVnAAndCategory(@Param("query") String query,
                                                               @Param("categoryId") Long categoryId,
                                                               Pageable pageable);
+    Page<Product> findAll(Pageable pageable);
+    @Query("select pro from Product  pro order by (select avg(e.rating) from Evaluation e inner join Product p on e.product.id = p.id where p.id = pro.id)")
+    Page<Product> findAllByAverageRatingWasSortDesc(Pageable pageable);
     Optional<Product> findById(Long id);
     List<Product> findByCategoryId(Long categoryId);
     List<Product> findAllByVendorUserUsername(String username);

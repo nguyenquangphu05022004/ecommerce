@@ -4,6 +4,7 @@ import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.dto.EvaluationDto;
 import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.Evaluation;
+import com.example.ecommerce.entity.User;
 import com.example.ecommerce.entity.UserContactDetails;
 import org.modelmapper.ModelMapper;
 
@@ -22,12 +23,13 @@ public class EvaluationConverter implements IGenericConverter<Evaluation, Evalua
 
     @Override
     public EvaluationDto toDto(Evaluation evaluation) {
-        UserContactDetails userContactDetails = evaluation.getUser().getUserContactDetails();
+        User user = evaluation.getUser();
         evaluation = evaluation.toBuilder()
                 .user(null).product(null).build();
         EvaluationDto evaluationDto = modelMapper.map(evaluation, EvaluationDto.class);
         evaluationDto.setUser(UserDto.builder()
-                .userContactDetails(userContactDetails)
+                .userContactDetails(user.getUserContactDetails())
+                .avatar(user.getAvatar().toBuilder().user(null).build())
                 .build());
         return evaluationDto;
     }

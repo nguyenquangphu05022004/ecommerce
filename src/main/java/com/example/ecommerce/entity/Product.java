@@ -39,8 +39,8 @@ public class Product extends Base{
     private List<Evaluation> evaluations = new ArrayList<>();
     @OneToMany(mappedBy = "product")
     private List<Order> orders = new ArrayList<>();
-    @OneToOne(mappedBy = "product")
-    private Basket basket;
+    @OneToMany(mappedBy = "product")
+    private List<Basket> basket = new ArrayList<>();
     @OneToOne(mappedBy = "product")
     private TrackProductSeller productSeller;
 }

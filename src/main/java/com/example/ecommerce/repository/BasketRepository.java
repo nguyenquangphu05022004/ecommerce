@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface BasketRepository extends JpaRepository<Basket, Long> {
     List<Basket> findAllByUserUsername(String username);
+    Optional<Basket> findByUserIdAndProductId(Long userId, Long productId);
     Long countAllByUserUsername(String username);
 //    Basket updateBasketQuantityById(Long id, Integer quantity);
 }

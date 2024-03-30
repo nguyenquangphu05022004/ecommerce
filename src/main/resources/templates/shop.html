@@ -12,7 +12,7 @@
     </style>
 </head>
 
-<body layout:fragment="body">
+<body layout:fragment="body" th:onload="initElements()">
 <!-- Fruits Shop Start-->
 <div class="container-fluid fruite" style="padding-top: 100px">
     <div class="container py-5">
@@ -21,7 +21,7 @@
                 <div class="row g-4">
                     <div class="col-xl-3">
                         <div class="d-flex">
-                            <input type="search" class="form-control p-3"
+                            <input type="search" class="form-control p-3" style="margin-right: 10px"
                                    placeholder="Tìm kiếm"
                                    name="query"
                                    id="searchProducts"
@@ -36,14 +36,15 @@
                     <div class="col-6"></div>
                     <div class="col-xl-3">
                         <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
-                            <label for="fruits">Sắp xếp mặc định:</label>
-                            <select id="fruits" name="fruitlist"
+                            <label for="sort-product">Sắp xếp mặc định:</label>
+                            <select id="sort-product" name="typeSort"
                                     class="border-0 form-select-sm bg-light me-3"
+                                    th:onchange="sortProduct()"
                             >
-                                <option value="volvo">Không</option>
-                                <option value="saab">Phổ biến</option>
-                                <option value="opel">Mua nhiều</option>
-                                <option value="audi">Giá</option>
+                                <option value="DEFAULT">Không</option>
+                                <option value="RATE_AVERAGE">Đánh giá cao</option>
+                                <option value="NUMBER_OF_SELLER">Mua nhiều</option>
+                                <option value="PRICE">Giá</option>
                             </select>
                         </div>
                     </div>
@@ -66,7 +67,6 @@
                                                     th:text="${category.name}"
                                                     th:selected="${categoryId} == ${category.id}"
                                             >
-
                                             </option>
                                         </span>
                                     </select>
@@ -74,114 +74,11 @@
                             </div>
                             <div class="col-lg-12">
                                 <div class="mb-3">
-                                    <h4 class="mb-2">Price</h4>
-                                    <input type="range" class="form-range w-100" id="rangeInput" name="rangeInput"
-                                           min="0" max="500" value="0" oninput="amount.value=rangeInput.value">
-                                    <output id="amount" name="amount" min-velue="0" max-value="500" for="rangeInput">0
-                                    </output>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="mb-3">
                                     <h4>Additional</h4>
-                                    <div class="mb-2">
-                                        <input type="radio" class="me-2" id="Categories-1" name="Categories-1"
-                                               value="Beverages">
-                                        <label for="Categories-1"> Organic</label>
-                                    </div>
-                                    <div class="mb-2">
-                                        <input type="radio" class="me-2" id="Categories-2" name="Categories-1"
-                                               value="Beverages">
-                                        <label for="Categories-2"> Fresh</label>
-                                    </div>
-                                    <div class="mb-2">
-                                        <input type="radio" class="me-2" id="Categories-3" name="Categories-1"
-                                               value="Beverages">
-                                        <label for="Categories-3"> Sales</label>
-                                    </div>
                                     <div class="mb-2">
                                         <input type="radio" class="me-2" id="Categories-4" name="Categories-1"
                                                value="Beverages">
-                                        <label for="Categories-4"> Discount</label>
-                                    </div>
-                                    <div class="mb-2">
-                                        <input type="radio" class="me-2" id="Categories-5" name="Categories-1"
-                                               value="Beverages">
-                                        <label for="Categories-5"> Expired</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <h4 class="mb-3">Featured products</h4>
-                                <div class="d-flex align-items-center justify-content-start">
-                                    <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                        <img src="user/img/featur-1.jpg" class="img-fluid rounded" alt="">
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-2">Big Banana</h6>
-                                        <div class="d-flex mb-2">
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
-                                        <div class="d-flex mb-2">
-                                            <h5 class="fw-bold me-2">2.99 $</h5>
-                                            <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-start">
-                                    <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                        <img src="user/img/featur-2.jpg" class="img-fluid rounded" alt="">
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-2">Big Banana</h6>
-                                        <div class="d-flex mb-2">
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
-                                        <div class="d-flex mb-2">
-                                            <h5 class="fw-bold me-2">2.99 $</h5>
-                                            <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-start">
-                                    <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                        <img src="user/img/featur-3.jpg" class="img-fluid rounded" alt="">
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-2">Big Banana</h6>
-                                        <div class="d-flex mb-2">
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star text-secondary"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
-                                        <div class="d-flex mb-2">
-                                            <h5 class="fw-bold me-2">2.99 $</h5>
-                                            <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-center my-4">
-                                    <a href="#"
-                                       class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100">Vew
-                                        More</a>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="position-relative">
-                                    <img src="user/img/banner-fruits.jpg" class="img-fluid w-100 rounded" alt="">
-                                    <div class="position-absolute"
-                                         style="top: 50%; right: 10px; transform: translateY(-50%);">
-                                        <h3 class="text-secondary fw-bold">Fresh <br> Fruits <br> Banner</h3>
+                                        <label for="Categories-4">Giảm giá</label>
                                     </div>
                                 </div>
                             </div>
@@ -189,73 +86,24 @@
                     </div>
                     <div class="col-lg-9">
                         <div class="row g-4 justify-content-center" id="products">
-                            <div class="col-md-6 col-lg-6 col-xl-4" th:each="product:${products}">
-                                <div class="rounded position-relative fruite-item">
-                                    <div class="fruite-img">
-                                        <img th:src="${product.thumbnail}"
-                                             class="img-fluid-redesign w-100 rounded-top"
-                                             alt=""
-                                        >
-                                    </div>
-                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                                         style="top: 10px; left: 10px;"
-
-                                    >
-                                        Thể loại: [[${product.category.name}]]
-                                    </div>
-                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                        <div class="col-12 text-truncate h4">
-                                            Tên: [[${product.language.nameVn}]]
-                                        </div>
-                                        <p>
-                                        <div class="col-12 text-truncate">
-                                            Mô tả: [[${product.description}]]
-                                        </div>
-                                        </p>
-                                        <div class="d-flex justify-content-between flex-lg-wrap mb-4">
-                                            <p class="text-dark fs-5 fw-bold mb-0">Giá: [[${product.formatPrice}]]</p>
-                                        </div>
-                                        <div class="d-flex justify-content-between flex-lg-wrap mb-4">
-                                            <a th:href="@{/shop/vendor/{vendorId}(vendorId=${product.vendor.id})}"
-                                               class="text-dark fs-5 fw-bold mb-0">Shop:
-                                                [[${product.vendor.shopName}]]</a>
-                                        </div>
-                                        <div class="row text-center">
-                                            <div class="col-lg-6">
-                                                <a href="/orders/product/[[${product.id}]]/[[${product.name}]]"
-                                                   class="btn border border-secondary rounded-pill px-3 text-primary w-100">
-                                                    <i
-                                                            class="fa fa-shopping-bag me-2 text-primary"></i>Mua</a>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <a href="##"
-                                                   class="btn border border-secondary rounded-pill px-3 text-primary w-100">
-                                                    <i
-                                                            class="fa fa-shopping-bag me-2 text-primary"></i>Thêm</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
                         <div class="col-12">
                             <div id="page" class="pagination d-flex justify-content-center mt-5">
-                                <script >
+                                <script>
                                     const pageElement = document.getElementById("page");
                                     const total = [[${totalPage}]]
                                     let html = ''
-                                    if(total > 0) {
+                                    if (total > 0) {
                                         html += `<a style="cursor: pointer" onclick='getPage(0)' class="rounded">&laquo;</a>`
                                     }
-                                    for(let i = 0; i < total; i++) {
-                                        if(i === [[${page}]]) {
-                                           html +=  `<a class="rounded active disabled">${i + 1}</a>`
+                                    for (let i = 0; i < total; i++) {
+                                        if (i === [[${page}]]) {
+                                            html += `<a class="rounded active disabled">${i + 1}</a>`
                                         } else {
-                                            html +=  `<a style="cursor: pointer" onclick='getPage(${i})' class="rounded">${i + 1}</a>`
+                                            html += `<a style="cursor: pointer" onclick='getPage(${i})' class="rounded">${i + 1}</a>`
                                         }
                                     }
-                                    if(total > 0) {
+                                    if (total > 0) {
                                         html += `<a  style="cursor: pointer" onclick='getPage(${total - 1})' class="rounded">&raquo;</a>`
                                     }
                                     pageElement.innerHTML = html
@@ -271,6 +119,66 @@
 <!-- Fruits Shop End-->
 
 <script th:inline="javascript">
+
+    function getElementProduct(product) {
+        return `<div class="col-md-6 col-lg-6 col-xl-4">
+            <div class="rounded position-relative fruite-item">
+                <div class="fruite-img">
+                    <img src="${product.thumbnail}"
+                         class="img-fluid-redesign w-100 rounded-top"
+                         alt=""
+                    />
+                </div>
+                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
+                     style="top: 10px; left: 10px;"
+
+                >
+                    Thể loại: ${product.category.name}
+                </div>
+                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                    <div class="col-12 text-truncate h4">
+                        Tên: ${product.language.nameVn}
+                    </div>
+                    <p>
+                        <div class="col-12 text-truncate">
+                            Mô tả: ${product.description}
+                        </div>
+                    </p>
+                    <div class="d-flex justify-content-between flex-lg-wrap mb-4">
+                        <p class="text-dark fs-5 fw-bold mb-0">Giá: ${product.formatPrice}</p>
+                    </div>
+                    <div class="d-flex justify-content-between flex-lg-wrap mb-4">
+                        <a href="/shop/vendor/${product.vendor.id}"
+                           class="text-dark fs-5 fw-bold mb-0">Shop:
+                            ${product.vendor.shopName}</a>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-lg-6">
+                            <a href="/products/${product.id}/${product.language.nameVn}"
+                               class="btn border border-secondary rounded-pill px-3 text-primary w-100">
+                                <i
+                                    class="fa fa-shopping-bag me-2 text-primary"></i>Mua</a>
+                        </div>
+                        <div class="col-lg-6">
+                            <a href="##"
+                               class="btn border border-secondary rounded-pill px-3 text-primary w-100">
+                                <i
+                                    class="fa fa-shopping-bag me-2 text-primary"></i>Thêm</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`
+    }
+    function initElements() {
+        const products = [[${products}]];
+        let e = '';
+        products.forEach(product => {
+            e += getElementProduct(product);
+        })
+
+        $("#products").html(e)
+    }
     function getDateSearch() {
         const keyWord = document.getElementById("searchProducts").value;
         const categoryId = document.getElementById("categoryId").value;
@@ -280,16 +188,19 @@
         }
         return dataSearch;
     }
+
     function getPage(page) {
         window.location.href = getHrefSearch(getDateSearch(), page)
     }
+
     function searchProductByKeyWordAndCategoryId() {
         window.location.href = getHrefSearch(getDateSearch(), 0)
     }
+
     function getHrefSearch(dataSearch, page) {
         const host = document.location.origin
         let path = document.location.pathname;
-        if(path.includes("vendor")) {
+        if (path.includes("vendor")) {
             path = path.substring(0, 14) + `/products/category/${dataSearch.categoryId}/search`
         } else {
             path = `/shop/products/category/${dataSearch.categoryId}/search`
@@ -300,23 +211,26 @@
 
     }
 
-
-
-    function callApi(type, data, theUrl, success) {
-        const url = new URL(theUrl, document.location);
-        console.log(url.href)
+    function sortProduct() {
+        const dataSort = [[${products}]];
+        const type = document.getElementById("sort-product").value;
+        const url = new URL(`[(@{/products/sort})]`, location).href + '?type=' + type;
         $.ajax({
-            type: type,
-            url: url.href,
-            data: data,
+            type:'post',
+            url: url,
+            data: JSON.stringify(dataSort),
             headers: {
                 "Content-Type": "application/json"
             },
-            success: function (data) {
-                success(data);
+            success:function (data) {
+                let html = ``;
+                data.forEach(product => {
+                    html += getElementProduct(product);
+                })
+                $("#products").html(html);
             },
             error: function () {
-                alert("Error")
+                alert("error sort product")
             }
         })
     }

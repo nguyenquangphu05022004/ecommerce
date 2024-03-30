@@ -34,7 +34,7 @@ public class UserController {
     @PostMapping("/register")
     public String registerAccount(@ModelAttribute UserDto userDto) {
         userService.saveOrUpdate(userDto);
-        return "redirect:/home";
+        return "redirect:/login";
     }
 
     @GetMapping("/admin/users")
@@ -42,6 +42,12 @@ public class UserController {
         List<UserDto> userDtos = userService.records();
         model.addAttribute("users", userDtos);
         return "admin/user/list-users";
+    }
+
+    @PostMapping("/users")
+    @ResponseBody
+    public UserDto updateUserProfile(@RequestBody UserDto userDto)   {
+        return userService.saveOrUpdate(userDto);
     }
 
     @PostMapping("/change-password")

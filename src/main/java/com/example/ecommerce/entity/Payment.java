@@ -6,6 +6,7 @@ public enum Payment {
     private String name;
     Payment(String name) {
         this.name = name;
+
     }
 
     public String getName() {

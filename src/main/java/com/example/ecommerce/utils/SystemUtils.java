@@ -22,4 +22,16 @@ public class SystemUtils {
         }
         return builder.toString();
     }
+    public static String getFormatNumber(Integer value) {
+        String number = String.valueOf(value);
+        int n = number.length();
+        StringBuilder builder = new StringBuilder();
+        while(n > 0) {
+            StringBuilder rev = new StringBuilder(number.substring(n - 3 >= 0 ? n - 3 : 0, n));
+            builder.append(rev.reverse());
+            if(n - 3 > 0) builder.append(",");
+            n -= 3;
+        }
+        return builder.reverse().toString();
+    }
 }

@@ -4,6 +4,7 @@ import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.dto.BillDto;
 import com.example.ecommerce.dto.OrderDto;
 import com.example.ecommerce.entity.Bill;
+import com.example.ecommerce.entity.Payment;
 import com.example.ecommerce.utils.Convert;
 
 public class BillConverterImpl implements IGenericConverter<Bill, BillDto> {

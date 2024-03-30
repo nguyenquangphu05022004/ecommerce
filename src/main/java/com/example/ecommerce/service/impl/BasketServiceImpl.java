@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,11 +29,12 @@ public class BasketServiceImpl implements IGenericService<BasketDto>, IBasketSer
 
     @Override
     public List<BasketDto> records() {
-        return basketRepository
-                .findAllByUserUsername(SecurityUtils.username())
-                .stream()
+        List<Basket> baskets = basketRepository
+                .findAllByUserUsername(SecurityUtils.username());
+        return baskets.stream()
                 .map(entity -> (BasketDto) Convert.BASKET.toDto(entity))
                 .collect(Collectors.toList());
+
     }
 
     @Override
@@ -52,14 +54,27 @@ public class BasketServiceImpl implements IGenericService<BasketDto>, IBasketSer
 
     @Override
     public BasketDto saveOrUpdate(BasketDto basketDto) {
-        User user = userRepository.findByUsername(SecurityUtils.username()).get();
-        Basket basket = (Basket) Convert.BASKET.toEntity(basketDto);
+        Basket basket = null;
         if(basketDto.getId() != null) {
+            basket = basketRepository.findById(basketDto.getId()).get();
             basket.setQuantity(basketDto.getQuantity());
+            return (BasketDto) Convert.BASKET.toDto(
+                    basketRepository.save(basket)
+            );
+        } else {
+            User user = userRepository.findByUsername(SecurityUtils.username()).get();
+            Optional<Basket> optionalBasket = basketRepository
+                    .findByUserIdAndProductId(user.getId(),
+                            basketDto.getProduct().getId());
+            if(optionalBasket.isEmpty()) {
+                basket = (Basket) Convert.BASKET.toEntity(basketDto);
+                basket.setUser(user);
+            } else {
+                basket = optionalBasket.get();
+                basket.setQuantity(basket.getQuantity() + 1);
+            }
+            basketRepository.save(basket);
+            return basketDto;
         }
-        basket.setUser(user);
-        return (BasketDto) Convert.BASKET.toDto(
-                basketRepository.save(basket)
-        );
     }
 }

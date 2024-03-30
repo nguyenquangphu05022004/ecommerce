@@ -5,7 +5,8 @@ import com.example.ecommerce.entity.Status;
 
 import java.util.List;
 
-public interface IBillService {
+public interface IBillService extends IGenericService<BillDto>{
     BillDto saveOrUpdate(BillDto billDto);
     List<BillDto> getBillsByStatus(Status status);
+    boolean updateStatus(Long billId);
 }

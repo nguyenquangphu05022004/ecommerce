@@ -34,7 +34,7 @@
                         <p class="mb-0 mt-4" th:text="${basket.product.language.nameVn}"></p>
                     </td>
                     <td>
-                        <p class="mb-0 mt-4" th:text="${basket.product.price}"></p>
+                        <p class="mb-0 mt-4" th:text="${basket.product.formatPrice}"></p>
                     </td>
                     <td>
                         <div class="input-group quantity mt-4" style="width: 100px;">
@@ -49,12 +49,12 @@
                             <input type="text"
                                    class="form-control form-control-sm text-center border-0"
                                    th:value="${basket.quantity}"
-                                   id="productQuantity"
+                                   th:id="${'productQuantity' + basket.id}"
                                    min=1>
                             <div class="input-group-btn">
                                 <button
                                         class="btn btn-sm btn-plus rounded-circle bg-light border"
-                                    th:onclick="updateQuantityProduct([[${basket}]], 1)"
+                                    th:onclick="updateQuantityProduct([[${basket.id}]], 1)"
                                 >
                                     <i class="fa fa-plus"></i>
                                 </button>
@@ -62,7 +62,7 @@
                         </div>
                     </td>
                     <td>
-                        <p class="mb-0 mt-4" th:text="${basket.totalPrice}" id = "totalPrice"></p>
+                        <p class="mb-0 mt-4" th:text="${basket.formatTotalPrice}" th:id="${'totalPrice' + basket.id}"></p>
                     </td>
                     <td>
                         <button th:onclick="removeBasket([[${basket.id}]])"
@@ -90,10 +90,10 @@
     </div>
     <script th:inline="javascript">
 
-        function updateQuantityProduct(basket, number) {
-           const inputQuantity = document.getElementById("productQuantity");
+        function updateQuantityProduct(basketId, number) {
+           const inputQuantity = document.getElementById(`productQuantity${basketId}`);
            let quantity = parseInt(inputQuantity.value)
-            console.log(quantity)
+            let basket = {id:basketId}
            if(quantity + number >= 1) {
                basket.quantity = quantity + number;
                const theUrl = "[(@{/baskets})]";
@@ -103,7 +103,7 @@
                    theUrl,
                    (data) => {
                        console.log(data)
-                       $("#totalPrice").html(data.totalPrice)
+                       $(`#totalPrice${data.id}`).html(data.formatTotalPrice)
                    }
                )
            }

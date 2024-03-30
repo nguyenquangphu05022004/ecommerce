@@ -22,8 +22,8 @@ public class Basket extends Base{
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @OneToOne
-    @JoinColumn(name = "product_id")
+    @ManyToOne
+    @JoinColumn(name = "product_id", unique = false)
     private Product product;
     private Integer quantity;
 

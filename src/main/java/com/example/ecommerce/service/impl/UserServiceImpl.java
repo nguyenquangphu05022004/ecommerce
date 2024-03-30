@@ -54,13 +54,13 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDto saveOrUpdate(UserDto userDto) {
         User user = null;
-        if (userDto.getId() != null) {
-            User oldUser = GenericService.findById(userRepository, userDto.getId());
+        if (SecurityUtils.username() != null) {
+            User oldUser = userRepository.findByUsername(SecurityUtils.username()).get();
             user = (User) Convert.USER.toEntity(oldUser, userDto);
         } else {
             user = (User) Convert.USER.toEntity(userDto);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return (UserDto) Convert.USER.toDto(userRepository.save(user));
     }
 
@@ -96,9 +96,11 @@ public class UserServiceImpl implements IUserService {
         try {
 
             User user = userRepository.findByUsername(SecurityUtils.username()).get();
-            SystemUtils.FILES_STORAGE_SERVICE
-                    .deleteFile(user.getAvatar().getName(),
-                            SystemUtils.FOLDER_AVATAR);
+            if(user.getAvatar() != null) {
+                SystemUtils.FILES_STORAGE_SERVICE
+                        .deleteFile(user.getAvatar().getName(),
+                                SystemUtils.FOLDER_AVATAR);
+            }
             SystemUtils.FILES_STORAGE_SERVICE.saveFile(multipartFile, SystemUtils.FOLDER_AVATAR);
             Image avatar = Image.builder()
                     .name(multipartFile.getOriginalFilename())
