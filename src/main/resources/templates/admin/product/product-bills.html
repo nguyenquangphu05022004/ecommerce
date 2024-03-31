@@ -22,6 +22,8 @@
                             <th scope="col">Ảnh</th>
                             <th scope="col">Giá</th>
                             <th scope="col">Số lượng</th>
+                            <th scope="col">Phí ship</th>
+                            <th scope="col">Tổng</th>
                             <th scope="col">Thể loại</th>
                             <th scope="col">Thanh toán</th>
                             <th scope="col">Đã thanh toán</th>
@@ -36,7 +38,9 @@
                             <th scope="row" th:text="${bill.order.product.language.nameVn}"></th>
                             <th scope="row" ><img th:src="${bill.order.product.thumbnail}" height="100" ></th>
                             <th scope="row" th:text="${bill.order.product.formatPrice}"></th>
-                            <th scope="row" th:text="${bill.order.product.quantity}"></th>
+                            <th scope="row" th:text="${bill.order.quantity}"></th>
+                            <th scope="row" th:text="${bill.order.product.vendor.formatMoneyDelivery}"></th>
+                            <th scope="row" th:text="${bill.order.formatTotalPrice}"></th>
                             <th scope="row" th:text="${bill.order.product.category.name}"></th>
                             <th scope="row" th:text="${bill.order.payment.name}"></th>
                             <th scope="row" th:if="${bill.status.name == 'SUCCESS'}">Đã thanh toán</th>
@@ -80,7 +84,7 @@
                                 </div>
                             </th>
                             <th>
-                                <button class="btn btn-primary" onclick="printBill()">Print Bill</button>
+                                <button class="btn btn-primary" th:onclick="printBill([[${bill}]])">Print Bill</button>
                             </th>
                         </tr>
                         </tbody>
@@ -90,20 +94,95 @@
         </div>
     </div>
     </div>
-    <script>
-        function printBill() {
+    <script th:inline="javascript">
+        function printBill(bill) {
+            console.log(bill)
             // Retrieve necessary data
             // Construct bill content
 
-            // Open print dialog
             var printWindow = window.open('', '_blank');
             printWindow.document.open();
-            printWindow.document.write('<html><head><title>Print Bill</title></head><body>');
+            printWindow.document.write(`<html>
+                                <head>
+                                    <title>Print Bill</title>
+                                    <style>
+                                        body {
+                                            font-family: Arial, sans-serif;
+                                            margin: 20px;
+                                        }
+                                        table {
+                                            width: 100%;
+                                            border-collapse: collapse;
+                                        }
+                                        th, td {
+                                            border: 1px solid #ddd;
+                                            padding: 8px;
+                                            text-align: left;
+                                        }
+                                        th {
+                                            background-color: #f2f2f2;
+                                        }
+                                        .qr-code {
+                                            text-align: center;
+                                            margin-top: 20px;
+                                        }
+                                    </style>
+                                </head>
+                                <body>`);
+            printWindow.document.write(`<h2>Thông tin người mua</h2>
+                                        <table>
+                                          <thead>
+                                            <tr>
+                                              <th>Họ và tên</th>
+                                              <th>Số điện thoại</th>
+                                              <th>Địa chỉ</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr>
+                                                <th scope="row">${bill.order.user.userContactDetails.fullName}</th>
+                                                <th scope="row">${bill.order.user.userContactDetails.phoneNumber}</th>
+                                                <th scope="row">${bill.order.user.userContactDetails.address}</th>
+                                            </tr>
+                                          </tbody>
+                                        </table>`)
+            printWindow.document.write(`<h2>Hóa đơn sản phẩm: ${bill.order.product.language.nameVn}</h2>
+                                        <table>
+                                          <thead>
+                                            <tr>
+                                              <th>Sản phẩm</th>
+                                              <th>Giá</th>
+                                              <th>Số lượng</th>
+                                              <th>Phí ship</th>
+                                              <th>Tổng</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr>
+                                              <td>${bill.order.product.language.nameVn}</td>
+                                              <td>${bill.order.product.formatPrice}</td>
+                                              <td>${bill.order.quantity}</td>
+                                              <td>${bill.order.product.vendor.formatMoneyDelivery}</td>
+                                              <td>${bill.order.formatTotalPrice}</td>
+                                            </tr>
+                                            <tr>
+                                              <td colspan="4" style="text-align:right">Tổng:</td>
+                                              <td>${bill.order.formatTotalPrice}</td>
+                                            </tr>
+                                          </tbody>
+                                        </table>`)
+            printWindow.document.write(`<div class="qr-code">
+                                            <h3>Scan QR Code khi giao hàng thành công</h3>
+                                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${bill.urlUpdateStatus}" alt="QR Code">
+                                        </div>`)
             printWindow.document.write('</body></html>');
             printWindow.document.close();
             // Trigger print dialog
-            printWindow.print();
-            printWindow.close();
+
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 2000)
         }
     </script>
     <!-- Table End -->

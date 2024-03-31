@@ -36,7 +36,6 @@ public class OrderConverter implements IGenericConverter<Order, OrderDto> {
                 .product((ProductDto) Convert.PRO.toDto(order.getProduct()))
                 .quantity(order.getQuantity())
                 .status(order.getBill().getStatus().getName())
-                .totalPrice(order.getTotalPrice())
                 .user(UserDto.builder()
                         .userContactDetails(order.getUser().getUserContactDetails())
                         .build())

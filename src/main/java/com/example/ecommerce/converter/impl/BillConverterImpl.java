@@ -17,6 +17,7 @@ public class BillConverterImpl implements IGenericConverter<Bill, BillDto> {
     @Override
     public BillDto toDto(Bill bill) {
         BillDto billDto = BillDto.builder()
+                .id(bill.getId())
                 .name(bill.getName())
                 .order((OrderDto) Convert.ORDER.toDto(bill.getOrder()))
                 .status(bill.getStatus())

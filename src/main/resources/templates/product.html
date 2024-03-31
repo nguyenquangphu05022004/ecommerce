@@ -59,9 +59,9 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
-                                <a th:href="@{/orders/product/{productId}/{productName}(productId = ${product.id}, productName = ${product.language.nameVn})}"
+                                <button th:onclick="red_order([[${product.id}]], [[${product.language.nameVn}]])"
                                    class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i
-                                        class="fa fa-shopping-bag me-2 text-primary"></i>Mua ngay</a>
+                                        class="fa fa-shopping-bag me-2 text-primary"></i>Mua ngay</button>
                             </div>
                             <div class="col-lg-6">
                                 <a href="##" th:onclick="createBasket([[${product.id}]])"
@@ -531,6 +531,11 @@
         }
         valueRating = value
         console.log("valueRating: ", valueRating)
+    }
+    function red_order(productId, productName) {
+        const quantity = document.getElementById("quantity").value;
+        const url = new URL(`[(@{/orders/product/${productId}/${productName}?numberOfProduct=${quantity}})]`, location).href;
+        window.location.href = url;
     }
 </script>
 </body>

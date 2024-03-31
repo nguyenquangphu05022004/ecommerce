@@ -15,4 +15,5 @@ public class BillDto extends BaseDto{
     private String name;
     private Status status;
     private OrderDto order;
+    private String urlUpdateStatus;
 }

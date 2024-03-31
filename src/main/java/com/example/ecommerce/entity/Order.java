@@ -26,12 +26,5 @@ public class Order extends Base{
     private Payment payment;
     @OneToOne(mappedBy = "order")
     private Bill bill;
-    @Transient
-    public Integer getTotalPrice() {
-        if(quantity != null && product != null && product.getPrice() != null) {
-            return quantity * product.getPrice();
-        }
-        return 0;
-    }
 
 }

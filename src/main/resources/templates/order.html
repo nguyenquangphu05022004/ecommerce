@@ -19,7 +19,13 @@
                             <input type="text"
                                    class="form-control"
                                    name="fullName"
+                                   th:if="${user.userContactDetails != null}"
                                    th:value="${user.userContactDetails.fullName}"
+                            >
+                            <input type="text"
+                                   class="form-control"
+                                   name="fullName"
+                                   th:unless="${user.userContactDetails != null}"
                             >
                         </div>
                     </div>
@@ -29,8 +35,14 @@
                             <input type="tel"
                                    class="form-control"
                                    name="phoneNumber"
+                                   th:if="${user.userContactDetails != null}"
                                    th:value="${user.userContactDetails.phoneNumber}"
 
+                            >
+                            <input type="text"
+                                   class="form-control"
+                                   name="phoneNumber"
+                                   th:unless="${user.userContactDetails != null}"
                             >
                         </div>
                     </div>
@@ -42,8 +54,13 @@
                             <input type="text"
                                    class="form-control"
                                    name="address"
+                                   th:if="${user.userContactDetails != null}"
                                    th:value="${user.userContactDetails.address}"
-
+                            >
+                            <input type="text"
+                                   class="form-control"
+                                   name="address"
+                                   th:unless="${user.userContactDetails != null}"
                             >
                         </div>
                     </div>
@@ -52,13 +69,18 @@
                             <label class="form-label my-3">Tỉnh<sup>*</sup></label>
                             <input type="text" class="form-control"
                                    name="province"
+                                   th:if="${user.userContactDetails != null}"
                                    th:value="${user.userContactDetails.province}"
-
+                            >
+                            <input type="text"
+                                   class="form-control"
+                                   name="province"
+                                   th:unless="${user.userContactDetails != null}"
                             >
                         </div>
                     </div>
                 </div>
-                <div class="form-item">
+                <div class="forfeam-item">
                     <label class="form-label my-3">Email<sup>*</sup></label>
                     <input type="email" class="form-control"
                            name="email"
@@ -67,6 +89,7 @@
                     >
                 </div>
                 <hr>
+                <p class="text-dark fw-bold h4">Shop: [[${product.vendor.shopName}]]</p>
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -88,10 +111,10 @@
                                 </div>
                             </th>
                             <td class="py-5" th:text="${product.language.nameVn}"></td>
-                            <td class="py-5" th:text="${product.price}">$69.00</td>
-                            <td class="py-5">2</td>
-                            <td class="py-5">100000</td>
-                            <td class="py-5">$138.00</td>
+                            <td class="py-5" th:text="${product.formatPrice}"></td>
+                            <td class="py-5">[[${param.numberOfProduct}]]</td>
+                            <td class="py-5">[[${product.vendor.formatMoneyDelivery}]]</td>
+                            <td class="py-5">[[${totalPrice}]]</td>
                         </tr>
                         </tbody>
                     </table>
@@ -156,8 +179,8 @@
             product: {
                 "id": productId,
             },
-            payment: form.elements["delivery"].value
-
+            payment: form.elements["delivery"].value,
+            quantity: [[${param.numberOfProduct}]][0]
         }
         console.log(order)
         $.ajax({
@@ -168,7 +191,7 @@
             },
             data: JSON.stringify(order),
             success: function () {
-                let theUrl = `[(@{/home})]`;
+                let theUrl = `[(@{/home?order=true})]`;
                 let url = new URL(theUrl, document.location);
                 window.location.href=url.href
             },

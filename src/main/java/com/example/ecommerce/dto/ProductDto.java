@@ -25,6 +25,7 @@ public class ProductDto extends BaseDto {
     private List<EvaluationDto> evaluations = new ArrayList<>();
     private MultipartFile multipartFile;
     private TrackProductSeller trackProductSeller;
+    private Integer numberOfProduct;
 
     public Integer getAverageEvaluation() {
         Integer totalRate = 0;
