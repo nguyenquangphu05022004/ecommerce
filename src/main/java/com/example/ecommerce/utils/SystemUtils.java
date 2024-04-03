@@ -11,8 +11,10 @@ public class SystemUtils {
     public static final String FOLDER_AVATAR = "avatar";
     public static final String FOLDER_PRODUCT_IMAGE = "image-product";
     public static final String FOLDER_EVALUATION_IMAGE = "image-evaluation";
+    public static final String FOLDER_CATEGORY_IMAGE = "image-category";
     public static final String SHORT_URL_AVATAR = "files/avatar";
-    public static final String SHOR_URL_PRODUCT = "files/image-product";
+    public static final String SHORT_URL_PRODUCT = "files/image-product";
+    public static final String SHORT_URL_CATEGORY="files/image-category";
     public static final IFilesStorageService FILES_STORAGE_SERVICE = new FilesStorageServiceImpl();
     public static String code() {
         StringBuilder builder = new StringBuilder();

@@ -11,7 +11,8 @@
     <div class="col-sm-12 col-xl-12">
         <div class="bg-light rounded h-100 p-4">
             <h6 class="mb-4">Sửa thể loại mặt hàng</h6>
-            <form role="form" method="post" th:action="@{/categories/edit/{categoryId}(categoryId = ${category.id})}" th:object="${category}">
+            <form role="form" method="post" th:action="@{/admin/categories/edit}" th:object="${category}" enctype="multipart/form-data">
+                <input type="hidden" th:field="*{id}" name="id">
                 <div class="form-floating mb-3">
                     <input type="text"
                            class="form-control"
@@ -21,9 +22,19 @@
                            placeholder="Tên thể loại">
                     <label for="name">Tên thể loại</label>
                 </div>
-
+                <div class="form-floating mb-3">
+                    <img th:if="${category.image == null}" src='http://ssl.gstatic.com/accounts/ui/avatar_2x.png'
+                         class="avatar img-circle img-thumbnail"
+                         width="400px"
+                         alt="avatar">
+                    <img th:unless="${category.image == null}"
+                         th:src="@{/{shortUrl}/{fileName}(shortUrl=${category.image.shortUrl}, fileName=${category.image.name})}"
+                         class="img-thumbnail" width="400px">
+                    <input type="file" name="file" class="text-center center-block file-upload mb-4">
+                    <label for="name">Ảnh</label>
+                </div>
                 <div class="form-floating">
-                    <button type="submit" class="btn btn-primary w-100">Thêm</button>
+                    <button type="submit" class="btn btn-primary w-100">Edit</button>
                 </div>
             </form>
         </div>

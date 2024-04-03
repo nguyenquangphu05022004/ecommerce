@@ -52,11 +52,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> {
             request
-                    .requestMatchers(HttpMethod.GET,"/shop", "/home",
+                    .requestMatchers(HttpMethod.GET,"/shop/**", "/home",
                             "/sign-up", "/login", "/user/**", "/products/**",
                             "/admin/css/**", "/admin/js/**", "/admin/lib/**",
                             "/forget-password",
-                            "/admin/scss/**", "/forget-password/new-pass")
+                            "/admin/scss/**", "/forget-password/new-pass", "/files/**")
                     .permitAll()
                     .requestMatchers("/admin/home").hasAnyAuthority(Role.VENDOR.getAuthority(), Role.ADMIN.getAuthority())
                     .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.getAuthority())

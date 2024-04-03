@@ -48,10 +48,12 @@ public class HomeController {
     @RequestMapping({"/", "/home"})
     public String getHomePage(Model model) {
         List<ProductDto> productDtos = productService.findAll(0);
+        List<CategoryDto> categoryDtos = categoryService.records();
         List<TrackProductSellerDto> trackProductSellerDtos =
                 trackProductSellerService.getListTopNumberByNumberOfSold(1, 9);
         model.addAttribute("trackProductSellers", trackProductSellerDtos);
         model.addAttribute("products", productDtos);
+        model.addAttribute("categories", categoryDtos);
         return "index";
     }
 

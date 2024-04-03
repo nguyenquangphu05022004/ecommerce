@@ -4,6 +4,7 @@ import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.entity.Image;
 import com.example.ecommerce.entity.Role;
 import com.example.ecommerce.entity.Verify;
+import com.example.ecommerce.service.IImageService;
 import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.User;
@@ -23,12 +24,15 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final IImageService imageService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           IImageService imageService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.imageService = imageService;
     }
 
     @Override
@@ -81,7 +85,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public boolean changePassword(String oldPassword, String newPassword) {
         User user = userRepository.findByUsername(SecurityUtils.username()).get();
-        if(passwordEncoder.matches(oldPassword, user.getPassword())) {
+        if (passwordEncoder.matches(oldPassword, user.getPassword())) {
             user.setPassword(passwordEncoder.encode(newPassword));
             userRepository.save(user);
             return true;
@@ -90,21 +94,18 @@ public class UserServiceImpl implements IUserService {
     }
 
 
-
     @Override
     public void updateAvatar(MultipartFile multipartFile) {
         try {
-
             User user = userRepository.findByUsername(SecurityUtils.username()).get();
-            if(user.getAvatar() != null) {
-                SystemUtils.FILES_STORAGE_SERVICE
-                        .deleteFile(user.getAvatar().getName(),
-                                SystemUtils.FOLDER_AVATAR);
+            if (user.getAvatar() != null) {
+                imageService.deleteFile(user.getAvatar().getId(),
+                        user.getAvatar().getName(),
+                        SystemUtils.FOLDER_AVATAR);
             }
-            SystemUtils.FILES_STORAGE_SERVICE.saveFile(multipartFile, SystemUtils.FOLDER_AVATAR);
-            Image avatar = Image.builder()
-                    .name(multipartFile.getOriginalFilename())
-                    .shortUrl(SystemUtils.SHORT_URL_AVATAR).build();
+            Image avatar = imageService.uploadFile(multipartFile,
+                                                SystemUtils.FOLDER_AVATAR,
+                                                SystemUtils.SHORT_URL_AVATAR);
             user.setAvatar(avatar);
             userRepository.save(user);
         } catch (Exception e) {

@@ -18,7 +18,8 @@ import java.util.List;
 public class Image extends Base{
     private String name;
     private String shortUrl;
-
     @OneToOne(mappedBy = "avatar")
     private User user;
+    @OneToOne(mappedBy = "thumbnail")
+    private Category category;
 }

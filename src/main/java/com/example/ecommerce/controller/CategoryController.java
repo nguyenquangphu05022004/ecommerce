@@ -36,6 +36,11 @@ public class CategoryController {
         model.addAttribute("category", categoryDto);
         return "admin/category/edit-categories";
     }
+    @PostMapping("/categories/edit")
+    public String updateCategory(@ModelAttribute CategoryDto categoryDto) {
+        categoryService.saveOrUpdate(categoryDto);
+        return "redirect:/admin/categories";
+    }
     @GetMapping("/categories")
     public String getListCategories(Model model) {
         List<CategoryDto> categoryDtos = categoryService.records();

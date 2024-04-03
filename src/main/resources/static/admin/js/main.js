@@ -205,3 +205,24 @@
     
 })(jQuery);
 
+$(document).ready(function() {
+
+
+    var readURL = function(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('.thumbnail').attr('src', e.target.result);
+                console.log(e.target.result)
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+        console.log(input.files)
+    }
+
+
+    $(".file-upload").on('change', function(){
+        readURL(this);
+    });
+});
+

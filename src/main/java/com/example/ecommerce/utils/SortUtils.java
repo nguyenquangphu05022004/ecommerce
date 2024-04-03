@@ -11,7 +11,7 @@ public class SortUtils {
 
     private static ProductSortService productSortService;
 
-    public static List<ProductDto> getListAfterSort(SortProductType type,
+    public static List<ProductDto> sortProduct(SortProductType type,
                                                     List<ProductDto> products) {
         if(productSortService == null) productSortService = new ProductSortServiceImpl();
         if(type.equals(SortProductType.PRICE))

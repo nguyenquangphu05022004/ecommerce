@@ -3,6 +3,7 @@ package com.example.ecommerce.converter.impl;
 import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.dto.CategoryDto;
 import com.example.ecommerce.entity.Category;
+import com.example.ecommerce.entity.Image;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,21 @@ public class CategoryConverter implements IGenericConverter<Category, CategoryDt
 
     @Override
     public Category toEntity(CategoryDto categoryDto) {
-        Category c = mapper.map(categoryDto, Category.class);
-        return c;
+        return Category.builder()
+                .thumbnail(categoryDto.getImage())
+                .name(categoryDto.getName())
+                .build();
     }
 
     @Override
     public CategoryDto toDto(Category category) {
-        return mapper.map(category, CategoryDto.class);
+        Image image = category.getThumbnail();
+        if(image != null) {
+            image = image.toBuilder().category(null).build();
+        }
+        CategoryDto categoryDto = mapper.map(category, CategoryDto.class);
+        categoryDto.setImage(image);
+        return categoryDto;
     }
 
     @Override

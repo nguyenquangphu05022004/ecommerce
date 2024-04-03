@@ -57,6 +57,7 @@ public class ProductController {
                                  Model model) {
         ProductDto productDto = productService.findById(productId);
         model.addAttribute("product", productDto);
+        model.addAttribute("products", getProductsByCategoryId(productDto.getCategory().getId()));
         return "product";
     }
 
@@ -77,7 +78,7 @@ public class ProductController {
 
     @GetMapping("/shop/products/category/{categoryId}/search")
     public String getAllProductsByKeywordNameAndCategory(
-            @RequestParam("query") String query,
+            @RequestParam(value = "query", defaultValue = "", required = false) String query,
             @PathVariable("categoryId") Long categoryId,
             @RequestParam(name = "page", defaultValue = "1", required = false) int page,
             Model model) {
@@ -114,7 +115,7 @@ public class ProductController {
     public List<ProductDto> sortProduct(@RequestParam("type") SortProductType type,
                                         @RequestBody List<ProductDto> products
                                         ) {
-       return  SortUtils.getListAfterSort(type, products);
+       return  SortUtils.sortProduct(type, products);
     }
 
 

@@ -20,6 +20,9 @@ public class Category extends Base{
 
     @Column(nullable = false, length = 100)
     private String name;
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private Image thumbnail;
     @OneToMany(mappedBy = "category")
     private List<Product> products = new ArrayList<>();
 }
