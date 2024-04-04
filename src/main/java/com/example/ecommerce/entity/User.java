@@ -34,8 +34,8 @@ public class User extends Base{
     private UserContactDetails userContactDetails;
     @OneToOne(mappedBy = "user")
     private Vendor vendor;
-    @OneToMany(mappedBy = "user")
-    private List<Evaluation> feedBacks = new ArrayList<>();
+    @OneToOne(mappedBy = "user")
+    private Evaluation evaluation;
     @OneToOne(mappedBy = "user")
     private Verify verify;
 }

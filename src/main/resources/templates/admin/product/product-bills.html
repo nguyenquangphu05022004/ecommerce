@@ -36,15 +36,18 @@
                         <tr th:if="${bills != null}" th:each="bill : ${bills}">
                             <th scope="row" th:text="${bill.name}"></th>
                             <th scope="row" th:text="${bill.order.product.language.nameVn}"></th>
-                            <th scope="row" ><img th:src="${bill.order.product.thumbnail}" height="100" ></th>
+                            <th scope="row" >
+                                <img th:if="${bill.order.product.thumbnails.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" height="100">
+                                <img th:unless="${bill.order.product.thumbnails.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${bill.order.product.thumbnails.get(0).shortUrl}, fileName=${bill.order.product.thumbnails.get(0).name})}" height="100">
+                            </th>
                             <th scope="row" th:text="${bill.order.product.formatPrice}"></th>
                             <th scope="row" th:text="${bill.order.quantity}"></th>
                             <th scope="row" th:text="${bill.order.product.vendor.formatMoneyDelivery}"></th>
                             <th scope="row" th:text="${bill.order.formatTotalPrice}"></th>
                             <th scope="row" th:text="${bill.order.product.category.name}"></th>
                             <th scope="row" th:text="${bill.order.payment.name}"></th>
-                            <th scope="row" th:if="${bill.status.name == 'SUCCESS'}">Đã thanh toán</th>
-                            <th scope="row" th:unless="${bill.status.name == 'SUCCESS'}">Chưa thanh toán</th>
+                            <th scope="row" th:if="${bill.status.name() == 'SUCCESS'}">Đã thanh toán</th>
+                                <th scope="row" th:unless="${bill.status.name() == 'SUCCESS'}">Chưa thanh toán</th>
                             <th scope="row">
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                     Xem thông tin

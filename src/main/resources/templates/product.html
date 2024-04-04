@@ -151,7 +151,7 @@
                             </div>
                         </div>
                     </div>
-                    <form id="form-comment" method="post" th:if="${was_bought != null}">
+                    <form id="form-comment" method="post" th:if="${was_bought == true}">
                         <h4 class="fw-bold">Để Lại Đánh Giá</h4>
                         <div class="row g-4">
                             <div class="col-lg-12">
@@ -444,7 +444,7 @@
         let html = `<div class="d-flex">
                                     <img src="/${data.user.avatar.shortUrl}/${data.user.avatar.name}" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
                                     <div class="">
-                                        <p class="mb-2" style="font-size: 14px;">April 12, 2024</p>
+                                        <p class="mb-2" style="font-size: 14px;">${data.formatDate}</p>
                                         <div class="d-flex justify-content-between">
                                             <h5>${data.user.userContactDetails.fullName}</h5>
                                             <div class="d-flex mb-3" style="right: 0">
@@ -497,5 +497,6 @@
         window.location.href = url;
     }
 </script>
+</div>
 </body>
 </html>

@@ -30,7 +30,7 @@ public class FactoryConverter {
                 genericConverter = new UserConverterImpl(mapper);
                 break;
             case BASKET:
-                genericConverter = new BasketConverterImpl(mapper);
+                genericConverter = new BasketConverterImpl();
                 break;
         }
         return genericConverter;

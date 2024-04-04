@@ -23,8 +23,8 @@ public class EvaluationServiceImpl  implements IEvaluationService {
     public EvaluationDto saveOrUpdate(EvaluationDto evaluationDto) {
         User user = userRepository.findByUsername(SecurityUtils.username()).get();
         Evaluation evaluation = null;
-        if(evaluationDto.getId() != null) {
-            Evaluation old = evaluationRepository.findById(evaluationDto.getId()).get();
+        if(user.getEvaluation() != null) {
+            Evaluation old = user.getEvaluation();
             evaluation = (Evaluation) Convert.EVAL.toEntity(old, evaluationDto);
         } else {
             evaluation = (Evaluation) Convert.EVAL.toEntity(evaluationDto);

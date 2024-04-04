@@ -1,6 +1,7 @@
 package com.example.ecommerce.controller;
 
 
+import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.dto.CategoryDto;
 import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.dto.SortProductType;
@@ -69,6 +70,7 @@ public class ProductController {
     public String getProductById(@PathVariable("productId") Long productId,
                                  Model model) {
         ProductDto productDto = productService.findById(productId);
+        model.addAttribute("was_bought", productService.productWasBoughtByUser(productId, SecurityUtils.username()));
         model.addAttribute("product", productDto);
         model.addAttribute("products", getProductsByCategoryId(productDto.getCategory().getId()));
         return "product";

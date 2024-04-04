@@ -21,7 +21,7 @@ public class Evaluation extends Base {
     private Product product;
     @Column(columnDefinition = "text")
     private String content;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
     private Integer numberOfLike;

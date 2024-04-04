@@ -9,11 +9,6 @@ import com.example.ecommerce.utils.Convert;
 import org.modelmapper.ModelMapper;
 
 public class BasketConverterImpl implements IGenericConverter<Basket, BasketDto> {
-    private final ModelMapper mapper;
-
-    public BasketConverterImpl(ModelMapper mapper) {
-        this.mapper = mapper;
-    }
 
     @Override
     public Basket toEntity(BasketDto basketDto) {

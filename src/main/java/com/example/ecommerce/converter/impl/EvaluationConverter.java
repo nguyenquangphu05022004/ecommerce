@@ -5,6 +5,7 @@ import com.example.ecommerce.dto.EvaluationDto;
 import com.example.ecommerce.dto.ImageDto;
 import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.Evaluation;
+import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.entity.User;
 import com.example.ecommerce.entity.UserContactDetails;
 import org.modelmapper.ModelMapper;
@@ -18,8 +19,9 @@ public class EvaluationConverter implements IGenericConverter<Evaluation, Evalua
 
     @Override
     public Evaluation toEntity(EvaluationDto evaluationDto) {
-        Evaluation evaluation = modelMapper.map(evaluationDto, Evaluation.class);
-        return evaluation;
+        return Evaluation.builder().numberOfLike(0)
+                .content(evaluationDto.getContent()).rating(evaluationDto.getRating())
+                .product(Product.builder().id(evaluationDto.getId()).build()).build();
     }
 
     @Override
@@ -37,6 +39,9 @@ public class EvaluationConverter implements IGenericConverter<Evaluation, Evalua
 
     @Override
     public Evaluation toEntity(Evaluation evaluation, EvaluationDto evaluationDto) {
-        return null;
+        return evaluation.toBuilder()
+                .rating(evaluationDto.getRating())
+                .content(evaluationDto.getContent())
+                .build();
     }
 }

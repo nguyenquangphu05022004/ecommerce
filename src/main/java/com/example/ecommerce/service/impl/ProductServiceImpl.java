@@ -6,6 +6,7 @@ import com.example.ecommerce.dto.VendorDto;
 import com.example.ecommerce.entity.Image;
 import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.entity.Vendor;
+import com.example.ecommerce.repository.BillRepository;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IImageService;
@@ -30,14 +31,17 @@ public class ProductServiceImpl implements IProductService {
     private final ProductRepository productRepository;
     private final VendorRepository vendorRepository;
     private final IImageService imageService;
+    private final BillRepository billRepository;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository,
                               VendorRepository vendorRepository,
-                              IImageService imageService) {
+                              IImageService imageService,
+                              BillRepository billRepository) {
         this.productRepository = productRepository;
         this.vendorRepository = vendorRepository;
         this.imageService = imageService;
+        this.billRepository = billRepository;
     }
 
     @Override
@@ -160,6 +164,11 @@ public class ProductServiceImpl implements IProductService {
                     return imageService.uploadFile(file, SystemUtils.FOLDER_PRODUCT_IMAGE,
                             SystemUtils.SHORT_URL_PRODUCT, product);
                 }).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean productWasBoughtByUser(Long productId, String username) {
+        return billRepository.existsByOrderProductIdAndOrderUserUsername(productId, username);
     }
 
 

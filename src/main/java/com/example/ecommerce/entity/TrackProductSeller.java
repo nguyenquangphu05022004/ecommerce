@@ -20,14 +20,5 @@ public class TrackProductSeller extends Base {
     @JoinColumn(name = "product_id")
     private Product product;
     private Integer numberOfProductsSold;
-    /**
-     * Using trigger auto increase numberOfProductsSold
-     * When status Bill to Success
-     */
-
-    /**
-     * When create a product using trigger auto map
-     * TrackProductSeller
-     */
 
 }
