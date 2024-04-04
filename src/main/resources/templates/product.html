@@ -14,7 +14,8 @@
                 <div class="row g-4">
                     <div class="col-lg-6">
                             <a href="#">
-                                <img th:src="${product.thumbnail}" class="img-fluid rounded">
+                                <img th:if="${product.thumbnails.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid w-100 rounded-top" alt="">
+                                <img th:unless="${product.thumbnails.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${product.thumbnails.get(0).shortUrl}, fileName=${product.thumbnails.get(0).name})}" class="img-fluid w-100 rounded-top" alt="">
                             </a>
                     </div>
                     <div class="col-lg-6">
@@ -340,7 +341,8 @@
                 <div th:each="p : ${products}" th:if="${p.id != product.id}" class="border border-primary rounded position-relative">
                     <div class="vesitable-img">
                         <a th:href="@{/products/{productId}/{productName}(productId=${p.id}, productName=${p.language.nameVn})}">
-                            <img th:src="${p.thumbnail}" class="img-fluid-redesign w-100 rounded-top" alt="">
+                            <img th:if="${p.thumbnails.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid-redesign w-100 rounded-top" alt="">
+                            <img th:unless="${p.thumbnails.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${p.thumbnails.get(0).shortUrl}, fileName=${p.thumbnails.get(0).name})}" class="img-fluid-redesign w-100 rounded-top" alt="">
                         </a>
                     </div>
                     <div class="text-white bg-primary px-3 py-1 rounded position-absolute"

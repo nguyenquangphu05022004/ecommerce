@@ -16,5 +16,6 @@ public interface IProductService extends IGenericService<ProductDto> {
     List<ProductDto> findAllByVendor();
     List<ProductDto> findAllByVendor(Long vendorId, Integer page, Sort sort);
     List<ProductDto> findAll(int page);
+    void uploadThumbnails(Long productId, List<MultipartFile> files);
 
 }

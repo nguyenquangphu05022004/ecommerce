@@ -75,10 +75,18 @@
             let html = '';
             if(value.length > 0) {
                 value.forEach(order => {
+                    let src = "";
+                    if(order.product.thumbnails.length > 0) {
+                        src=`/${order.product.thumbnails[0].shortUrl}/${order.product.thumbnails[0].name}`
+                    } else {
+                        src = "https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
+                    }
                     html += `<tr>
                             <th scope="col">${order.id}</th>
                             <th scope="col">${order.product.language.nameVn}</th>
-                            <th scope="col"><img src="${order.product.thumbnail}" height="100" ></th>
+                            <th scope="col">
+                                <img src="${src}" height="100" class="rounded-top" >
+                            </th>
                             <th scope="col">${order.product.formatPrice}</th>
                             <th scope="col">${order.quantity}</th>
                             <th scope="col">${order.totalPrice}</th>

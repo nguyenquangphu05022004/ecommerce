@@ -2,6 +2,7 @@ package com.example.ecommerce.converter.impl;
 
 import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.dto.EvaluationDto;
+import com.example.ecommerce.dto.ImageDto;
 import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.Evaluation;
 import com.example.ecommerce.entity.User;
@@ -29,7 +30,7 @@ public class EvaluationConverter implements IGenericConverter<Evaluation, Evalua
         EvaluationDto evaluationDto = modelMapper.map(evaluation, EvaluationDto.class);
         evaluationDto.setUser(UserDto.builder()
                 .userContactDetails(user.getUserContactDetails())
-                .avatar(user.getAvatar().toBuilder().user(null).build())
+                .avatar(new ImageDto(user.getAvatar().getName(), user.getAvatar().getShortUrl()))
                 .build());
         return evaluationDto;
     }

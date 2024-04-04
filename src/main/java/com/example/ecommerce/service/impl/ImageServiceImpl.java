@@ -1,6 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.entity.Image;
+import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.repository.ImageRepository;
 import com.example.ecommerce.service.IImageService;
 import com.example.ecommerce.utils.SystemUtils;
@@ -26,6 +27,18 @@ public class ImageServiceImpl implements IImageService {
         image =  imageRepository.save(image);
         SystemUtils.FILES_STORAGE_SERVICE.saveFile(multipartFile, folder);
         return image.toBuilder().user(null).category(null).build();
+    }
+
+    @Override
+    public Image uploadFile(MultipartFile multipartFile, String folder, String shortUrl, Product product) {
+        Image image = Image.builder()
+                .name(multipartFile.getOriginalFilename())
+                .shortUrl(shortUrl)
+                .product(product)
+                .build();
+        image =  imageRepository.save(image);
+        SystemUtils.FILES_STORAGE_SERVICE.saveFile(multipartFile, folder);
+        return image.toBuilder().user(null).category(null).product(null).build();
     }
 
 

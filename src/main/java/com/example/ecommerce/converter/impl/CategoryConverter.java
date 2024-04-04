@@ -18,20 +18,12 @@ public class CategoryConverter implements IGenericConverter<Category, CategoryDt
 
     @Override
     public Category toEntity(CategoryDto categoryDto) {
-        return Category.builder()
-                .thumbnail(categoryDto.getImage())
-                .name(categoryDto.getName())
-                .build();
+        return mapper.map(categoryDto, Category.class);
     }
 
     @Override
     public CategoryDto toDto(Category category) {
-        Image image = category.getThumbnail();
-        if(image != null) {
-            image = image.toBuilder().category(null).build();
-        }
         CategoryDto categoryDto = mapper.map(category, CategoryDto.class);
-        categoryDto.setImage(image);
         return categoryDto;
     }
 

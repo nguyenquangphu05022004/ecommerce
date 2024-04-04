@@ -15,16 +15,13 @@ import java.util.List;
 @SuperBuilder(toBuilder = true)
 public class Product extends Base{
 
-    /*
-        product:
-            id, name, thumbnail, price,category, vendor,
-            description, listEvaluation, listFeedBack
-     */
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "language_id")
     private Language language;
-    private String thumbnail;
+
+    @OneToMany(mappedBy = "product")
+    private List<Image> thumbnails = new ArrayList<>();
+
     private Integer price;
     private Integer quantity;
     @ManyToOne

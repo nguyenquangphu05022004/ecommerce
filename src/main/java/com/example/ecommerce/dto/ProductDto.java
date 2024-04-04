@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class ProductDto extends BaseDto {
-    private String thumbnail;
+    private List<ImageDto> thumbnails = new ArrayList<>();
     private Integer price;
     private Integer quantity;
     private CategoryDto category;
@@ -23,9 +23,10 @@ public class ProductDto extends BaseDto {
     private String description;
     private LanguageDto language;
     private List<EvaluationDto> evaluations = new ArrayList<>();
-    private MultipartFile multipartFile;
     private TrackProductSeller trackProductSeller;
     private Integer numberOfProduct;
+
+
 
     public Integer getAverageEvaluation() {
         Integer totalRate = 0;

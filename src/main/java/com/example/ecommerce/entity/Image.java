@@ -1,9 +1,7 @@
 package com.example.ecommerce.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -22,4 +20,15 @@ public class Image extends Base{
     private User user;
     @OneToOne(mappedBy = "thumbnail")
     private Category category;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    public Image(String name, String shortUrl) {
+        this.name = name; this.shortUrl = shortUrl;
+    }
+    public Image(Long id, String name, String shortUrl) {
+        this(name, shortUrl);
+        setId(id);
+    }
 }

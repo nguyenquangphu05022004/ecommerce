@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,18 @@ public class ProductController {
     @ResponseBody
     public ProductDto createProduct(@RequestBody ProductDto productDto) {
         return productService.saveOrUpdate(productDto);
+    }
+
+    @PostMapping("/vendor/product/{productId}/images/upload")
+    public String uploadThumbnails(@PathVariable("productId") Long productId,
+                                     @RequestParam("files") List<MultipartFile> files) {
+        productService.uploadThumbnails(productId, files);
+        return "redirect:/vendor/products";
+    }
+    @GetMapping("/vendor/product/{productId}/images/upload")
+    public String formUploadThumbnails(@PathVariable("productId") Long productId, Model model) {
+        model.addAttribute("productId", productId);
+        return "admin/product/upload-images";
     }
 
     @GetMapping("/vendor/products")

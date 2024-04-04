@@ -2,10 +2,13 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.dto.ProductDto;
+import com.example.ecommerce.dto.VendorDto;
+import com.example.ecommerce.entity.Image;
 import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.entity.Vendor;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.VendorRepository;
+import com.example.ecommerce.service.IImageService;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.utils.SystemUtils;
@@ -16,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,12 +29,15 @@ public class ProductServiceImpl implements IProductService {
 
     private final ProductRepository productRepository;
     private final VendorRepository vendorRepository;
+    private final IImageService imageService;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository,
-                              VendorRepository vendorRepository) {
+                              VendorRepository vendorRepository,
+                              IImageService imageService) {
         this.productRepository = productRepository;
         this.vendorRepository = vendorRepository;
+        this.imageService = imageService;
     }
 
     @Override
@@ -61,16 +68,13 @@ public class ProductServiceImpl implements IProductService {
         Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username());
         Product product = new Product();
         if (productDto.getId() != null) {
-
+            return null;
         } else {
             product = (Product) Convert.PRO.toEntity(productDto);
         }
-        SystemUtils.FILES_STORAGE_SERVICE
-                .saveFile(productDto.getMultipartFile(),
-                        SystemUtils.FOLDER_PRODUCT_IMAGE);
         product.setVendor(vendor);
-        product.setThumbnail(productDto.getMultipartFile().getOriginalFilename());
         return (ProductDto) Convert.PRO.toDto(productRepository.save(product));
+
     }
 
     @Override
@@ -146,6 +150,16 @@ public class ProductServiceImpl implements IProductService {
                 .stream()
                 .map(e -> (ProductDto) Convert.PRO.toDto(e))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void uploadThumbnails(Long id, List<MultipartFile> files) {
+        Product product = productRepository.findById(id).get();
+        List<Image> thumbnails = files
+                .stream().map(file -> {
+                    return imageService.uploadFile(file, SystemUtils.FOLDER_PRODUCT_IMAGE,
+                            SystemUtils.SHORT_URL_PRODUCT, product);
+                }).collect(Collectors.toList());
     }
 
 

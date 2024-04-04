@@ -10,7 +10,7 @@
     <div class="col-sm-12 col-xl-12">
         <div class="bg-light rounded h-100 p-4">
             <h6 class="mb-4">Thêm sản phẩm</h6>
-            <form id = 'product'>
+            <form id = 'product' >
                 <div class="form-floating mb-3">
                     <input type="text"
                            class="form-control"
@@ -26,14 +26,6 @@
                            name="nameEn"
                            placeholder="Ví dụ: giay">
                     <label for="nameEn">Tên không dấu</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="text"
-                           class="form-control"
-                           id="thumbnail"
-                           name="thumbnail"
-                           placeholder="Link ảnh sản phẩm">
-                    <label for="thumbnail">Link ảnh sản phẩm</label>
                 </div>
                 <div class="form-floating mb-3">
                     <input type="number"
@@ -92,8 +84,7 @@
                 category: {
                     id: form.elements['categoryId'].value
                 },
-                thumbnail: form.elements['thumbnail'].value,
-                quantity: form.elements['quantity'].value
+                quantity: form.elements['quantity'].value,
             }
             $.ajax({
                 type:'post',

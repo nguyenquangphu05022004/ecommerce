@@ -30,8 +30,8 @@
                         <tbody>
                         <tr th:each="category : ${categories}">
                             <th scope="row" th:text="${category.name}"></th>
-                            <th scope="row" th:if="${category.image != null}">[[${category.image.name}]]</th>
-                            <th scope="row" th:unless="${category.image != null}">Không tìm thấy ảnh</th>
+                            <th scope="row" th:if="${category.thumbnail != null}">[[${category.thumbnail.name}]]</th>
+                            <th scope="row" th:unless="${category.thumbnail != null}">Không tìm thấy ảnh</th>
                             <th scope="row" th:text="${category.createdDate}"></th>
                             <th scope="row" th:text="${category.createdBy}"></th>
                             <th scope="row" ><a th:href="@{/admin/categories/edit/{categoryId}(categoryId = ${category.id})}">Edit</a></th>

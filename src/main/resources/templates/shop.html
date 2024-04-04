@@ -121,10 +121,16 @@
 <script th:inline="javascript">
 
     function getElementProduct(product) {
+        let src = "";
+        if(product.thumbnails.length > 0) {
+            src=`/${product.thumbnails[0].shortUrl}/${product.thumbnails[0].name}`
+        } else {
+            src = "https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
+        }
         return `<div class="col-md-6 col-lg-6 col-xl-4">
             <div class="rounded position-relative fruite-item">
                 <div class="fruite-img">
-                    <img src="${product.thumbnail}"
+                    <img src="${src}"
                          class="img-fluid-redesign w-100 rounded-top"
                          alt=""
                     />

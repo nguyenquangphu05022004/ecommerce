@@ -71,6 +71,7 @@ public class CategoryServiceImpl implements ICategoryService {
                 SystemUtils.FOLDER_CATEGORY_IMAGE,
                 SystemUtils.SHORT_URL_CATEGORY);
         cate.setThumbnail(image);
-        return (CategoryDto) Convert.CATE.toDto(categoryRepository.save(cate));
+        CategoryDto dto =  (CategoryDto) Convert.CATE.toDto(categoryRepository.save(cate));
+        return dto;
     }
 }

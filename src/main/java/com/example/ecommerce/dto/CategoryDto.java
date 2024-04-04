@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CategoryDto extends BaseDto{
     private String name;
-    private Image image;
+    private ImageDto thumbnail;
     private MultipartFile file;//store data thumbnail send from user
 //    private List<ProductDto> products =new ArrayList<>();
 }

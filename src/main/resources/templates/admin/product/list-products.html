@@ -23,6 +23,8 @@
                             <th scope="col">Số lượng</th>
                             <th scope="col">Mô tả</th>
                             <th scope="col">Thể loại</th>
+                            <th scope="col">Upload image</th>
+                            <th scope="col">Edit image</th>
                             <th scope="col">Sửa</th>
                             <th scope="col">Xóa</th>
 
@@ -31,11 +33,25 @@
                         <tbody>
                         <tr th:each="product : ${products}">
                             <th scope="row" th:text="${product.language.nameVn}"></th>
-                            <th scope="row" ><img th:src="${product.thumbnail}" height="100" ></th>
+                            <th scope="row" th:if="${product.thumbnails != null}">
+                                <div class="d-flex">
+                                    <div th:each="image : ${product.thumbnails}">
+                                        <img th:src="@{/{shortUrl}/{fileName}(shortUrl=${image.shortUrl}, fileName=${image.name})}"
+                                             class="img-fluid"
+                                        >
+                                    </div>
+                                </div>
+                            </th>
                             <th scope="row" th:text="${product.price}"></th>
                             <th scope="row" th:text="${product.quantity}"></th>
                             <th scope="row" th:text="${product.description}"></th>
                             <th scope="row" th:text="${product.category.name}"></th>
+                            <th scope="row">
+                                <a th:href="@{/vendor/product/{productId}/images/upload(productId=${product.id})}">Upload</a>
+                            </th>
+                            <th scope="row">
+                                <a th:href="@{/vendor/product/{productId}/images/edit(productId=${product.id})}">Edit</a>
+                            </th>
                             <th scope="row" ><a th:href="@{/admin/vendor/products/edit/{productId}(productId = ${product.id})}">Edit</a></th>
                             <th scope="row" ><a th:href="@{/admin/vendor/products/delete/{productId}(productId = ${product.id})}">Delete</a></th>
                         </tr>

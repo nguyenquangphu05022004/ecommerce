@@ -21,4 +21,7 @@ public class Language extends Base{
     private Product product;
     private String nameVn;
     private String nameEn;
+    public Language(String nameVn, String nameEn) {
+        this.nameVn = nameVn; this.nameEn = nameEn;
+    }
 }

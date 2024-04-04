@@ -20,7 +20,7 @@ public class UserDto extends BaseDto{
     private String username;
     private String password;
     private String email;
-    private Image avatar;
+    private ImageDto avatar;
     private Role role;
     private UserContactDetails userContactDetails;
     private BasketDto basket;

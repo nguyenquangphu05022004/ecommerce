@@ -26,8 +26,8 @@
                 <tr th:each="basket: ${baskets}" th:id="${basket.id}">
                     <th scope="row">
                         <div class="d-flex align-items-center">
-                            <img th:src="${basket.product.thumbnail}" class="img-fluid me-5 rounded-circle"
-                                 style="width: 80px; height: 80px;" alt="">
+                            <img th:if="${basket.product.thumbnails.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
+                            <img th:unless="${basket.product.thumbnails.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${basket.product.thumbnails.get(0).shortUrl}, fileName=${basket.product.thumbnails.get(0).name})}" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
                         </div>
                     </th>
                     <td>
