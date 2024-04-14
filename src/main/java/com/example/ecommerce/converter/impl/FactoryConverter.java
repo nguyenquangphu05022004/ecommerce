@@ -8,17 +8,11 @@ public class FactoryConverter {
         ModelMapper mapper = new ModelMapper();
         IGenericConverter genericConverter = null;
         switch (converter) {
-            case BILL:
-                genericConverter =  new BillConverterImpl();
-                break;
             case PRODUCT:
                 genericConverter = new ProductConverterImpl(mapper);
                 break;
             case CATEGORY:
                 genericConverter = new CategoryConverter(mapper);
-                break;
-            case ORDER:
-                genericConverter = new OrderConverter(mapper);
                 break;
             case EVALUATION:
                 genericConverter = new EvaluationConverter(mapper);

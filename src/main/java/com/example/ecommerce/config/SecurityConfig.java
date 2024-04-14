@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> {
             request
-                    .requestMatchers(HttpMethod.GET,"/shop/**", "/home",
+                    .requestMatchers(HttpMethod.GET,"/shop/**", "/home","/",
                             "/sign-up", "/login", "/user/**", "/products/**",
                             "/admin/css/**", "/admin/js/**", "/admin/lib/**",
                             "/forget-password",

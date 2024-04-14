@@ -1,0 +1,28 @@
+version: "3.1"  # Adjust version if needed
+services:
+  mysql_db:
+    image: mysql:8.0
+    volumes:
+      - mydata:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: irohas2004
+  ecommerce-app:
+    image: irohas2004/ecommerce:1.2
+    volumes:
+      - uploadsImage:/app/src/main/resources/static/uploads
+    ports:
+      - 8081:8081
+    depends_on:
+      - mysql_db
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8085:80
+    environment:
+      - PMA_HOST=mysql_db
+    depends_on:
+      - mysql_db
+volumes:
+  mydata:
+  uploadsImage:

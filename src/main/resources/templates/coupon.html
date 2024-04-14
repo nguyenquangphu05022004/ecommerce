@@ -1,0 +1,167 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
+        layout:decorate="~{/layout.html}">
+<head>
+    <title>Giảm giá</title>
+    <style>
+        .banner {
+            background-color: #e0e9ec; /* Change the color as needed */
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            border-radius: 20px;
+            width: auto;
+        }
+
+        .banner-btn {
+            border-radius: 10px;
+            border: none;
+            background: oldlace;
+        }
+    </style>
+</head>
+<body>
+<!-- 404 Start -->
+<div layout:fragment="body" class="container-fluid" style="padding-top: 170px">
+    <div class="container py-5 text-center">
+        <div class="row justify-content-center">
+            <div class="row g-4">
+                <div class="col-lg-3">
+                    <div class="row g-4">
+                        <div class="col-lg-12">
+                            <h3>Người bán hàng</h3>
+                            <select class="form-select h3"
+                                    style="height: auto; font-size: 25px"
+                                    id="vendorId"
+                                    aria-label="Floating label select example"
+                                    name="vendorId"
+                                    th:onchange="getVendorById()"
+                            >
+                                <option th:selected="${vendorId == '0'}" value="0">Tất cả</option>
+                                <span th:each="vendor :${vendors}">
+                                            <option th:value=${vendor.id}
+                                                    th:text="${vendor.shopName}"
+                                                    th:selected="${vendorId} == ${vendor.id}"
+                                            >
+                                            </option>
+                                        </span>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="banner mb-5 row g-4" th:each="coupon:${coupons}">
+                        <div class="col-lg-7">
+                            <h2>Shop: <a class="text-danger"
+                                         th:href="@{/shop/vendor/{vendorId}/search(vendorId=${coupon.vendor.id})}">[[${coupon.vendor.shopName}]]</a>
+                            </h2>
+                            <span class="text-dark">[[${coupon.content}]]</span>
+                            <h3>Giảm giá [[${coupon.percent}]] %</h3>
+                            <div th:if="${coupon.started == true && coupon.expired == false}">
+                                <button  class="banner-btn" data-bs-toggle="modal"
+                                        th:data-bs-target="${'#modal-code-' + coupon.id}">Nhận ngay
+                                </button>
+                            </div>
+                            <div th:unless="${coupon.started == true && coupon.expired == false}">
+                                <span class="text-danger">Sự kiện chưa bắt đầu.</span>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-5">
+                            <div>
+                                <h5 class="text-dark">Thời gian: </h5>
+                                <span class="text-dark">[[${coupon.formatStart}]]</span>
+                                </br>
+                                <span class="text-dark">[[${coupon.formatEnd}]]</span>
+                                </br>
+                            </div>
+                        </div>
+                        <div class="modal fade" th:id="${'modal-code-' + coupon.id}" tabindex="-1"
+                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Mã khuyến mãi</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <h3 class="text-center">[[${coupon.code}]]</h3>
+                                        <p>
+                                            <button th:onclick="AdvancedCopy([[${coupon.code}]])"
+                                                    class="btn btn-primary">Copy
+                                            </button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+
+        function AdvancedCopy(text) {
+            //the text that is to be copied to the clipboard
+            var theText = text;
+
+            //create our hidden div element
+            var hiddenCopy = document.createElement('div');
+            //set the innerHTML of the div
+            hiddenCopy.innerHTML = theText;
+            //set the position to be absolute and off the screen
+            hiddenCopy.style.position = 'absolute';
+            hiddenCopy.style.left = '-9999px';
+
+            //check and see if the user had a text selection range
+            var currentRange;
+            if (document.getSelection().rangeCount > 0) {
+                //the user has a text selection range, store it
+                currentRange = document.getSelection().getRangeAt(0);
+                //remove the current selection
+                window.getSelection().removeRange(currentRange);
+            } else {
+                //they didn't have anything selected
+                currentRange = false;
+            }
+
+            //append the div to the body
+            document.body.appendChild(hiddenCopy);
+            //create a selection range
+            var CopyRange = document.createRange();
+            //set the copy range to be the hidden div
+            CopyRange.selectNode(hiddenCopy);
+            //add the copy range
+            window.getSelection().addRange(CopyRange);
+
+            //since not all browsers support this, use a try block
+            try {
+                //copy the text
+                document.execCommand('copy');
+            } catch (err) {
+                window.alert("Your Browser Doesn't support this! Error : " + err);
+            }
+            //remove the selection range (Chrome throws a warning if we don't.)
+            window.getSelection().removeRange(CopyRange);
+            //remove the hidden div
+            document.body.removeChild(hiddenCopy);
+
+            //return the old selection range
+            if (currentRange) {
+                window.getSelection().addRange(currentRange);
+            }
+        }
+
+        function getVendorById() {
+            const vendorId = document.getElementById("vendorId").value;
+            window.location.href = new URL(`/coupons?vendorId=${vendorId}`, document.location).href;
+        }
+    </script>
+</div>
+</body>
+</html>

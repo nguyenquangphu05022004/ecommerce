@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class BasketServiceImpl implements IGenericService<BasketDto>, IBasketService {
+public class BasketServiceImpl implements IBasketService {
     private final BasketRepository basketRepository;
     private final UserRepository userRepository;
 
@@ -47,10 +47,6 @@ public class BasketServiceImpl implements IGenericService<BasketDto>, IBasketSer
         return basketRepository.countAllByUserUsername(SecurityUtils.username());
     }
 
-    @Override
-    public BasketDto findById(Long id) {
-        return null;
-    }
 
     @Override
     public BasketDto saveOrUpdate(BasketDto basketDto) {

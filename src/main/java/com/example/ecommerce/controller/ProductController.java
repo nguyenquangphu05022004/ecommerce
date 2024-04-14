@@ -3,6 +3,7 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.dto.CategoryDto;
+import com.example.ecommerce.dto.EvaluationDto;
 import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.dto.SortProductType;
 import com.example.ecommerce.service.impl.CategoryServiceImpl;
@@ -70,17 +71,12 @@ public class ProductController {
     public String getProductById(@PathVariable("productId") Long productId,
                                  Model model) {
         ProductDto productDto = productService.findById(productId);
-        model.addAttribute("was_bought", productService.productWasBoughtByUser(productId, SecurityUtils.username()));
+        boolean wasBoughtByUser = productService.productWasBoughtByUser(productId, SecurityUtils.username());
+        model.addAttribute("evaluation", new EvaluationDto());
+        model.addAttribute("was_bought", wasBoughtByUser);
         model.addAttribute("product", productDto);
-        model.addAttribute("products", getProductsByCategoryId(productDto.getCategory().getId()));
+        model.addAttribute("products", productService.findProductByCategoryId(productDto.getCategory().getId(), 0));
         return "product";
-    }
-
-    @GetMapping("/products/category/{categoryId}")
-    @ResponseBody
-    public List<ProductDto> getProductsByCategoryId(@PathVariable Long categoryId) {
-        List<ProductDto> products = productService.findProductByCategoryId(categoryId);
-        return products;
     }
 
     @GetMapping("/products")
@@ -91,39 +87,46 @@ public class ProductController {
     }
 
 
-    @GetMapping("/shop/products/category/{categoryId}/search")
-    public String getAllProductsByKeywordNameAndCategory(
+    @GetMapping("/shop/products/search")
+    public String getListProductBySearchWithoutVendor(
             @RequestParam(value = "query", defaultValue = "", required = false) String query,
-            @PathVariable("categoryId") Long categoryId,
+            @RequestParam(value = "categoryId", defaultValue = "0", required = false) Long categoryId,
             @RequestParam(name = "page", defaultValue = "1", required = false) int page,
+            @RequestParam(name="startPrice", defaultValue = "0", required = false) Integer startPrice,
+            @RequestParam(name = "endPrice", defaultValue = "0", required = false) Integer endPrice,
             Model model) {
-        getListProductBySearchCondition(query, categoryId, page, model, -1l);
+        query = query.isEmpty() ? null : query;
+        categoryId = categoryId == null || categoryId == 0 ? 0 : categoryId;
+        startPrice = startPrice == null || startPrice == 0? 0 : startPrice;
+        endPrice = endPrice == null || endPrice == 0 ? 0 : endPrice;
+        List<ProductDto> search = productService.search(
+                query, categoryId,null,
+                Math.min(startPrice, endPrice),
+                Math.max(startPrice, endPrice),page - 1);
+        saveAttribute(search,  query, categoryId, page, startPrice, endPrice, model);
         return "shop";
     }
 
-    @GetMapping("/shop/vendor/{vendorId}")
+    @GetMapping("/shop/vendor/{vendorId}/search")
     public String getListProductOfVendorById(@PathVariable Long vendorId,
+                                             @RequestParam(value = "query", defaultValue = "", required = false) String query,
+                                             @RequestParam(value = "categoryId", required = false) Long categoryId,
                                              @RequestParam(name = "page", defaultValue = "1", required = false) int page,
+                                             @RequestParam(name="startPrice", defaultValue = "0", required = false) Integer startPrice,
+                                             @RequestParam(name = "endPrice", defaultValue = "0", required = false) Integer endPrice,
                                              Model model) {
-        List<CategoryDto> categoryDtos = categoryService.records();
-        Sort sortAble = null;
-        List<ProductDto> products = productService.findAllByVendor(vendorId, page - 1, sortAble);
-        model.addAttribute("products", products);
-        model.addAttribute("categories", categoryDtos);
-        model.addAttribute("totalPage", SystemUtils.totalPage);
-        model.addAttribute("page", page - 1);
+        query = query.isEmpty() ? null : query;
+        categoryId = categoryId == null || categoryId == 0 ? 0 : categoryId;
+        startPrice = startPrice == null || startPrice == 0? 0 : startPrice;
+        endPrice = endPrice == null || endPrice == 0 ? 0 : endPrice;
+        List<ProductDto> products = productService.search(
+                query, categoryId,vendorId,
+                Math.min(startPrice, endPrice),
+                Math.max(startPrice, endPrice),page - 1);
+        saveAttribute(products,  query, categoryId, page, startPrice, endPrice, model);
         return "shop";
     }
 
-    @GetMapping("/shop/vendor/{vendorId}/products/category/{categoryId}/search")
-    public String getListProductOfVendorByIdAndSearch(@PathVariable Long vendorId,
-                                                      @RequestParam("query") String query,
-                                                      @PathVariable("categoryId") Long categoryId,
-                                                      @RequestParam(name = "page", defaultValue = "1", required = false) int page,
-                                                      Model model) {
-        getListProductBySearchCondition(query, categoryId, page , model, vendorId);
-        return "shop";
-    }
 
     @PostMapping("/products/sort/**")
     @ResponseBody
@@ -135,33 +138,19 @@ public class ProductController {
 
 
     
-    private void getListProductBySearchCondition(
-            String query,
-            Long categoryId,
-            int page,
-            Model model,
-            Long vendorId
+    private void saveAttribute(
+            List<ProductDto> productDtos,
+            String query, Long categoryId, int page,
+            int startPrice, int endPrice, Model model
     ) {
         List<CategoryDto> categoryDtos = categoryService.records();
-        List<ProductDto> productDtos = new ArrayList<>();
-        if (query.isEmpty() && categoryId == 0) productDtos = productService.records();
-        else if (query.isEmpty() && categoryId != 0) productDtos = productService.findProductByCategoryId(categoryId);
-        else if (!query.isEmpty() && categoryId == 0) productDtos = productService.searchProductsByName(query);
-        else productDtos = productService.searchProductsByNameAndCategoryId(query, categoryId, page - 1);
-        if(vendorId > 0) {
-            List<ProductDto> products = new ArrayList<>();
-            for(ProductDto pro : productDtos) {
-                if(pro.getVendor().getId() == vendorId) {
-                    products.add(pro);
-                }
-            }
-            productDtos = products;
-        }
         model.addAttribute("products", productDtos);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("categories", categoryDtos);
         model.addAttribute("keyword", query);
         model.addAttribute("totalPage", SystemUtils.totalPage);
+        model.addAttribute("startPrice", startPrice);
+        model.addAttribute("endPrice", endPrice);
         model.addAttribute("page", page - 1);
     }
 

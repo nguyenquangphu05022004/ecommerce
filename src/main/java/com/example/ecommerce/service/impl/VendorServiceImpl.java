@@ -1,5 +1,10 @@
 package com.example.ecommerce.service.impl;
 
+import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.dao.impl.CouponEventDao;
+import com.example.ecommerce.dto.CouponDto;
+import com.example.ecommerce.entity.Coupon;
+import com.example.ecommerce.repository.CouponRepository;
 import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.dto.VendorDto;
 import com.example.ecommerce.entity.User;
@@ -10,6 +15,7 @@ import com.example.ecommerce.service.IGenericService;
 import com.example.ecommerce.service.IVendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,7 +24,8 @@ public class VendorServiceImpl  implements IGenericService<VendorDto>, IVendorSe
     private final VendorRepository vendorRepository;
     private final UserRepository userRepository;
     @Autowired
-    public VendorServiceImpl(VendorRepository vendorRepository, UserRepository userRepository) {
+    public VendorServiceImpl(VendorRepository vendorRepository,
+                             UserRepository userRepository) {
         this.vendorRepository = vendorRepository;
         this.userRepository = userRepository;
     }
@@ -54,4 +61,5 @@ public class VendorServiceImpl  implements IGenericService<VendorDto>, IVendorSe
         vendor.setShopName(vendorDto.getShopName());
         return (VendorDto) Convert.VEND.toDto(vendorRepository.save(vendor));
     }
+
 }

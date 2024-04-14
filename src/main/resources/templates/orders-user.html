@@ -42,6 +42,7 @@
                                         <th scope="col">Ảnh minh họa</th>
                                         <th scope="col">Giá</th>
                                         <th scope="col">Số lượng</th>
+                                        <th scope="col">Giảm giá</th>
                                         <th scope="col">Tổng</th>
                                         <th scope="col">Thể loại</th>
                                         <th scope="col">Trạng thái</th>
@@ -71,7 +72,6 @@
             theUrl = `[(@{/orders/${statusValue}})]`;
         }
         callApi('get', " ", theUrl, (value) => {
-            console.log(value)
             let html = '';
             if(value.length > 0) {
                 value.forEach(order => {
@@ -89,6 +89,7 @@
                             </th>
                             <th scope="col">${order.product.formatPrice}</th>
                             <th scope="col">${order.quantity}</th>
+                            <th scope="col">${order.percent != null ? order.percent : "0"} %</th>
                             <th scope="col">${order.formatTotalPrice}</th>
                             <th scope="col">${order.product.category.name}</th>
                             <th scope="col">${order.status}</th>
@@ -102,7 +103,6 @@
 
     function callApi(type, data, theUrl, success) {
         const url = new URL(theUrl, document.location);
-        console.log(url.href)
         $.ajax({
             type: type,
             url: url.href,

@@ -1,0 +1,50 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/admin/layout.html}">
+<head>
+    <title>Danh sách khuyến mãi</title>
+</head>
+<body>
+<section layout:fragment="body">
+    <!-- Table Start -->
+    <div class="container-fluid pt-4 px-4">
+
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Khuyến mãi</h6>
+                <a  th:href="@{/vendor/coupon/add}">Tạo coupon</a>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Nội dung</th>
+                            <th scope="col">%</th>
+                            <th scope="col">Shop</th>
+                            <th scope="col">Code</th>
+                            <th scope="col">Bắt đầu</th>
+                            <th scope="col">Kết thúc</th>
+                            <th scope="col">Hết hạn</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="coupon : ${coupons}">
+                            <th scope="row" th:text="${coupon.content}"></th>
+                            <th scope="row" th:text="${coupon.percent}"></th>
+                            <th scope="row" th:text="${coupon.vendor.shopName}"></th>
+                            <th scope="row" th:text="${coupon.code}"></th>
+                            <th scope="row" th:text="${coupon.formatStart}"></th>
+                            <th scope="row" th:text="${coupon.formatEnd}"></th>
+                            <th scope="row" th:text="${coupon.expired}"></th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- Table End -->
+</section>
+</body>
+</html>

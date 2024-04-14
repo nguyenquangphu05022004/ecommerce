@@ -30,4 +30,7 @@ public class Vendor extends Base{
     private List<Product> products = new ArrayList<>();
     private Integer perMoneyDelivery;
 
+    @OneToMany(mappedBy = "vendor")
+    private List<Coupon> coupons = new ArrayList<>();
+
 }

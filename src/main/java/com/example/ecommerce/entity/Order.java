@@ -26,5 +26,6 @@ public class Order extends Base{
     private Payment payment;
     @OneToOne(mappedBy = "order")
     private Bill bill;
+    private Integer percent;
 
 }

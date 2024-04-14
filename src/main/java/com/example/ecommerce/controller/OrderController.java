@@ -42,9 +42,9 @@ public class OrderController {
         model.addAttribute("user", userDto);
         model.addAttribute("product", productDto);
         model.addAttribute("totalPrice",
-                (SystemUtils.getFormatNumber(numberOfProduct
-                        * productDto.getPrice()
+                SystemUtils.getFormatNumber((numberOfProduct * productDto.getPrice()
                         + productDto.getVendor().getPerMoneyDelivery())));
+        model.addAttribute("numberOfProduct", numberOfProduct);
         return "order";
     }
 

@@ -32,7 +32,7 @@
                 <li class="list-group-item text-muted">Hoạt động <i class="fa fa-dashboard fa-1x"></i></li>
                 <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <li class="list-group-item text-right"><span class="pull-left"><strong>Đánh giá: </strong></span>
-                        [[${user.feedBacks.size}]]
+                        [[${user.evaluations.size}]]
                     </li>
                 </a>
                 <li class="list-group-item text-right"><span class="pull-left"><strong>Theo dõi: </strong></span> 78
@@ -114,7 +114,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:if="${user.feedBacks != null}" th:each="evaluation : ${user.feedBacks}">
+                                <tr th:if="${user.evaluations != null}" th:each="evaluation : ${user.evaluations}">
                                     <th scope="row"><a th:href="@{/products/{productId}/{productName}(productId=${evaluation.product.id}, productName=${evaluation.product.language.nameVn})}">[[${evaluation.product.language.nameVn}]]</a></th>
                                     <th scope="row" th:text="${evaluation.content}"></th>
                                     <th scope="row">[[${evaluation.rating}]]/5</th>

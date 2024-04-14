@@ -1,34 +1,28 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.utils.Convert;
+import com.example.ecommerce.converter.impl.BillConverterImpl;
 import com.example.ecommerce.dto.BillDto;
 import com.example.ecommerce.entity.Bill;
 import com.example.ecommerce.entity.Status;
 import com.example.ecommerce.repository.BillRepository;
 import com.example.ecommerce.service.IBillService;
-import com.example.ecommerce.service.IGenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.print.*;
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.awt.print.Printable.NO_SUCH_PAGE;
 
 @Service
 public class BillServiceImpl implements IBillService {
 
     private final BillRepository billRepository;
+    private final BillConverterImpl billConverter;
 
     @Autowired
-    public BillServiceImpl(BillRepository billRepository) {
+    public BillServiceImpl(BillRepository billRepository, BillConverterImpl billConverter) {
         this.billRepository = billRepository;
+        this.billConverter = billConverter;
     }
 
     @Override
@@ -36,7 +30,7 @@ public class BillServiceImpl implements IBillService {
         return billRepository
                 .findAllByOrderProductVendorUserUsername(SecurityUtils.username())
                 .stream()
-                .map(bill -> (BillDto) Convert.BILL.toDto(bill))
+                .map(bill -> billConverter.toDto(bill))
                 .collect(Collectors.toList());
     }
 
@@ -52,9 +46,7 @@ public class BillServiceImpl implements IBillService {
 
     @Override
     public BillDto findById(Long id) {
-        return (BillDto) Convert.BILL.toDto(
-                GenericService.findById(billRepository, id)
-        );
+        return billConverter.toDto(billRepository.findById(id).get());
     }
 
     @Override
@@ -66,7 +58,7 @@ public class BillServiceImpl implements IBillService {
     public List<BillDto> getBillsByStatus(Status status) {
         List<Bill> bills = billRepository.findAllByStatus(status);
         return bills.stream()
-                .map(e -> (BillDto) Convert.BILL.toDto(e))
+                .map(e ->billConverter.toDto(e))
                 .collect(Collectors.toList());
     }
 

@@ -9,14 +9,15 @@ import java.util.List;
 
 public interface IProductService extends IGenericService<ProductDto> {
     ProductDto saveOrUpdate(ProductDto productDto);
-    List<ProductDto> searchProductsByName(String name);
-    List<ProductDto> findProductByCategoryId(Long categoryId);
-    List<ProductDto> searchProductsByNameAndCategoryId(String name, Long categoryId, int page, Sort sort);
-    List<ProductDto> searchProductsByNameAndCategoryId(String name, Long categoryId, int page);
+    List<ProductDto> findProductByCategoryId(Long categoryId, int page);
+    List<ProductDto> search(String query, Long categoryId,
+                            Long vendorId, Integer startPrice,
+                            Integer endPrice, int page);
     List<ProductDto> findAllByVendor();
-    List<ProductDto> findAllByVendor(Long vendorId, Integer page, Sort sort);
+    List<ProductDto> findAllByVendor(Long vendorId, Integer page);
     List<ProductDto> findAll(int page);
     void uploadThumbnails(Long productId, List<MultipartFile> files);
     boolean productWasBoughtByUser(Long productId, String username);
+
 
 }

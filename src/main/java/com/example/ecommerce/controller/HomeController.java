@@ -5,11 +5,10 @@ import com.example.ecommerce.dto.CategoryDto;
 import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.dto.TrackProductSellerDto;
 import com.example.ecommerce.dto.UserDto;
-import com.example.ecommerce.service.ICategoryService;
-import com.example.ecommerce.service.IProductService;
-import com.example.ecommerce.service.ITrackProductSellerService;
-import com.example.ecommerce.service.IUserService;
+import com.example.ecommerce.service.*;
 import com.example.ecommerce.utils.SystemUtils;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
@@ -28,16 +27,18 @@ public class HomeController {
     private final ICategoryService categoryService;
     private final ITrackProductSellerService trackProductSellerService;
     private final IUserService userService;
+    private final IBasketService basketService;
 
     @Autowired
     public HomeController(@Qualifier("productService") IProductService productService,
                           @Qualifier("categoryService") ICategoryService categoryService,
                           @Qualifier("trackProductService") ITrackProductSellerService trackProductSellerService,
-                          @Qualifier("userService") IUserService userService) {
+                          @Qualifier("userService") IUserService userService, IBasketService basketService) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.trackProductSellerService = trackProductSellerService;
         this.userService = userService;
+        this.basketService = basketService;
     }
 
     /**
@@ -45,12 +46,15 @@ public class HomeController {
      * 1, Xem danh mục, sản phẩm
      * 2, Tạo đơn hàng, giỏ hàng
      */
-    @RequestMapping({"/", "/home"})
-    public String getHomePage(Model model) {
+    @RequestMapping({"/", "/home", ""})
+    public String getHomePage(Model model, HttpServletResponse response) {
         List<ProductDto> productDtos = productService.findAll(0);
         List<CategoryDto> categoryDtos = categoryService.records();
         List<TrackProductSellerDto> trackProductSellerDtos =
                 trackProductSellerService.getListTopNumberByNumberOfSold(1, 9);
+        Cookie numberOfBasketCookie = new Cookie("basket", basketService.count().toString());
+        numberOfBasketCookie.setMaxAge(10 * 365 * 24 * 60 * 60);
+        response.addCookie(numberOfBasketCookie);
         model.addAttribute("trackProductSellers", trackProductSellerDtos);
         model.addAttribute("products", productDtos);
         model.addAttribute("categories", categoryDtos);
@@ -59,8 +63,7 @@ public class HomeController {
 
     @GetMapping("/shop")
     public String getShopPage(Model model,
-                              @RequestParam(name = "page", defaultValue = "1", required = false) int page,
-                              @RequestParam(name = "sortBy", required = false, defaultValue = "null") String sortBy) {
+                              @RequestParam(name = "page", defaultValue = "1", required = false) int page) {
         List<CategoryDto> categoryDtos = categoryService.records();
         List<ProductDto> productDtos = productService.findAll(page - 1);
         model.addAttribute("categories", categoryDtos);
@@ -87,7 +90,7 @@ public class HomeController {
         return "register";
     }
 
-    @GetMapping("/vendor/seller")
+    @GetMapping("/seller")
     public String getPageVendorSeller() {
 //        return "admin/user/vendor-seller";
         return "contact";

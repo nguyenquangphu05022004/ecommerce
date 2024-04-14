@@ -23,6 +23,9 @@ public class Image extends Base{
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+    @ManyToOne
+    @JoinColumn(name = "evaluation_id")
+    private Evaluation evaluation;
 
     public Image(String name, String shortUrl) {
         this.name = name; this.shortUrl = shortUrl;

@@ -90,6 +90,13 @@
                 </div>
                 <hr>
                 <p class="text-dark fw-bold h4">Shop: [[${product.vendor.shopName}]]</p>
+                <div class="mt-5">
+                    <input type="text"
+                           class="border-0 border-bottom rounded me-5 mb-4"
+                           id="coupon"
+                           placeholder="Coupon Code">
+                    <button th:onclick="checkCoupon([[${product.id}]])" class="btn border-secondary rounded-pill text-primary" type="button">Apply Coupon</button>
+                </div>
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -99,7 +106,9 @@
                             <th scope="col">Giá</th>
                             <th scope="col">Số lượng</th>
                             <th scope="col">Phí Ship</th>
+                            <th scope="col">Giảm giá</th>
                             <th scope="col">Tổng</th>
+                            <th scope="col">Tổng sau khi giảm</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -114,7 +123,12 @@
                             <td class="py-5" th:text="${product.formatPrice}"></td>
                             <td class="py-5">[[${param.numberOfProduct}]]</td>
                             <td class="py-5">[[${product.vendor.formatMoneyDelivery}]]</td>
+                            <td class="py-5" id="coupon-decrease">0 %</td>
                             <td class="py-5">[[${totalPrice}]]</td>
+                            <td class="py-5" >
+                                <p id="coupon-total" >[[${totalPrice}]]</p>
+                                <input type="hidden" value="" id="value-id-coupon">
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -180,7 +194,9 @@
                 "id": productId,
             },
             payment: form.elements["delivery"].value,
-            quantity: [[${param.numberOfProduct}]][0]
+            quantity: [[${param.numberOfProduct}]][0],
+            couponId: document.getElementById("value-id-coupon").value
+
         }
         console.log(order)
         $.ajax({
@@ -199,6 +215,34 @@
                 alert("Error")
             }
         })
+    }
+    function callApi(type, data,  theUrl, success, error) {
+        const url = new URL(theUrl, document.location);
+        $.ajax({
+            type: type,
+            url: url.href,
+            data: data,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            success: function (data) {
+                success(data);
+            },
+            error: function () {
+                error();
+            }
+        })
+    }
+    function checkCoupon(productId) {
+        const code = document.getElementById("coupon").value;
+        callApi('post', '', `[(@{/vendor/product/${productId}/coupon?couponCode=${code}})]`, (coupon) => {
+            $("#coupon-decrease").html(coupon.percent + '%')
+            let totalPrice = [[${totalPrice}]];
+            totalPrice = parseFloat(totalPrice.replace(/,/g, ''));
+            const totalDe = getFormatNumber(totalPrice - totalPrice * 0.01 * coupon.percent);
+            $("#coupon-total").html(totalDe)
+            document.getElementById("value-id-coupon").value = coupon.id;
+        }, () => {alert("Mã không hợp lệ, vui lòng nhập mã khác.")})
     }
 </script>
 </body>

@@ -26,5 +26,5 @@ public class UserDto extends BaseDto{
     private BasketDto basket;
     private VendorDto vendor;
     private Verify verify;
-    private List<EvaluationDto> feedBacks = new ArrayList<>();
+    private List<EvaluationDto> evaluations = new ArrayList<>();
 }

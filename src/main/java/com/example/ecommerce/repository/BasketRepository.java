@@ -12,4 +12,5 @@ public interface BasketRepository extends JpaRepository<Basket, Long> {
     Optional<Basket> findByUserIdAndProductId(Long userId, Long productId);
     Long countAllByUserUsername(String username);
 //    Basket updateBasketQuantityById(Long id, Integer quantity);
+    void deleteByProductIdAndUserId(Long productId, Long userId);
 }

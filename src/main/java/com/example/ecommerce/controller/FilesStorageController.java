@@ -1,5 +1,6 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IUserService;
 import com.example.ecommerce.utils.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class FilesStorageController {
 
     private final IUserService userService;
-
+    private final IFilesStorageService filesStorageService;
     @Autowired
-    public FilesStorageController(IUserService userService) {
+    public FilesStorageController(IUserService userService,
+                                  IFilesStorageService filesStorageService) {
         this.userService = userService;
+        this.filesStorageService = filesStorageService;
     }
 
 
@@ -47,8 +50,7 @@ public class FilesStorageController {
     @ResponseBody
     public Resource getImage(@PathVariable("type") String type,
                              @PathVariable("fileName") String fileName) {
-        Resource resource = SystemUtils.FILES_STORAGE_SERVICE
-                            .loadFile(fileName, type);
+        Resource resource = filesStorageService.loadFile(fileName, type);
         return resource;
     }
 

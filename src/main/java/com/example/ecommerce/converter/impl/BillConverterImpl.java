@@ -2,12 +2,18 @@ package com.example.ecommerce.converter.impl;
 
 import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.dto.BillDto;
-import com.example.ecommerce.dto.OrderDto;
 import com.example.ecommerce.entity.Bill;
-import com.example.ecommerce.entity.Payment;
-import com.example.ecommerce.utils.Convert;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BillConverterImpl implements IGenericConverter<Bill, BillDto> {
+    private final OrderConverter orderConverter;
+
+    @Autowired
+    public BillConverterImpl(OrderConverter orderConverter) {
+        this.orderConverter = orderConverter;
+    }
 
     @Override
     public Bill toEntity(BillDto billDto) {
@@ -19,7 +25,7 @@ public class BillConverterImpl implements IGenericConverter<Bill, BillDto> {
         BillDto billDto = BillDto.builder()
                 .id(bill.getId())
                 .name(bill.getName())
-                .order((OrderDto) Convert.ORDER.toDto(bill.getOrder()))
+                .order(orderConverter.toDto(bill.getOrder()))
                 .status(bill.getStatus())
                 .build();
         return billDto;

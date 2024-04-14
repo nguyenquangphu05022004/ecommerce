@@ -2,7 +2,10 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.dto.BasketDto;
 import com.example.ecommerce.service.impl.BasketServiceImpl;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +32,13 @@ public class BasketController {
 
     @PostMapping("/baskets")
     @ResponseBody
-    public BasketDto createBasket(@RequestBody BasketDto basketDto) {
-        return basketService.saveOrUpdate(basketDto);
+    public BasketDto createBasket(@RequestBody BasketDto basketDto, HttpServletResponse response) {
+        basketDto = basketService.saveOrUpdate(basketDto);
+        Cookie numberOfBasketCookie = new Cookie("basket", basketService.count().toString());
+        numberOfBasketCookie.setMaxAge(10 * 365 * 24 * 60 * 60);
+        numberOfBasketCookie.setPath("/");
+        response.addCookie(numberOfBasketCookie);
+        return basketDto;
     }
 
     @PutMapping("/baskets")
@@ -38,9 +46,13 @@ public class BasketController {
     public BasketDto updateBasket(@RequestBody BasketDto basketDto) {
         return basketService.saveOrUpdate(basketDto);
     }
-    @DeleteMapping("/baskets/{basketId}")
+    @GetMapping("/baskets/{basketId}")
     @ResponseBody
-    public void deleteBasket(@PathVariable("basketId") Long basketId) {
+    public void deleteBasket(@PathVariable("basketId") Long basketId, HttpServletResponse response) {
         basketService.delete(basketId);
+        Cookie numberOfBasketCookie = new Cookie("basket", basketService.count().toString());
+        numberOfBasketCookie.setMaxAge(10 * 365 * 24 * 60 * 60);
+        numberOfBasketCookie.setPath("/");
+        response.addCookie(numberOfBasketCookie);
     }
 }

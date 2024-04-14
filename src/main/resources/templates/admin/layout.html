@@ -75,6 +75,16 @@
                            class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Danh sách</a>
                     </div>
                 </div>
+                <div class="nav-item dropdown" sec:authorize="hasAuthority('VENDOR')">
+                    <a href="#" class="nav-link dropdown-toggle"
+                       data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Khuyến Mãi</a>
+                    <div class="dropdown-menu bg-transparent border-0">
+                        <a th:href="@{/vendor/coupon/add}"
+                           class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Thêm</a>
+                        <a th:href="@{/vendor/coupons}"
+                           class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Danh sách</a>
+                    </div>
+                </div>
                 <a  th:href="@{/vendor/products/bills}"
                     sec:authorize="hasAuthority('VENDOR')"
                    class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Hóa đơn</a>

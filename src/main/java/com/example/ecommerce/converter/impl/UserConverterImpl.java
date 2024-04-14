@@ -3,12 +3,13 @@ package com.example.ecommerce.converter.impl;
 import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.dto.BasketDto;
 import com.example.ecommerce.dto.UserDto;
-import com.example.ecommerce.entity.Basket;
-import com.example.ecommerce.entity.Image;
-import com.example.ecommerce.entity.Role;
-import com.example.ecommerce.entity.User;
+import com.example.ecommerce.entity.*;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserConverterImpl implements IGenericConverter<User, UserDto> {
     private ModelMapper mapper;
@@ -36,8 +37,11 @@ public class UserConverterImpl implements IGenericConverter<User, UserDto> {
         if(user.getAvatar() != null) {
             user = user.toBuilder().avatar(user.getAvatar().toBuilder().user(null).build()).build();
         }
-        if(user.getEvaluation() != null) {
-            user = user.toBuilder().evaluation(user.getEvaluation().toBuilder().user(null).build()).build();
+        if(user.getEvaluations() != null || user.getEvaluations().size() == 0) {
+            List<Evaluation> evaluations = user.getEvaluations().stream().map(e -> {
+                return e.toBuilder().user(null).build();
+            }).collect(Collectors.toList());
+            user.setEvaluations(evaluations);
         }
         UserDto userDto =  mapper.map(user, UserDto.class);
         return userDto;

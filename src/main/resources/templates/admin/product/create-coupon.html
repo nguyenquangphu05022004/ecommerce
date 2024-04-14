@@ -1,0 +1,68 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/admin/layout}">
+
+<head>
+    <title>Coupon</title>
+</head>
+<body layout:fragment="body">
+<div class="col-sm-12 col-xl-12">
+    <div class="bg-light rounded h-100 p-4">
+        <h6 class="mb-4">Tạo khuyến mãi</h6>
+        <form role="form" th:action="@{/vendor/coupon/add}" method="post" th:object="${coupon}">
+            <div class="form-floating mb-3">
+                <input type="text"
+                       class="form-control"
+                       id="code"
+                       name="code"
+                       th:field="*{code}"
+                       placeholder="Ví dụ: giày">
+                <label for="content">Code</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text"
+                       class="form-control"
+                       id="content"
+                       name="content"
+                       th:field="*{content}"
+                       placeholder="Ví dụ: giày">
+                <label for="content">Nội dung</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="number"
+                       class="form-control"
+                       id="percent"
+                       name="percent"
+                       th:field="*{percent}"
+                       placeholder="Giá tiền">
+                <label for="percent">Giảm giá(%)</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="datetime-local"
+                       class="form-control"
+                       id="start"
+                       name="start"
+                       th:field="*{start}"
+                       placeholder="Số lượng">
+                <label for="start">Bắt đầu</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="datetime-local"
+                       class="form-control"
+                       id="end"
+                       name="end"
+                       th:field="*{end}"
+                       placeholder="Số lượng">
+                <label for="end">Kết thúc</label>
+            </div>
+            <div class="form-floating mb-3">
+                <button type="submit" class="btn btn-primary w-100">Tạo</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+</script>
+</body>
+</html>

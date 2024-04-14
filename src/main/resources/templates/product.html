@@ -151,20 +151,25 @@
                             </div>
                         </div>
                     </div>
-                    <form id="form-comment" method="post" th:if="${was_bought == true}">
+                    <form id="form-comment" th:action="@{/evaluations/{productId}(productId=${product.id})}"
+                          method="post" th:if="${was_bought == true}" th:object="${evaluation}"
+                          enctype="multipart/form-data"
+                    >
                         <h4 class="fw-bold">Để Lại Đánh Giá</h4>
                         <div class="row g-4">
                             <div class="col-lg-12">
                                 <div class="border-bottom rounded my-4">
                                     <textarea name="content"
                                               class="form-control border-0"
+                                              th:field="*{content}"
                                               cols="30" rows="8"
                                               placeholder="Đánh giá của bạn*"
                                     ></textarea>
                                 </div>
                                 <div class="border-bottom rounded my-4">
-                                    <input type="file" multiple class="form-control" name="file">
+                                    <input type="file" multiple class="form-control" name="image">
                                 </div>
+                                <input type="hidden" name="rating" th:field="*{rating}" id="rating">
                             </div>
                             <div class="col-lg-12">
                                 <div class="d-flex justify-content-between py-3 mb-5">
@@ -178,9 +183,9 @@
                                             <i class="fa fa-star" id="rate#5" onclick="rating(5)"></i>
                                         </div>
                                     </div>
-                                    <a href="##" th:onclick="createEvaluation([[${product.id}]])"
+                                    <button type="submit"
                                        class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">Đăng
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -385,6 +390,21 @@
                 if(typeof data === 'string') {
                     window.location.href=new URL('[(@{/login})]', document.location).href;
                 } else {
+                    let cookieValue = "0";
+                    let name = 'basket' + "=";
+                    let decodedCookie = decodeURIComponent(document.cookie);
+                    let ca = decodedCookie.split(';');
+                    for(let i = 0; i <ca.length; i++) {
+                        let c = ca[i];
+                        while (c.charAt(0) == ' ') {
+                            c = c.substring(1);
+                        }
+                        if (c.indexOf(name) == 0) {
+                            cookieValue =  c.substring(name.length, c.length);
+                            break;
+                        }
+                    }
+                    document.getElementById("basket").innerHTML = cookieValue;
                     alert("Đã thêm vào giỏ hàng!")
                 }
             },
@@ -422,15 +442,6 @@
             html += evaluationHtml(evaluation)
         })
         $("#nav-mission").html(html);
-        //relative-product
-        callApi("get", "", `[(@{/products/category/${product.category.id}})]`, (data) => {
-            // let e = ``
-            // data.forEach(product => {
-            //     e += ``
-            // })
-            // $("#relative-product").html(e)
-        })
-
     }
 
     function evaluationHtml(data) {
@@ -441,6 +452,12 @@
         for (let i = data.rating + 1; i <= 5; i++) {
             rate += `<i class="fa fa-star"></i>`
         }
+        let images = ``;
+        for(let i = 0; i < data.images.length; i++) {
+            const image = data.images[i];
+            images += `<img src="/${image.shortUrl}/${image.name}" class="img-fluid rounded p-3" style="width: 100px; height: 100px;" alt="">`
+        }
+
         let html = `<div class="d-flex">
                                     <img src="/${data.user.avatar.shortUrl}/${data.user.avatar.name}" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
                                     <div class="">
@@ -452,31 +469,10 @@
                                             </div>
                                         </div>
                                         <p class="text-dark">${data.content}</p>
+                                        ${images}
                                     </div>
                                 </div>`
         return html;
-    }
-
-    function createEvaluation(productId) {
-        let theUrl = `[(@{/evaluations})]`;
-        const formEvaluation = document.getElementById("form-comment")
-        const evaluation = {
-            product: {
-                id: productId
-            },
-            content: formEvaluation.elements["content"].value,
-            rating: valueRating,
-            numberOfLike: 0
-        }
-        console.log(evaluation)
-        callApi("post", JSON.stringify(evaluation), theUrl, (data) => {
-            rating(0)
-            console.log(rate)
-            formEvaluation.elements["email"].value = ""
-            formEvaluation.elements["fullName"].value = ""
-            formEvaluation.elements["content"].value = ""
-            $("#nav-mission").append(evaluationHtml(data))
-        })
     }
 
     function rating(value) {
@@ -489,7 +485,7 @@
             rate.classList.remove("text-primary")
         }
         valueRating = value
-        console.log("valueRating: ", valueRating)
+        document.getElementById("rating").value = valueRating;
     }
     function red_order(productId, productName) {
         const quantity = document.getElementById("quantity").value;

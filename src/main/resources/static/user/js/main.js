@@ -170,3 +170,33 @@ $(document).ready(function() {
     });
 });
 
+
+function getFormatNumber(value) {
+    let number = String(value);
+    let n = number.length;
+    let builder = '';
+    while (n > 0) {
+        let rev = number.substring(n - 3 >= 0 ? n - 3 : 0, n).split('').join('');
+        builder = rev + builder;
+        if (n - 3 > 0) builder = ',' + builder;
+        n -= 3;
+    }
+    return builder;
+}
+function getCookie(cname) {
+    let cookieValue = "0";
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            cookieValue =  c.substring(name.length, c.length);
+            break;
+        }
+    }
+    return cookieValue;
+}

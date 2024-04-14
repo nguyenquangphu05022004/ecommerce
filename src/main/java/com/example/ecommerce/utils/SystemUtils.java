@@ -2,9 +2,14 @@ package com.example.ecommerce.utils;
 
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.impl.FilesStorageServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
+@PropertySource("classpath:application.properties")
 public class SystemUtils {
     public static int totalPage = 0;
     public static final Integer NUMBER_OF_ITEM = 9;
@@ -15,7 +20,9 @@ public class SystemUtils {
     public static final String SHORT_URL_AVATAR = "files/avatar";
     public static final String SHORT_URL_PRODUCT = "files/image-product";
     public static final String SHORT_URL_CATEGORY="files/image-category";
-    public static final IFilesStorageService FILES_STORAGE_SERVICE = new FilesStorageServiceImpl();
+    public static final String SHORT_URL_EVALUATION="files/image-evaluation";
+
+
     public static String code() {
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i < 12; i++) {
@@ -35,5 +42,9 @@ public class SystemUtils {
             n -= 3;
         }
         return builder.reverse().toString();
+    }
+    public static String getFormatDate(LocalDateTime localDateTime, String pattern){
+        DateTimeFormatter format = DateTimeFormatter.ofPattern(pattern);
+        return format.format(localDateTime);
     }
 }

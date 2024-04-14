@@ -1,6 +1,8 @@
 package com.example.ecommerce.service.impl;
 
+import com.example.ecommerce.dto.Resources;
 import com.example.ecommerce.service.IFilesStorageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -13,9 +15,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 @Service
 public class FilesStorageServiceImpl implements IFilesStorageService {
-    private final Path root = Paths.get("src\\main\\resources\\static\\uploads");
+    private final Resources resources;
+    private  Path root = null;
+
+    @Autowired
+    public FilesStorageServiceImpl(Resources resources) {
+        this.resources = resources;
+    }
+
+
     @Override
     public void saveFile(MultipartFile multipartFile, String folder) {
+        if(root == null) {
+            root = Paths.get(resources.getUrlFilesStorage());
+        }
         try {
             Path path = root.resolve(folder);
             Files.copy(multipartFile.getInputStream(), path.resolve(multipartFile.getOriginalFilename()));
@@ -27,6 +40,9 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
 
     @Override
     public Resource loadFile(String fileName, String folder) {
+        if(root == null) {
+            root = Paths.get(resources.getUrlFilesStorage());
+        }
         try {
             Path path = root.resolve(folder).resolve(fileName);
             Resource resource = new UrlResource(path.toUri());
@@ -43,6 +59,9 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
 
     @Override
     public void deleteFile(String fileName, String folder) {
+        if(root == null) {
+            root = Paths.get(resources.getUrlFilesStorage());
+        }
         Path path = root.resolve(folder).resolve(fileName);
         try {
             Files.delete(path);

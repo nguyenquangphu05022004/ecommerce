@@ -5,6 +5,7 @@ import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.dto.VendorDto;
 import com.example.ecommerce.entity.Image;
 import com.example.ecommerce.entity.Product;
+import com.example.ecommerce.entity.Status;
 import com.example.ecommerce.entity.Vendor;
 import com.example.ecommerce.repository.BillRepository;
 import com.example.ecommerce.repository.ProductRepository;
@@ -82,41 +83,66 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductDto> searchProductsByName(String name) {
-        List<Product> products = productRepository
-                .findAllByLanguageNameEnOrNameVn(name.toLowerCase());
-        return products.stream()
-                .map(entity -> (ProductDto) Convert.PRO.toDto(entity))
+    public List<ProductDto> findProductByCategoryId(Long categoryId, int page) {
+        return productRepository.findAllByCategoryId(categoryId, PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM))
+                .stream()
+                .map(e -> (ProductDto) Convert.PRO.toDto(e))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductDto> findProductByCategoryId(Long categoryId) {
-        List<Product> products = productRepository.findByCategoryId(categoryId);
-        return products.stream()
-                .map((entity) -> (ProductDto) Convert.PRO.toDto(entity))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ProductDto> searchProductsByNameAndCategoryId(String name,
-                                                              Long categoryId,
-                                                              int page,
-                                                              Sort sort) {
-        return searchByCondition(name, categoryId, page, sort);
-    }
-
-    @Override
-    public List<ProductDto> searchProductsByNameAndCategoryId(String name, Long categoryId, int page) {
-        return searchByCondition(name, categoryId, page, null);
-    }
-
-    private List<ProductDto> searchByCondition(String name, Long categoryId, int page, Sort sort) {
-        Pageable paging;
-        if (sort == null) paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
-        else paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM, sort);
-        Page<Product> pages = productRepository
-                .findAllByLanguageNameEnOrNameVnAAndCategory(name, categoryId, paging);
+    public List<ProductDto> search(String query, Long categoryId,
+                                   Long vendorId, Integer startPrice,
+                                   Integer endPrice, int page) {
+        Pageable paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
+        Page<Product> pages = null;
+        if(vendorId != null) {
+            if(query == null && categoryId == 0 && startPrice == 0 && endPrice == 0) {
+                pages = productRepository.findAllByVendorId(vendorId, paging);
+            } else if(query == null && categoryId == 0 && startPrice != 0 && endPrice != 0) {
+                pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndVendorId(vendorId, startPrice, endPrice, paging);
+            } else if(query == null && categoryId != null) {
+                if(startPrice != 0 && endPrice != 0) {
+                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndCategoryIdAndVendorId(vendorId, categoryId, startPrice, endPrice, paging);
+                } else {
+                    pages = productRepository.findAllByCategoryIdAndVendorId(vendorId, categoryId, paging);
+                }
+            } else if(query != null && categoryId == 0) {
+                if(startPrice != 0 && endPrice != 0) {
+                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndVendorId(vendorId,query, startPrice, endPrice, paging);
+                } else {
+                    pages = productRepository.findAllByProductNameAndVendorId(vendorId, query, paging);
+                }
+            } else if(query != null && categoryId != 0) {
+                if(startPrice != 0 && endPrice != 0) {
+                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndCategoryIdAndVendorId(vendorId, query, categoryId, startPrice, endPrice, paging);
+                } else {
+                    pages = productRepository.findAllByProductNameAndCategoryIdAndVendorId(vendorId, query, categoryId, paging);
+                }
+            }
+        } else {
+            if(query == null && categoryId == 0 && startPrice != 0 && endPrice != 0) {
+                pages = productRepository.findAllByPriceBetweenStartPriceAndEndPrice(startPrice, endPrice, paging);
+            } else if(query == null && categoryId != null) {
+                if(startPrice != 0 && endPrice != 0) {
+                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndCategoryId(categoryId, startPrice, endPrice, paging);
+                } else {
+                    pages = productRepository.findAllByCategoryId(categoryId, paging);
+                }
+            } else if(query != null && categoryId == 0) {
+                if(startPrice != 0 && endPrice != 0) {
+                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductName(query, startPrice, endPrice, paging);
+                } else {
+                    pages = productRepository.findAllByProductName(query, paging);
+                }
+            } else if(query != null && categoryId != null) {
+                if(startPrice != 0 && endPrice != 0) {
+                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndCategoryId(query, categoryId, startPrice, endPrice, paging);
+                } else {
+                    pages = productRepository.findAllByProductNameAndCategoryId(query, categoryId, paging);
+                }
+            }
+        }
         SystemUtils.totalPage = pages.getTotalPages();
         List<Product> products = pages.getContent();
         return products.stream()
@@ -134,10 +160,8 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductDto> findAllByVendor(Long vendorId, Integer page, Sort sort) {
-        Pageable paging = null;
-        if (sort == null) paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
-        else paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM, sort);
+    public List<ProductDto> findAllByVendor(Long vendorId, Integer page) {
+        Pageable paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
         Page<Product> productPages = productRepository.findAllByVendorId(vendorId, paging);
         SystemUtils.totalPage = productPages.getTotalPages();
         return productPages.getContent()
@@ -168,7 +192,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public boolean productWasBoughtByUser(Long productId, String username) {
-        return billRepository.existsByOrderProductIdAndOrderUserUsername(productId, username);
+        return billRepository.existsByOrderBillStatusAndOrderProductIdAndOrderUserUsername(Status.SUCCESS,productId, username);
     }
 
 

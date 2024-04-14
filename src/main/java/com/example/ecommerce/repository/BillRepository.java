@@ -9,5 +9,5 @@ import java.util.List;
 public interface BillRepository extends JpaRepository<Bill, Long> {
     List<Bill> findAllByStatus(Status status);
     List<Bill> findAllByOrderProductVendorUserUsername(String username);
-    boolean existsByOrderProductIdAndOrderUserUsername(Long id, String username);
+    boolean existsByOrderBillStatusAndOrderProductIdAndOrderUserUsername(Status status, Long productId, String username);
 }

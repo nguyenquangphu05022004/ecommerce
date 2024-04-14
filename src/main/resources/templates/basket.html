@@ -8,135 +8,157 @@
 <body layout:fragment="body" class="container-fluid" style="padding-top: 95px">
 <!-- Cart Page Start -->
 
-    <div class="container py-5">
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">Sản phẩm</th>
-                    <th scope="col">Tên</th>
-                    <th scope="col">Giá</th>
-                    <th scope="col">Số lượng</th>
-                    <th scope="col">Tổng</th>
-                    <th scope="col">Xóa</th>
-                    <th scope="col">Mua</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="basket: ${baskets}" th:id="${basket.id}">
-                    <th scope="row">
-                        <div class="d-flex align-items-center">
-                            <img th:if="${basket.product.thumbnails.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
-                            <img th:unless="${basket.product.thumbnails.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${basket.product.thumbnails.get(0).shortUrl}, fileName=${basket.product.thumbnails.get(0).name})}" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
+<div class="container py-5">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Sản phẩm</th>
+                <th scope="col">Tên</th>
+                <th scope="col">Giá</th>
+                <th scope="col">Số lượng</th>
+                <th scope="col">Tổng</th>
+                <th scope="col">Xóa</th>
+                <th scope="col">Mua</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="basket: ${baskets}" th:id="${basket.id}">
+                <th scope="row">
+                    <div class="d-flex align-items-center">
+                        <img th:if="${basket.product.thumbnails.size == 0}"
+                             src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
+                             class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
+                        <img th:unless="${basket.product.thumbnails.size == 0}"
+                             th:src="@{/{shortUrl}/{fileName}(shortUrl=${basket.product.thumbnails.get(0).shortUrl}, fileName=${basket.product.thumbnails.get(0).name})}"
+                             class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
+                    </div>
+                </th>
+                <td>
+                    <p class="mb-0 mt-4" th:text="${basket.product.language.nameVn}"></p>
+                </td>
+                <td>
+                    <p class="mb-0 mt-4" th:text="${basket.product.formatPrice}"></p>
+                </td>
+                <td>
+                    <div class="input-group quantity mt-4" style="width: 100px;">
+                        <div class="input-group-btn">
+                            <button
+                                    class="btn btn-sm btn-minus rounded-circle bg-light border"
+                                    th:onclick="updateQuantityProduct([[${basket}]], -1)"
+                            >
+                                <i class="fa fa-minus"></i>
+                            </button>
                         </div>
-                    </th>
-                    <td>
-                        <p class="mb-0 mt-4" th:text="${basket.product.language.nameVn}"></p>
-                    </td>
-                    <td>
-                        <p class="mb-0 mt-4" th:text="${basket.product.formatPrice}"></p>
-                    </td>
-                    <td>
-                        <div class="input-group quantity mt-4" style="width: 100px;">
-                            <div class="input-group-btn">
-                                <button
-                                        class="btn btn-sm btn-minus rounded-circle bg-light border"
-                                        th:onclick="updateQuantityProduct([[${basket}]], -1)"
-                                >
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="text"
-                                   class="form-control form-control-sm text-center border-0"
-                                   th:value="${basket.quantity}"
-                                   th:id="${'productQuantity' + basket.id}"
-                                   min=1>
-                            <div class="input-group-btn">
-                                <button
-                                        class="btn btn-sm btn-plus rounded-circle bg-light border"
+                        <input type="text"
+                               class="form-control form-control-sm text-center border-0"
+                               th:value="${basket.quantity}"
+                               th:id="${'productQuantity' + basket.id}"
+                               min=1>
+                        <div class="input-group-btn">
+                            <button
+                                    class="btn btn-sm btn-plus rounded-circle bg-light border"
                                     th:onclick="updateQuantityProduct([[${basket.id}]], 1)"
-                                >
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
+                            >
+                                <i class="fa fa-plus"></i>
+                            </button>
                         </div>
-                    </td>
-                    <td>
-                        <p class="mb-0 mt-4" th:text="${basket.formatTotalPrice}" th:id="${'totalPrice' + basket.id}"></p>
-                    </td>
-                    <td>
-                        <button th:onclick="removeBasket([[${basket.id}]])"
-                                class="btn btn-md rounded-circle bg-light border mt-4">
-                            <i class="fa fa-times text-danger"></i>
-                        </button>
-                    </td>
-                    <td th:id="${'productQuantity' + basket.id + 'basket'}">
-                        <a
-                                th:href="@{/orders/product/{productId}/{productName}?numberOfProduct={numberOfProduct}(productId = ${basket.product.id}, productName=${basket.product.language.nameVn}, numberOfProduct=${basket.quantity})}"
-                                class="btn btn-md rounded-circle bg-light border mt-4" >
-                            <i class="fab fa-btc"></i>
-                        </a>
-                    </td>
+                    </div>
+                </td>
+                <td>
+                    <p class="mb-0 mt-4" th:text="${basket.formatTotalPrice}" th:id="${'totalPrice' + basket.id}"></p>
+                </td>
+                <td>
+                    <button th:onclick="removeBasket([[${basket.id}]])"
+                            class="btn btn-md rounded-circle bg-light border mt-4">
+                        <i class="fa fa-times text-danger"></i>
+                    </button>
+                </td>
+                <td th:id="${'productQuantity' + basket.id + 'basket'}">
+                    <a
+                            th:href="@{/orders/product/{productId}/{productName}?numberOfProduct={numberOfProduct}(productId = ${basket.product.id}, productName=${basket.product.language.nameVn}, numberOfProduct=${basket.quantity})}"
+                            class="btn btn-md rounded-circle bg-light border mt-4">
+                        <i class="fab fa-btc"></i>
+                    </a>
+                </td>
 
-                </tr>
+            </tr>
 
-                </tbody>
-            </table>
-        </div>
-        <div class="mt-5">
-            <input type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code">
-            <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Apply Coupon</button>
-        </div>
+            </tbody>
+        </table>
     </div>
-    <script th:inline="javascript">
+</div>
+<script th:inline="javascript">
 
-        function updateQuantityProduct(basketId, number) {
-           const inputQuantity = document.getElementById(`productQuantity${basketId}`);
-           let quantity = parseInt(inputQuantity.value)
-            let basket = {id:basketId}
-           if(quantity + number >= 1) {
-               basket.quantity = quantity + number;
-               const theUrl = "[(@{/baskets})]";
-               callApi(
-                   "put",
-                   JSON.stringify(basket),
-                   theUrl,
-                   (data) => {
-                       console.log(data)
-                       $(`#totalPrice${data.id}`).html(data.formatTotalPrice)
-                       document.getElementById(`productQuantity${basketId}basket`)
-                           .innerHTML = `<a
+    function updateQuantityProduct(basketId, number) {
+        const inputQuantity = document.getElementById(`productQuantity${basketId}`);
+        let quantity = parseInt(inputQuantity.value)
+        let basket = {id: basketId}
+        if (quantity + number >= 1) {
+            basket.quantity = quantity + number;
+            const theUrl = "/baskets";
+            callApi(
+                "put",
+                JSON.stringify(basket),
+                theUrl,
+                (data) => {
+                    console.log(data)
+                    $(`#totalPrice${data.id}`).html(data.formatTotalPrice)
+                    document.getElementById(`productQuantity${basketId}basket`)
+                        .innerHTML = `<a
                                 href="/orders/product/${data.product.id}/${data.product.language.nameVn}?numberOfProduct=${data.quantity}"
                                 class="btn btn-md rounded-circle bg-light border mt-4" >
                             <i class="fab fa-btc"></i>
                         </a>`
-                   }
-               )
-           }
-        }
-        function removeBasket(basketId) {
-            const theUrl = `[(@{/baskets/${basketId}})]`
-            callApi("delete", "", theUrl, (data) => $(`#${basketId}`).html(""));
-        }
-        function callApi(type, data,  theUrl, success) {
-            const url = new URL(theUrl, document.location);
-            console.log(url.href)
-            $.ajax({
-                type: type,
-                url: url.href,
-                data: data,
-                headers: {
-                    "Content-Type": "application/json"
                 },
-                success: function (data) {
-                    success(data);
-                },
-                error: function () {
-                    alert("Error")
+                () => {
+                    alert("ĐÃ XẢY RA LỖI!!")
                 }
-            })
+            )
         }
-    </script>
+    }
+
+    function removeBasket(basketId) {
+        const theUrl = `/baskets/${basketId}`
+        callApi("get", "", theUrl, (data) => {
+            let cookieValue = "0";
+            let name = 'basket' + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    cookieValue = c.substring(name.length, c.length);
+                    break;
+                }
+            }
+            document.getElementById("basket").innerHTML = cookieValue;
+            $(`#${basketId}`).html("");
+        }, () => alert("Error"));
+    }
+
+    function callApi(type, data, theUrl, success, error) {
+        const url = new URL(theUrl, document.location);
+        console.log(url.href)
+        $.ajax({
+            type: type,
+            url: url.href,
+            data: data,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            success: function (data) {
+                success(data);
+            },
+            error: function () {
+                error();
+            }
+        })
+    }
+</script>
 <!-- Cart Page End -->
 </body>
 

@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "evaluations")
 @NoArgsConstructor
@@ -21,8 +24,10 @@ public class Evaluation extends Base {
     private Product product;
     @Column(columnDefinition = "text")
     private String content;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     private Integer numberOfLike;
+    @OneToMany(mappedBy = "evaluation")
+    private List<Image> images = new ArrayList<>();
 }

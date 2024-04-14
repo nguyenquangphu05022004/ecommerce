@@ -23,6 +23,7 @@
                             <th scope="col">Giá</th>
                             <th scope="col">Số lượng</th>
                             <th scope="col">Phí ship</th>
+                            <th scope="col">Giảm giá</th>
                             <th scope="col">Tổng</th>
                             <th scope="col">Thể loại</th>
                             <th scope="col">Thanh toán</th>
@@ -43,16 +44,17 @@
                             <th scope="row" th:text="${bill.order.product.formatPrice}"></th>
                             <th scope="row" th:text="${bill.order.quantity}"></th>
                             <th scope="row" th:text="${bill.order.product.vendor.formatMoneyDelivery}"></th>
+                            <th scope="row">[[${bill.order.percent}]] %</th>
                             <th scope="row" th:text="${bill.order.formatTotalPrice}"></th>
                             <th scope="row" th:text="${bill.order.product.category.name}"></th>
                             <th scope="row" th:text="${bill.order.payment.name}"></th>
                             <th scope="row" th:if="${bill.status.name() == 'SUCCESS'}">Đã thanh toán</th>
                                 <th scope="row" th:unless="${bill.status.name() == 'SUCCESS'}">Chưa thanh toán</th>
                             <th scope="row">
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <a href="#" data-bs-toggle="modal" th:data-bs-target="${'#modal-bill-' + bill.id}">
                                     Xem thông tin
                                 </a>
-                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" th:id="${'modal-bill-' + bill.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -67,7 +69,6 @@
                                                             <th scope="col">Họ và tên</th>
                                                             <th scope="col">Địa chỉ</th>
                                                             <th scope="col">Số điện thoại</th>
-                                                            <th scope="col">Email</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>
@@ -75,7 +76,6 @@
                                                             <th scope="row" th:text="${bill.order.user.userContactDetails.fullName}"></th>
                                                             <th scope="row" th:text="${bill.order.user.userContactDetails.address}"></th>
                                                             <th scope="row" th:text="${bill.order.user.userContactDetails.phoneNumber}"></th>
-                                                            <th scope="row" th:text="${bill.order.user.email}"></th>
                                                         </tr>
                                                         </tbody>
                                                     </table>
@@ -99,10 +99,6 @@
     </div>
     <script th:inline="javascript">
         function printBill(bill) {
-            console.log(bill)
-            // Retrieve necessary data
-            // Construct bill content
-
             var printWindow = window.open('', '_blank');
             printWindow.document.open();
             printWindow.document.write(`<html>
@@ -157,6 +153,7 @@
                                               <th>Giá</th>
                                               <th>Số lượng</th>
                                               <th>Phí ship</th>
+                                              <th>Giảm giá</th>
                                               <th>Tổng</th>
                                             </tr>
                                           </thead>
@@ -166,17 +163,18 @@
                                               <td>${bill.order.product.formatPrice}</td>
                                               <td>${bill.order.quantity}</td>
                                               <td>${bill.order.product.vendor.formatMoneyDelivery}</td>
+                                              <td>${bill.order.percent} %</td>
                                               <td>${bill.order.formatTotalPrice}</td>
                                             </tr>
                                             <tr>
-                                              <td colspan="4" style="text-align:right">Tổng:</td>
+                                              <td colspan="5" style="text-align:right">Tổng:</td>
                                               <td>${bill.order.formatTotalPrice}</td>
                                             </tr>
                                           </tbody>
                                         </table>`)
             printWindow.document.write(`<div class="qr-code">
                                             <h3>Scan QR Code khi giao hàng thành công</h3>
-                                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${bill.urlUpdateStatus}" alt="QR Code">
+                                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${bill.urlUpdateStatus}" alt="QR Code">
                                         </div>`)
             printWindow.document.write('</body></html>');
             printWindow.document.close();
