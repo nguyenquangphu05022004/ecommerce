@@ -31,7 +31,6 @@ pipeline {
         stage('Deploy MySQL to VPS') {
             steps {
                 echo 'Deploying and cleaning'
-                sh 'docker-compose -f docker-compose.yaml down'
                 sh 'docker-compose -f docker-compose.yaml up -d'
             }
         }
