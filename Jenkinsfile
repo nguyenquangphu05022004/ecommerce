@@ -31,7 +31,6 @@ pipeline {
        stage('Deploy MySQL to DEV') {
             steps {
                 echo 'Deploying and cleaning'
-                sh 'docker image pull mysql:8.0'
                 sh "docker run --name mysql_db --rm --network dev -v my-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=${mysql-db} -e MYSQL_DATABASE=db_example  -d mysql:8.0 "
                 sh 'sleep 20'
                 sh "docker exec -i mysql_db mysql --user=root --password=${mysql-db} < backup.sql"
@@ -41,7 +40,6 @@ pipeline {
         stage('Deploy Spring Boot to DEV') {
             steps {
                 echo 'Deploying and cleaning'
-                sh 'docker image pull irohas2004/ecommerce'
                 sh 'docker container run -d --rm --name ecommerce-my-app -p 8081:8081 --network irohas2004/ecommerce'
             }
         }
