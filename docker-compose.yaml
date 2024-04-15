@@ -7,7 +7,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: irohas2004
   ecommerce-app:
-    image: irohas2004/ecommerce:1.2
+    image: irohas2004/ecommerce
     volumes:
       - uploadsImage:/app/src/main/resources/static/uploads
     ports:
