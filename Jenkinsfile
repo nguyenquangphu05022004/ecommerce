@@ -19,11 +19,10 @@ pipeline {
         stage('Packaging/Pushing imagae') {
 
             steps {
-                // withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
+                withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
                     sh 'docker build -t irohas2004/ecommerce .'
-                    sh 'docker login -u irohas2004 -p Hachiman2004@'
                     sh 'docker push irohas2004/ecommerce'
-                // }
+                }
             }
         }
 
@@ -34,11 +33,5 @@ pipeline {
             }
         }
  
-    }
-    post {
-        // Clean after build
-        always {
-            cleanWs()
-        }
     }
 }
