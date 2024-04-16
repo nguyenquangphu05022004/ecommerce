@@ -21,7 +21,7 @@ pipeline {
             steps {
                 // withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
                     sh 'docker build -t irohas2004/ecommerce .'
-                    docker login --username=irohas2004 --pasword=Hachiman2004@
+                    docker login -u=irohas2004 -p=Hachiman2004@
                     sh 'docker push irohas2004/ecommerce'
                 // }
             }
