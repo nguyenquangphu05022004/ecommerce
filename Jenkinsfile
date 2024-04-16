@@ -31,7 +31,6 @@ pipeline {
        stage('Deploy APP to DEV') {
             steps {
                 echo 'Deploying and cleaning'
-                sh 'docker-compose --version'
                 sh 'docker-compose -f docker-compose.yaml up -d'
             }
         }
