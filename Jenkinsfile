@@ -26,10 +26,10 @@ pipeline {
             steps {
                 echo 'Deploying and cleaning'
                 withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
-                    sh 'docker network rm -f mynetwork'
                     sh 'docker rm -f mysql_db 1> /dev/null 2>&1'
                     sh 'docker rm -f ecommerce-app 1> /dev/null 2>&1'
                     sh 'docker rm -f phpmyadmin 1> /dev/null 2>&1'
+                    sh 'docker network rm -f mynetwork'
 
                     sh 'docker network create mynetwork'
                     sh 'docker run -d --name mysql_db -v mydata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=irohas2004 --network mynetwork mysql:8.0'
