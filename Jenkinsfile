@@ -6,12 +6,10 @@ pipeline {
         maven 'my_maven' 
     }
     stages {
-        stage('Initialize'){
-            def dockerHome = tool 'my_docker'
-            env.PATH = "${dockerHome}/bin:${env.PATH}"
-        }
         stage('Build with Maven') {
             steps {
+                def dockerHome = tool 'my_docker'
+                env.PATH = "${dockerHome}/bin:${env.PATH}"
                 sh 'mvn --version' 
                 sh 'java -version'
             }
