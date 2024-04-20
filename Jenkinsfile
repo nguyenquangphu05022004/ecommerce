@@ -5,9 +5,6 @@ pipeline {
     tools { 
         maven 'my_maven' 
     }
-    environment {
-        MYSQL_ROOT_LOGIN = credentials('MYSQL_ROOT_LOGIN')
-    }
     stages {
 
         stage('Build with Maven') {
@@ -20,8 +17,8 @@ pipeline {
 
             steps {
                 withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
-                    sh 'docker build -t irohas2004/ecommerce .'
-                    sh 'docker push irohas2004/ecommerce'
+                    sh 'docker build -t irohas2004/ecommerce:2.0 .'
+                    sh 'docker push irohas2004/ecommerce:2.0'
                 }
             }
         }

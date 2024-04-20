@@ -62,8 +62,12 @@ public class CategoryServiceImpl implements ICategoryService {
         if(categoryDto.getId() != null) {
             Category category = categoryRepository.findById(categoryDto.getId()).get();
             if(category.getThumbnail() != null) {
-                filesStorageService.deleteFile(category.getThumbnail().getName(),
-                        SystemUtils.FOLDER_CATEGORY_IMAGE);
+                try {
+                    filesStorageService.deleteFile(category.getThumbnail().getName(),
+                            SystemUtils.FOLDER_CATEGORY_IMAGE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 image = category.getThumbnail().toBuilder()
                         .name(categoryDto.getFile().getOriginalFilename())
                         .build();
