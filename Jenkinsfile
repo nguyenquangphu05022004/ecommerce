@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Build with Maven') {
             steps {
-                scripts  {
+                script  {
                     def dockerHome = tool 'my_docker'
                     env.PATH = "${dockerHome}/bin:${env.PATH}"
                 }
