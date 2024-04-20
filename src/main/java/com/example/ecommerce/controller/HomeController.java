@@ -41,12 +41,16 @@ public class HomeController {
         this.basketService = basketService;
     }
 
+    @GetMapping("/admin/home")
+    public String getHomeAdmin() {
+        return "admin/admin-control";
+    }
     /**
      * Chức năng:
      * 1, Xem danh mục, sản phẩm
      * 2, Tạo đơn hàng, giỏ hàng
      */
-    @RequestMapping({"/", "/home", ""})
+    @RequestMapping({"/", "/home"})
     public String getHomePage(Model model, HttpServletResponse response) {
         List<ProductDto> productDtos = productService.findAll(0);
         List<CategoryDto> categoryDtos = categoryService.records();

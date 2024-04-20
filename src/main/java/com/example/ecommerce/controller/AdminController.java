@@ -16,9 +16,5 @@ public class AdminController {
      *      3,
      *
      ***/
-    @GetMapping("/home")
-    public String getHome() {
-        return "admin/admin-control";
-    }
 
 }

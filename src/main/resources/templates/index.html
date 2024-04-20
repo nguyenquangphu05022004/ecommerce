@@ -26,14 +26,22 @@
                 <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
                     <div class="carousel-inner" role="listbox">
                         <div class="carousel-item active rounded" th:each="category : ${categories}" th:if="${category.id == 1}">
-                            <img th:src="@{/{shortUrl}/{fileName}(shortUrl=${category.thumbnail.shortUrl}, fileName=${category.thumbnail.name})}"
+                            <img th:if="${category.thumbnail != null}" th:src="@{/{shortUrl}/{fileName}(shortUrl=${category.thumbnail.shortUrl}, fileName=${category.thumbnail.name})}"
+                                 class="img-fluid w-100 rounded"
+                                 style="height: 300px"
+                            >
+                            <img th:unless="${category.thumbnail != null}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
                                  class="img-fluid w-100 rounded"
                                  style="height: 300px"
                             >
                             <a th:href="@{/shop/products/search?categoryId={categoryId}(categoryId=${category.id})}" class="btn px-4 py-2 text-white rounded bg-dark">[[${category.name}]]</a>
                         </div>
                         <div class="carousel-item rounded" th:each="category : ${categories}" th:unless="${category.id == 1}">
-                            <img th:src="@{/{shortUrl}/{fileName}(shortUrl=${category.thumbnail.shortUrl}, fileName=${category.thumbnail.name})}"
+                            <img th:if="${category.thumbnail != null}" th:src="@{/{shortUrl}/{fileName}(shortUrl=${category.thumbnail.shortUrl}, fileName=${category.thumbnail.name})}"
+                                 class="img-fluid w-100 rounded"
+                                 style="height: 300px"
+                            >
+                            <img th:unless="${category.thumbnail != null}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
                                  class="img-fluid w-100 rounded"
                                  style="height: 300px"
                             >
