@@ -1,4 +1,6 @@
 FROM openjdk:17-jdk-alpine
 WORKDIR /app
-COPY target/*.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+COPY src ./src
+CMD ["./mvnw", "spring-boot:run"]
