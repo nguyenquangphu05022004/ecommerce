@@ -1,27 +1,37 @@
-#!groovy
-
 pipeline {
-  agent none
-  stages {
-     stage('Initialize'){
-        def dockerHome = tool 'my_docker'
-        env.PATH = "${dockerHome}/bin:${env.PATH}"
+
+    agent any
+
+    tools { 
+        maven 'my_maven' 
     }
-    stage('Maven Install') {
-      agent {
-        docker {
-          image 'maven:3.5.0'
+    stages {
+        stage('Initialize'){
+            def dockerHome = tool 'my_docker'
+            env.PATH = "${dockerHome}/bin:${env.PATH}"
         }
-      }
-      steps {
-        sh 'mvn clean install'
-      }
+        stage('Build with Maven') {
+            steps {
+                sh 'mvn --version' 
+                sh 'java -version'
+            }
+        }
+        stage('Packaging/Pushing imagae') {
+
+            steps {
+                withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
+                    sh 'docker build -t irohas2004/ecommerce:2.0 .'
+                    sh 'docker push irohas2004/ecommerce:2.0'
+                }
+            }
+        }
+
+       stage('Deploy APP to DEV') {
+            steps {
+                echo 'Deploying and cleaning'
+                sh 'docker-compose -f docker-compose.yaml up -d'
+            }
+        }
+ 
     }
-    stage('Docker Build') {
-      agent any
-      steps {
-        sh 'docker build -t irohas2004/ecommerce:latest .'
-      }
-    }
-  }
 }
