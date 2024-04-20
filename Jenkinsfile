@@ -4,6 +4,7 @@ pipeline {
 
     tools { 
         maven 'my_maven' 
+        docker 'my_docker'
     }
     stages {
 
@@ -22,13 +23,5 @@ pipeline {
                 }
             }
         }
-
-       stage('Deploy APP to DEV') {
-            steps {
-                echo 'Deploying and cleaning'
-                sh 'docker-compose -f docker-compose.yaml up -d'
-            }
-        }
- 
     }
 }
