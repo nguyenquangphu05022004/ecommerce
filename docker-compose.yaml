@@ -6,12 +6,26 @@ services:
       - mydata:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: irohas2004
+    networks:
+      - app-network
+      
+  ecommerce-app:
+    image: irohas2004/ecommerce-app:2.5
+    volumes:
+      - uploadsImage:/app/src/main/resources/static/uploads
+    ports:
+      - 8081:8081
+    networks:
+      - app-network
+
   phpmyadmin:
     image: phpmyadmin
     ports:
       - 8085:80
     environment:
       - PMA_HOST=mysql_db
+    networks:
+      - app-network
     depends_on:
       - mysql_db
 volumes:
