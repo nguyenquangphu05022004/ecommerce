@@ -6,6 +6,12 @@ pipeline {
         maven 'my_maven' 
     }
     stages {
+        stage('Install docker') {
+          script {
+              def dockerHome = tool 'my_docker'
+              env.PATH = "${dockerHome}/bin:${env.PATH}"
+          }
+        }
         stage('Build with Maven') {
             steps {
                 sh 'mvn --version' 
@@ -16,12 +22,8 @@ pipeline {
 
             steps {
                 withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
-                    script {
-                        def dockerHome = tool 'my_docker'
-                        env.PATH = "${dockerHome}/bin:${env.PATH}"
-                        sh 'docker build -t irohas2004/ecommerce:2.0 .'
-                        sh 'docker push irohas2004/ecommerce:2.0'
-                    }
+                    sh 'docker build -t irohas2004/ecommerce:2.0 .'
+                    sh 'docker push irohas2004/ecommerce:2.0'
                 }
             }
         }
