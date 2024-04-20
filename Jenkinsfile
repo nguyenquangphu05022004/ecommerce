@@ -25,7 +25,9 @@ pipeline {
        stage('Deploy APP to DEV') {
             steps {
                 echo 'Deploying and cleaning'
-                sh 'docker-compose -f docker-compose.yaml up -d'
+                withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
+                    sh 'docker-compose -f docker-compose.yaml up -d'
+                }
             }
         }
  
