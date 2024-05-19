@@ -1,7 +1,8 @@
 package com.example.ecommerce.service.impl;
-import com.example.ecommerce.dao.EventDAO;
+
 import com.example.ecommerce.dao.impl.UserEventDao;
 import com.example.ecommerce.dto.EmailDetails;
+import com.example.ecommerce.dto.task.SendEmailTask;
 import com.example.ecommerce.entity.User;
 import com.example.ecommerce.entity.Verify;
 import com.example.ecommerce.repository.UserRepository;
@@ -9,6 +10,8 @@ import com.example.ecommerce.repository.VerifyRepository;
 import com.example.ecommerce.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -19,7 +22,9 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.Optional;
 
-// Annotation
+
+
+
 @Service
 // Class
 // Implementing EmailService interface
@@ -50,14 +55,9 @@ public class EmailServiceImpl implements EmailService {
         try {
             Optional<User> userOptional = userRepository.findByEmail(details.getRecipient());
             if(userOptional.isEmpty()) return String.format("Email: %s.\n Không tồn tại trong hệ thống.", details.getRecipient());
-            MimeMessage mailMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mailMessage, "utf-8");
-            mimeMessageHelper.setFrom(sender);
-            mimeMessageHelper.setTo(details.getRecipient());
-            mimeMessageHelper.setText(details.getMsgBody(), true);
-            mimeMessageHelper.setSubject(details.getSubject());
             saveDataVerify(details, userOptional.get());
-            javaMailSender.send(mailMessage);
+            Thread emailTask = new Thread(new SendEmailTask(details, javaMailSender, sender));
+            emailTask.start();
             return String.format("Chúng tôi đã gửi mã xác nhận vào email: %s.\n Vui lòng kiểm tra.\n Mã sẽ hết hạn trong 5 phút.", details.getRecipient());
         }
         catch (Exception e) {
