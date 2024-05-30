@@ -3,6 +3,7 @@ package com.example.ecommerce.service.impl;
 import com.example.ecommerce.entity.Evaluation;
 import com.example.ecommerce.entity.Image;
 import com.example.ecommerce.entity.Product;
+import com.example.ecommerce.entity.Stock;
 import com.example.ecommerce.repository.ImageRepository;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IImageService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+
 public class ImageServiceImpl implements IImageService {
     private final ImageRepository imageRepository;
     private final IFilesStorageService filesStorageService;
@@ -40,15 +42,15 @@ public class ImageServiceImpl implements IImageService {
     }
 
     @Override
-    public Image uploadFile(MultipartFile multipartFile, String folder, String shortUrl, Product product) {
+    public Image uploadFile(MultipartFile multipartFile, String folder, String shortUrl, Stock stock) {
         Image image = Image.builder()
                 .name(multipartFile.getOriginalFilename())
                 .shortUrl(shortUrl)
-                .product(product)
+                .stock(stock)
                 .build();
         image =  imageRepository.save(image);
         filesStorageService.saveFile(multipartFile, folder);
-        return image.toBuilder().user(null).category(null).product(null).build();
+        return image.toBuilder().user(null).category(null).stock(null).build();
     }
 
     @Override

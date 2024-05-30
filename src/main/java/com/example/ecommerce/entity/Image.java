@@ -21,8 +21,8 @@ public class Image extends Base{
     @OneToOne(mappedBy = "thumbnail")
     private Category category;
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "stock_id")
+    private Stock stock;
     @ManyToOne
     @JoinColumn(name = "evaluation_id")
     private Evaluation evaluation;

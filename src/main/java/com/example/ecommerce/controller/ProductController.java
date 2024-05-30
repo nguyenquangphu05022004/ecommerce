@@ -48,12 +48,7 @@ public class ProductController {
         return productService.saveOrUpdate(productDto);
     }
 
-    @PostMapping("/vendor/product/{productId}/images/upload")
-    public String uploadThumbnails(@PathVariable("productId") Long productId,
-                                     @RequestParam("files") List<MultipartFile> files) {
-        productService.uploadThumbnails(productId, files);
-        return "redirect:/vendor/products";
-    }
+
     @GetMapping("/vendor/product/{productId}/images/upload")
     public String formUploadThumbnails(@PathVariable("productId") Long productId, Model model) {
         model.addAttribute("productId", productId);

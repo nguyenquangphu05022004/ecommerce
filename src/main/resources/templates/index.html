@@ -82,8 +82,8 @@
                                     <div class="rounded position-relative fruite-item">
                                         <div class="fruite-img">
                                             <a th:href="@{/products/{productId}/{productName}(productId=${value.id}, productName=${value.language.nameVn})}">
-                                                <img th:if="${value.thumbnails.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid-redesign w-100 rounded-top" alt="">
-                                                <img th:unless="${value.thumbnails.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${value.thumbnails.get(0).shortUrl}, fileName=${value.thumbnails.get(0).name})}" class="img-fluid-redesign w-100 rounded-top" alt="">
+                                                <img th:if="${value.stockDtos.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid-redesign w-100 rounded-top" alt="">
+                                                <img th:unless="${value.stockDtos.size == 0}" th:src="@{/{shortUrl}/{fileName}(shortUrl=${value.stockDtos.get(0).imageDtos.get(0).shortUrl}, fileName=${value.stockDtos.get(0).imageDtos.get(0).name})}" class="img-fluid-redesign w-100 rounded-top" alt="">
                                             </a>
                                         </div>
                                         <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
@@ -140,8 +140,8 @@
                 rate += '<i class="fas fa-star"></i>';
             }
             let src = "";
-            if(product.thumbnails.length > 0) {
-                src=`/${product.thumbnails[0].shortUrl}/${product.thumbnails[0].name}`
+            if(product.stockDtos.length > 0) {
+                // src=`/${product.thumbnails[0].shortUrl}/${product.thumbnails[0].name}`
             } else {
                 src = "https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
             }

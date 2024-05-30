@@ -19,9 +19,6 @@ public class Product extends Base{
     @JoinColumn(name = "language_id")
     private Language language;
 
-    @OneToMany(mappedBy = "product")
-    private List<Image> thumbnails = new ArrayList<>();
-
     private Integer price;
     private Integer quantity;
     @ManyToOne
@@ -40,4 +37,6 @@ public class Product extends Base{
     private List<Basket> basket = new ArrayList<>();
     @OneToOne(mappedBy = "product")
     private TrackProductSeller productSeller;
+    @OneToMany(mappedBy = "product")
+    private List<Stock> stocks = new ArrayList<>();
 }

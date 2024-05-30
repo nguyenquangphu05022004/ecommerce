@@ -9,7 +9,7 @@ public class FactoryConverter {
         IGenericConverter genericConverter = null;
         switch (converter) {
             case PRODUCT:
-                genericConverter = new ProductConverterImpl(mapper);
+                genericConverter = new ProductConverterImpl();
                 break;
             case CATEGORY:
                 genericConverter = new CategoryConverter(mapper);

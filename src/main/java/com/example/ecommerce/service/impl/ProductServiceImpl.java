@@ -180,15 +180,7 @@ public class ProductServiceImpl implements IProductService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public void uploadThumbnails(Long id, List<MultipartFile> files) {
-        Product product = productRepository.findById(id).get();
-        List<Image> thumbnails = files
-                .stream().map(file -> {
-                    return imageService.uploadFile(file, SystemUtils.FOLDER_PRODUCT_IMAGE,
-                            SystemUtils.SHORT_URL_PRODUCT, product);
-                }).collect(Collectors.toList());
-    }
+
 
     @Override
     public boolean productWasBoughtByUser(Long productId, String username) {

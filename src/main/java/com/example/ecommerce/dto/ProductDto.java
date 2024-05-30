@@ -15,16 +15,15 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class ProductDto extends BaseDto {
-    private List<ImageDto> thumbnails = new ArrayList<>();
+
     private Integer price;
-    private Integer quantity;
     private CategoryDto category;
     private VendorDto vendor;
     private String description;
     private LanguageDto language;
     private List<EvaluationDto> evaluations = new ArrayList<>();
     private TrackProductSeller trackProductSeller;
-    private Integer numberOfProduct;
+    private List<StockDto> stockDtos = new ArrayList<>();
 
 
 

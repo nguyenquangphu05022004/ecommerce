@@ -103,6 +103,7 @@
                         <tr>
                             <th scope="col">Sản phẩm</th>
                             <th scope="col">Tên</th>
+                            <th scope="col">Loại mặt hàng</th>
                             <th scope="col">Giá</th>
                             <th scope="col">Số lượng</th>
                             <th scope="col">Phí Ship</th>
@@ -115,11 +116,12 @@
                         <tr>
                             <th scope="row">
                                 <div class="d-flex align-items-center mt-2">
-                                    <img th:if="${product.thumbnails.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid-redesign rounded-circle" alt="">
-                                    <img th:unless="${product.thumbnails.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${product.thumbnails.get(0).shortUrl}, fileName=${product.thumbnails.get(0).name})}" class="img-fluid-redesign rounded-circle" alt="">
+                                    <img th:if="${stock.imageDtos.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid-redesign" alt="">
+                                    <img th:unless="${stock.imageDtos.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${stock.imageDtos.get(0).shortUrl}, fileName=${stock.imageDtos.get(0).name})}" class="img-fluid-redesign " alt="">
                                 </div>
                             </th>
                             <td class="py-5" th:text="${product.language.nameVn}"></td>
+                            <td class="py-5" th:text="${stock.code}"></td>
                             <td class="py-5" th:text="${product.formatPrice}"></td>
                             <td class="py-5">[[${param.numberOfProduct}]]</td>
                             <td class="py-5">[[${product.vendor.formatMoneyDelivery}]]</td>

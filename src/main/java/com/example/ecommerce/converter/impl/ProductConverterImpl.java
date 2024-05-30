@@ -12,20 +12,14 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Component
 public class ProductConverterImpl implements IGenericConverter<Product, ProductDto> {
-    private final ModelMapper mapper;
-
-    public ProductConverterImpl(ModelMapper mapper) {
-        this.mapper = mapper;
-    }
 
     @Override
     public Product toEntity(ProductDto productDto) {
         return Product.builder()
                 .language(new Language(productDto.getLanguage().getNameVn(), productDto.getLanguage().getNameEn()))
                 .price(productDto.getPrice())
-                .quantity(productDto.getQuantity())
                 .category(Category.builder().id(productDto.getCategory().getId()).build())
                 .description(productDto.getDescription()).build();
     }
@@ -37,8 +31,16 @@ public class ProductConverterImpl implements IGenericConverter<Product, ProductD
         TrackProductSeller productSeller = product.getProductSeller() != null ?
                 TrackProductSeller.builder().numberOfProductsSold(product.getProductSeller().getNumberOfProductsSold()).build() : null;
 
-        List<ImageDto> thumbnails = product.getThumbnails() != null ?
-                product.getThumbnails().stream().map(e -> new ImageDto(e.getName(), e.getShortUrl())).collect(Collectors.toList()) : new ArrayList<>();
+        List<StockDto> stockDtos = product.getStocks() != null ?
+                product.getStocks().stream().map(e -> {
+                    return StockDto.builder()
+                            .code(e.getCode())
+                            .quantity(e.getQuantity())
+                            .id(e.getId())
+                            .imageDtos(
+                                    getImageDtoByStock(e)
+                            ).build();
+                }).collect(Collectors.toList()) : new ArrayList<>();
 
         List<EvaluationDto> evaluations = product.getEvaluations() != null ?
                 product.getEvaluations().stream().map(e -> (EvaluationDto) Convert.EVAL.toDto(e)).collect(Collectors.toList()) : new ArrayList<>();
@@ -51,13 +53,21 @@ public class ProductConverterImpl implements IGenericConverter<Product, ProductD
                 .price(product.getPrice())
                 .language(language)
                 .category((CategoryDto) Convert.CATE.toDto(product.getCategory()))
-                .thumbnails(thumbnails)
-                .quantity(product.getQuantity())
+                .stockDtos(stockDtos)
                 .evaluations(evaluations)
                 .trackProductSeller(productSeller)
                 .vendor((VendorDto) Convert.VEND.toDto(vendor))
                 .build();
         return productDto;
+    }
+
+    public static List<ImageDto> getImageDtoByStock(Stock e) {
+        return e.getImages().stream().map(image -> {
+            return ImageDto.builder()
+                    .name(image.getName())
+                    .shortUrl(image.getShortUrl())
+                    .build();
+        }).collect(Collectors.toList());
     }
 
     @Override

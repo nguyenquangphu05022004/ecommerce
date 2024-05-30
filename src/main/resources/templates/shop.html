@@ -138,8 +138,8 @@
 
     function getElementProduct(product) {
         let src = "";
-        if(product.thumbnails.length > 0) {
-            src=`/${product.thumbnails[0].shortUrl}/${product.thumbnails[0].name}`
+        if(product.stockDtos.length > 0) {
+            src=`/${product.stockDtos[0].imageDtos[0].shortUrl}/${product.stockDtos[0].imageDtos[0].name}`
         } else {
             src = "https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
         }

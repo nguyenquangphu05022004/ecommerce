@@ -21,7 +21,8 @@ public class SystemUtils {
     public static final String SHORT_URL_PRODUCT = "files/image-product";
     public static final String SHORT_URL_CATEGORY="files/image-category";
     public static final String SHORT_URL_EVALUATION="files/image-evaluation";
-
+    public static final String FOLDER_STOCK_IMAGE = "image-stock";
+    public static final String SHORT_URL_STOCK = "files/image-stock";
 
     public static String code() {
         StringBuilder builder = new StringBuilder();
