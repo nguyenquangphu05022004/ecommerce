@@ -4,17 +4,15 @@ import com.example.ecommerce.utils.SystemUtils;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @ToString
 @SuperBuilder(toBuilder = true)
 public class BasketDto extends BaseDto{
-    private ProductDto product;
     private Integer quantity;
     private Integer totalPrice;
-
+    private ProductTypeResponse productType;
     public String getFormatTotalPrice() {
         return SystemUtils.getFormatNumber(this.totalPrice);
     }

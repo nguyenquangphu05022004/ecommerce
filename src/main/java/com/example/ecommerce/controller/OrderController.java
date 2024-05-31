@@ -2,18 +2,16 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.dto.OrderDto;
-import com.example.ecommerce.dto.ProductDto;
-import com.example.ecommerce.dto.StockDto;
+import com.example.ecommerce.dto.OrderRequest;
+import com.example.ecommerce.dto.StockResponse;
 import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.Status;
-import com.example.ecommerce.entity.UserContactDetails;
 import com.example.ecommerce.service.IStockService;
 import com.example.ecommerce.service.impl.OrderServiceImpl;
 import com.example.ecommerce.service.impl.ProductServiceImpl;
 import com.example.ecommerce.service.impl.UserServiceImpl;
 import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,15 +31,17 @@ public class OrderController {
     public String getFormCheckOut(@RequestParam("numberOfProduct") Integer numberOfProduct,
                                   @RequestParam("stockId") Long stockId,
                                   Model model) {
-        StockDto stockDto = stockService.findById(stockId);
+        StockResponse stockDto = stockService.findById(stockId);
         UserDto userDto = userService.findUserByUsername(SecurityUtils.username());
-        model.addAttribute("user", userDto);
-        model.addAttribute("product", stockDto.getProductDto());
-        model.addAttribute("totalPrice",
-                SystemUtils.getFormatNumber((numberOfProduct * stockDto.getProductDto().getPrice()
-                        + stockDto.getProductDto().getVendor().getPerMoneyDelivery())));
-        model.addAttribute("numberOfProduct", numberOfProduct);
         model.addAttribute("stock", stockDto);
+        model.addAttribute("user", userDto);
+        model.addAttribute("totalPrice",
+                SystemUtils.getFormatNumber((
+                        numberOfProduct * stockDto.getPrice()
+                        + stockDto.getProductResponse()
+                        .getVendorResponse()
+                        .getPerMoneyDelivery())));
+        model.addAttribute("numberOfProduct", numberOfProduct);
         return "order";
     }
 
@@ -59,7 +59,7 @@ public class OrderController {
 
     @PostMapping("/orders")
     @ResponseBody
-    public OrderDto createOrder(@RequestBody OrderDto orderDto) {
+    public OrderDto createOrder(@RequestBody OrderRequest orderDto) {
         return orderService.saveOrUpdate(orderDto);
     }
 }

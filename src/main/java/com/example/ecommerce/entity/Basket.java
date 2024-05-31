@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.View;
 
 @Entity
 @Data
@@ -15,22 +14,18 @@ import org.hibernate.annotations.View;
 @Table(name = "basket")
 public class Basket extends Base{
 
-    /*
-        basket:
-            id, product
-     */
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne
-    @JoinColumn(name = "product_id", unique = false)
-    private Product product;
+    @JoinColumn(name = "product_type_id")
+    private ProductType productType;
     private Integer quantity;
 
     @Transient
     public Integer getTotalPrice() {
-        if(quantity != null && product != null && product.getPrice() != null) {
-            return quantity * product.getPrice();
+        if(quantity != null && productType != null && productType.getStock().getPrice() != null) {
+            return quantity * productType.getStock().getPrice();
         }
         return 0;
     }

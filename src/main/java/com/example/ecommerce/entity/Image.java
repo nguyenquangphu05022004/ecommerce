@@ -16,16 +16,6 @@ import java.util.List;
 public class Image extends Base{
     private String name;
     private String shortUrl;
-    @OneToOne(mappedBy = "avatar")
-    private User user;
-    @OneToOne(mappedBy = "thumbnail")
-    private Category category;
-    @ManyToOne
-    @JoinColumn(name = "stock_id")
-    private Stock stock;
-    @ManyToOne
-    @JoinColumn(name = "evaluation_id")
-    private Evaluation evaluation;
 
     public Image(String name, String shortUrl) {
         this.name = name; this.shortUrl = shortUrl;

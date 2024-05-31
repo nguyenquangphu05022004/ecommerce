@@ -5,6 +5,7 @@ import com.example.ecommerce.dto.*;
 import com.example.ecommerce.entity.Order;
 import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.entity.User;
+import com.example.ecommerce.service.impl.OrderServiceImpl;
 import com.example.ecommerce.utils.Convert;
 import org.aspectj.weaver.ast.Or;
 import org.modelmapper.ModelMapper;
@@ -21,7 +22,7 @@ public class OrderConverter implements IGenericConverter<Order, OrderDto> {
         Order order = Order.builder()
                 .payment(orderDto.getPayment())
                 .quantity(orderDto.getQuantity())
-                .percent(0)
+                .couponPercent(0)
                 .build();
         return order;
     }
@@ -30,13 +31,9 @@ public class OrderConverter implements IGenericConverter<Order, OrderDto> {
         OrderDto orderDto = OrderDto.builder()
                 .id(order.getId())
                 .payment(order.getPayment())
-                .product((ProductDto) Convert.PRO.toDto(order.getProduct()))
                 .quantity(order.getQuantity())
                 .status(order.getBill().getStatus().getName())
-                .user(UserDto.builder()
-                        .userContactDetails(order.getUser().getUserContactDetails())
-                        .build())
-                .percent(order.getPercent())
+                .contactDetails(order.getUser().getUserContactDetails())
                 .build();
         return orderDto;
     }

@@ -28,6 +28,6 @@ public class Evaluation extends Base {
     @JoinColumn(name = "user_id")
     private User user;
     private Integer numberOfLike;
-    @OneToMany(mappedBy = "evaluation")
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 }

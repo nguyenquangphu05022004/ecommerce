@@ -12,5 +12,7 @@ public class StockRequest {
     private String code;
     private Long productId;
     private Integer quantity;
+    private Integer price;
+    private List<DecorationDto> productTypes;
     private List<MultipartFile> multipartFiles;
 }

@@ -35,7 +35,7 @@ public class UserConverterImpl implements IGenericConverter<User, UserDto> {
     public UserDto toDto(User user) {
         if(user.getVendor() != null) user.setVendor(null);
         if(user.getAvatar() != null) {
-            user = user.toBuilder().avatar(user.getAvatar().toBuilder().user(null).build()).build();
+            user = user.toBuilder().avatar(user.getAvatar().toBuilder().build()).build();
         }
         if(user.getEvaluations() != null || user.getEvaluations().size() == 0) {
             List<Evaluation> evaluations = user.getEvaluations().stream().map(e -> {

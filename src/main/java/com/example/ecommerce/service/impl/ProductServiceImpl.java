@@ -14,6 +14,7 @@ import com.example.ecommerce.service.IImageService;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.utils.SystemUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,23 +28,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("productService")
+@RequiredArgsConstructor
 public class ProductServiceImpl implements IProductService {
 
     private final ProductRepository productRepository;
     private final VendorRepository vendorRepository;
-    private final IImageService imageService;
     private final BillRepository billRepository;
 
-    @Autowired
-    public ProductServiceImpl(ProductRepository productRepository,
-                              VendorRepository vendorRepository,
-                              IImageService imageService,
-                              BillRepository billRepository) {
-        this.productRepository = productRepository;
-        this.vendorRepository = vendorRepository;
-        this.imageService = imageService;
-        this.billRepository = billRepository;
-    }
 
     @Override
     public List<ProductDto> records() {
@@ -186,6 +177,5 @@ public class ProductServiceImpl implements IProductService {
     public boolean productWasBoughtByUser(Long productId, String username) {
         return billRepository.existsByOrderBillStatusAndOrderProductIdAndOrderUserUsername(Status.SUCCESS,productId, username);
     }
-
 
 }

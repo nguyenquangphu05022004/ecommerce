@@ -15,12 +15,18 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class Stock extends Base{
+
     private String code;
-    private Integer quantity;
+    private Integer quantityOfProduct;
+    private Integer price;
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-    @OneToMany(mappedBy = "stock")
+
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "stock")
+    private List<ProductType> productTypes = new ArrayList<>();
 
 }

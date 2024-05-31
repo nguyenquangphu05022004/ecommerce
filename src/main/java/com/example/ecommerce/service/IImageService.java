@@ -9,7 +9,4 @@ import org.springframework.web.multipart.MultipartFile;
 public interface IImageService {
     Image uploadFile(MultipartFile multipartFile, String folder, String shortUrl);
     void deleteFile(String nameFile, String folderFile, Long idImage);
-    Image uploadFile(MultipartFile multipartFile, String folder, String shortUrl, Stock stock);
-    Image uploadFile(MultipartFile multipartFile, String folder, String shortUrl, Evaluation evaluation);
-
 }

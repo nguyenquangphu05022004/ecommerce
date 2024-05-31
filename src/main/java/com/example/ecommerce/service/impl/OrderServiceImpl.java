@@ -2,6 +2,7 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.converter.impl.OrderConverter;
+import com.example.ecommerce.dto.OrderRequest;
 import com.example.ecommerce.entity.*;
 import com.example.ecommerce.repository.BasketRepository;
 import com.example.ecommerce.repository.CouponRepository;
@@ -44,7 +45,11 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
     public List<OrderDto> records() {
         return  orderRepository.findAllByUserUsername(SecurityUtils.username())
                 .stream()
-                .map(entity -> orderConverter.toDto(entity))
+                .map(entity -> orderConverter.toDto(entity)
+                        .toBuilder()
+                        .stockResponse(StockServiceImpl
+                                .getStockResponse(entity.getStock()))
+                        .build())
                 .collect(Collectors.toList());
     }
 
@@ -65,25 +70,25 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
 
     @Override
     @Transactional
-    public OrderDto saveOrUpdate(OrderDto orderDto) {
-        User user = userRepository.findByUsername(SecurityUtils.username()).get();
-        user.setUserContactDetails(orderDto.getUser().getUserContactDetails());
-        Product product = Product.builder()
-                .id(orderDto.getProduct().getId())
-                .build();
-        Order order = orderConverter.toEntity(orderDto);
-        if(orderDto.getCouponId() != null) {
-            Optional<Coupon> opCoupon = couponRepository.findByIdAndProductIdAndExpiredIsFalse(
-                    orderDto.getCouponId(), product.getId()
-            );
-            if(!opCoupon.isEmpty()) {
-                order.setPercent(opCoupon.get().getPercent());
-            }
-        }
-        order.setUser(user);
-        order.setProduct(product);
-        orderRepository.save(order);
-        basketRepository.deleteByProductIdAndUserId(product.getId(), user.getId());
+    public OrderDto saveOrUpdate(OrderRequest orderDto) {
+//        User user = userRepository.findByUsername(SecurityUtils.username()).get();
+//        user.setUserContactDetails(orderDto.getContactDetails());
+//        Product product = Product.builder()
+//                .id(orderDto.getProduct().getId())
+//                .build();
+//        Order order = orderConverter.toEntity(orderDto);
+//        if(orderDto.getCouponId() != null) {
+//            Optional<Coupon> opCoupon = couponRepository.findByIdAndProductIdAndExpiredIsFalse(
+//                    orderDto.getCouponId(), product.getId()
+//            );
+//            if(!opCoupon.isEmpty()) {
+//                order.setPercent(opCoupon.get().getPercent());
+//            }
+//        }
+//        order.setUser(user);
+//        order.setProduct(product);
+//        orderRepository.save(order);
+//        basketRepository.deleteByProductIdAndUserId(product.getId(), user.getId());
         return null;
     }
 

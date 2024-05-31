@@ -1,8 +1,8 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.dto.ProductDto;
-import com.example.ecommerce.dto.StockDto;
 import com.example.ecommerce.dto.StockRequest;
+import com.example.ecommerce.dto.StockResponse;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.IStockService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class StockController {
     }
     @GetMapping("/stocks/{stockId}")
     @ResponseBody
-    public StockDto getById(@PathVariable("stockId") Long stockId) {
+    public StockResponse getById(@PathVariable("stockId") Long stockId) {
         return stockService.findById(stockId);
     }
 

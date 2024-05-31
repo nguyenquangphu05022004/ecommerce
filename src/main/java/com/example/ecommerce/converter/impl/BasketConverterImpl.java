@@ -12,24 +12,12 @@ public class BasketConverterImpl implements IGenericConverter<Basket, BasketDto>
 
     @Override
     public Basket toEntity(BasketDto basketDto) {
-        Basket basket = Basket.builder()
-                .quantity(basketDto.getQuantity())
-                .product(Product.builder()
-                        .id(basketDto.getProduct()
-                                .getId()).build())
-                .build();
-        return basket;
+        return null;
     }
 
     @Override
     public BasketDto toDto(Basket basket) {
-        BasketDto basketDto = BasketDto.builder()
-                .id(basket.getId())
-                .quantity(basket.getQuantity())
-                .product((ProductDto) Convert.PRO.toDto(basket.getProduct()))
-                .build();
-        basketDto.setTotalPrice(basket.getTotalPrice());
-        return basketDto;
+       return null;
     }
 
     @Override

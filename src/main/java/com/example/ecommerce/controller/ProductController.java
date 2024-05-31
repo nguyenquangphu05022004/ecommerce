@@ -6,25 +6,24 @@ import com.example.ecommerce.dto.CategoryDto;
 import com.example.ecommerce.dto.EvaluationDto;
 import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.dto.SortProductType;
+import com.example.ecommerce.service.ICategoryService;
+import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.impl.CategoryServiceImpl;
 import com.example.ecommerce.service.impl.ProductServiceImpl;
 import com.example.ecommerce.utils.SortUtils;
 import com.example.ecommerce.utils.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class ProductController {
 
-    private final ProductServiceImpl productService;
-    private final CategoryServiceImpl categoryService;
+    private final IProductService productService;
+    private final ICategoryService categoryService;
 
     @Autowired
     public ProductController(ProductServiceImpl productService,

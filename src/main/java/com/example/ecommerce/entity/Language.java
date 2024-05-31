@@ -17,8 +17,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class Language extends Base{
 
-    @OneToOne(mappedBy = "language")
-    private Product product;
     private String nameVn;
     private String nameEn;
     public Language(String nameVn, String nameEn) {

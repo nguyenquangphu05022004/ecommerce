@@ -18,14 +18,18 @@ public class Order extends Base{
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "stock_id")
+    private Stock stock;
+
     private Integer quantity;
     @Enumerated(EnumType.STRING)
     private Payment payment;
+
     @OneToOne(mappedBy = "order")
     private Bill bill;
-    private Integer percent;
+
+    private Integer couponPercent;
 
 }

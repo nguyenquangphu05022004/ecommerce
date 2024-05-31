@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Setter
 @Getter
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
@@ -18,14 +18,12 @@ public class ProductDto extends BaseDto {
 
     private Integer price;
     private CategoryDto category;
-    private VendorDto vendor;
+    private StockResponse.ProductResponse.VendorResponse vendorResponse;
     private String description;
     private LanguageDto language;
     private List<EvaluationDto> evaluations = new ArrayList<>();
     private TrackProductSeller trackProductSeller;
-    private List<StockDto> stockDtos = new ArrayList<>();
-
-
+    private List<StockResponse> stockResponses = new ArrayList<>();
 
     public Integer getAverageEvaluation() {
         Integer totalRate = 0;
