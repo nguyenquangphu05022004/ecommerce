@@ -9,10 +9,11 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @ToString
 @SuperBuilder(toBuilder = true)
+@Setter
 public class BasketDto extends BaseDto{
     private Integer quantity;
     private Integer totalPrice;
-    private ProductTypeResponse productType;
+    private StockResponse stockResponse;
     public String getFormatTotalPrice() {
         return SystemUtils.getFormatNumber(this.totalPrice);
     }

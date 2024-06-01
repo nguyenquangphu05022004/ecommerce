@@ -1,5 +1,6 @@
 package com.example.ecommerce.dto;
 
+import com.example.ecommerce.utils.SystemUtils;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,11 +14,15 @@ import java.util.List;
 @SuperBuilder(toBuilder = true)
 public class StockResponse extends BaseDto{
     private String code;
-    private Integer quantity;
+    private Integer quantityOfProduct;
     private List<ImageDto> images = new ArrayList<>();
     private ProductResponse productResponse;
-    private DecorationDto productType;
+    private DecorationDto decoration;
     private Integer price;
+
+    public String getFormatPrice() {
+        return SystemUtils.getFormatNumber(price);
+    }
     @Getter
     @Setter
     @Builder
@@ -33,6 +38,9 @@ public class StockResponse extends BaseDto{
             private Long id;
             private String name;
             private Integer perMoneyDelivery;
+            public String getFormatMoneyDelivery() {
+                return SystemUtils.getFormatNumber(perMoneyDelivery);
+            }
         }
     }
 }

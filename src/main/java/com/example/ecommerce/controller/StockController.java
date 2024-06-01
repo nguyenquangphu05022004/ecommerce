@@ -1,8 +1,10 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.dto.DecorationDto;
 import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.dto.StockRequest;
 import com.example.ecommerce.dto.StockResponse;
+import com.example.ecommerce.service.IDecorationService;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.IStockService;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +20,12 @@ import java.util.List;
 public class StockController {
     private final IStockService stockService;
     private final IProductService productService;
+    private final IDecorationService decorationService;
     @GetMapping("/vendor/products/stock/add")
     public String getFormCreateStockForProduct(Model model) {
         List<ProductDto> listProductOfVendor = productService.findAllByVendor();
+        List<DecorationDto> decorationDtoList = decorationService.listDecoration();
+        model.addAttribute("decorations", decorationDtoList);
         model.addAttribute("products", listProductOfVendor);
         model.addAttribute("stockRequest", new StockRequest());
         return "admin/product/create-stock";

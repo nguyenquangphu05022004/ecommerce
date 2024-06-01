@@ -1,13 +1,14 @@
 package com.example.ecommerce.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
-public class DecorationDto {
+@SuperBuilder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class DecorationDto extends BasketDto{
     private String size;
     private String color;
 }

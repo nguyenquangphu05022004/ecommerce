@@ -77,10 +77,7 @@ public class HomeController {
         return "shop";
     }
 
-    @GetMapping("/user/order")
-    public String getOrderPageOfUser(Model model) {
-        return "orders-user";
-    }
+
 
     @GetMapping("/login")
     public String getLoginPage() {

@@ -14,14 +14,14 @@
                 <div class="row g-4">
                     <div class="col-lg-6">
                             <a href="#">
-                                <img  th:if="${product.stockDtos.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                <img id = "image-product" th:unless="${product.stockDtos.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${product.stockDtos.get(0).imageDtos.get(0).shortUrl}, fileName=${product.stockDtos.get(0).imageDtos.get(0).name})}" class="img-fluid w-100 rounded-top" alt="">
+                                <img  th:if="${product.stockResponses.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid w-100 rounded-top" alt="">
+                                <img id = "image-product" th:unless="${product.stockResponses.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${product.stockResponses.get(0).images.get(0).shortUrl}, fileName=${product.stockResponses.get(0).images.get(0).name})}" class="img-fluid w-100 rounded-top" alt="">
                             </a>
                     </div>
                     <div class="col-lg-6">
                         <h4 class="fw-bold mb-3">[[${product.language.nameVn}]]</h4>
                         <p class="mb-3">[[${product.category.name}]]</p>
-                        <h5 class="fw-bold mb-3">[[${product.formatPrice}]]</h5>
+                        <h5 class="fw-bold mb-3" id="price-product">[[${product.formatPrice}]]</h5>
                         <div class="d-flex mb-4" id="average_evaluation">
                             <script th:inline="javascript">
                                 const avrate = [[${product.averageEvaluation}]];
@@ -38,9 +38,9 @@
                         </div>
                         <div>
                             <h4 class="text-center">Thể loại</h4>
-                            <div class="input-group mb-3" th:each="stock, state : ${product.stockDtos}">
-                                <label class="h6" style="font-size: 20px; margin-right: 10px" th:for="${stock.id}">[[${stock.code}]]</label>
-                                <p style="margin-right: 10px">Số lượng([[${stock.quantity}]]) </p>
+                            <div class="input-group mb-3" th:each="stock, state : ${product.stockResponses}">
+                                <label class="h6" style="font-size: 20px; margin-right: 10px" th:for="${stock.id}">[[${stock.decoration.color}]] - [[${stock.decoration.size}]]</label>
+                                <p style="margin-right: 10px">Số lượng([[${stock.quantityOfProduct}]]) </p>
                                 <input
                                         type="radio"
                                         class="form-check"
@@ -76,7 +76,7 @@
                                         class="fa fa-shopping-bag me-2 text-primary"></i>Đặt hàng</button>
                             </div>
                             <div class="col-lg-6">
-                                <a href="##" th:onclick="createBasket([[${product.id}]])"
+                                <a href="##" th:onclick="createBasket()"
                                    class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
                                     <i class="fa fa-shopping-bag   me-2 text-primary"></i>Thêm giỏ hàng</a></div>
                         </div>
@@ -360,7 +360,7 @@
                     <div class="vesitable-img">
                         <a th:href="@{/products/{productId}/{productName}(productId=${p.id}, productName=${p.language.nameVn})}">
                             <img th:if="${p.stockDtos.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid-redesign w-100 rounded-top" alt="">
-                            <img th:unless="${p.stockDtos.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${p.stockDtos.get(0).imageDtos.get(0).shortUrl}, fileName=${p.stockDtos.get(0).imageDtos.get(0).name})}" class="img-fluid-redesign w-100 rounded-top" alt="">
+                            <img th:unless="${p.stockDtos.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${p.stockDtos.get(0).images.get(0).shortUrl}, fileName=${p.stockDtos.get(0).images.get(0).name})}" class="img-fluid-redesign w-100 rounded-top" alt="">
                         </a>
                     </div>
                     <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
@@ -382,15 +382,20 @@
 </div>
 <!-- Single Product End -->
 <script th:inline="javascript">
-    function createBasket(productId) {
+    function createBasket() {
+        const typeProduct = document.getElementsByName("type")
+        let stockId;
+        for(let i = 0; i < typeProduct.length; i++) {
+            if(typeProduct[i].checked) {
+                stockId = typeProduct[i].value; break;
+            }
+        }
         let theUrl = `[(@{/baskets})]`;
         const url = new URL(theUrl, document.location);
         const formQuantity = document.getElementById("quantity")
         const basket = {
-            product: {
-                "id": productId,
-            },
-            quantity: formQuantity.value
+            "stockId": stockId,
+            "operator": '+'
         }
         $.ajax({
             type: "post",
@@ -400,26 +405,26 @@
                 "Content-Type": "application/json"
             },
             success: function (data) {
-                if(typeof data === 'string') {
-                    window.location.href=new URL('[(@{/login})]', document.location).href;
-                } else {
-                    let cookieValue = "0";
-                    let name = 'basket' + "=";
-                    let decodedCookie = decodeURIComponent(document.cookie);
-                    let ca = decodedCookie.split(';');
-                    for(let i = 0; i <ca.length; i++) {
-                        let c = ca[i];
-                        while (c.charAt(0) == ' ') {
-                            c = c.substring(1);
-                        }
-                        if (c.indexOf(name) == 0) {
-                            cookieValue =  c.substring(name.length, c.length);
-                            break;
-                        }
-                    }
-                    document.getElementById("basket").innerHTML = cookieValue;
+                // if(typeof data === 'string') {
+                //     window.location.href=new URL('[(@{/login})]', document.location).href;
+                // } else {
+                //     let cookieValue = "0";
+                //     let name = 'basket' + "=";
+                //     let decodedCookie = decodeURIComponent(document.cookie);
+                //     let ca = decodedCookie.split(';');
+                //     for(let i = 0; i <ca.length; i++) {
+                //         let c = ca[i];
+                //         while (c.charAt(0) == ' ') {
+                //             c = c.substring(1);
+                //         }
+                //         if (c.indexOf(name) == 0) {
+                //             cookieValue =  c.substring(name.length, c.length);
+                //             break;
+                //         }
+                //     }
+                //     document.getElementById("basket").innerHTML = cookieValue;
                     alert("Đã thêm vào giỏ hàng!")
-                }
+
             },
             error: function () {
                 alert("Error")
@@ -516,8 +521,11 @@
     function getStockById(stockId) {
         callApi('get', '', `[(@{/stocks/${stockId}})]`, (res) => {
             const element = document.getElementById('image-product');
-
-            element.src = "/" + res.imageDtos[0].shortUrl + "/" + res.imageDtos[0].name;
+            const priceProduct = document.getElementById('price-product')
+            priceProduct.innerHTML = getFormatNumber(res.price)
+            console.log(res)
+            console.log(priceProduct)
+            // element.src = "/" + res.images[0].shortUrl + "/" + res.images[0].name;
         })
     }
 </script>

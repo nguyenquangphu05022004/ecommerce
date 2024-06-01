@@ -1,6 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.converter.impl.ProductConverterImpl;
+import com.example.ecommerce.dto.DecorationDto;
 import com.example.ecommerce.dto.StockRequest;
 import com.example.ecommerce.dto.StockResponse;
 import com.example.ecommerce.entity.Image;
@@ -8,6 +9,7 @@ import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.entity.Decoration;
 import com.example.ecommerce.entity.Stock;
 import com.example.ecommerce.exception.NotFoundException;
+import com.example.ecommerce.repository.DecorationRepository;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.StockRepository;
 import com.example.ecommerce.service.IImageService;
@@ -28,7 +30,9 @@ public class StockServiceImpl implements IStockService {
     private final StockRepository stockRepository;
     private final IImageService imageService;
     private final ProductRepository productRepository;
+    private final DecorationRepository decorationRepository;
     private final ModelMapper mapper;
+
     @Override
     public List<StockResponse> records() {
         return null;
@@ -45,7 +49,6 @@ public class StockServiceImpl implements IStockService {
     }
 
     @Override
-    @Transactional
     public StockResponse findById(Long id) {
         Stock stock = stockRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("StockId", id + "")
@@ -57,31 +60,38 @@ public class StockServiceImpl implements IStockService {
     @Override
     @Transactional
     public void save(StockRequest stockRequest) {
-        Product product = productRepository.findById(stockRequest.getProductId())
-                        .orElseThrow(() -> new NotFoundException("ProductId", stockRequest.getProductId() + ""));
-        List<Decoration> decorations = stockRequest
-                .getProductTypes()
-                .stream()
-                .map(
-                        productTypeDto -> mapper.map(productTypeDto, Decoration.class)
-                )
-                .collect(Collectors.toList());
+        Product product = productRepository.findById(
+                        stockRequest.getProductId()
+        ).orElseThrow(() -> new NotFoundException(
+                                "ProductId", stockRequest.getProductId() + ""
+                        ));
+        Decoration decoration = decorationRepository.findById(
+                stockRequest.getDecorationId()
+        ).orElseThrow(() -> new NotFoundException(
+                        "DecorationId", stockRequest.getDecorationId() + ""
+                ));
 
         List<Image> images = stockRequest.getMultipartFiles()
                 .stream()
-                .map(multipartFile -> imageService.uploadFile(
-                        multipartFile,
-                        SystemUtils.FOLDER_STOCK_IMAGE,
-                        SystemUtils.SHORT_URL_STOCK
-                ))
+                .map(multipartFile -> {
+                    Image image = imageService.loadByFileName(multipartFile.getOriginalFilename());
+                    if(image == null) {
+                        return imageService.uploadFile(
+                                multipartFile,
+                                SystemUtils.FOLDER_STOCK_IMAGE,
+                                SystemUtils.SHORT_URL_STOCK
+                        );
+                    }
+                    return image;
+                })
                 .collect(Collectors.toList());
 
         Stock stock = Stock.builder()
                 .code(stockRequest.getCode())
                 .product(product)
                 .price(stockRequest.getPrice())
-                .quantityOfProduct(stockRequest.getQuantity())
-                .decorations(decorations)
+                .quantityOfProduct(stockRequest.getQuantityOfProduct())
+                .decoration(decoration)
                 .images(images)
                 .build();
         stockRepository.save(stock);
@@ -93,12 +103,17 @@ public class StockServiceImpl implements IStockService {
     }
 
 
-
     public static StockResponse getStockResponse(Stock stock) {
         return StockResponse.builder()
                 .code(stock.getCode())
                 .id(stock.getId())
                 .images(ProductConverterImpl.getImageDtoByStock(stock))
+                .quantityOfProduct(stock.getQuantityOfProduct())
+                .price(stock.getPrice())
+                .decoration(DecorationDto.builder()
+                        .size(stock.getDecoration().getSize())
+                        .color(stock.getDecoration().getColor())
+                        .build())
                 .productResponse( //mapper product
                         StockResponse
                                 .ProductResponse
@@ -118,6 +133,9 @@ public class StockServiceImpl implements IStockService {
                                                 .id(stock.getProduct()
                                                         .getVendor()
                                                         .getId())
+                                                .perMoneyDelivery(stock.getProduct()
+                                                        .getVendor()
+                                                        .getPerMoneyDelivery())
                                                 .name(stock.getProduct()
                                                         .getVendor()
                                                         .getShopName())

@@ -1,11 +1,12 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.dto.BasketDto;
+import com.example.ecommerce.dto.BasketRequest;
 import com.example.ecommerce.service.impl.BasketServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.server.Session;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,20 +32,19 @@ public class BasketController {
     }
 
     @PostMapping("/baskets")
-    @ResponseBody
-    public BasketDto createBasket(@RequestBody BasketDto basketDto, HttpServletResponse response) {
-        basketDto = basketService.saveOrUpdate(basketDto);
+    @ResponseStatus(HttpStatus.OK)
+    public void createBasket(@RequestBody BasketRequest basketDto, HttpServletResponse response) {
+        basketService.saveOrUpdate(basketDto);
         Cookie numberOfBasketCookie = new Cookie("basket", basketService.count().toString());
         numberOfBasketCookie.setMaxAge(10 * 365 * 24 * 60 * 60);
         numberOfBasketCookie.setPath("/");
         response.addCookie(numberOfBasketCookie);
-        return basketDto;
     }
 
     @PutMapping("/baskets")
-    @ResponseBody
-    public BasketDto updateBasket(@RequestBody BasketDto basketDto) {
-        return basketService.saveOrUpdate(basketDto);
+    @ResponseStatus(HttpStatus.OK)
+    public void updateBasket(@RequestBody BasketRequest basketDto) {
+         basketService.saveOrUpdate(basketDto);
     }
     @GetMapping("/baskets/{basketId}")
     @ResponseBody

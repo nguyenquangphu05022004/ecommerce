@@ -89,13 +89,13 @@
                     >
                 </div>
                 <hr>
-                <p class="text-dark fw-bold h4">Shop: [[${product.vendor.shopName}]]</p>
+                <p class="text-dark fw-bold h4">Shop: [[${stock.productResponse.vendorResponse.name}]]</p>
                 <div class="mt-5">
                     <input type="text"
                            class="border-0 border-bottom rounded me-5 mb-4"
                            id="coupon"
                            placeholder="Coupon Code">
-                    <button th:onclick="checkCoupon([[${product.id}]])" class="btn border-secondary rounded-pill text-primary" type="button">Apply Coupon</button>
+                    <button th:onclick="checkCoupon([[${stock.id}]])" class="btn border-secondary rounded-pill text-primary" type="button">Apply Coupon</button>
                 </div>
                 <div class="table-responsive">
                     <table class="table">
@@ -116,15 +116,18 @@
                         <tr>
                             <th scope="row">
                                 <div class="d-flex align-items-center mt-2">
-                                    <img th:if="${stock.imageDtos.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid-redesign" alt="">
-                                    <img th:unless="${stock.imageDtos.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${stock.imageDtos.get(0).shortUrl}, fileName=${stock.imageDtos.get(0).name})}" class="img-fluid-redesign " alt="">
+                                    <img th:if="${stock.images.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid" alt="">
+                                    <img th:unless="${stock.images.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${stock.images.get(0).shortUrl}, fileName=${stock.images.get(0).name})}" class="img-fluid" alt="">
                                 </div>
                             </th>
-                            <td class="py-5" th:text="${product.language.nameVn}"></td>
-                            <td class="py-5" th:text="${stock.code}"></td>
-                            <td class="py-5" th:text="${product.formatPrice}"></td>
+                            <td class="py-5" th:text="${stock.productResponse.name}"></td>
+                            <td class="py-5">
+                                [[${stock.decoration.color != null ? stock.decoration.color + ' - ' : '' }]]
+                                [[${stock.decoration.size != null ? stock.decoration.size  : '' }]]
+                            </td>
+                            <td class="py-5" th:text="${stock.formatPrice}"></td>
                             <td class="py-5">[[${param.numberOfProduct}]]</td>
-                            <td class="py-5">[[${product.vendor.formatMoneyDelivery}]]</td>
+                            <td class="py-5">[[${stock.productResponse.vendorResponse.formatMoneyDelivery}]]</td>
                             <td class="py-5" id="coupon-decrease">0 %</td>
                             <td class="py-5">[[${totalPrice}]]</td>
                             <td class="py-5" >
@@ -169,7 +172,7 @@
                 <div class="row g-4 text-center align-items-center justify-content-center pt-4">
                     <a href="##"
                        class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"
-                       th:onclick="orderProduct([[${product.id}]])"
+                       th:onclick="orderProduct([[${stock.id}]], [[${param.numberOfProduct}]])"
                     >Đặt hàng</a>
                 </div>
             </div>
@@ -179,26 +182,20 @@
 <!-- Checkout Page End -->
 
 <script th:inline="javascript">
-    function orderProduct(productId) {
+    function orderProduct(stockId, numberOfProduct) {
         let theUrl = `[(@{/orders})]`;
         let url = new URL(theUrl, document.location);
         const form = document.getElementById("product-order")
         const order = {
-            user: {
-               userContactDetails: {
-                   fullName: form.elements["fullName"].value,
-                   address: form.elements["address"].value,
-                   phoneNumber: form.elements["phoneNumber"].value,
-                   province: form.elements["province"].value
-               }
-            },
-            product: {
-                "id": productId,
-            },
+           userContactDetails: {
+               fullName: form.elements["fullName"].value,
+               address: form.elements["address"].value,
+               phoneNumber: form.elements["phoneNumber"].value,
+               province: form.elements["province"].value
+           },
+            stockId: stockId,
             payment: form.elements["delivery"].value,
-            quantity: [[${param.numberOfProduct}]][0],
-            couponId: document.getElementById("value-id-coupon").value
-
+            quantity: numberOfProduct[0],
         }
         console.log(order)
         $.ajax({

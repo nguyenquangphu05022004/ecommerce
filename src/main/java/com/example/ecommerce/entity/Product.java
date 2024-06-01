@@ -28,8 +28,6 @@ public class Product extends Base{
     private String description;
     @OneToMany(mappedBy = "product")
     private List<Evaluation> evaluations = new ArrayList<>();
-    @OneToMany(mappedBy = "product")
-    private List<Order> orders = new ArrayList<>();
     @OneToOne(mappedBy = "product")
     private TrackProductSeller productSeller;
     @OneToMany(mappedBy = "product")

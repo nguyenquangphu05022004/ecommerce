@@ -6,8 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BasketRequest {
-    private Integer quantity;
-    private Integer totalPrice;
-    private Long productTypeId;
+    private Long stockId;
     private Character operator;
 }

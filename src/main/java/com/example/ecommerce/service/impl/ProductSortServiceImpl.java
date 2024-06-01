@@ -10,9 +10,9 @@ public class ProductSortServiceImpl implements ProductSortService {
 
     @Override
     public List<ProductDto> sortByPrice(List<ProductDto> products) {
-        Collections.sort(products, (ProductDto p1, ProductDto p2) -> {
-            return p2.getPrice() - p1.getPrice();
-        });
+//        Collections.sort(products, (ProductDto p1, ProductDto p2) -> {
+//            return p2.getPrice() - p1.getPrice();
+//        });
         return products;
     }
 

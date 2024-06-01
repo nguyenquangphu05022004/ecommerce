@@ -32,7 +32,6 @@ public class OrderConverter implements IGenericConverter<Order, OrderDto> {
                 .id(order.getId())
                 .payment(order.getPayment())
                 .quantity(order.getQuantity())
-                .status(order.getBill().getStatus().getName())
                 .contactDetails(order.getUser().getUserContactDetails())
                 .build();
         return orderDto;

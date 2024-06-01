@@ -2,21 +2,15 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.dto.BasketRequest;
-import com.example.ecommerce.entity.ProductType;
-import com.example.ecommerce.exception.NotFoundException;
-import com.example.ecommerce.exception.NotValidException;
-import com.example.ecommerce.repository.ProductTypeRepository;
-import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.dto.BasketDto;
 import com.example.ecommerce.entity.Basket;
+import com.example.ecommerce.entity.Stock;
 import com.example.ecommerce.entity.User;
 import com.example.ecommerce.repository.BasketRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IBasketService;
-import com.example.ecommerce.service.IGenericService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,7 +29,11 @@ public class BasketServiceImpl implements IBasketService {
         List<Basket> baskets = basketRepository
                 .findAllByUserUsername(SecurityUtils.username());
         return baskets.stream()
-                .map(entity -> mapper.map(entity, BasketDto.class))
+                .map(entity -> {
+                    BasketDto basket = mapper.map(entity, BasketDto.class);
+                    basket.setStockResponse(StockServiceImpl.getStockResponse(entity.getStock()));
+                    return basket;
+                })
                 .collect(Collectors.toList());
 
     }
@@ -56,10 +54,10 @@ public class BasketServiceImpl implements IBasketService {
         Basket basket = null;
         User user = userRepository.findByUsername(SecurityUtils.username()).get();
         Optional<Basket> optionBasket = basketRepository
-                .findByUserIdAndProductTypeId
+                .findByUserIdAndStockId
                         (
                                 user.getId(),
-                                basketRequest.getProductTypeId()
+                                basketRequest.getStockId()
                         );
 
         if (optionBasket.isPresent()) {
@@ -79,9 +77,9 @@ public class BasketServiceImpl implements IBasketService {
             }
         } else {
             basket = Basket.builder()
-                    .quantity(basket.getQuantity())
-                    .productType(ProductType.builder()
-                            .id(basketRequest.getProductTypeId())
+                    .quantity(1)
+                    .stock(Stock.builder()
+                            .id(basketRequest.getStockId())
                             .build())
                     .user(user)
                     .build();

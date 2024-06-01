@@ -1,0 +1,37 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/admin/layout}">
+
+<head>
+    <title>Decoration</title>
+</head>
+<body layout:fragment="body">
+<div class="col-sm-12 col-xl-12">
+    <div class="bg-light rounded h-100 p-4">
+        <h6 class="mb-4">Decoration</h6>
+        <form th:action= "@{/admin/decorations}" method = "post" role="form" th:object="${decoration}">
+            <div class="form-floating mb-3">
+                <input type="text"
+                       class="form-control"
+                       id="size"
+                       name="size"
+                       th:field="*{size}"
+                       placeholder="Ví dụ: giày">
+                <label for="size">Size</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text"
+                       class="form-control"
+                       id="color"
+                       name="color"
+                       th:field="*{color}"
+                       placeholder="Ví dụ: Xanh">
+                <label for="color">color</label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">ADD</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

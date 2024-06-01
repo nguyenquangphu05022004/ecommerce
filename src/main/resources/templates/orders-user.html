@@ -11,7 +11,7 @@
         <div class="row g-4">
             <div class="col-lg-12">
                 <div class="row g-4">
-                    <div class="col-lg-3">
+                    <div class="col-lg-2">
                         <div class="row g-4">
                             <div class="col-lg-12">
                                 <div class="mb-3">
@@ -31,7 +31,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-9">
+                    <div class="col-lg-10">
                         <div class="row g-4 justify-content-center" id="orders">
                             <div class="table-responsive">
                                 <table class="table">
@@ -40,11 +40,11 @@
                                         <th scope="col">Mã đơn hàng</th>
                                         <th scope="col">Tên sản phẩm</th>
                                         <th scope="col">Ảnh minh họa</th>
+                                        <th scope="col">Loại mặt hàng</th>
                                         <th scope="col">Giá</th>
                                         <th scope="col">Số lượng</th>
                                         <th scope="col">Giảm giá</th>
                                         <th scope="col">Tổng</th>
-                                        <th scope="col">Thể loại</th>
                                         <th scope="col">Trạng thái</th>
                                         <th scope="col">Sửa</th>
                                     </tr>
@@ -76,31 +76,36 @@
             if(value.length > 0) {
                 value.forEach(order => {
                     let src = "";
-                    if(order.product.thumbnails.length > 0) {
-                        src=`/${order.product.thumbnails[0].shortUrl}/${order.product.thumbnails[0].name}`
+                    if(order.stockResponse.images.length > 0) {
+                        src=`/${order.stockResponse.images[0].shortUrl}/${order.stockResponse.images[0].name}`
                     } else {
                         src = "https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
                     }
+                    const buttonDelete = order.approval === false ? `<button class="btn btn-primary" onClick="deleteOrder(${order.id})">Xóa</button>` : 'Đang tiến hành'
                     html += `<tr>
                             <th scope="col">${order.id}</th>
-                            <th scope="col">${order.product.language.nameVn}</th>
+                            <th scope="col">${order.stockResponse.productResponse.name}</th>
                             <th scope="col">
                                 <img src="${src}" height="100" class="rounded-top" >
                             </th>
-                            <th scope="col">${order.product.formatPrice}</th>
+                             <th scope="col">${order.stockResponse.decoration.color} - ${order.stockResponse.decoration.size}</th>
+                            <th scope="col">${order.stockResponse.formatPrice}</th>
                             <th scope="col">${order.quantity}</th>
-                            <th scope="col">${order.percent != null ? order.percent : "0"} %</th>
+                            <th scope="col">${order.couponPercent != null ? order.couponPercent : "0"} %</th>
                             <th scope="col">${order.formatTotalPrice}</th>
-                            <th scope="col">${order.product.category.name}</th>
-                            <th scope="col">${order.status}</th>
-                            <th scope="col">Sửa</th>
+                            <th scope="col">${order.approval === false ? 'Chưa nhận đơn' : 'Đã nhận đơn'}</th>
+                            <th scope="col">${buttonDelete}</th>
                         </tr>`
                 })
             }
             $("#tableOfOrder").html(html)
         })
     }
-
+    const deleteOrder = (orderId) => {
+        callApi('delete', '', `[(@{/orders/${orderId}})]`, () => {
+            window.location.reload();
+        })
+    }
     function callApi(type, data, theUrl, success) {
         const url = new URL(theUrl, document.location);
         $.ajax({

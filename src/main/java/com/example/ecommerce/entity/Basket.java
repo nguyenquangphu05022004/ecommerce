@@ -18,14 +18,14 @@ public class Basket extends Base{
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne
-    @JoinColumn(name = "product_type_id")
-    private ProductType productType;
+    @JoinColumn(name = "stock_id")
+    private Stock stock;
     private Integer quantity;
 
     @Transient
     public Integer getTotalPrice() {
-        if(quantity != null && productType != null && productType.getStock().getPrice() != null) {
-            return quantity * productType.getStock().getPrice();
+        if(quantity != null && stock != null && stock.getPrice() != null) {
+            return quantity * stock.getPrice();
         }
         return 0;
     }

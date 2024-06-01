@@ -33,4 +33,9 @@ public class ImageServiceImpl implements IImageService {
         filesStorageService.deleteFile(nameFile, folderFile);
     }
 
+    @Override
+    public Image loadByFileName(String fileName) {
+        return imageRepository.findByName(fileName).get();
+    }
+
 }

@@ -29,7 +29,7 @@ public class Order extends Base{
 
     @OneToOne(mappedBy = "order")
     private Bill bill;
-
-    private Integer couponPercent;
+    private boolean approval;
+    private int couponPercent;
 
 }

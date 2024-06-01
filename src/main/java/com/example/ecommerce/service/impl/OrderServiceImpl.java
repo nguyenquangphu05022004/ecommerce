@@ -4,14 +4,13 @@ import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.converter.impl.OrderConverter;
 import com.example.ecommerce.dto.OrderRequest;
 import com.example.ecommerce.entity.*;
-import com.example.ecommerce.repository.BasketRepository;
-import com.example.ecommerce.repository.CouponRepository;
-import com.example.ecommerce.repository.UserRepository;
+import com.example.ecommerce.exception.NotFoundException;
+import com.example.ecommerce.repository.*;
 import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.dto.OrderDto;
-import com.example.ecommerce.repository.OrderRepository;
 import com.example.ecommerce.service.IGenericService;
 import com.example.ecommerce.service.IOrderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,32 +20,26 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final OrderConverter orderConverter;
     private final CouponRepository couponRepository;
     private final BasketRepository basketRepository;
+    private final StockRepository stockRepository;
 
-    @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository,
-                            UserRepository userRepository,
-                            OrderConverter orderConverter,
-                            CouponRepository couponRepository,
-                            BasketRepository basketRepository) {
-        this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
-        this.orderConverter = orderConverter;
-        this.couponRepository = couponRepository;
-        this.basketRepository = basketRepository;
-    }
 
     @Override
     public List<OrderDto> records() {
-        return  orderRepository.findAllByUserUsername(SecurityUtils.username())
+        return orderRepository.findAllByUserUsername(SecurityUtils.username())
                 .stream()
-                .map(entity -> orderConverter.toDto(entity)
-                        .toBuilder()
+                .map(entity -> OrderDto.builder()
+                        .id(entity.getId())
+                        .approval(entity.isApproval())
+                        .payment(entity.getPayment())
+                        .quantity(entity.getQuantity())
+                        .couponPercent(entity.getCouponPercent())
                         .stockResponse(StockServiceImpl
                                 .getStockResponse(entity.getStock()))
                         .build())
@@ -71,30 +64,24 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
     @Override
     @Transactional
     public OrderDto saveOrUpdate(OrderRequest orderDto) {
-//        User user = userRepository.findByUsername(SecurityUtils.username()).get();
-//        user.setUserContactDetails(orderDto.getContactDetails());
-//        Product product = Product.builder()
-//                .id(orderDto.getProduct().getId())
-//                .build();
-//        Order order = orderConverter.toEntity(orderDto);
-//        if(orderDto.getCouponId() != null) {
-//            Optional<Coupon> opCoupon = couponRepository.findByIdAndProductIdAndExpiredIsFalse(
-//                    orderDto.getCouponId(), product.getId()
-//            );
-//            if(!opCoupon.isEmpty()) {
-//                order.setPercent(opCoupon.get().getPercent());
-//            }
-//        }
-//        order.setUser(user);
-//        order.setProduct(product);
-//        orderRepository.save(order);
-//        basketRepository.deleteByProductIdAndUserId(product.getId(), user.getId());
+        User user = userRepository.findByUsername(SecurityUtils.username()).get();
+        user.setUserContactDetails(orderDto.getContactDetails());
+        Stock stock = stockRepository.findById(orderDto.getStockId())
+                .orElseThrow(() -> new NotFoundException("StockId", orderDto.getStockId() + ""));
+        Order order = Order.builder()
+                .stock(stock)
+                .payment(orderDto.getPayment())
+                .quantity(orderDto.getQuantity())
+                .user(user)
+                .build();
+        orderRepository.save(order);
+        basketRepository.deleteByStockIdAndUserId(stock.getId(), user.getId());
         return null;
     }
 
     @Override
     public List<OrderDto> records(Status status) {
-        return  orderRepository
+        return orderRepository
                 .findAllByUserUsernameAndBillStatus(SecurityUtils.username(), status)
                 .stream()
                 .map(entity -> orderConverter.toDto(entity))

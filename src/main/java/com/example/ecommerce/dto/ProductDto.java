@@ -16,7 +16,6 @@ import java.util.List;
 @SuperBuilder(toBuilder = true)
 public class ProductDto extends BaseDto {
 
-    private Integer price;
     private CategoryDto category;
     private StockResponse.ProductResponse.VendorResponse vendorResponse;
     private String description;
@@ -32,7 +31,8 @@ public class ProductDto extends BaseDto {
     }
 
     public String getFormatPrice() {
-        return SystemUtils.getFormatNumber(this.price);
+        if(this.stockResponses.size() == 0) return "0";
+        return SystemUtils.getFormatNumber(this.stockResponses.get(0).getPrice());
     }
 
 }

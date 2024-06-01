@@ -11,8 +11,8 @@ import java.util.List;
 public class StockRequest {
     private String code;
     private Long productId;
-    private Integer quantity;
+    private Long decorationId;
+    private Integer quantityOfProduct;
     private Integer price;
-    private List<DecorationDto> productTypes;
     private List<MultipartFile> multipartFiles;
 }

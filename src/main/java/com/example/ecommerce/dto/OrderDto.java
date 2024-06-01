@@ -20,8 +20,8 @@ public class OrderDto extends BaseDto{
     private StockResponse stockResponse;
     private Integer quantity;
     private Payment payment;
-    private String status;
-    private Integer couponPercent;
+    private int couponPercent;
+    private boolean approval;
 
     public String getFormatTotalPrice() {
         Integer totalPrice = 0;

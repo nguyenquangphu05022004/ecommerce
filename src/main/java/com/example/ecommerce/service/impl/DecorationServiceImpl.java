@@ -45,7 +45,7 @@ public class DecorationServiceImpl implements IDecorationService {
     }
 
     @Override
-    public List<DecorationDto> listProductTypes() {
+    public List<DecorationDto> listDecoration() {
         return decorationRepository
                 .findAll()
                 .stream()

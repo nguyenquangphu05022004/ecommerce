@@ -12,9 +12,11 @@ import com.example.ecommerce.service.impl.ProductServiceImpl;
 import com.example.ecommerce.service.impl.UserServiceImpl;
 import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.tags.form.LabelTag;
 
 import java.util.List;
 
@@ -23,7 +25,6 @@ import java.util.List;
 public class OrderController {
 
     private final OrderServiceImpl orderService;
-    private final ProductServiceImpl productService;
     private final UserServiceImpl userService;
     private final IStockService stockService;
 
@@ -57,9 +58,20 @@ public class OrderController {
         return orderService.records(status);
     }
 
+    @DeleteMapping("/orders/{orderId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteOrderById(@PathVariable("orderId") Long orderId) {
+        orderService.delete(orderId);
+    }
+
     @PostMapping("/orders")
     @ResponseBody
     public OrderDto createOrder(@RequestBody OrderRequest orderDto) {
         return orderService.saveOrUpdate(orderDto);
+    }
+
+    @GetMapping("/user/order")
+    public String getOrderPageOfUser(Model model) {
+        return "orders-user";
     }
 }

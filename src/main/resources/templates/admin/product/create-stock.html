@@ -23,11 +23,11 @@
             <div class="form-floating mb-3">
                 <input type="number"
                        class="form-control"
-                       id="quantity"
-                       name="quantity"
-                       th:field="*{quantity}"
+                       id="quantityOfProduct"
+                       name="quantityOfProduct"
+                       th:field="*{quantityOfProduct}"
                        placeholder="Ví dụ: giay">
-                <label for="quantity">Quantity</label>
+                <label for="quantityOfProduct">Quantity</label>
             </div>
             <div class="form-floating mb-4">
                 <select
@@ -36,6 +36,16 @@
                 >
                     <span th:each="product : ${products}">
                         <option th:value="${product.id}">[[${product.language.nameVn}]]</option>
+                    </span>
+                </select>
+            </div>
+            <div class="form-floating mb-4">
+                <select
+                        th:field="*{decorationId}"
+                        id="decorationId"
+                >
+                    <span th:each="decoration : ${decorations}">
+                        <option th:value="${decoration.id}">[[${decoration.color}]] - [[${decoration.size}]]</option>
                     </span>
                 </select>
             </div>

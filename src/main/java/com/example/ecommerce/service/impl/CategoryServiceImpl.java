@@ -57,29 +57,29 @@ public class CategoryServiceImpl implements ICategoryService {
     @Transactional
     public CategoryDto saveOrUpdate(CategoryDto categoryDto) {
         Category cate = null;
-        Image image = null;
-        if(categoryDto.getId() != null) {
-            Category category = categoryRepository.findById(categoryDto.getId()).get();
-            if(category.getThumbnail() != null) {
-                try {
-                    filesStorageService.deleteFile(category.getThumbnail().getName(),
-                            SystemUtils.FOLDER_CATEGORY_IMAGE);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                image = category.getThumbnail().toBuilder()
-                        .name(categoryDto.getFile().getOriginalFilename())
-                        .build();
-            }
-            category.setName(categoryDto.getName());
-            cate = category;
-        } else {
-            cate = (Category) Convert.CATE.toEntity(categoryDto);
-            image = imageService.uploadFile(categoryDto.getFile(),
-                    SystemUtils.FOLDER_CATEGORY_IMAGE,
-                    SystemUtils.SHORT_URL_CATEGORY);
-        }
-        cate.setThumbnail(image);
+//        Image image = null;
+//        if(categoryDto.getId() != null) {
+//            Category category = categoryRepository.findById(categoryDto.getId()).get();
+//            if(category.getThumbnail() != null) {
+//                try {
+//                    filesStorageService.deleteFile(category.getThumbnail().getName(),
+//                            SystemUtils.FOLDER_CATEGORY_IMAGE);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                image = category.getThumbnail().toBuilder()
+//                        .name(categoryDto.getFile().getOriginalFilename())
+//                        .build();
+//            }
+//            category.setName(categoryDto.getName());
+//            cate = category;
+//        } else {
+//            cate = (Category) Convert.CATE.toEntity(categoryDto);
+//            image = imageService.uploadFile(categoryDto.getFile(),
+//                    SystemUtils.FOLDER_CATEGORY_IMAGE,
+//                    SystemUtils.SHORT_URL_CATEGORY);
+//        }
+//        cate.setThumbnail(image);
         CategoryDto dto =  (CategoryDto) Convert.CATE.toDto(categoryRepository.save(cate));
         return dto;
     }

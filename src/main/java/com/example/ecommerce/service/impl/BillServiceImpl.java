@@ -27,11 +27,12 @@ public class BillServiceImpl implements IBillService {
 
     @Override
     public List<BillDto> records() {
-        return billRepository
-                .findAllByOrderProductVendorUserUsername(SecurityUtils.username())
-                .stream()
-                .map(bill -> billConverter.toDto(bill))
-                .collect(Collectors.toList());
+        return null;
+//        return billRepository
+//                .findAllByOrderProductVendorUserUsername(SecurityUtils.username())
+//                .stream()
+//                .map(bill -> billConverter.toDto(bill))
+//                .collect(Collectors.toList());
     }
 
     @Override
