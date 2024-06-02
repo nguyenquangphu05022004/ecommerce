@@ -64,6 +64,12 @@ public class OrderController {
         orderService.delete(orderId);
     }
 
+    @PutMapping("/orders/{orderId}/approval")
+    @ResponseStatus(HttpStatus.OK)
+    public void approvalOrder(@PathVariable("orderId") Long orderId) {
+        orderService.approval(orderId);
+    }
+
     @PostMapping("/orders")
     @ResponseBody
     public OrderDto createOrder(@RequestBody OrderRequest orderDto) {
@@ -71,7 +77,11 @@ public class OrderController {
     }
 
     @GetMapping("/user/order")
-    public String getOrderPageOfUser(Model model) {
+    public String getOrderPageOfUser() {
         return "orders-user";
+    }
+    @GetMapping("/vendor/orders")
+    public String getOrderPageVendor() {
+        return "admin/order-product";
     }
 }

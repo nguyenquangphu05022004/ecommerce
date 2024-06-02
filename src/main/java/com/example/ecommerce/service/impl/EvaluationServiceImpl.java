@@ -49,9 +49,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
                     ? new ArrayList<>() : evaluation.getImages();
 
             imageOfEvaluation.stream().forEach(image -> filesStorageService
-                    .deleteFile(
-                            image.getName(),
-                            SystemUtils.FOLDER_EVALUATION_IMAGE)
+                    .deleteFile(image.getName())
             );
             evaluation = (Evaluation) Convert.EVAL.toEntity(evaluation, evaluationDto);
         } else {
@@ -61,8 +59,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
         evaluation = evaluationRepository.save(evaluation);
         for (MultipartFile mul : images) {
             if (mul != null) {
-                imageService.uploadFile(mul, SystemUtils.FOLDER_EVALUATION_IMAGE,
-                        SystemUtils.SHORT_URL_EVALUATION);
+                imageService.uploadFile(mul, SystemUtils.SHORT_URL_EVALUATION);
             }
         }
         return (EvaluationDto) Convert.EVAL.toDto(evaluation);

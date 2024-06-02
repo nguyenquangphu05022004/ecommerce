@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -74,15 +75,14 @@ public class StockServiceImpl implements IStockService {
         List<Image> images = stockRequest.getMultipartFiles()
                 .stream()
                 .map(multipartFile -> {
-                    Image image = imageService.loadByFileName(multipartFile.getOriginalFilename());
-                    if(image == null) {
+                    Optional<Image> image = imageService.loadByFileName(multipartFile.getOriginalFilename());
+                    if(image.isEmpty()) {
                         return imageService.uploadFile(
                                 multipartFile,
-                                SystemUtils.FOLDER_STOCK_IMAGE,
                                 SystemUtils.SHORT_URL_STOCK
                         );
                     }
-                    return image;
+                    return image.get();
                 })
                 .collect(Collectors.toList());
 

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImpl implements IImageService {
@@ -17,25 +19,25 @@ public class ImageServiceImpl implements IImageService {
 
 
     @Override
-    public Image uploadFile(MultipartFile multipartFile, String folder, String shortUrl) {
+    public Image uploadFile(MultipartFile multipartFile, String shortUrl) {
         Image image = Image.builder()
                 .name(multipartFile.getOriginalFilename())
                 .shortUrl(shortUrl)
                 .build();
         image =  imageRepository.save(image);
-        filesStorageService.saveFile(multipartFile, folder);
+        filesStorageService.saveFile(multipartFile);
         return image;
     }
 
     @Override
-    public void deleteFile(String nameFile, String folderFile, Long idImage) {
+    public void deleteFile(String nameFile, Long idImage) {
         imageRepository.deleteById(idImage);
-        filesStorageService.deleteFile(nameFile, folderFile);
+        filesStorageService.deleteFile(nameFile);
     }
 
     @Override
-    public Image loadByFileName(String fileName) {
-        return imageRepository.findByName(fileName).get();
+    public Optional<Image> loadByFileName(String fileName) {
+        return imageRepository.findByName(fileName);
     }
 
 }

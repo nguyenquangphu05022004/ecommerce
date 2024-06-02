@@ -523,9 +523,9 @@
             const element = document.getElementById('image-product');
             const priceProduct = document.getElementById('price-product')
             priceProduct.innerHTML = getFormatNumber(res.price)
-            console.log(res)
-            console.log(priceProduct)
-            // element.src = "/" + res.images[0].shortUrl + "/" + res.images[0].name;
+            if(res.images.length > 0) {
+                element.src = "/" + res.images[0].shortUrl + "/" + res.images[0].name;
+            }
         })
     }
 </script>

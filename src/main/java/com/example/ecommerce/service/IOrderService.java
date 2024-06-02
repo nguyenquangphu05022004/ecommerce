@@ -9,4 +9,7 @@ import java.util.List;
 public interface IOrderService {
     OrderDto saveOrUpdate(OrderRequest orderRequest);
     List<OrderDto> records(Status status);
+
+    void approval(Long orderId);
+    void updatePayment(Long orderId);
 }

@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
-    private final OrderConverter orderConverter;
     private final CouponRepository couponRepository;
     private final BasketRepository basketRepository;
     private final StockRepository stockRepository;
@@ -34,16 +33,22 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
     public List<OrderDto> records() {
         return orderRepository.findAllByUserUsername(SecurityUtils.username())
                 .stream()
-                .map(entity -> OrderDto.builder()
-                        .id(entity.getId())
-                        .approval(entity.isApproval())
-                        .payment(entity.getPayment())
-                        .quantity(entity.getQuantity())
-                        .couponPercent(entity.getCouponPercent())
-                        .stockResponse(StockServiceImpl
-                                .getStockResponse(entity.getStock()))
-                        .build())
+                .map(entity -> toDto(entity))
                 .collect(Collectors.toList());
+    }
+
+    private OrderDto toDto(Order entity) {
+        return OrderDto.builder()
+                .id(entity.getId())
+                .approval(entity.isApproval())
+                .payment(entity.getPayment())
+                .quantity(entity.getQuantity())
+                .couponPercent(entity.getCouponPercent())
+                .purchased(entity.isPurchased())
+                .stockResponse(StockServiceImpl
+                        .getStockResponse(entity.getStock()))
+                .shipStatus(entity.isShipStatus())
+                .build();
     }
 
     @Override
@@ -58,7 +63,7 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
 
     @Override
     public OrderDto findById(Long id) {
-        return orderConverter.toDto(orderRepository.findById(id).get());
+        return toDto(orderRepository.findById(id).get());
     }
 
     @Override
@@ -84,7 +89,22 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
         return orderRepository
                 .findAllByUserUsernameAndBillStatus(SecurityUtils.username(), status)
                 .stream()
-                .map(entity -> orderConverter.toDto(entity))
+                .map(entity -> toDto(entity))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void approval(Long orderId) {
+        Order order = orderRepository.findById(orderId).get();
+        order.setApproval(true);
+        orderRepository.save(order);
+    }
+
+    @Override
+    public void updatePayment(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("OrderId", orderId + ""));
+        order.setPurchased(true);
+        orderRepository.save(order);
     }
 }

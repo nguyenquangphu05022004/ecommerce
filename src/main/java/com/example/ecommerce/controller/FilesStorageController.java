@@ -48,9 +48,8 @@ public class FilesStorageController {
     @GetMapping(value = "/files/{type}/{fileName}",
             produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ResponseBody
-    public Resource getImage(@PathVariable("type") String type,
-                             @PathVariable("fileName") String fileName) {
-        Resource resource = filesStorageService.loadFile(fileName, type);
+    public Resource getImage(@PathVariable("fileName") String fileName) {
+        Resource resource = filesStorageService.loadFile(fileName);
         return resource;
     }
 

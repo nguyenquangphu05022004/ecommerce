@@ -22,8 +22,11 @@ public class OrderDto extends BaseDto{
     private Payment payment;
     private int couponPercent;
     private boolean approval;
+    private boolean purchased;
+    private boolean shipStatus;
 
-    public String getFormatTotalPrice() {
+
+    public Integer getTotalPrice() {
         Integer totalPrice = 0;
         if(quantity != null && stockResponse != null && stockResponse.getPrice() != null) {
             totalPrice =  quantity * stockResponse.getPrice() +
@@ -33,6 +36,10 @@ public class OrderDto extends BaseDto{
             Integer x = totalPrice/100;
             totalPrice = totalPrice - x*couponPercent;
         }
-        return SystemUtils.getFormatNumber(totalPrice);
+        return totalPrice;
+    }
+
+    public String getFormatTotalPrice() {
+        return SystemUtils.getFormatNumber(getTotalPrice());
     }
 }

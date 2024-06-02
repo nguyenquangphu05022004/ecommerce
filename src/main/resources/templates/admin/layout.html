@@ -89,7 +89,13 @@
                            class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Danh sách</a>
                     </div>
                 </div>
-                <a th:href="@{/vendor/products/stock}"
+                <a th:href="@{/vendor/orders}"
+                   sec:authorize="hasAuthority('VENDOR')"
+                   class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Orders</a>
+                <a th:href="@{/admin/uploads}"
+                   sec:authorize="hasAuthority('ADMIN')"
+                   class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Upload Image</a>
+                <a th:href="@{/vendor/products/stock/add}"
                    sec:authorize="hasAuthority('VENDOR')"
                    class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Kho hàng</a>
                 <a th:href="@{/vendor/products/bills}"

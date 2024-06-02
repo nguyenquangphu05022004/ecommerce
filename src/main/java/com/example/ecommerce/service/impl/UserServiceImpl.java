@@ -106,15 +106,15 @@ public class UserServiceImpl implements IUserService {
             User user = userRepository.findByUsername(SecurityUtils.username()).get();
             Image avatar = null;
             if (user.getAvatar() != null) {
-                filesStorageService.deleteFile(user.getAvatar().getName(), SystemUtils.FOLDER_AVATAR);
+                filesStorageService.deleteFile(user.getAvatar().getName());
                 avatar = user.getAvatar().toBuilder()
                         .name(multipartFile.getOriginalFilename())
                         .build();
-                filesStorageService.saveFile(multipartFile, SystemUtils.FOLDER_AVATAR);
+                filesStorageService.saveFile(multipartFile);
             }
             else {
-                 avatar = imageService.uploadFile(multipartFile,
-                        SystemUtils.FOLDER_AVATAR,
+                 avatar = imageService.uploadFile(
+                         multipartFile,
                         SystemUtils.SHORT_URL_AVATAR);
             }
             user.setAvatar(avatar);

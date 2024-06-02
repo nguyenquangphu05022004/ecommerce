@@ -6,8 +6,10 @@ import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.entity.Stock;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 public interface IImageService {
-    Image uploadFile(MultipartFile multipartFile, String folder, String shortUrl);
-    void deleteFile(String nameFile, String folderFile, Long idImage);
-    Image loadByFileName(String fileName);
+    Image uploadFile(MultipartFile multipartFile, String shortUrl);
+    void deleteFile(String nameFile, Long idImage);
+    Optional<Image> loadByFileName(String fileName);
 }

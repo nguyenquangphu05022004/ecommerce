@@ -117,4 +117,9 @@ public class HomeController {
         return "forget-password";
     }
 
+    @GetMapping("/chat")
+    public String chatPage() {
+        return "chat";
+    }
+
 }

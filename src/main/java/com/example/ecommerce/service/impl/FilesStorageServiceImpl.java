@@ -26,13 +26,12 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
 
 
     @Override
-    public void saveFile(MultipartFile multipartFile, String folder) {
+    public void saveFile(MultipartFile multipartFile) {
         if(root == null) {
             root = Paths.get(resources.getUrlFilesStorage());
         }
         try {
-            Path path = root.resolve(folder);
-            Files.copy(multipartFile.getInputStream(), path.resolve(multipartFile.getOriginalFilename()));
+            Files.copy(multipartFile.getInputStream(), root.resolve(multipartFile.getOriginalFilename()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -40,12 +39,12 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
 
 
     @Override
-    public Resource loadFile(String fileName, String folder) {
+    public Resource loadFile(String fileName) {
         if(root == null) {
             root = Paths.get(resources.getUrlFilesStorage());
         }
         try {
-            Path path = root.resolve(folder).resolve(fileName);
+            Path path = root.resolve(fileName);
             Resource resource = new UrlResource(path.toUri());
             if(resource.exists() && resource.isReadable()) {
                 return resource;
@@ -59,11 +58,11 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
     }
 
     @Override
-    public void deleteFile(String fileName, String folder) {
+    public void deleteFile(String fileName) {
         if(root == null) {
             root = Paths.get(resources.getUrlFilesStorage());
         }
-        Path path = root.resolve(folder).resolve(fileName);
+        Path path = root.resolve(fileName);
         try {
             Files.delete(path);
         } catch (IOException e) {

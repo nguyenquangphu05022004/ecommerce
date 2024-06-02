@@ -1,9 +1,10 @@
 <html
         xmlns:th="http://thymeleaf.org"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{/layout.html}">
+        layout:decorate="~{/admin/layout}">
+
 <head>
-    <title>Đơn Hàng Của Tôi</title>
+    <title>Orders</title>
 </head>
 <body layout:fragment="body" th:onload="getAllOrder()">
 <div class="container-fluid fruite" style="padding-top: 100px">
@@ -23,17 +24,11 @@
                                             th:onchange="getAllOrder()"
                                     >
                                         <option selected value="ALL">Tất cả</option>
-                                        <option value="SUCCESS">Đã mua</option>
-                                        <option value="PROCESSING">Đang tiến hành</option>
-                                        <option value="CANCEL">Đã hủy</option>
+                                        <option value="SUCCESS">Đã duyệt</option>
+                                        <option value="PROCESSING">Chưa duyệt</option>
+                                        <option value="CANCEL">Đã thanh toán</option>
                                     </select>
                                 </div>
-                                <h4>Test Card</h4>
-                                <div>Bank: NCB</div>
-                                <div>Number: 9704198526191432198</div>
-                                <div>FullName: NGUYEN VAN A</div>
-                                <div>Start: 07/15</div>
-                                <div>Opt: 123456</div>
                             </div>
                         </div>
                     </div>
@@ -54,7 +49,8 @@
                                         <th scope="col">Trạng thái</th>
                                         <th scope="col">Hình thức</th>
                                         <th scope="col">Thanh toán</th>
-                                        <th scope="col">Sửa</th>
+                                        <th scope="col">Kiểm tra kho hàng</th>
+                                        <th scope="col">Chấp thuận</th>
                                     </tr>
                                     </thead>
                                     <tbody id="tableOfOrder">
@@ -89,7 +85,7 @@
                     } else {
                         src = "https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
                     }
-                    const buttonDelete = order.approval === false ? `<button class="btn btn-primary" onClick="deleteOrder(${order.id})">Xóa</button>` : 'Đang tiến hành'
+                    const buttonApproval = order.approval === false ? `<button class="btn btn-primary" onClick="approvalOrder(${order.id})">Xác nhận</button>` : 'Đang tiến hành'
                     html += `<tr>
                             <th scope="col">${order.id}</th>
                             <th scope="col">${order.stockResponse.productResponse.name}</th>
@@ -102,9 +98,10 @@
                             <th scope="col">${order.couponPercent != null ? order.couponPercent : "0"} %</th>
                             <th scope="col">${order.formatTotalPrice}</th>
                             <th scope="col">${order.approval === false ? 'Chưa nhận đơn' : 'Đã nhận đơn'}</th>
-                            <th scope="col">${order.payment === 'PAY_BY_BANK' ? order.purchased === false ?  `<button class="btn btn-primary" onClick="paymentOverBank(${order.id}, ${order.totalPrice})">Thanh toán qua ngân hàng</button>` : 'Thanh toán qua ngân hàng' : 'Thanh toán tại nhà'}</th>
-                            <th scope="col">${order.purchased === false ? 'Chưa thanh toán' : 'Đã thanh toán'}</th>
-                            <th scope="col">${buttonDelete}</th>
+                            <th scope="col">${order.payment === 'PAY_BY_BANK' ? 'Thanh toán qua ngân hàng' : 'Thanh toán tại nhà'}</th>
+                            <th scope="col">Chưa thanh toán</th>
+                            <th scope="col"><button class="btn btn-primary" onclick="checkStockOfProduct(${order.stockResponse.id})">Check</button></th>
+                            <th scope="col">${buttonApproval}</th>
                         </tr>`
                 })
             }
@@ -112,13 +109,17 @@
         })
     }
 
-    const paymentOverBank = (orderId, amount) => {
-        callApi('post', '', `[(@{/payment?amount=${amount}&orderInfo=${orderId}})]`, (res) => {
-            window.open(res, "_blank");
+    const checkStockOfProduct = (stockId) => {
+        callApi('get', '', `[(@{/stocks/${stockId}})]`, (res) => {
+            if(res.quantityOfProduct > 0) {
+                alert(`Sản phẩm vẫn còn ${res.quantityOfProduct}`)
+            } else {
+                alert(`Sản phẩm đã hết`)
+            }
         })
     }
-    const deleteOrder = (orderId) => {
-        callApi('delete', '', `[(@{/orders/${orderId}})]`, () => {
+    const approvalOrder = (orderId) => {
+        callApi('put', '', `[(@{/orders/${orderId}/approval})]`, () => {
             window.location.reload();
         })
     }

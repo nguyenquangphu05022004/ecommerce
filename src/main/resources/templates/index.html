@@ -82,8 +82,8 @@
                                     <div class="rounded position-relative fruite-item">
                                         <div class="fruite-img">
                                             <a th:href="@{/products/{productId}/{productName}(productId=${value.id}, productName=${value.language.nameVn})}">
-                                                <img th:if="${value.stockDtos.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid-redesign w-100 rounded-top" alt="">
-                                                <img th:unless="${value.stockDtos.size == 0}" th:src="@{/{shortUrl}/{fileName}(shortUrl=${value.stockDtos.get(0).imageDtos.get(0).shortUrl}, fileName=${value.stockDtos.get(0).imageDtos.get(0).name})}" class="img-fluid-redesign w-100 rounded-top" alt="">
+                                                <img th:if="${value.stockResponses.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid-redesign w-100 rounded-top" alt="">
+                                                <img th:unless="${value.stockResponses.size == 0}" th:src="@{/{shortUrl}/{fileName}(shortUrl=${value.stockResponses.get(0).images.get(0).shortUrl}, fileName=${value.stockResponses.get(0).images.get(0).name})}" class="img-fluid-redesign w-100 rounded-top" alt="">
                                             </a>
                                         </div>
                                         <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
@@ -140,8 +140,8 @@
                 rate += '<i class="fas fa-star"></i>';
             }
             let src = "";
-            if(product.stockDtos.length > 0) {
-                // src=`/${product.thumbnails[0].shortUrl}/${product.thumbnails[0].name}`
+            if(product.stockResponses.length > 0) {
+                src=`/${product.stockResponses[0].images[0].shortUrl}/${product.stockResponses[0].images[0].name}`
             } else {
                 src = "https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
             }
@@ -149,7 +149,7 @@
                     <div class="p-4 rounded bg-light">
                         <div class="row align-items-center">
                             <div class="col-6">
-                              <img src='${src}' class="img-fluid rounded-circle w-100" alt="">
+                              <img src='${src}' class="img-fluid-redesign rounded-circle w-100" alt="">
                             </div>
                             <div class="col-6">
                                 <a href='/products/${product.id}/${product.language.nameVn}'

@@ -65,6 +65,7 @@ public class SecurityConfig {
                             "/forget-password/new-pass", "/products/sort").permitAll()
                     .requestMatchers( "/vendor/**", "/vendors")
                     .hasAnyAuthority(Role.VENDOR.getAuthority(), Role.ADMIN.getAuthority())
+                    .requestMatchers("/chat").authenticated()
                     .anyRequest().authenticated();
 
         })
