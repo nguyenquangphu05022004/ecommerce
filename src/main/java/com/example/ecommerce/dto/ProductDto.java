@@ -15,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class ProductDto extends BaseDto {
-
     private CategoryDto category;
     private StockResponse.ProductResponse.VendorResponse vendorResponse;
     private String description;

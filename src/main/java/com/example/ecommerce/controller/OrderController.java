@@ -8,7 +8,6 @@ import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.Status;
 import com.example.ecommerce.service.IStockService;
 import com.example.ecommerce.service.impl.OrderServiceImpl;
-import com.example.ecommerce.service.impl.ProductServiceImpl;
 import com.example.ecommerce.service.impl.UserServiceImpl;
 import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.tags.form.LabelTag;
 
 import java.util.List;
 

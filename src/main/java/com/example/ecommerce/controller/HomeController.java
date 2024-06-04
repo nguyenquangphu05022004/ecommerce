@@ -9,19 +9,17 @@ import com.example.ecommerce.service.*;
 import com.example.ecommerce.utils.SystemUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Sort;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
     private final IProductService productService;
     private final ICategoryService categoryService;
@@ -29,17 +27,6 @@ public class HomeController {
     private final IUserService userService;
     private final IBasketService basketService;
 
-    @Autowired
-    public HomeController(@Qualifier("productService") IProductService productService,
-                          @Qualifier("categoryService") ICategoryService categoryService,
-                          @Qualifier("trackProductService") ITrackProductSellerService trackProductSellerService,
-                          @Qualifier("userService") IUserService userService, IBasketService basketService) {
-        this.productService = productService;
-        this.categoryService = categoryService;
-        this.trackProductSellerService = trackProductSellerService;
-        this.userService = userService;
-        this.basketService = basketService;
-    }
 
     @GetMapping("/admin/home")
     public String getHomeAdmin() {

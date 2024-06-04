@@ -97,59 +97,8 @@
                         </nav>
                         <div class="tab-content mb-5">
                             <div class="tab-pane active" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
-                                <p>The generated Lorem Ipsum is therefore always free from repetition injected humour,
-                                    or non-characteristic words etc.
-                                    Susp endisse ultricies nisi vel quam suscipit </p>
-                                <p>Sabertooth peacock flounder; chain pickerel hatchetfish, pencilfish snailfish
-                                    filefish Antarctic
-                                    icefish goldeye aholehole trumpetfish pilot fish airbreathing catfish, electric ray
-                                    sweeper.</p>
-                                <div class="px-2">
-                                    <div class="row g-4">
-                                        <div class="col-6">
-                                            <div class="row bg-light align-items-center text-center justify-content-center py-2">
-                                                <div class="col-6">
-                                                    <p class="mb-0">Weight</p>
-                                                </div>
-                                                <div class="col-6">
-                                                    <p class="mb-0">1 kg</p>
-                                                </div>
-                                            </div>
-                                            <div class="row text-center align-items-center justify-content-center py-2">
-                                                <div class="col-6">
-                                                    <p class="mb-0">Country of Origin</p>
-                                                </div>
-                                                <div class="col-6">
-                                                    <p class="mb-0">Agro Farm</p>
-                                                </div>
-                                            </div>
-                                            <div class="row bg-light text-center align-items-center justify-content-center py-2">
-                                                <div class="col-6">
-                                                    <p class="mb-0">Quality</p>
-                                                </div>
-                                                <div class="col-6">
-                                                    <p class="mb-0">Organic</p>
-                                                </div>
-                                            </div>
-                                            <div class="row text-center align-items-center justify-content-center py-2">
-                                                <div class="col-6">
-                                                    <p class="mb-0">Сheck</p>
-                                                </div>
-                                                <div class="col-6">
-                                                    <p class="mb-0">Healthy</p>
-                                                </div>
-                                            </div>
-                                            <div class="row bg-light text-center align-items-center justify-content-center py-2">
-                                                <div class="col-6">
-                                                    <p class="mb-0">Min Weight</p>
-                                                </div>
-                                                <div class="col-6">
-                                                    <p class="mb-0">250 Kg</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <p>[[${product.description}]]</p>
+
                             </div>
                             <div class="tab-pane" id="nav-mission"
                                  role="tabpanel" aria-labelledby="nav-mission-tab">
@@ -359,12 +308,12 @@
                 <div th:each="p : ${products}" th:if="${p.id != product.id}" class="border border-primary rounded position-relative">
                     <div class="vesitable-img">
                         <a th:href="@{/products/{productId}/{productName}(productId=${p.id}, productName=${p.language.nameVn})}">
-                            <img th:if="${p.stockDtos.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid-redesign w-100 rounded-top" alt="">
-                            <img th:unless="${p.stockDtos.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${p.stockDtos.get(0).images.get(0).shortUrl}, fileName=${p.stockDtos.get(0).images.get(0).name})}" class="img-fluid-redesign w-100 rounded-top" alt="">
+                            <img th:if="${p.stockResponses.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid-redesign w-100 rounded-top" alt="">
+                            <img th:unless="${p.stockResponses.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${p.stockResponses.get(0).images.get(0).shortUrl}, fileName=${p.stockResponses.get(0).images.get(0).name})}" class="img-fluid-redesign w-100 rounded-top" alt="">
                         </a>
                     </div>
                     <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
-                         style="top: 10px; right: 10px;">[[${product.category.name}]]
+                         style="top: 10px; right: 10px;">[[${product.category.name}]    ]
                     </div>
                     <div class="p-4 pb-0 rounded-bottom">
                         <a th:href="@{/products/{productId}/{productName}(productId=${p.id}, productName=${p.language.nameVn})}"><h4 class="text-truncate">[[${p.language.nameVn}]]</h4></a>

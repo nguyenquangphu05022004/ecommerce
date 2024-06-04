@@ -6,31 +6,30 @@ import com.example.ecommerce.dto.CategoryDto;
 import com.example.ecommerce.dto.EvaluationDto;
 import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.dto.SortProductType;
-import com.example.ecommerce.service.ICategoryService;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.impl.CategoryServiceImpl;
 import com.example.ecommerce.service.impl.ProductServiceImpl;
 import com.example.ecommerce.utils.SortUtils;
 import com.example.ecommerce.utils.SystemUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class ProductController {
 
     private final IProductService productService;
-    private final ICategoryService categoryService;
+    private final CategoryServiceImpl categoryService;
 
-    @Autowired
-    public ProductController(ProductServiceImpl productService,
-                             CategoryServiceImpl categoryService) {
-        this.productService = productService;
-        this.categoryService = categoryService;
-    }
+
 
     @GetMapping("/vendor/products/add")
     public String getFormProduct(Model model) {
@@ -46,7 +45,6 @@ public class ProductController {
     public ProductDto createProduct(@RequestBody ProductDto productDto) {
         return productService.saveOrUpdate(productDto);
     }
-
 
     @GetMapping("/vendor/product/{productId}/images/upload")
     public String formUploadThumbnails(@PathVariable("productId") Long productId, Model model) {
@@ -126,12 +124,12 @@ public class ProductController {
     @ResponseBody
     public List<ProductDto> sortProduct(@RequestParam("type") SortProductType type,
                                         @RequestBody List<ProductDto> products
-                                        ) {
-       return  SortUtils.sortProduct(type, products);
+    ) {
+        return  SortUtils.sortProduct(type, products);
     }
 
 
-    
+
     private void saveAttribute(
             List<ProductDto> productDtos,
             String query, Long categoryId, int page,

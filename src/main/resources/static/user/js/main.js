@@ -200,3 +200,15 @@ function getCookie(cname) {
     }
     return cookieValue;
 }
+
+const showChat = document.getElementById('show-chat');
+showChat.addEventListener('click', () => {
+    const messageShow = document.querySelector('.show-chat-support-dialog');
+    if(showChat.textContent === 'Chat') {
+        messageShow.style.display='flex'
+        showChat.innerText = 'Close'
+    } else {
+        messageShow.style.display='none'
+        showChat.innerText = 'Chat'
+    }
+})

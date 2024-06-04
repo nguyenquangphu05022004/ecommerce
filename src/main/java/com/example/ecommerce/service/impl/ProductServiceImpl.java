@@ -3,14 +3,13 @@ package com.example.ecommerce.service.impl;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.entity.Product;
-import com.example.ecommerce.entity.Status;
 import com.example.ecommerce.entity.Vendor;
-import com.example.ecommerce.repository.BillRepository;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.utils.SystemUtils;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,15 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service("productService")
+@Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements IProductService {
 
     private final ProductRepository productRepository;
     private final VendorRepository vendorRepository;
-    private final BillRepository billRepository;
-
-
+    private final EntityManager entityManager;
     @Override
     public List<ProductDto> records() {
         return GenericService.records(productRepository, Convert.PRO);
@@ -69,72 +66,70 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<ProductDto> findProductByCategoryId(Long categoryId, int page) {
-//        return productRepository.findAllByCategoryId(categoryId, PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM))
-//                .stream()
-//                .map(e -> (ProductDto) Convert.PRO.toDto(e))
-//                .collect(Collectors.toList());
-        return null;
+        return productRepository.findAllByCategoryId(categoryId, PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM))
+                .stream()
+                .map(e -> (ProductDto) Convert.PRO.toDto(e))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<ProductDto> search(String query, Long categoryId,
                                    Long vendorId, Integer startPrice,
                                    Integer endPrice, int page) {
-//        Pageable paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
-//        Page<Product> pages = null;
-//        if(vendorId != null) {
-//            if(query == null && categoryId == 0 && startPrice == 0 && endPrice == 0) {
-//                pages = productRepository.findAllByVendorId(vendorId, paging);
-//            } else if(query == null && categoryId == 0 && startPrice != 0 && endPrice != 0) {
-//                pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndVendorId(vendorId, startPrice, endPrice, paging);
-//            } else if(query == null && categoryId != null) {
-//                if(startPrice != 0 && endPrice != 0) {
-//                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndCategoryIdAndVendorId(vendorId, categoryId, startPrice, endPrice, paging);
-//                } else {
-//                    pages = productRepository.findAllByCategoryIdAndVendorId(vendorId, categoryId, paging);
-//                }
-//            } else if(query != null && categoryId == 0) {
-//                if(startPrice != 0 && endPrice != 0) {
-//                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndVendorId(vendorId,query, startPrice, endPrice, paging);
-//                } else {
-//                    pages = productRepository.findAllByProductNameAndVendorId(vendorId, query, paging);
-//                }
-//            } else if(query != null && categoryId != 0) {
-//                if(startPrice != 0 && endPrice != 0) {
-//                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndCategoryIdAndVendorId(vendorId, query, categoryId, startPrice, endPrice, paging);
-//                } else {
-//                    pages = productRepository.findAllByProductNameAndCategoryIdAndVendorId(vendorId, query, categoryId, paging);
-//                }
-//            }
-//        } else {
-//            if(query == null && categoryId == 0 && startPrice != 0 && endPrice != 0) {
-//                pages = productRepository.findAllByPriceBetweenStartPriceAndEndPrice(startPrice, endPrice, paging);
-//            } else if(query == null && categoryId != null) {
-//                if(startPrice != 0 && endPrice != 0) {
-//                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndCategoryId(categoryId, startPrice, endPrice, paging);
-//                } else {
-//                    pages = productRepository.findAllByCategoryId(categoryId, paging);
-//                }
-//            } else if(query != null && categoryId == 0) {
-//                if(startPrice != 0 && endPrice != 0) {
-//                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductName(query, startPrice, endPrice, paging);
-//                } else {
-//                    pages = productRepository.findAllByProductName(query, paging);
-//                }
-//            } else if(query != null && categoryId != null) {
-//                if(startPrice != 0 && endPrice != 0) {
-//                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndCategoryId(query, categoryId, startPrice, endPrice, paging);
-//                } else {
-//                    pages = productRepository.findAllByProductNameAndCategoryId(query, categoryId, paging);
-//                }
-//            }
-//        }
-//        SystemUtils.totalPage = pages.getTotalPages();
-//        List<Product> products = pages.getContent();
-//        return products.stream()
-//                .map((entity) -> (ProductDto) Convert.PRO.toDto(entity))
-//                .collect(Collectors.toList());
-        return null;
+        Pageable paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
+        Page<Product> pages = null;
+        if(vendorId != null) {
+            if(query == null && categoryId == 0 && startPrice == 0 && endPrice == 0) {
+                pages = productRepository.findAllByVendorId(vendorId, paging);
+            } else if(query == null && categoryId == 0 && startPrice != 0 && endPrice != 0) {
+                pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndVendorId(vendorId, startPrice, endPrice, paging);
+            } else if(query == null && categoryId != null) {
+                if(startPrice != 0 && endPrice != 0) {
+                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndCategoryIdAndVendorId(vendorId, categoryId, startPrice, endPrice, paging);
+                } else {
+                    pages = productRepository.findAllByCategoryIdAndVendorId(vendorId, categoryId, paging);
+                }
+            } else if(query != null && categoryId == 0) {
+                if(startPrice != 0 && endPrice != 0) {
+                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndVendorId(vendorId,query, startPrice, endPrice, paging);
+                } else {
+                    pages = productRepository.findAllByProductNameAndVendorId(vendorId, query, paging);
+                }
+            } else if(query != null && categoryId != 0) {
+                if(startPrice != 0 && endPrice != 0) {
+                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndCategoryIdAndVendorId(vendorId, query, categoryId, startPrice, endPrice, paging);
+                } else {
+                    pages = productRepository.findAllByProductNameAndCategoryIdAndVendorId(vendorId, query, categoryId, paging);
+                }
+            }
+        } else {
+            if(query == null && categoryId == 0 && startPrice != 0 && endPrice != 0) {
+                pages = productRepository.findAllByPriceBetweenStartPriceAndEndPrice(startPrice, endPrice, paging);
+            } else if(query == null && categoryId != null) {
+                if(startPrice != 0 && endPrice != 0) {
+                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndCategoryId(categoryId, startPrice, endPrice, paging);
+                } else {
+                    pages = productRepository.findAllByCategoryId(categoryId, paging);
+                }
+            } else if(query != null && categoryId == 0) {
+                if(startPrice != 0 && endPrice != 0) {
+                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductName(query, startPrice, endPrice, paging);
+                } else {
+                    pages = productRepository.findAllByProductName(query, paging);
+                }
+            } else if(query != null && categoryId != null) {
+                if(startPrice != 0 && endPrice != 0) {
+                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndCategoryId(query, categoryId, startPrice, endPrice, paging);
+                } else {
+                    pages = productRepository.findAllByProductNameAndCategoryId(query, categoryId, paging);
+                }
+            }
+        }
+        SystemUtils.totalPage = pages.getTotalPages();
+        List<Product> products = pages.getContent();
+        return products.stream()
+                .map((entity) -> (ProductDto) Convert.PRO.toDto(entity))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -174,5 +169,9 @@ public class ProductServiceImpl implements IProductService {
         return false;
 //        return billRepository.existsByOrderBillStatusAndOrderProductIdAndOrderUserUsername(Status.SUCCESS,productId, username);
     }
+
+
+
+
 
 }
