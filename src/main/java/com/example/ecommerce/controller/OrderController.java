@@ -5,7 +5,7 @@ import com.example.ecommerce.dto.OrderDto;
 import com.example.ecommerce.dto.OrderRequest;
 import com.example.ecommerce.dto.StockResponse;
 import com.example.ecommerce.dto.UserDto;
-import com.example.ecommerce.entity.Status;
+import com.example.ecommerce.domain.Status;
 import com.example.ecommerce.service.IStockService;
 import com.example.ecommerce.service.impl.OrderServiceImpl;
 import com.example.ecommerce.service.impl.UserServiceImpl;

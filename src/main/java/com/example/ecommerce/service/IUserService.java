@@ -1,8 +1,8 @@
 package com.example.ecommerce.service;
 
+import com.example.ecommerce.domain.response.UserInboxResponse;
 import com.example.ecommerce.dto.UserDto;
-import com.example.ecommerce.entity.Role;
-import com.example.ecommerce.entity.Verify;
+import com.example.ecommerce.domain.Role;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -15,4 +15,5 @@ public interface IUserService extends IGenericService<UserDto>{
     void updateAvatar(MultipartFile multipartFile);
     boolean isExistsEmail(String email);
 
+    UserInboxResponse findByUsername(String username);
 }

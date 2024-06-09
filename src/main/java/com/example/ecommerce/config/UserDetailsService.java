@@ -1,6 +1,6 @@
 package com.example.ecommerce.config;
 
-import com.example.ecommerce.entity.User;
+import com.example.ecommerce.domain.User;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

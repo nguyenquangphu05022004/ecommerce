@@ -1,10 +1,9 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.converter.impl.BillConverterImpl;
 import com.example.ecommerce.dto.BillDto;
-import com.example.ecommerce.entity.Bill;
-import com.example.ecommerce.entity.Status;
+import com.example.ecommerce.domain.Bill;
+import com.example.ecommerce.domain.Status;
 import com.example.ecommerce.repository.BillRepository;
 import com.example.ecommerce.service.IBillService;
 import org.springframework.beans.factory.annotation.Autowired;

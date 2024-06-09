@@ -1,7 +1,7 @@
 package com.example.ecommerce.dto;
 
-import com.example.ecommerce.entity.Payment;
-import com.example.ecommerce.entity.UserContactDetails;
+import com.example.ecommerce.domain.Payment;
+import com.example.ecommerce.domain.UserContactDetails;
 import lombok.Getter;
 import lombok.Setter;
 

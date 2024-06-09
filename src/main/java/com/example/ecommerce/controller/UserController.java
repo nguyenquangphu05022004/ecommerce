@@ -1,12 +1,16 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.domain.Role;
+import com.example.ecommerce.domain.response.UserInboxResponse;
 import com.example.ecommerce.dto.UserDto;
-import com.example.ecommerce.entity.Role;
-import com.example.ecommerce.entity.User;
-import com.example.ecommerce.entity.Verify;
 import com.example.ecommerce.service.VerifyService;
 import com.example.ecommerce.service.impl.UserServiceImpl;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +18,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
+@Slf4j
 public class UserController {
     private final UserServiceImpl userService;
     private final VerifyService verifyService;
 
-    @Autowired
-    public UserController(UserServiceImpl userService, VerifyService verifyService) {
-        this.userService = userService;
-        this.verifyService = verifyService;
-    }
 
 
     @GetMapping("/admin/users/role/{ROLE}")
@@ -85,5 +86,19 @@ public class UserController {
                 return "redirect:/forget-password?expire=true";
             }
         }
+    }
+    @MessageMapping("/chat.getListUserConversation/{username}")
+    @SendTo("/topic/public/listUserMessage/{username}")
+    public UserInboxResponse getListUserConversation(@DestinationVariable("username") String username) {
+        UserInboxResponse userResponse = userService.findByUsername(username);
+        log.info("user: {}", userResponse);
+        return userResponse;
+    }
+
+    @GetMapping("/users")
+    @ResponseBody
+    public UserInboxResponse getUserByUsername(@RequestParam("username") String username) {
+        UserInboxResponse userResponse = userService.findByUsername(username);
+        return userResponse;
     }
 }

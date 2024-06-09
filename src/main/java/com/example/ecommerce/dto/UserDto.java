@@ -1,9 +1,8 @@
 package com.example.ecommerce.dto;
 
-import com.example.ecommerce.entity.Image;
-import com.example.ecommerce.entity.Role;
-import com.example.ecommerce.entity.UserContactDetails;
-import com.example.ecommerce.entity.Verify;
+import com.example.ecommerce.domain.Role;
+import com.example.ecommerce.domain.UserContactDetails;
+import com.example.ecommerce.domain.Verify;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

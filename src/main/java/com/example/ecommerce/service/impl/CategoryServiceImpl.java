@@ -2,14 +2,12 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.dto.CategoryDto;
-import com.example.ecommerce.entity.Category;
-import com.example.ecommerce.entity.Image;
+import com.example.ecommerce.domain.Category;
 import com.example.ecommerce.repository.CategoryRepository;
 import com.example.ecommerce.service.ICategoryService;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IImageService;
 import com.example.ecommerce.utils.Convert;
-import com.example.ecommerce.utils.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

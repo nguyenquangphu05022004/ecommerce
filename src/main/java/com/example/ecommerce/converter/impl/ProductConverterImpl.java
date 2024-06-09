@@ -2,12 +2,9 @@ package com.example.ecommerce.converter.impl;
 
 import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.dto.*;
-import com.example.ecommerce.entity.*;
+import com.example.ecommerce.domain.*;
 import com.example.ecommerce.service.impl.StockServiceImpl;
 import com.example.ecommerce.utils.Convert;
-import lombok.NoArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

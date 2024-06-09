@@ -1,7 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.dto.DecorationDto;
-import com.example.ecommerce.entity.Decoration;
+import com.example.ecommerce.domain.Decoration;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.DecorationRepository;
 import com.example.ecommerce.service.IDecorationService;

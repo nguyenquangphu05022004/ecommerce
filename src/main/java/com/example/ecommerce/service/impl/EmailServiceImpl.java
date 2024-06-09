@@ -1,17 +1,15 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.dao.impl.UserEventDao;
+import com.example.ecommerce.domain.User;
+import com.example.ecommerce.domain.Verify;
 import com.example.ecommerce.dto.EmailDetails;
 import com.example.ecommerce.dto.task.SendEmailTask;
-import com.example.ecommerce.entity.User;
-import com.example.ecommerce.entity.Verify;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VerifyRepository;
 import com.example.ecommerce.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -26,26 +24,15 @@ import java.util.Optional;
 
 
 @Service
-// Class
-// Implementing EmailService interface
+@RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender javaMailSender;
     private final UserRepository userRepository;
     private final VerifyRepository verifyRepository;
-    private final UserEventDao userEventDao;
     @Value("${spring.mail.username}")
     private String sender;
-    @Autowired
-    public EmailServiceImpl(JavaMailSender javaMailSender,
-                            UserRepository userRepository,
-                            VerifyRepository verifyRepository,
-                            UserEventDao userEventDao) {
-        this.javaMailSender = javaMailSender;
-        this.userRepository = userRepository;
-        this.verifyRepository = verifyRepository;
-        this.userEventDao = userEventDao;
-    }
+
 
     // Method 1
     // To send a simple email
@@ -71,16 +58,14 @@ public class EmailServiceImpl implements EmailService {
         if(verify == null) {
             verify = Verify.builder()
                     .code(details.getCode())
-                    .status(true)
                     .user(user)
                     .build();
         } else {
             verify = verify.toBuilder()
                     .code(details.getCode())
-                    .status(true).build();
+                    .build();
         }
         verifyRepository.save(verify);
-        userEventDao.createEvent(user);
     }
 
     // Method 2

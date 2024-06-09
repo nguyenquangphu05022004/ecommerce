@@ -205,6 +205,7 @@ const showChat = document.getElementById('show-chat');
 showChat.addEventListener('click', () => {
     const messageShow = document.querySelector('.show-chat-support-dialog');
     if(showChat.textContent === 'Chat') {
+        connectWebSocket();
         messageShow.style.display='flex'
         showChat.innerText = 'Close'
     } else {

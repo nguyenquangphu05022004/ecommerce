@@ -1,6 +1,5 @@
 package com.example.ecommerce.dto;
 
-import com.example.ecommerce.entity.User;
 import com.example.ecommerce.utils.SystemUtils;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

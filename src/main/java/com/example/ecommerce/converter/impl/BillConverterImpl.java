@@ -2,7 +2,7 @@ package com.example.ecommerce.converter.impl;
 
 import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.dto.BillDto;
-import com.example.ecommerce.entity.Bill;
+import com.example.ecommerce.domain.Bill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

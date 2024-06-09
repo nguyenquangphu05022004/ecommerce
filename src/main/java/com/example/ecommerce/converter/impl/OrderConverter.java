@@ -2,15 +2,7 @@ package com.example.ecommerce.converter.impl;
 
 import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.dto.*;
-import com.example.ecommerce.entity.Order;
-import com.example.ecommerce.entity.Product;
-import com.example.ecommerce.entity.User;
-import com.example.ecommerce.service.impl.OrderServiceImpl;
-import com.example.ecommerce.utils.Convert;
-import org.aspectj.weaver.ast.Or;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.ecommerce.domain.Order;
 import org.springframework.stereotype.Component;
 
 @Component

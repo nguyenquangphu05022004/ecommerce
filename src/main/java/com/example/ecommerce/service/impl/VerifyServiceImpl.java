@@ -1,8 +1,7 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.entity.User;
-import com.example.ecommerce.entity.Verify;
+import com.example.ecommerce.domain.User;
+import com.example.ecommerce.domain.Verify;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VerifyRepository;
 import com.example.ecommerce.service.VerifyService;
@@ -29,15 +28,14 @@ public class VerifyServiceImpl implements VerifyService {
 
     @Override
     public boolean update(String code, String password) {
-        Optional<Verify> optional = verifyRepository.findByCodeAndStatus(code, true);
-        if(optional.isEmpty()) {
+        Optional<Verify> optional = verifyRepository.findByCode(code);
+        if(optional.isEmpty() || optional.get().isExpired()) {
             return false;
         }
         Verify verify = optional.get();
         User user = verify.getUser().toBuilder()
                 .password(passwordEncoder.encode(password)).build();
         verify = verify.toBuilder()
-                .status(false)
                 .user(user).build();
         verifyRepository.save(verify);
         return true;
@@ -46,7 +44,10 @@ public class VerifyServiceImpl implements VerifyService {
 
     @Override
     public boolean isCodeExpire(String code) {
-        boolean status = verifyRepository.existsByCodeAndStatus(code, true);
-        return status;
+        Optional<Verify> byCode = verifyRepository.findByCode(code);
+        if(byCode.isPresent()) {
+            return byCode.get().isExpired();
+        }
+        return false;
     }
 }

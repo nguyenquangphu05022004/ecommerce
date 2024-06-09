@@ -2,8 +2,8 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.dto.ProductDto;
-import com.example.ecommerce.entity.Product;
-import com.example.ecommerce.entity.Vendor;
+import com.example.ecommerce.domain.Product;
+import com.example.ecommerce.domain.Vendor;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IProductService;

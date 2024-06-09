@@ -1,21 +1,15 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.dao.impl.CouponEventDao;
-import com.example.ecommerce.dto.CouponDto;
-import com.example.ecommerce.entity.Coupon;
-import com.example.ecommerce.repository.CouponRepository;
-import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.dto.VendorDto;
-import com.example.ecommerce.entity.User;
-import com.example.ecommerce.entity.Vendor;
+import com.example.ecommerce.domain.User;
+import com.example.ecommerce.domain.Vendor;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IGenericService;
 import com.example.ecommerce.service.IVendorService;
+import com.example.ecommerce.utils.Convert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
