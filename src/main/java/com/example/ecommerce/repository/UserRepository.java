@@ -1,7 +1,7 @@
 package com.example.ecommerce.repository;
 
-import com.example.ecommerce.entity.Role;
-import com.example.ecommerce.entity.User;
+import com.example.ecommerce.domain.Role;
+import com.example.ecommerce.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,5 +12,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByRole(Role role);
     boolean existsByEmail(String email);
     Optional<User> findByEmail(String email);
-    Optional<User> findByVerifyCodeAndVerifyStatus(String code, Boolean status);
 }

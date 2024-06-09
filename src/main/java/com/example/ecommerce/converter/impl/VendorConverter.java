@@ -2,11 +2,8 @@ package com.example.ecommerce.converter.impl;
 
 import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.dto.VendorDto;
-import com.example.ecommerce.entity.Vendor;
-import lombok.NoArgsConstructor;
+import com.example.ecommerce.domain.Vendor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 public class VendorConverter implements IGenericConverter<Vendor, VendorDto> {
     private  final ModelMapper mapper;

@@ -20,9 +20,8 @@ public class CouponDto extends BaseDto {
     private LocalDateTime start;
     private LocalDateTime end;
     private VendorDto vendor;
-    private Boolean expired;
+    private boolean isExpired;
     //check current day is event start
-    private Boolean started;
     public String getFormatStart() {
         return SystemUtils.getFormatDate(start, "HH:mm:ss dd-MM-yyyy");
     }

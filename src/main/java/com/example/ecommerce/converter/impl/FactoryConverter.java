@@ -21,7 +21,7 @@ public class FactoryConverter {
                 genericConverter = new VendorConverter(mapper);
                 break;
             case USER:
-                genericConverter = new UserConverterImpl(mapper);
+                genericConverter = new UserMapper(mapper);
                 break;
             case BASKET:
                 genericConverter = new BasketConverterImpl();

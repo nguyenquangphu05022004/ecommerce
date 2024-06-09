@@ -1,22 +1,18 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.converter.impl.OrderConverter;
 import com.example.ecommerce.dto.OrderRequest;
-import com.example.ecommerce.entity.*;
+import com.example.ecommerce.domain.*;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.*;
-import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.dto.OrderDto;
 import com.example.ecommerce.service.IGenericService;
 import com.example.ecommerce.service.IOrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

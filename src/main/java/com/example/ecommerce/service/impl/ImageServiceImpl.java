@@ -1,11 +1,10 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.entity.Image;
+import com.example.ecommerce.domain.Image;
 import com.example.ecommerce.repository.ImageRepository;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IImageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

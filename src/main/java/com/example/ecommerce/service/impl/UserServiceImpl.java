@@ -1,14 +1,15 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.entity.Image;
-import com.example.ecommerce.entity.Role;
-import com.example.ecommerce.entity.Verify;
+import com.example.ecommerce.converter.impl.UserMapper;
+import com.example.ecommerce.domain.Image;
+import com.example.ecommerce.domain.Role;
+import com.example.ecommerce.domain.response.UserInboxResponse;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IImageService;
 import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.dto.UserDto;
-import com.example.ecommerce.entity.User;
+import com.example.ecommerce.domain.User;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IUserService;
 import com.example.ecommerce.utils.SystemUtils;
@@ -19,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service("userService")
@@ -127,5 +127,11 @@ public class UserServiceImpl implements IUserService {
     @Override
     public boolean isExistsEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public UserInboxResponse findByUsername(String username) {
+        User user = userRepository.findByUsername(username).get();
+        return UserMapper.maptoUserResponse(user);
     }
 }

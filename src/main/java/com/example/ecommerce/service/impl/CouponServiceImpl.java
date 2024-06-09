@@ -2,19 +2,14 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.converter.impl.CouponConverterImpl;
-import com.example.ecommerce.dao.impl.CouponEventDao;
+import com.example.ecommerce.domain.Coupon;
+import com.example.ecommerce.domain.Vendor;
 import com.example.ecommerce.dto.CouponDto;
-import com.example.ecommerce.dto.VendorDto;
-import com.example.ecommerce.entity.Coupon;
-import com.example.ecommerce.entity.Product;
-import com.example.ecommerce.entity.Vendor;
 import com.example.ecommerce.exception.NotFoundException;
-import com.example.ecommerce.exception.NotValidException;
 import com.example.ecommerce.repository.CouponRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.ICouponService;
-import com.example.ecommerce.utils.Convert;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,28 +18,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CouponServiceImpl implements ICouponService {
     private final VendorRepository vendorRepository;
     private final CouponRepository couponRepository;
-    private final CouponEventDao couponEventDao;
     private final CouponConverterImpl couponConverter;
-    @Autowired
-    public CouponServiceImpl(VendorRepository vendorRepository,
-                             CouponRepository couponRepository,
-                             CouponEventDao couponEventDao,
-                             CouponConverterImpl couponConverter) {
-        this.vendorRepository = vendorRepository;
-        this.couponRepository = couponRepository;
-        this.couponEventDao = couponEventDao;
-        this.couponConverter = couponConverter;
-    }
 
     @Override
     @Transactional
     public void createCoupon(CouponDto couponDto) {
         Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username());
         Coupon coupon = couponConverter.toEntity(couponDto).toBuilder().vendor(vendor).build();
-        couponEventDao.createEvent(couponRepository.save(coupon));
+        couponRepository.save(coupon);
     }
 
     @Override
@@ -67,7 +52,7 @@ public class CouponServiceImpl implements ICouponService {
     @Override
     public CouponDto findByCodeAndProductId(String code, Long productId) {
         Optional<Coupon> opCoupon = couponRepository.findByCodeAndProductIdAndExpiredIsFalse(code, productId);
-        if(opCoupon.isEmpty()) {
+        if(opCoupon.isEmpty() || opCoupon.get().couponIsExpired()) {
             throw new NotFoundException("Code", code);
         } else {
             Coupon coupon = opCoupon.get();

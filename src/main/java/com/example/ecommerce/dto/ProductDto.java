@@ -1,11 +1,9 @@
 package com.example.ecommerce.dto;
 
-import com.example.ecommerce.entity.*;
+import com.example.ecommerce.domain.*;
 import com.example.ecommerce.utils.SystemUtils;
-import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;

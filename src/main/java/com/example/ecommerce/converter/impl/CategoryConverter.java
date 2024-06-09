@@ -2,12 +2,8 @@ package com.example.ecommerce.converter.impl;
 
 import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.dto.CategoryDto;
-import com.example.ecommerce.entity.Category;
-import com.example.ecommerce.entity.Image;
-import lombok.NoArgsConstructor;
+import com.example.ecommerce.domain.Category;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 public class CategoryConverter implements IGenericConverter<Category, CategoryDto> {
     private final ModelMapper mapper;

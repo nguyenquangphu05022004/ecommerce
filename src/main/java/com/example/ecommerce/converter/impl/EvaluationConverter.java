@@ -4,7 +4,7 @@ import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.dto.EvaluationDto;
 import com.example.ecommerce.dto.ImageDto;
 import com.example.ecommerce.dto.UserDto;
-import com.example.ecommerce.entity.*;
+import com.example.ecommerce.domain.*;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;

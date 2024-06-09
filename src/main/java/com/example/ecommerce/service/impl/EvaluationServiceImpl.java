@@ -1,13 +1,13 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.entity.Image;
+import com.example.ecommerce.domain.Image;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IImageService;
 import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.dto.EvaluationDto;
-import com.example.ecommerce.entity.Evaluation;
-import com.example.ecommerce.entity.User;
+import com.example.ecommerce.domain.Evaluation;
+import com.example.ecommerce.domain.User;
 import com.example.ecommerce.repository.EvaluationRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IEvaluationService;

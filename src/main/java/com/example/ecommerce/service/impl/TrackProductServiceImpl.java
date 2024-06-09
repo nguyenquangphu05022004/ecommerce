@@ -2,7 +2,7 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.dto.TrackProductSellerDto;
-import com.example.ecommerce.entity.TrackProductSeller;
+import com.example.ecommerce.domain.TrackProductSeller;
 import com.example.ecommerce.repository.TrackProductSellerRepository;
 import com.example.ecommerce.service.ITrackProductSellerService;
 import com.example.ecommerce.utils.Convert;

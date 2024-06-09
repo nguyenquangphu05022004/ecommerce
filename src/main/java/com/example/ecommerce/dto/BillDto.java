@@ -1,6 +1,6 @@
 package com.example.ecommerce.dto;
 
-import com.example.ecommerce.entity.Status;
+import com.example.ecommerce.domain.Status;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
