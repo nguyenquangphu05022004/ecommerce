@@ -516,7 +516,7 @@
     position: fixed;
     right: 30px;
     bottom: 30px;
-    width: 800px;
+    width: 75%;
     align-items: center;
     justify-content: center;
     z-index: 999999;
@@ -536,7 +536,7 @@ body{margin-top:20px;}
     display: flex;
     flex-direction: column;
     max-height: 500px;
-    overflow-y: scroll
+    overflow-y: scroll;
 }
 
 .chat-message-left,

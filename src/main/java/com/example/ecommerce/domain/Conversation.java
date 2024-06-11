@@ -28,8 +28,22 @@ public class Conversation extends Base{
         String conversationName = users.stream()
                 .filter(user -> user.getUsername()
                         .compareTo(username) != 0)
-                .map(user -> user.getUserContactDetails().getFullName())
+                .map(user -> {
+                    if(user.getRole() == Role.VENDOR) {
+                        return user.getVendor().getShopName();
+                    }
+                    return user.getUserContactDetails().getFullName();
+                })
                 .collect(Collectors.joining(", "));
         return conversationName;
+    }
+    @Transient
+    public String getImageOfConversation(String username) {
+        String imageUrl = users.stream()
+                .filter(user -> user.getUsername()
+                        .compareTo(username) != 0)
+                .map(user ->  user.defaultImage())
+                .collect(Collectors.joining(", "));
+        return imageUrl;
     }
 }

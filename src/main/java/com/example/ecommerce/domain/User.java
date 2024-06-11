@@ -64,12 +64,12 @@ public class User extends Base{
     public int hashCode() {
         return Objects.hash(super.hashCode(), username);
     }
+
+    @Transient
     public String defaultImage() {
-        if(avatar == null) {
+        if(this.avatar == null) {
             return this.defaultAvatar;
         }
-        return MvcUriComponentsBuilder.fromMethodName(
-                FilesStorageController.class, avatar.getName()
-        ).build().toString();
+        return "/files/image/" + this.avatar.getName();
     }
 }

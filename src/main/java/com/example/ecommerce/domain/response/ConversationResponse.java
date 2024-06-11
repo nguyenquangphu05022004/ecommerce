@@ -14,5 +14,5 @@ import java.util.List;
 public class ConversationResponse {
     private Long id;
     private String conversationName;
-    private List<ChatMessageResponse> chatMessageResponses = new ArrayList<>();
+    private String image;
 }

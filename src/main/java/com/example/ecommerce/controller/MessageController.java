@@ -35,6 +35,9 @@ public class MessageController {
         return chatMessageService.createMessage(chatMessage);
     }
 
+    
+
+
     @GetMapping("/message/user/{username}/conversation/{conversationId}")
     @ResponseBody
     public List<ChatMessageResponse> getListMessageByConversationId(
@@ -43,6 +46,8 @@ public class MessageController {
     ) {
         return chatMessageService.getListMessageByConversationId(conversationId, username);
     }
+
+
 
 
 }

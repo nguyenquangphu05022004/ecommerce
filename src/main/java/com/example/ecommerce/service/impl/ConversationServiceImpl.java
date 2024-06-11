@@ -28,8 +28,9 @@ public class ConversationServiceImpl implements IConversationService {
         Conversation conversation = Conversation.builder()
                 .users(users)
                 .build();
+        conversation = conversationRepository.save(conversation);
         return ConversationMapper.mapperToConversationResponse(
-                conversationRepository.save(conversation)
+                conversation
         );
     }
 }
