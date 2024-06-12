@@ -1,6 +1,7 @@
 package com.example.ecommerce.converter.impl;
 
 import com.example.ecommerce.domain.ChatMessage;
+import com.example.ecommerce.domain.Role;
 import com.example.ecommerce.domain.response.ChatMessageResponse;
 import com.example.ecommerce.utils.SystemUtils;
 
@@ -12,7 +13,9 @@ public class ChatMessageMapper {
     ) {
         return ChatMessageResponse.builder()
                 .userSender(ChatMessageResponse.UserSender.builder()
-                        .fullName(chatMessage.getUserSender()
+                        .fullName(chatMessage.getUserSender().getRole() == Role.VENDOR
+                                ? chatMessage.getUserSender().getVendor().getShopName()
+                                : chatMessage.getUserSender()
                                 .getUserContactDetails().getFullName())
                         .username(chatMessage.getUserSender().getUsername())
                         .build())
@@ -29,8 +32,8 @@ public class ChatMessageMapper {
                         chatMessage.getUserSender()
                                 .getUsername()
                                 .compareTo(username) != 0
-                        ? ChatMessageResponse.MessageType.RECEIVE
-                        : ChatMessageResponse.MessageType.SEND
+                                ? ChatMessageResponse.MessageType.RECEIVE
+                                : ChatMessageResponse.MessageType.SEND
                 )
                 .build();
     }

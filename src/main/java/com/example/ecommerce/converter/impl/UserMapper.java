@@ -75,7 +75,6 @@ public class UserMapper implements IGenericConverter<User, UserDto> {
                                 })
                                 .collect(Collectors.toList())
                 )
-                .avatar(user.getDefaultAvatar())
                 .build();
         return userResponse;
     }

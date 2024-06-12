@@ -1,10 +1,12 @@
 package com.example.ecommerce.controller;
 
 
+import com.example.ecommerce.domain.response.vendor.VendorResponseInbox;
 import com.example.ecommerce.dto.CouponDto;
 import com.example.ecommerce.dto.VendorDto;
 import com.example.ecommerce.service.impl.CouponServiceImpl;
 import com.example.ecommerce.service.impl.VendorServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
@@ -14,21 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class VendorController {
-    /**
-     * Chức năng của người bán:
-     *  1, Tạo, xóa các sản phẩm
-     *  2, Cập nhật trạng thái các đơn hàng
-     *  3,
-     */
     private final VendorServiceImpl vendorService;
     private final CouponServiceImpl couponService;
-
-    @Autowired
-    public VendorController(VendorServiceImpl vendorService, CouponServiceImpl couponService) {
-        this.vendorService = vendorService;
-        this.couponService = couponService;
-    }
 
     @GetMapping("/admin/users/{userId}/vendor")
     public String getFormUpdateUserToVendor(@PathVariable("userId") Long userId, Model model) {
@@ -71,5 +62,14 @@ public class VendorController {
     public CouponDto checkCouponExistsOrValid(@PathVariable("productId") Long productId,
                                                   @RequestParam("couponCode") String couponCode) {
         return couponService.findByCodeAndProductId(couponCode, productId);
+    }
+
+
+    @GetMapping("/vendors/name")
+    @ResponseBody
+    public List<VendorResponseInbox> getListVendorByVendorName(
+            @RequestParam("name") String vendorName
+    ) {
+        return vendorService.findAllByName(vendorName);
     }
 }

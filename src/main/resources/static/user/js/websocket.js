@@ -7,9 +7,11 @@ const infoChatUser = document.getElementById("info-chat-user")
 const form_sendMessage = document.querySelector('#form-message')
 let sendConversationId = null;
 const message_input = document.querySelector('#write-msg')
-const search_username_button = document.getElementById('search-username')
+const vendorNameInput = document.getElementById('vendor_name')
 const input_username = document.getElementById("search-input-username")
 const baseUrl = window.location.origin
+const search_vendor_form = document.getElementById('search-vendor')
+let listUsername = [username];
 function onConnect() {
     console.log("username: ", username)
     stomClient.subscribe(
@@ -30,66 +32,61 @@ function connectWebSocket() {
     stomClient = Stomp.over(socket);
     stomClient.connect({}, onConnect, onError)
 }
+/**
+ *lay danh sach tin nhan cua conversation co id
+ */
 
-async function getListMessageOfConverstation(conversationId) {
-    sendConversationId = conversationId;
-    if (sendConversationId.includes('null_')) {
-        fetch(`${baseUrl}/conversations?username=${username}&username=${sendConversationId.split('_')[1]}`)
-            .then(res => res.json())
-            .then((conversation) => {
-                stomClient.send(
-                    `/app/chat.getListUserConversation/${username}`,
-                    {},
-                    ''
-                )
-                stomClient.send(
-                    `/app/chat.getListUserConversation/${sendConversationId.split('_')[1]}`,
-                    {},
-                    ''
-                )
-                sendConversationId = conversation.id;
-            })
-            .catch(err => {
-                console.log(err)
-            })
-
-    }
-    const response = await fetch(`${baseUrl}/message/user/${username}/conversation/${sendConversationId}`);
-    const messages = await response.json();
-    console.log(messages);
-    let html = ''
-    for (let i = 0; i < messages.length; i++) {
-        if (messages[i].messageType === 'SEND') {
-            html += `<div class="chat-message-right pb-4">
+async function getListMessageOfConverstation(id) {
+        if(id.includes('null_')) {
+            sendConversationId = null;
+            messageHistory.innerHTML =''
+            infoChatUser.innerHTML = `<div class="d-flex align-items-center py-1">
+                            <div class="position-relative">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png"
+                                     class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
+                            </div>
+                            <div class="flex-grow-1 pl-3">
+                                <strong>${document.getElementById(`conversation-name-${id.split('_')[1]}`).textContent}</strong>
+                            </div>
+                        </div>`
+            listUsername.push(id.split('_')[2])
+        } else {
+            sendConversationId = id;
+            const response = await fetch(`${baseUrl}/message/user/${username}/conversation/${sendConversationId}`);
+            const messages = await response.json();
+            console.log(messages);
+            let html = ''
+            for (let i = 0; i < messages.length; i++) {
+                if (messages[i].messageType === 'SEND') {
+                    html += `<div class="chat-message-right pb-4">
                                 <div>
                                     <img src="https://bootdey.com/img/Content/avatar/avatar1.png"
                                          class="rounded-circle mr-1" alt="Chris Wood" width="40" height="40">
                                     <div class="text-muted small text-nowrap mt-2">${messages[i].updatedAt}</div>
                                 </div>
                                 <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
-                                    <div class="font-weight-bold mb-1">Bạn</div>
+                                    <div class="font-weight-bold mb-1" style="font-weight: bold">Bạn</div>
                                     ${messages[i].content}
                                 </div>
                             </div>`
-        } else {
-            html += `<div class="chat-message-left pb-4">
+                } else {
+                    html += `<div class="chat-message-left pb-4">
                                 <div>
                                     <img src="https://bootdey.com/img/Content/avatar/avatar3.png"
                                          class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
                                     <div class="text-muted small text-nowrap mt-2">${messages[i].updatedAt}</div>
                                 </div>
                                 <div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
-                                    <div class="font-weight-bold mb-1">${messages[i].userSender.fullName}</div>
+                                    <div class="font-weight-bold mb-1" style="font-weight: bold">${messages[i].userSender.fullName}</div>
                                         ${messages[i].content}
                                 </div>
                             </div>`
-        }
-    }
-    console.log(html)
-    messageHistory.innerHTML =''
-    messageHistory.insertAdjacentHTML('beforeend', html)
-    messageHistory.scrollTop = messageHistory.scrollHeight;
-    infoChatUser.innerHTML = `<div class="d-flex align-items-center py-1">
+                }
+            }
+            messageHistory.innerHTML =''
+            messageHistory.insertAdjacentHTML('beforeend', html)
+            messageHistory.scrollTop = messageHistory.scrollHeight;
+            infoChatUser.innerHTML = `<div class="d-flex align-items-center py-1">
                             <div class="position-relative">
                                 <img src="https://bootdey.com/img/Content/avatar/avatar3.png"
                                      class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
@@ -98,12 +95,27 @@ async function getListMessageOfConverstation(conversationId) {
                                 <strong>${messages.length > 0 && messages[0].conversationResponseMessage.conversationName}</strong>
                             </div>
                         </div>`
-
+        }
 
 }
-
-function onSendMessage(event) {
+//send message
+async function onSendMessage(event) {
     event.preventDefault();
+   if(sendConversationId === null) {
+       await fetch(`${baseUrl}/conversations?username=${listUsername[0]}&username=${listUsername[1]}`)
+           .then(res => res.json())
+           .then(conversation => {
+               sendConversationId = conversation.id;
+               listUsername.forEach(user => {
+                   stomClient.send(
+                       `/app/chat.getListUserConversation/${user}`,
+                       {},
+                       ''
+                   )
+               })
+           })
+           .catch(() => alert("Xay ra loi khi tao phong chat"));
+   }
     stomClient.send(
         `/app/chat.sendMessage/${username}/${sendConversationId}`,
         {},
@@ -114,6 +126,9 @@ function onSendMessage(event) {
     message_input.value = ''
 }
 
+/**
+ *lay danh sach chat cua user
+ */
 function receivedListChat(payload) {
     const userResponse = JSON.parse(payload.body);
     const listChat = userResponse.conversationResponses;
@@ -125,13 +140,12 @@ function receivedListChat(payload) {
                                 <img src="https://bootdey.com/img/Content/avatar/avatar3.png"
                                      class="rounded-circle mr-1" alt="Jennifer Chang" width="40" height="40">
                                 <div class="flex-grow-1 ml-3">
-                                    ${listChat[i].conversationName}
+                                    <div id='conversation-name-${listChat[i].id}'>${listChat[i].conversationName}</div>
                                     <div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
                                 </div>
                             </div>
                         </a>`
     }
-    console.log(html)
     inboxChatUser.innerHTML = `${html}`;
 }
 
@@ -148,7 +162,7 @@ function receivedMessage(payload) {
                                     <div class="text-muted small text-nowrap mt-2">${message.updatedAt}</div>
                                 </div>
                                 <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
-                                    <div class="font-weight-bold mb-1">Bạn</div>
+                                    <div class="font-weight-bold mb-1" style="font-weight: bold">Bạn</div>
                                     ${message.content}
                                 </div>
                             </div>`
@@ -160,7 +174,7 @@ function receivedMessage(payload) {
                                     <div class="text-muted small text-nowrap mt-2">${message.updatedAt}</div>
                                 </div>
                                 <div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
-                                    <div class="font-weight-bold mb-1">${message.userSender.fullName}</div>
+                                    <div class="font-weight-bold mb-1" style="font-weight: bold">${message.userSender.fullName}</div>
                                         ${message.content}
                                 </div>
                             </div>`
@@ -173,24 +187,47 @@ function receivedMessage(payload) {
     }
 }
 
-function searchUsername(e) {
+
+function searchVendorByName(e) {
     e.preventDefault();
-    const usernameSearch = input_username.value;
-    const response = fetch(`${baseUrl}/users?username=${usernameSearch}`);
+    sendConversationId = null;
+    const vendorName = vendorNameInput.value;
+    const response = fetch(`${baseUrl}/vendors/name?name=${vendorName}`);
     response.then(res => res.json())
-        .then(userResponse => {
-            inboxChatUser.innerHTML = `<div class="chat_list" id="${'null_' + userResponse.username}" style="cursor: pointer" onclick="getListMessageOfConverstation('${'null_' + userResponse.username}')">
-                        <div class="chat_people">
-                            <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                            <div class="chat_ib">
-                                <h5>${userResponse.fullName}<span class="chat_date">Dec 25</span></h5>
+        .then(vendorResponses => {
+            let html = '';
+            vendorResponses.forEach(vendor => {
+                if(vendor.conversationResponses === null) {
+                    html += `<a href="#" class="list-group-item list-group-item-action border-0" id='null_${vendor.id}' onclick="getListMessageOfConverstation('null_${vendor.id}_${vendor.username}')">
+                            <div class="d-flex align-items-start">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png"
+                                     class="rounded-circle mr-1" alt="Jennifer Chang" width="40" height="40">
+                                <div class="flex-grow-1 ml-3">
+                                    <div id='conversation-name-${vendor.id}'>${vendor.shopName}</div>
+                                    <div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
+                                </div>
                             </div>
-                        </div>
-                    </div>`
+                        </a>`
+                } else {
+                    vendor.conversationResponses.forEach(conversation => {
+                        html += `<a href="#" class="list-group-item list-group-item-action border-0" id='people_chat_${conversation.id}' onclick="getListMessageOfConverstation('${conversation.id}')">
+                            <div class="d-flex align-items-start">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png"
+                                     class="rounded-circle mr-1" alt="Jennifer Chang" width="40" height="40">
+                                <div class="flex-grow-1 ml-3">
+                                    <div id='conversation-name-${conversation.id}'>${conversation.conversationName}</div>
+                                    <div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
+                                </div>
+                            </div>
+                        </a>`
+                    })
+                }
+            })
+            inboxChatUser.innerHTML = `${html}`;
         })
 
 
 }
 
 form_sendMessage.addEventListener('submit', onSendMessage, true)
-search_username_button.addEventListener('submit', searchUsername, true)
+search_vendor_form.addEventListener('submit', searchVendorByName, true)

@@ -13,18 +13,7 @@ public class ConversationMapper {
         ConversationResponse conversationResponse =
                 ConversationResponse.builder()
                         .conversationName(conversation.getConversationName(username))
-                        .chatMessageResponses(
-                                conversation
-                                        .getChatMessages()
-                                        .stream()
-                                        .map(message -> {
-                                            return ChatMessageMapper.
-                                                    mappertoChatMessageResponse(
-                                                            message, username
-                                                    );
-                                        })
-                                        .collect(Collectors.toList())
-                        )
+                        .image(conversation.getImageOfConversation(username))
                         .build();
         conversationResponse.setId(conversation.getId());
         return conversationResponse;

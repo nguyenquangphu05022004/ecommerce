@@ -16,7 +16,6 @@ public class UserInboxResponse {
     private Long id;
     private String username;
     private String fullName;
-    private String avatar;
     private List<ConversationResponse> conversationResponses = new ArrayList<>();
 
 }

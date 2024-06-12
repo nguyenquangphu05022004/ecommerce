@@ -1,5 +1,9 @@
 package com.example.ecommerce.service.impl;
 
+import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.domain.response.ConversationResponse;
+import com.example.ecommerce.domain.response.UserInboxResponse;
+import com.example.ecommerce.domain.response.vendor.VendorResponseInbox;
 import com.example.ecommerce.dto.VendorDto;
 import com.example.ecommerce.domain.User;
 import com.example.ecommerce.domain.Vendor;
@@ -12,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public class VendorServiceImpl  implements IGenericService<VendorDto>, IVendorService {
+public class VendorServiceImpl implements IGenericService<VendorDto>, IVendorService {
     private final VendorRepository vendorRepository;
     private final UserRepository userRepository;
+
     @Autowired
     public VendorServiceImpl(VendorRepository vendorRepository,
                              UserRepository userRepository) {
@@ -56,4 +62,38 @@ public class VendorServiceImpl  implements IGenericService<VendorDto>, IVendorSe
         return (VendorDto) Convert.VEND.toDto(vendorRepository.save(vendor));
     }
 
+    @Override
+    public List<VendorResponseInbox> findAllByName(String vendorName) {
+        String username = SecurityUtils.username();
+        System.out.println("Username: " + username);
+        List<Vendor> vendors = vendorRepository
+                .findAllByVendorNameAndNotMySelf(vendorName, username);
+        List<VendorResponseInbox> vendorResponses = vendors.stream().map(vendor -> {
+            List<ConversationResponse> conversationsConnectedBetweenVendorAndUser
+                    = vendor.getUser()
+                    .getConversations()
+                    .stream()
+                    .filter(conversation -> conversation.getUsers()
+                            .stream()
+                            .anyMatch(user -> user.getUsername().equals(username)))
+                    .map(conversation -> {
+                        return ConversationResponse.builder()
+                                .conversationName(
+                                        conversation.getConversationName(username)
+                                )
+                                .id(conversation.getId()).build();
+                    })
+                    .collect(Collectors.toList());
+            return VendorResponseInbox.builder()
+                    .username(vendor.getUser().getUsername())
+                    .shopName(vendor.getShopName())
+                    .id(vendor.getId())
+                    .conversationResponses(
+                            conversationsConnectedBetweenVendorAndUser.isEmpty() ?
+                                    null :
+                                    conversationsConnectedBetweenVendorAndUser
+                    ).build();
+        }).toList();
+        return vendorResponses;
+    }
 }
