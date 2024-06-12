@@ -59,13 +59,13 @@
                             </h2>
                             <span class="text-dark">[[${coupon.content}]]</span>
                             <h3>Giảm giá [[${coupon.percent}]] %</h3>
-                            <div th:if="${coupon.started == true && coupon.expired == false}">
+                            <div th:if="${coupon.isExpired == false}">
                                 <button  class="banner-btn" data-bs-toggle="modal"
                                         th:data-bs-target="${'#modal-code-' + coupon.id}">Nhận ngay
                                 </button>
                             </div>
-                            <div th:unless="${coupon.started == true && coupon.expired == false}">
-                                <span class="text-danger">Sự kiện chưa bắt đầu.</span>
+                            <div th:unless="${coupon.expired == false}">
+                                <span class="text-danger">Sự kiện chưa bắt đầu/kết thúc.</span>
                             </div>
 
                         </div>

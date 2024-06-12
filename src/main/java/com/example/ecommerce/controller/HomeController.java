@@ -1,10 +1,10 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.dto.CategoryDto;
-import com.example.ecommerce.dto.ProductDto;
-import com.example.ecommerce.dto.TrackProductSellerDto;
-import com.example.ecommerce.dto.UserDto;
+import com.example.ecommerce.domain.dto.product.CategoryDto;
+import com.example.ecommerce.domain.dto.product.ProductDto;
+import com.example.ecommerce.domain.dto.product.TrackProductSellerDto;
+import com.example.ecommerce.domain.dto.user.UserDto;
 import com.example.ecommerce.service.*;
 import com.example.ecommerce.utils.SystemUtils;
 import jakarta.servlet.http.Cookie;

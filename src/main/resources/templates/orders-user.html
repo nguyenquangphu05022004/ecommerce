@@ -43,6 +43,7 @@
                                 <table class="table">
                                     <thead>
                                     <tr>
+                                        <th scope="col">Shop</th>
                                         <th scope="col">Mã đơn hàng</th>
                                         <th scope="col">Tên sản phẩm</th>
                                         <th scope="col">Ảnh minh họa</th>
@@ -91,6 +92,7 @@
                     }
                     const buttonDelete = order.approval === false ? `<button class="btn btn-primary" onClick="deleteOrder(${order.id})">Xóa</button>` : 'Đang tiến hành'
                     html += `<tr>
+                            <th scope="col"><a href="/shop/vendor/${order.stockResponse.productResponse.vendorResponse.id}/search">${order.stockResponse.productResponse.vendorResponse.name}</a></th>
                             <th scope="col">${order.id}</th>
                             <th scope="col">${order.stockResponse.productResponse.name}</th>
                             <th scope="col">
@@ -102,7 +104,7 @@
                             <th scope="col">${order.couponPercent != null ? order.couponPercent : "0"} %</th>
                             <th scope="col">${order.formatTotalPrice}</th>
                             <th scope="col">${order.approval === false ? 'Chưa nhận đơn' : 'Đã nhận đơn'}</th>
-                            <th scope="col">${order.payment === 'PAY_BY_BANK' ? order.purchased === false ?  `<button class="btn btn-primary" onClick="paymentOverBank(${order.id}, ${order.totalPrice})">Thanh toán qua ngân hàng</button>` : 'Thanh toán qua ngân hàng' : 'Thanh toán tại nhà'}</th>
+                            <th scope="col">${order.approval === true ? order.payment === 'PAY_BY_BANK' ? order.purchased === false ?  `<button class="btn btn-primary" onClick="paymentOverBank(${order.id}, ${order.totalPrice})">Thanh toán qua ngân hàng</button>` : 'Thanh toán qua ngân hàng' : 'Thanh toán tại nhà' : 'Đang kiểm tra kho'}</th>
                             <th scope="col">${order.purchased === false ? 'Chưa thanh toán' : 'Đã thanh toán'}</th>
                             <th scope="col">${buttonDelete}</th>
                         </tr>`

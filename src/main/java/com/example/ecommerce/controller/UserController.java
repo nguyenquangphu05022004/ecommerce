@@ -1,13 +1,13 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.Role;
-import com.example.ecommerce.domain.response.UserInboxResponse;
-import com.example.ecommerce.dto.UserDto;
+import com.example.ecommerce.domain.dto.ENUM.Role;
+import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
+import com.example.ecommerce.domain.singleton.UserTrack;
+import com.example.ecommerce.domain.dto.user.UserDto;
 import com.example.ecommerce.service.VerifyService;
 import com.example.ecommerce.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -93,6 +93,11 @@ public class UserController {
         UserInboxResponse userResponse = userService.findByUsername(username);
         log.info("user: {}", userResponse);
         return userResponse;
+    }
+
+    @MessageMapping("/chat.addUser/{username}")
+    public void userConnectedWebSocket(@DestinationVariable("username") String username) {
+        UserTrack.getInstance().getMap().put(username, true);
     }
 
     @GetMapping("/users")

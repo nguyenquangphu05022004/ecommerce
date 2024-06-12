@@ -1,8 +1,8 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.domain.response.UserInboxResponse;
-import com.example.ecommerce.dto.UserDto;
-import com.example.ecommerce.domain.Role;
+import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
+import com.example.ecommerce.domain.dto.user.UserDto;
+import com.example.ecommerce.domain.dto.ENUM.Role;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

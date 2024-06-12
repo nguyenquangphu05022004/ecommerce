@@ -2,22 +2,16 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.domain.User;
 import com.example.ecommerce.domain.Verify;
-import com.example.ecommerce.dto.EmailDetails;
-import com.example.ecommerce.dto.task.SendEmailTask;
+import com.example.ecommerce.domain.dto.utilize.EmailDetails;
+import com.example.ecommerce.domain.dto.utilize.SendEmailTask;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VerifyRepository;
 import com.example.ecommerce.service.EmailService;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.util.Optional;
 
 
@@ -33,16 +27,12 @@ public class EmailServiceImpl implements EmailService {
     @Value("${spring.mail.username}")
     private String sender;
 
-
-    // Method 1
-    // To send a simple email
     public String sendSimpleMail(EmailDetails details) {
-
-        // Try block to check for exceptions
         try {
             Optional<User> userOptional = userRepository.findByEmail(details.getRecipient());
             if(userOptional.isEmpty()) return String.format("Email: %s.\n Không tồn tại trong hệ thống.", details.getRecipient());
             saveDataVerify(details, userOptional.get());
+            details.setUsername(userOptional.get().getUsername());
             Thread emailTask = new Thread(new SendEmailTask(details, javaMailSender, sender));
             emailTask.start();
             return String.format("Chúng tôi đã gửi mã xác nhận vào email: %s.\n Vui lòng kiểm tra.\n Mã sẽ hết hạn trong 5 phút.", details.getRecipient());
@@ -66,43 +56,5 @@ public class EmailServiceImpl implements EmailService {
                     .build();
         }
         verifyRepository.save(verify);
-    }
-
-    // Method 2
-    // To send an email with attachment
-    public String
-    sendMailWithAttachment(EmailDetails details) {
-        MimeMessage mimeMessage
-                = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper;
-
-        try {
-            mimeMessageHelper
-                    = new MimeMessageHelper(mimeMessage, true);
-            mimeMessageHelper.setFrom(sender);
-            mimeMessageHelper.setTo(details.getRecipient());
-            mimeMessageHelper.setText(details.getMsgBody());
-            mimeMessageHelper.setSubject(
-                    details.getSubject());
-
-            // Adding the attachment
-            FileSystemResource file
-                    = new FileSystemResource(
-                    new File(details.getAttachment()));
-
-            mimeMessageHelper.addAttachment(
-                    file.getFilename(), file);
-
-            // Sending the mail
-            javaMailSender.send(mimeMessage);
-            return "Mail sent Successfully";
-        }
-
-        // Catch block to handle MessagingException
-        catch (MessagingException e) {
-
-            // Display message when exception occurred
-            return "Error while sending mail!!!";
-        }
     }
 }

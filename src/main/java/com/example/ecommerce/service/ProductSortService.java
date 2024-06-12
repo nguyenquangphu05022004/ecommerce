@@ -1,6 +1,6 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.dto.ProductDto;
+import com.example.ecommerce.domain.dto.product.ProductDto;
 
 import java.util.List;
 

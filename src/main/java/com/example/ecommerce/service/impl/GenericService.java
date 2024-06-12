@@ -1,6 +1,5 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.converter.IGenericConverter;
 import com.example.ecommerce.exception.NotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
 

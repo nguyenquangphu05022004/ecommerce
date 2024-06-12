@@ -1,5 +1,6 @@
 package com.example.ecommerce.domain;
 
+import com.example.ecommerce.domain.dto.ENUM.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;

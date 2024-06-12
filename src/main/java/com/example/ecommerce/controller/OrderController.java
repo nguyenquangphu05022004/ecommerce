@@ -1,11 +1,12 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.dto.OrderDto;
-import com.example.ecommerce.dto.OrderRequest;
-import com.example.ecommerce.dto.StockResponse;
-import com.example.ecommerce.dto.UserDto;
-import com.example.ecommerce.domain.Status;
+import com.example.ecommerce.domain.dto.ENUM.SelectFilterOrder;
+import com.example.ecommerce.domain.dto.product.StockResponse;
+import com.example.ecommerce.domain.dto.product.OrderDto;
+import com.example.ecommerce.domain.dto.product.OrderRequest;
+import com.example.ecommerce.domain.dto.user.UserDto;
+import com.example.ecommerce.domain.dto.ENUM.Status;
 import com.example.ecommerce.service.IStockService;
 import com.example.ecommerce.service.impl.OrderServiceImpl;
 import com.example.ecommerce.service.impl.UserServiceImpl;
@@ -81,5 +82,15 @@ public class OrderController {
     @GetMapping("/vendor/orders")
     public String getOrderPageVendor() {
         return "admin/order-product";
+    }
+    @GetMapping("/vendor/orders/product")
+    @ResponseBody
+    public List<OrderDto> getListOrder() {
+        return orderService.getAllOrder();
+    }
+    @GetMapping("/vendor/orders/product/{selectFilterOrder}")
+    @ResponseBody
+    public List<OrderDto> getListOrder(@PathVariable("selectFilterOrder") SelectFilterOrder selectFilerOrder) {
+        return orderService.getAllOrder(selectFilerOrder);
     }
 }

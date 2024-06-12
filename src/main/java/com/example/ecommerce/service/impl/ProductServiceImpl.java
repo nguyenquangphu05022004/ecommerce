@@ -1,13 +1,12 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.dto.ProductDto;
+import com.example.ecommerce.domain.dto.product.ProductDto;
 import com.example.ecommerce.domain.Product;
 import com.example.ecommerce.domain.Vendor;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IProductService;
-import com.example.ecommerce.utils.Convert;
 import com.example.ecommerce.utils.SystemUtils;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;

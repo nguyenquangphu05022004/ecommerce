@@ -1,9 +1,9 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.converter.impl.ProductConverterImpl;
-import com.example.ecommerce.dto.DecorationDto;
-import com.example.ecommerce.dto.StockRequest;
-import com.example.ecommerce.dto.StockResponse;
+import com.example.ecommerce.converter.ProductConverterImpl;
+import com.example.ecommerce.domain.dto.product.DecorationResponse;
+import com.example.ecommerce.domain.dto.product.StockRequest;
+import com.example.ecommerce.domain.dto.product.StockResponse;
 import com.example.ecommerce.domain.Image;
 import com.example.ecommerce.domain.Product;
 import com.example.ecommerce.domain.Decoration;
@@ -110,7 +110,7 @@ public class StockServiceImpl implements IStockService {
                 .images(ProductConverterImpl.getImageDtoByStock(stock))
                 .quantityOfProduct(stock.getQuantityOfProduct())
                 .price(stock.getPrice())
-                .decoration(DecorationDto.builder()
+                .decoration(DecorationResponse.builder()
                         .size(stock.getDecoration().getSize())
                         .color(stock.getDecoration().getColor())
                         .build())

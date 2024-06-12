@@ -1,17 +1,17 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.response.ConversationResponse;
-import com.example.ecommerce.domain.response.UserInboxResponse;
-import com.example.ecommerce.domain.response.vendor.VendorResponseInbox;
-import com.example.ecommerce.dto.VendorDto;
+import com.example.ecommerce.domain.dto.chat.ConversationResponse;
+import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
+import com.example.ecommerce.domain.dto.chat.VendorResponseInbox;
+import com.example.ecommerce.domain.singleton.UserTrack;
+import com.example.ecommerce.domain.dto.user.VendorDto;
 import com.example.ecommerce.domain.User;
 import com.example.ecommerce.domain.Vendor;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IGenericService;
 import com.example.ecommerce.service.IVendorService;
-import com.example.ecommerce.utils.Convert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -85,14 +85,30 @@ public class VendorServiceImpl implements IGenericService<VendorDto>, IVendorSer
                     })
                     .collect(Collectors.toList());
             return VendorResponseInbox.builder()
-                    .username(vendor.getUser().getUsername())
+                    .user(
+                            UserInboxResponse.builder()
+                                    .conversationResponses(
+                                            conversationsConnectedBetweenVendorAndUser.isEmpty()
+                                                    ? null
+                                                    : conversationsConnectedBetweenVendorAndUser
+                                    )
+                                    .fullName(vendor.getUser()
+                                            .getUserContactDetails() != null
+                                            ?
+                                            vendor.getUser()
+                                                    .getUserContactDetails()
+                                                    .getFullName()
+                                            : "ANONYMOUS")
+                                    .username(vendor.getUser().getUsername())
+                                    .active(UserTrack.getInstance().getMap().get(
+                                            vendor.getUser().getUsername() != null
+                                    ))
+                                    .image(vendor.getUser().defaultImage())
+                                    .build()
+                    )
                     .shopName(vendor.getShopName())
                     .id(vendor.getId())
-                    .conversationResponses(
-                            conversationsConnectedBetweenVendorAndUser.isEmpty() ?
-                                    null :
-                                    conversationsConnectedBetweenVendorAndUser
-                    ).build();
+                    .build();
         }).toList();
         return vendorResponses;
     }

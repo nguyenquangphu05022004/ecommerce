@@ -1,7 +1,7 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.domain.request.ChatMessageRequest;
-import com.example.ecommerce.domain.response.ChatMessageResponse;
+import com.example.ecommerce.domain.dto.chat.ChatMessageRequest;
+import com.example.ecommerce.domain.dto.chat.ChatMessageResponse;
 
 import java.util.List;
 

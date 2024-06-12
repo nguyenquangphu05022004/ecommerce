@@ -2,24 +2,20 @@ package com.example.ecommerce.controller;
 
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.dto.CategoryDto;
-import com.example.ecommerce.dto.EvaluationDto;
-import com.example.ecommerce.dto.ProductDto;
-import com.example.ecommerce.dto.SortProductType;
+import com.example.ecommerce.domain.dto.product.CategoryDto;
+import com.example.ecommerce.domain.dto.product.EvaluationDto;
+import com.example.ecommerce.domain.dto.product.ProductDto;
+import com.example.ecommerce.domain.dto.ENUM.SortProductType;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.impl.CategoryServiceImpl;
 import com.example.ecommerce.service.impl.ProductServiceImpl;
 import com.example.ecommerce.utils.SortUtils;
 import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller

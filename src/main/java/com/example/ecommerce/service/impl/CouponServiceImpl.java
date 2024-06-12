@@ -1,10 +1,10 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.converter.impl.CouponConverterImpl;
+import com.example.ecommerce.converter.CouponConverterImpl;
 import com.example.ecommerce.domain.Coupon;
 import com.example.ecommerce.domain.Vendor;
-import com.example.ecommerce.dto.CouponDto;
+import com.example.ecommerce.domain.dto.product.CouponDto;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.CouponRepository;
 import com.example.ecommerce.repository.VendorRepository;

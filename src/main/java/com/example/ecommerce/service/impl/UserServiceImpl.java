@@ -1,16 +1,15 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.converter.impl.UserMapper;
+import com.example.ecommerce.converter.UserMapper;
 import com.example.ecommerce.domain.Image;
-import com.example.ecommerce.domain.Role;
-import com.example.ecommerce.domain.response.UserInboxResponse;
+import com.example.ecommerce.domain.User;
+import com.example.ecommerce.domain.dto.ENUM.Role;
+import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
+import com.example.ecommerce.domain.dto.user.UserDto;
+import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IImageService;
-import com.example.ecommerce.utils.Convert;
-import com.example.ecommerce.dto.UserDto;
-import com.example.ecommerce.domain.User;
-import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IUserService;
 import com.example.ecommerce.utils.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,6 +131,6 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserInboxResponse findByUsername(String username) {
         User user = userRepository.findByUsername(username).get();
-        return UserMapper.maptoUserResponse(user);
+        return UserMapper.maptoResponse(user);
     }
 }

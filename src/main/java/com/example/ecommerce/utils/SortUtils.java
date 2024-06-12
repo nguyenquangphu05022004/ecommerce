@@ -1,7 +1,7 @@
 package com.example.ecommerce.utils;
 
-import com.example.ecommerce.dto.ProductDto;
-import com.example.ecommerce.dto.SortProductType;
+import com.example.ecommerce.domain.dto.product.ProductDto;
+import com.example.ecommerce.domain.dto.ENUM.SortProductType;
 import com.example.ecommerce.service.ProductSortService;
 import com.example.ecommerce.service.impl.ProductSortServiceImpl;
 

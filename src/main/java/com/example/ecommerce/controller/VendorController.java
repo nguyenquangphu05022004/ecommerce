@@ -1,14 +1,12 @@
 package com.example.ecommerce.controller;
 
 
-import com.example.ecommerce.domain.response.vendor.VendorResponseInbox;
-import com.example.ecommerce.dto.CouponDto;
-import com.example.ecommerce.dto.VendorDto;
+import com.example.ecommerce.domain.dto.chat.VendorResponseInbox;
+import com.example.ecommerce.domain.dto.product.CouponDto;
+import com.example.ecommerce.domain.dto.user.VendorDto;
 import com.example.ecommerce.service.impl.CouponServiceImpl;
 import com.example.ecommerce.service.impl.VendorServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

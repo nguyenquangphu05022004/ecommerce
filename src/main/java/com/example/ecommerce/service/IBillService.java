@@ -1,7 +1,7 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.dto.BillDto;
-import com.example.ecommerce.domain.Status;
+import com.example.ecommerce.domain.dto.product.BillDto;
+import com.example.ecommerce.domain.dto.ENUM.Status;
 
 import java.util.List;
 

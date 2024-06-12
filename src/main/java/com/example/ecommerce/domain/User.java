@@ -1,14 +1,12 @@
 package com.example.ecommerce.domain;
 
-import com.example.ecommerce.controller.FilesStorageController;
+import com.example.ecommerce.domain.dto.ENUM.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import java.util.*;
 
@@ -45,10 +43,6 @@ public class User extends Base{
     private List<Conversation> conversations = new ArrayList<>();
 
 
-    @Transient
-    @Value("${image.default}")
-    private String defaultAvatar;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -68,7 +62,7 @@ public class User extends Base{
     @Transient
     public String defaultImage() {
         if(this.avatar == null) {
-            return this.defaultAvatar;
+            return "https://ssl.gstatic.com/accounts/ui/avatar_2x.png";
         }
         return "/files/image/" + this.avatar.getName();
     }

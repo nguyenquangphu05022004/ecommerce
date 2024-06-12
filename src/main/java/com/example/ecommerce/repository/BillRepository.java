@@ -1,7 +1,7 @@
 package com.example.ecommerce.repository;
 
 import com.example.ecommerce.domain.Bill;
-import com.example.ecommerce.domain.Status;
+import com.example.ecommerce.domain.dto.ENUM.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.request.ChatMessageRequest;
-import com.example.ecommerce.domain.response.ChatMessageResponse;
+import com.example.ecommerce.domain.dto.chat.ChatMessageRequest;
+import com.example.ecommerce.domain.dto.chat.ChatMessageResponse;
 import com.example.ecommerce.service.IChatMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

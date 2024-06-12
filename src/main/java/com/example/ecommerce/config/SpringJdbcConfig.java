@@ -1,10 +1,7 @@
 package com.example.ecommerce.config;
 
-import com.example.ecommerce.dto.Resources;
-import lombok.Getter;
+import com.example.ecommerce.domain.dto.utilize.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;

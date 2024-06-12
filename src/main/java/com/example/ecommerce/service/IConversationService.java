@@ -1,6 +1,6 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.domain.response.ConversationResponse;
+import com.example.ecommerce.domain.dto.chat.ConversationResponse;
 
 import java.util.List;
 

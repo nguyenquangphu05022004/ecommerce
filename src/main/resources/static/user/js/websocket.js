@@ -8,16 +8,19 @@ const form_sendMessage = document.querySelector('#form-message')
 let sendConversationId = null;
 const message_input = document.querySelector('#write-msg')
 const vendorNameInput = document.getElementById('vendor_name')
-const input_username = document.getElementById("search-input-username")
 const baseUrl = window.location.origin
 const search_vendor_form = document.getElementById('search-vendor')
 let listUsername = [username];
 function onConnect() {
-    console.log("username: ", username)
     stomClient.subscribe(
         `/topic/public/listUserMessage/${username}`, receivedListChat)
     stomClient.send(
         `/app/chat.getListUserConversation/${username}`,
+        {},
+        ''
+    )
+    stomClient.send(
+        `/app/chat.addUser/${username}`,
         {},
         ''
     )
@@ -60,7 +63,7 @@ async function getListMessageOfConverstation(id) {
                 if (messages[i].messageType === 'SEND') {
                     html += `<div class="chat-message-right pb-4">
                                 <div>
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                                    <img src="${messages[i].userSender.image}"
                                          class="rounded-circle mr-1" alt="Chris Wood" width="40" height="40">
                                     <div class="text-muted small text-nowrap mt-2">${messages[i].updatedAt}</div>
                                 </div>
@@ -72,7 +75,7 @@ async function getListMessageOfConverstation(id) {
                 } else {
                     html += `<div class="chat-message-left pb-4">
                                 <div>
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar3.png"
+                                    <img src="${messages[i].userSender.image}"
                                          class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
                                     <div class="text-muted small text-nowrap mt-2">${messages[i].updatedAt}</div>
                                 </div>
@@ -88,11 +91,11 @@ async function getListMessageOfConverstation(id) {
             messageHistory.scrollTop = messageHistory.scrollHeight;
             infoChatUser.innerHTML = `<div class="d-flex align-items-center py-1">
                             <div class="position-relative">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png"
+                                <img src="${messages[0].conversationResponse.image}"
                                      class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
                             </div>
                             <div class="flex-grow-1 pl-3">
-                                <strong>${messages.length > 0 && messages[0].conversationResponseMessage.conversationName}</strong>
+                                <strong>${messages.length > 0 && messages[0].conversationResponse.conversationName}</strong>
                             </div>
                         </div>`
         }
@@ -137,11 +140,11 @@ function receivedListChat(payload) {
         stomClient.subscribe(`/topic/public/conversation/${listChat[i].id}`, receivedMessage)
         html += `<a href="#" class="list-group-item list-group-item-action border-0" id='people_chat_${listChat[i].id}' onclick="getListMessageOfConverstation('${listChat[i].id}')">
                             <div class="d-flex align-items-start">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png"
+                                <img src="${listChat[i].image}"
                                      class="rounded-circle mr-1" alt="Jennifer Chang" width="40" height="40">
                                 <div class="flex-grow-1 ml-3">
                                     <div id='conversation-name-${listChat[i].id}'>${listChat[i].conversationName}</div>
-                                    <div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
+                                    <div class="small"><span class="fas fa-circle ${listChat[i].active === true ? 'chat-online' : 'chat-offline'}"></span> ${listChat[i].active === true ? 'On' : 'Off'}</div>
                                 </div>
                             </div>
                         </a>`
@@ -151,13 +154,12 @@ function receivedListChat(payload) {
 
 function receivedMessage(payload) {
     const message = JSON.parse(payload.body)
-    const getChatInbox = document.getElementById(`people_chat_${message.conversationResponseMessage.id}`)
-    if ((message.conversationResponseMessage.id + '') === (sendConversationId + '')) {
+    if ((message.conversationResponse.id + '') === (sendConversationId + '')) {
         let html = ''
         if (message.userSender.username === username) {
             html = `<div class="chat-message-right pb-4">
                                 <div>
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                                    <img src="${message.userSender.image}"
                                          class="rounded-circle mr-1" alt="Chris Wood" width="40" height="40">
                                     <div class="text-muted small text-nowrap mt-2">${message.updatedAt}</div>
                                 </div>
@@ -169,7 +171,7 @@ function receivedMessage(payload) {
         } else {
             html = `<div class="chat-message-left pb-4">
                                 <div>
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar3.png"
+                                    <img src="${message.userSender.image}"
                                          class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
                                     <div class="text-muted small text-nowrap mt-2">${message.updatedAt}</div>
                                 </div>
@@ -197,26 +199,26 @@ function searchVendorByName(e) {
         .then(vendorResponses => {
             let html = '';
             vendorResponses.forEach(vendor => {
-                if(vendor.conversationResponses === null) {
-                    html += `<a href="#" class="list-group-item list-group-item-action border-0" id='null_${vendor.id}' onclick="getListMessageOfConverstation('null_${vendor.id}_${vendor.username}')">
+                if(vendor.user.conversationResponses === null) {
+                    html += `<a href="#" class="list-group-item list-group-item-action border-0" id='null_${vendor.id}' onclick="getListMessageOfConverstation('null_${vendor.id}_${vendor.user.username}')">
                             <div class="d-flex align-items-start">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png"
+                                <img src="${vendor.user.image}"
                                      class="rounded-circle mr-1" alt="Jennifer Chang" width="40" height="40">
                                 <div class="flex-grow-1 ml-3">
                                     <div id='conversation-name-${vendor.id}'>${vendor.shopName}</div>
-                                    <div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
+                                    <div class="small"><span class="fas fa-circle ${vendor.user.active === true ? 'chat-online' : 'chat-offline'}"></span> ${vendor.user.active === true ? 'On' : 'Off'}</div>
                                 </div>
                             </div>
                         </a>`
                 } else {
-                    vendor.conversationResponses.forEach(conversation => {
+                    vendor.user.conversationResponses.forEach(conversation => {
                         html += `<a href="#" class="list-group-item list-group-item-action border-0" id='people_chat_${conversation.id}' onclick="getListMessageOfConverstation('${conversation.id}')">
                             <div class="d-flex align-items-start">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png"
+                                <img src="${conversation.image}"
                                      class="rounded-circle mr-1" alt="Jennifer Chang" width="40" height="40">
                                 <div class="flex-grow-1 ml-3">
                                     <div id='conversation-name-${conversation.id}'>${conversation.conversationName}</div>
-                                    <div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
+                                    <div class="small"><span class="fas fa-circle ${conversation.active === true ? 'chat-online' : 'chat-offline'}"></span> ${conversation.active === true ? 'On' : 'Off'}</div>
                                 </div>
                             </div>
                         </a>`

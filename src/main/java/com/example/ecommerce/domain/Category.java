@@ -21,7 +21,7 @@ public class Category extends Base{
     private String name;
     @OneToOne
     @JoinColumn(name = "image_id")
-    private Image thumbnail;
+    private Image image;
     @OneToMany(mappedBy = "category")
     private List<Product> products = new ArrayList<>();
 }

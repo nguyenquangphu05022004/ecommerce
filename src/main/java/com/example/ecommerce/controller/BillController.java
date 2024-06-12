@@ -1,10 +1,8 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.dto.BillDto;
+import com.example.ecommerce.domain.dto.product.BillDto;
 import com.example.ecommerce.service.IBillService;
-import com.example.ecommerce.service.impl.BillServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -24,9 +24,10 @@
                                             th:onchange="getAllOrder()"
                                     >
                                         <option selected value="ALL">Tất cả</option>
-                                        <option value="SUCCESS">Đã duyệt</option>
-                                        <option value="PROCESSING">Chưa duyệt</option>
-                                        <option value="CANCEL">Đã thanh toán</option>
+                                        <option value="APPROVAL">Đã duyệt</option>
+                                        <option value="NOT_APPROVAL">Chưa duyệt</option>
+                                        <option value="PURCHASED">Đã thanh toán</option>
+                                        <option value="NOT_PURCHASED">Chưa thanh toán</option>
                                     </select>
                                 </div>
                             </div>
@@ -71,9 +72,9 @@
         const statusValue = statusSelect.value;
         let theUrl = "";
         if (statusValue === "ALL") {
-            theUrl = `[(@{/orders})]`;
+            theUrl = `[(@{/vendor/orders/product})]`;
         } else {
-            theUrl = `[(@{/orders/${statusValue}})]`;
+            theUrl = `[(@{/vendor/orders/product/${statusValue}})]`;
         }
         callApi('get', " ", theUrl, (value) => {
             let html = '';
@@ -99,7 +100,7 @@
                             <th scope="col">${order.formatTotalPrice}</th>
                             <th scope="col">${order.approval === false ? 'Chưa nhận đơn' : 'Đã nhận đơn'}</th>
                             <th scope="col">${order.payment === 'PAY_BY_BANK' ? 'Thanh toán qua ngân hàng' : 'Thanh toán tại nhà'}</th>
-                            <th scope="col">Chưa thanh toán</th>
+                            <th scope="col">${order.purchased === true ? 'Đã thanh toán' : 'Chưa thanh toán'}</th>
                             <th scope="col"><button class="btn btn-primary" onclick="checkStockOfProduct(${order.stockResponse.id})">Check</button></th>
                             <th scope="col">${buttonApproval}</th>
                         </tr>`
