@@ -29,8 +29,8 @@ public class OrderDto extends BaseDto {
         Integer totalPrice = 0;
         if(quantity != null && stock != null && stock.getPrice() != null) {
             totalPrice =  quantity * stock.getPrice() +
-                    stock.getProductResponse()
-                            .getVendorResponse()
+                    stock.getProduct()
+                            .getVendor()
                             .getPerMoneyDelivery();
             Integer x = totalPrice/100;
             totalPrice = totalPrice - x*couponPercent;

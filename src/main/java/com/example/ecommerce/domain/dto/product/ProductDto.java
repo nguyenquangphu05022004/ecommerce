@@ -14,12 +14,12 @@ import java.util.List;
 @SuperBuilder(toBuilder = true)
 public class ProductDto extends BaseDto {
     private CategoryDto category;
-    private StockResponse.ProductResponse.VendorResponse vendorResponse;
+    private StockResponse.ProductResponse.VendorResponse vendor;
     private String description;
     private MapName language;
     private List<EvaluationDto> evaluations = new ArrayList<>();
-    private TrackProductSellerDto productSeller;
-    private List<StockResponse> stockResponses = new ArrayList<>();
+    private TrackProductSellerResponse productSeller;
+    private List<StockResponse> stocks = new ArrayList<>();
 
     public Integer getAverageEvaluation() {
         Integer totalRate = 0;
@@ -28,7 +28,12 @@ public class ProductDto extends BaseDto {
     }
 
     public String getFormatPrice() {
-        if(this.stockResponses.size() == 0) return "0";
-        return SystemUtils.getFormatNumber(this.stockResponses.get(0).getPrice());
+        if(this.stocks.size() == 0) return "0";
+        return SystemUtils.getFormatNumber(this.stocks.get(0).getPrice());
+    }
+    @Getter
+    @Setter
+    public static class TrackProductSellerResponse {
+        private Integer numberOfProductsSold;
     }
 }

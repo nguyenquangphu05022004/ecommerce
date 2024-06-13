@@ -6,9 +6,9 @@ import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor
 @Getter
-@ToString
 @SuperBuilder(toBuilder = true)
 @AllArgsConstructor
+@Setter
 public class CategoryDto extends BaseDto {
     private String name;
     private ImageDto image;

@@ -7,11 +7,10 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
-@Data
+@Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @SuperBuilder(toBuilder = true)
 public class CouponDto extends BaseDto {
     private String code;
@@ -19,7 +18,6 @@ public class CouponDto extends BaseDto {
     private String content;
     private LocalDateTime start;
     private LocalDateTime end;
-    private Long vendorId;
     private boolean isExpired;
     //check current day is event start
     public String getFormatStart() {

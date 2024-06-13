@@ -2,15 +2,10 @@ package com.example.ecommerce.converter;
 
 import com.example.ecommerce.domain.dto.product.EvaluationDto;
 import com.example.ecommerce.domain.dto.product.EvaluationRequest;
-import com.example.ecommerce.domain.dto.product.ImageDto;
-import com.example.ecommerce.domain.dto.user.UserDto;
 import com.example.ecommerce.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor

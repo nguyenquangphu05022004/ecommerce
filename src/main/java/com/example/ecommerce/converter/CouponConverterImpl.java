@@ -1,8 +1,7 @@
 package com.example.ecommerce.converter;
 
-import com.example.ecommerce.domain.Vendor;
-import com.example.ecommerce.domain.dto.product.CouponDto;
 import com.example.ecommerce.domain.Coupon;
+import com.example.ecommerce.domain.dto.product.CouponDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -12,11 +11,7 @@ import org.springframework.stereotype.Component;
 public class CouponConverterImpl {
     private final ModelMapper mapper;
     public Coupon toEntity(CouponDto couponDto) {
-        Coupon coupon = mapper.map(couponDto, Coupon.class)
-                .toBuilder()
-                .vendor(Vendor.builder().id(couponDto.getVendorId())
-                        .build())
-                .build();
+        Coupon coupon = mapper.map(couponDto, Coupon.class);
         return coupon;
     }
 

@@ -3,6 +3,7 @@ package com.example.ecommerce.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -10,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @Getter
+@Setter
 public class Image extends Base{
     private String name;
     private String shortUrl;

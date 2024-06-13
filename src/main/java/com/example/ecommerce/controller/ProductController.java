@@ -2,13 +2,12 @@ package com.example.ecommerce.controller;
 
 
 import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.domain.dto.ENUM.SortProductType;
 import com.example.ecommerce.domain.dto.product.CategoryDto;
 import com.example.ecommerce.domain.dto.product.EvaluationDto;
 import com.example.ecommerce.domain.dto.product.ProductDto;
-import com.example.ecommerce.domain.dto.ENUM.SortProductType;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.impl.CategoryServiceImpl;
-import com.example.ecommerce.service.impl.ProductServiceImpl;
 import com.example.ecommerce.utils.SortUtils;
 import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;

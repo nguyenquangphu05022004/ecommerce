@@ -2,14 +2,14 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.dto.ENUM.SelectFilterOrder;
-import com.example.ecommerce.domain.dto.product.StockResponse;
+import com.example.ecommerce.domain.dto.ENUM.Status;
 import com.example.ecommerce.domain.dto.product.OrderDto;
 import com.example.ecommerce.domain.dto.product.OrderRequest;
-import com.example.ecommerce.domain.dto.user.UserDto;
-import com.example.ecommerce.domain.dto.ENUM.Status;
+import com.example.ecommerce.domain.dto.product.StockResponse;
+import com.example.ecommerce.domain.dto.user.UserResponseInfo;
 import com.example.ecommerce.service.IStockService;
+import com.example.ecommerce.service.IUserService;
 import com.example.ecommerce.service.impl.OrderServiceImpl;
-import com.example.ecommerce.service.impl.UserServiceImpl;
 import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ import java.util.List;
 public class OrderController {
 
     private final OrderServiceImpl orderService;
-    private final UserServiceImpl userService;
+    private final IUserService userService;
     private final IStockService stockService;
 
     @GetMapping("/orders/product/**")
@@ -32,14 +32,14 @@ public class OrderController {
                                   @RequestParam("stockId") Long stockId,
                                   Model model) {
         StockResponse stockDto = stockService.findById(stockId);
-        UserDto userDto = userService.findUserByUsername(SecurityUtils.username());
+        UserResponseInfo userResponseInfo = userService.findUserByUsername(SecurityUtils.username());
         model.addAttribute("stock", stockDto);
-        model.addAttribute("user", userDto);
+        model.addAttribute("user", userResponseInfo);
         model.addAttribute("totalPrice",
                 SystemUtils.getFormatNumber((
                         numberOfProduct * stockDto.getPrice()
-                        + stockDto.getProductResponse()
-                        .getVendorResponse()
+                        + stockDto.getProduct()
+                        .getVendor()
                         .getPerMoneyDelivery())));
         model.addAttribute("numberOfProduct", numberOfProduct);
         return "order";

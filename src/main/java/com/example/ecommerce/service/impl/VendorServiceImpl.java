@@ -8,10 +8,13 @@ import com.example.ecommerce.domain.singleton.UserTrack;
 import com.example.ecommerce.domain.dto.user.VendorDto;
 import com.example.ecommerce.domain.User;
 import com.example.ecommerce.domain.Vendor;
+import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IGenericService;
 import com.example.ecommerce.service.IVendorService;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,20 +22,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class VendorServiceImpl implements IGenericService<VendorDto>, IVendorService {
     private final VendorRepository vendorRepository;
     private final UserRepository userRepository;
+    private final ModelMapper mapper;
 
-    @Autowired
-    public VendorServiceImpl(VendorRepository vendorRepository,
-                             UserRepository userRepository) {
-        this.vendorRepository = vendorRepository;
-        this.userRepository = userRepository;
-    }
 
     @Override
     public List<VendorDto> records() {
-        return GenericService.records(vendorRepository, Convert.VEND);
+        return vendorRepository.findAll()
+                .stream()
+                .map(vendor -> mapper.map(vendor, VendorDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -47,8 +49,15 @@ public class VendorServiceImpl implements IGenericService<VendorDto>, IVendorSer
 
     @Override
     public VendorDto findById(Long id) {
-        return (VendorDto) Convert.VEND.toDto(
-                GenericService.findById(vendorRepository, id)
+        return mapper.map(
+                vendorRepository.findById(id)
+                        .orElseThrow(
+                                () -> new NotFoundException(
+                                        "VendorId",
+                                        id + ""
+                                )
+                        ),
+                VendorDto.class
         );
     }
 
@@ -59,7 +68,7 @@ public class VendorServiceImpl implements IGenericService<VendorDto>, IVendorSer
         Vendor vendor = new Vendor();
         vendor.setUser(user);
         vendor.setShopName(vendorDto.getShopName());
-        return (VendorDto) Convert.VEND.toDto(vendorRepository.save(vendor));
+        return mapper.map(vendorRepository.save(vendor), VendorDto.class);
     }
 
     @Override

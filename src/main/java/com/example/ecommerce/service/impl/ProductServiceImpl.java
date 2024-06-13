@@ -1,15 +1,16 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.dto.product.ProductDto;
 import com.example.ecommerce.domain.Product;
 import com.example.ecommerce.domain.Vendor;
+import com.example.ecommerce.domain.dto.product.ProductDto;
+import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.utils.SystemUtils;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,10 +26,14 @@ public class ProductServiceImpl implements IProductService {
 
     private final ProductRepository productRepository;
     private final VendorRepository vendorRepository;
-    private final EntityManager entityManager;
+    private final ModelMapper mapper;
+
     @Override
     public List<ProductDto> records() {
-        return GenericService.records(productRepository, Convert.PRO);
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(product ->mapToDto(product))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -43,31 +48,35 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductDto findById(Long id) {
-        return (ProductDto) Convert.PRO.toDto(
-                GenericService.findById(productRepository, id)
-        );
+        Product product = productRepository.findById(id)
+                .orElseThrow(
+                        () -> new NotFoundException("ProductId", id + "")
+                );
+        return mapToDto(product);
     }
 
     @Override
     @Transactional
     public ProductDto saveOrUpdate(ProductDto productDto) {
         Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username());
-        Product product = new Product();
+        Product product = null;
         if (productDto.getId() != null) {
             return null;
         } else {
-            product = (Product) Convert.PRO.toEntity(productDto);
+            product = mapper.map(productDto, Product.class);
         }
         product.setVendor(vendor);
-        return (ProductDto) Convert.PRO.toDto(productRepository.save(product));
+        return mapToDto(productRepository.save(product));
 
     }
 
     @Override
     public List<ProductDto> findProductByCategoryId(Long categoryId, int page) {
-        return productRepository.findAllByCategoryId(categoryId, PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM))
+        return productRepository.findAllByCategoryId(
+                        categoryId,
+                        PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM))
                 .stream()
-                .map(e -> (ProductDto) Convert.PRO.toDto(e))
+                .map(e -> mapToDto(e))
                 .collect(Collectors.toList());
     }
 
@@ -77,47 +86,47 @@ public class ProductServiceImpl implements IProductService {
                                    Integer endPrice, int page) {
         Pageable paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
         Page<Product> pages = null;
-        if(vendorId != null) {
-            if(query == null && categoryId == 0 && startPrice == 0 && endPrice == 0) {
+        if (vendorId != null) {
+            if (query == null && categoryId == 0 && startPrice == 0 && endPrice == 0) {
                 pages = productRepository.findAllByVendorId(vendorId, paging);
-            } else if(query == null && categoryId == 0 && startPrice != 0 && endPrice != 0) {
+            } else if (query == null && categoryId == 0 && startPrice != 0 && endPrice != 0) {
                 pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndVendorId(vendorId, startPrice, endPrice, paging);
-            } else if(query == null && categoryId != null) {
-                if(startPrice != 0 && endPrice != 0) {
+            } else if (query == null && categoryId != null) {
+                if (startPrice != 0 && endPrice != 0) {
                     pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndCategoryIdAndVendorId(vendorId, categoryId, startPrice, endPrice, paging);
                 } else {
                     pages = productRepository.findAllByCategoryIdAndVendorId(vendorId, categoryId, paging);
                 }
-            } else if(query != null && categoryId == 0) {
-                if(startPrice != 0 && endPrice != 0) {
-                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndVendorId(vendorId,query, startPrice, endPrice, paging);
+            } else if (query != null && categoryId == 0) {
+                if (startPrice != 0 && endPrice != 0) {
+                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndVendorId(vendorId, query, startPrice, endPrice, paging);
                 } else {
                     pages = productRepository.findAllByProductNameAndVendorId(vendorId, query, paging);
                 }
-            } else if(query != null && categoryId != 0) {
-                if(startPrice != 0 && endPrice != 0) {
+            } else if (query != null && categoryId != 0) {
+                if (startPrice != 0 && endPrice != 0) {
                     pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndCategoryIdAndVendorId(vendorId, query, categoryId, startPrice, endPrice, paging);
                 } else {
                     pages = productRepository.findAllByProductNameAndCategoryIdAndVendorId(vendorId, query, categoryId, paging);
                 }
             }
         } else {
-            if(query == null && categoryId == 0 && startPrice != 0 && endPrice != 0) {
+            if (query == null && categoryId == 0 && startPrice != 0 && endPrice != 0) {
                 pages = productRepository.findAllByPriceBetweenStartPriceAndEndPrice(startPrice, endPrice, paging);
-            } else if(query == null && categoryId != null) {
-                if(startPrice != 0 && endPrice != 0) {
+            } else if (query == null && categoryId != null) {
+                if (startPrice != 0 && endPrice != 0) {
                     pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndCategoryId(categoryId, startPrice, endPrice, paging);
                 } else {
                     pages = productRepository.findAllByCategoryId(categoryId, paging);
                 }
-            } else if(query != null && categoryId == 0) {
-                if(startPrice != 0 && endPrice != 0) {
+            } else if (query != null && categoryId == 0) {
+                if (startPrice != 0 && endPrice != 0) {
                     pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductName(query, startPrice, endPrice, paging);
                 } else {
                     pages = productRepository.findAllByProductName(query, paging);
                 }
-            } else if(query != null && categoryId != null) {
-                if(startPrice != 0 && endPrice != 0) {
+            } else if (query != null && categoryId != null) {
+                if (startPrice != 0 && endPrice != 0) {
                     pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndCategoryId(query, categoryId, startPrice, endPrice, paging);
                 } else {
                     pages = productRepository.findAllByProductNameAndCategoryId(query, categoryId, paging);
@@ -127,7 +136,7 @@ public class ProductServiceImpl implements IProductService {
         SystemUtils.totalPage = pages.getTotalPages();
         List<Product> products = pages.getContent();
         return products.stream()
-                .map((entity) -> (ProductDto) Convert.PRO.toDto(entity))
+                .map((entity) -> mapToDto(entity))
                 .collect(Collectors.toList());
     }
 
@@ -136,7 +145,7 @@ public class ProductServiceImpl implements IProductService {
         String username = SecurityUtils.username();
         return productRepository.findAllByVendorUserUsername(username)
                 .stream()
-                .map(e -> (ProductDto) Convert.PRO.toDto(e))
+                .map(e -> mapToDto(e))
                 .collect(Collectors.toList());
     }
 
@@ -147,20 +156,20 @@ public class ProductServiceImpl implements IProductService {
         SystemUtils.totalPage = productPages.getTotalPages();
         return productPages.getContent()
                 .stream()
-                .map(e -> (ProductDto) Convert.PRO.toDto(e))
+                .map(e -> mapToDto(e))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ProductDto> findAll(int page) {
-        Page<Product> productPages = productRepository.findAll(PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM));
+        Page<Product> productPages = productRepository
+                .findAll(PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM));
         SystemUtils.totalPage = productPages.getTotalPages();
         return productPages.getContent()
                 .stream()
-                .map(e -> (ProductDto) Convert.PRO.toDto(e))
+                .map(e -> mapToDto(e))
                 .collect(Collectors.toList());
     }
-
 
 
     @Override
@@ -169,8 +178,11 @@ public class ProductServiceImpl implements IProductService {
 //        return billRepository.existsByOrderBillStatusAndOrderProductIdAndOrderUserUsername(Status.SUCCESS,productId, username);
     }
 
-
-
-
+    public ProductDto mapToDto(Product product) {
+        product.getStocks().stream().forEach(e -> {
+            e.setProduct(null);
+        });
+        return mapper.map(product, ProductDto.class);
+    }
 
 }

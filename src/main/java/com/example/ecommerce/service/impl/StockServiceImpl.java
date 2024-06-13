@@ -1,13 +1,11 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.converter.ProductConverterImpl;
-import com.example.ecommerce.domain.dto.product.DecorationResponse;
-import com.example.ecommerce.domain.dto.product.StockRequest;
-import com.example.ecommerce.domain.dto.product.StockResponse;
+import com.example.ecommerce.domain.Decoration;
 import com.example.ecommerce.domain.Image;
 import com.example.ecommerce.domain.Product;
-import com.example.ecommerce.domain.Decoration;
 import com.example.ecommerce.domain.Stock;
+import com.example.ecommerce.domain.dto.product.StockRequest;
+import com.example.ecommerce.domain.dto.product.StockResponse;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.DecorationRepository;
 import com.example.ecommerce.repository.ProductRepository;
@@ -54,7 +52,7 @@ public class StockServiceImpl implements IStockService {
         Stock stock = stockRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("StockId", id + "")
         );
-        return getStockResponse(stock);
+        return mapper.map(stock, StockResponse.class);
     }
 
 
@@ -75,11 +73,14 @@ public class StockServiceImpl implements IStockService {
         List<Image> images = stockRequest.getMultipartFiles()
                 .stream()
                 .map(multipartFile -> {
-                    Optional<Image> image = imageService.loadByFileName(multipartFile.getOriginalFilename());
+                    Optional<Image> image = imageService
+                            .loadByFileName(
+                                    multipartFile.getOriginalFilename()
+                            );
                     if(image.isEmpty()) {
                         return imageService.uploadFile(
                                 multipartFile,
-                                SystemUtils.SHORT_URL_STOCK
+                                SystemUtils.TAG
                         );
                     }
                     return image.get();
@@ -100,49 +101,5 @@ public class StockServiceImpl implements IStockService {
     @Override
     public void update(Long stockId) {
 
-    }
-
-
-    public static StockResponse getStockResponse(Stock stock) {
-        return StockResponse.builder()
-                .code(stock.getCode())
-                .id(stock.getId())
-                .images(ProductConverterImpl.getImageDtoByStock(stock))
-                .quantityOfProduct(stock.getQuantityOfProduct())
-                .price(stock.getPrice())
-                .decoration(DecorationResponse.builder()
-                        .size(stock.getDecoration().getSize())
-                        .color(stock.getDecoration().getColor())
-                        .build())
-                .productResponse( //mapper product
-                        StockResponse
-                                .ProductResponse
-                                .builder()
-                                .name(stock.getProduct()
-                                        .getLanguage()
-                                        .getNameVn())
-                                .description(stock.getProduct()
-                                        .getDescription())
-                                .id(stock.getProduct()
-                                        .getId())
-                                .vendorResponse( //mapper vendor
-                                        StockResponse
-                                                .ProductResponse
-                                                .VendorResponse
-                                                .builder()
-                                                .id(stock.getProduct()
-                                                        .getVendor()
-                                                        .getId())
-                                                .perMoneyDelivery(stock.getProduct()
-                                                        .getVendor()
-                                                        .getPerMoneyDelivery())
-                                                .name(stock.getProduct()
-                                                        .getVendor()
-                                                        .getShopName())
-                                                .build()
-                                )
-                                .build()
-                )
-                .build();
     }
 }

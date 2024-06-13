@@ -31,7 +31,6 @@ public class BasketServiceImpl implements IBasketService {
         return baskets.stream()
                 .map(entity -> {
                     BasketDto basket = mapper.map(entity, BasketDto.class);
-                    basket.setStockResponse(StockServiceImpl.getStockResponse(entity.getStock()));
                     return basket;
                 })
                 .collect(Collectors.toList());

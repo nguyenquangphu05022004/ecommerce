@@ -1,18 +1,15 @@
 package com.example.ecommerce.converter;
 
-import com.example.ecommerce.domain.Evaluation;
 import com.example.ecommerce.domain.dto.ENUM.Role;
 import com.example.ecommerce.domain.User;
 import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
 import com.example.ecommerce.domain.dto.user.UserRequest;
 import com.example.ecommerce.domain.singleton.UserTrack;
-import com.example.ecommerce.domain.dto.user.UserDto;
+import com.example.ecommerce.domain.dto.user.UserResponseInfo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
@@ -26,9 +23,9 @@ public class UserMapper {
         return user;
     }
 
-    public UserDto toDto(User user) {
-        UserDto userDto = mapper.map(user, UserDto.class);
-        return userDto;
+    public UserResponseInfo toDto(User user) {
+        UserResponseInfo userResponseInfo = mapper.map(user, UserResponseInfo.class);
+        return userResponseInfo;
     }
 
 

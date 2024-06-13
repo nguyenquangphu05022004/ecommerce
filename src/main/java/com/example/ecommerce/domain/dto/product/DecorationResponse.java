@@ -1,5 +1,6 @@
 package com.example.ecommerce.domain.dto.product;
 
+import com.example.ecommerce.domain.dto.BaseDto;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -8,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class DecorationResponse extends BasketDto {
+public class DecorationResponse extends BaseDto {
     private String size;
     private String color;
 }

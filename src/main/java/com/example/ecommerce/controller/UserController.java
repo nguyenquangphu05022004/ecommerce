@@ -2,10 +2,10 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.domain.dto.ENUM.Role;
 import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
+import com.example.ecommerce.domain.dto.user.UserResponseInfo;
 import com.example.ecommerce.domain.singleton.UserTrack;
-import com.example.ecommerce.domain.dto.user.UserDto;
+import com.example.ecommerce.service.IUserService;
 import com.example.ecommerce.service.VerifyService;
-import com.example.ecommerce.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -21,34 +21,32 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
-    private final UserServiceImpl userService;
+    private final IUserService userService;
     private final VerifyService verifyService;
-
-
 
     @GetMapping("/admin/users/role/{ROLE}")
     @ResponseBody
-    public List<UserDto> getListUserByRole(@PathVariable("ROLE") Role role) {
+    public List<UserResponseInfo> getListUserByRole(@PathVariable("ROLE") Role role) {
         return userService.getListUserByRole(role);
     }
 
     @PostMapping("/register")
-    public String registerAccount(@ModelAttribute UserDto userDto) {
-        userService.saveOrUpdate(userDto);
+    public String registerAccount(@ModelAttribute UserResponseInfo userResponseInfo) {
+        userService.saveOrUpdate(userResponseInfo);
         return "redirect:/login";
     }
 
     @GetMapping("/admin/users")
     public String getListUser(Model model) {
-        List<UserDto> userDtos = userService.records();
-        model.addAttribute("users", userDtos);
+        List<UserResponseInfo> userResponseInfos = userService.records();
+        model.addAttribute("users", userResponseInfos);
         return "admin/user/list-users";
     }
 
     @PostMapping("/users")
     @ResponseBody
-    public UserDto updateUserProfile(@RequestBody UserDto userDto)   {
-        return userService.saveOrUpdate(userDto);
+    public UserResponseInfo updateUserProfile(@RequestBody UserResponseInfo userResponseInfo)   {
+        return userService.saveOrUpdate(userResponseInfo);
     }
 
     @PostMapping("/change-password")

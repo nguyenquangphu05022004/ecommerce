@@ -1,6 +1,7 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.domain.dto.product.CategoryDto;
+import com.example.ecommerce.domain.dto.product.CategoryRequest;
 import com.example.ecommerce.service.impl.CategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,12 +21,12 @@ public class CategoryController {
 
     @GetMapping("/categories/add")
     public String getFormCategory(Model model) {
-        CategoryDto categoryDto = new CategoryDto();
+        CategoryRequest categoryDto = new CategoryRequest();
         model.addAttribute("category", categoryDto);
         return "admin/category/create-categories";
     }
     @PostMapping("/categories/add")
-    public String createCategory(@ModelAttribute CategoryDto categoryDto) {
+    public String createCategory(@ModelAttribute CategoryRequest categoryDto) {
         categoryService.saveOrUpdate(categoryDto);
         return "redirect:/admin/categories";
     }
@@ -37,7 +38,7 @@ public class CategoryController {
         return "admin/category/edit-categories";
     }
     @PostMapping("/categories/edit")
-    public String updateCategory(@ModelAttribute CategoryDto categoryDto) {
+    public String updateCategory(@ModelAttribute CategoryRequest categoryDto) {
         categoryService.saveOrUpdate(categoryDto);
         return "redirect:/admin/categories";
     }

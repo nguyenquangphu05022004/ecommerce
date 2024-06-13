@@ -11,7 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
 @Getter
-@Data
+@Setter
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public abstract class BaseDto {

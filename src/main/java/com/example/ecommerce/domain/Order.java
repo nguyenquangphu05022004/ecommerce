@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "orders")
 @NoArgsConstructor
-@Data
+@Setter
 @Getter
 @SuperBuilder(toBuilder = true)
 public class Order extends Base{

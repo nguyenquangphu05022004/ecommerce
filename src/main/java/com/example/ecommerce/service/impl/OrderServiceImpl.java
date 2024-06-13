@@ -13,6 +13,7 @@ import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IGenericService;
 import com.example.ecommerce.service.IOrderService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,29 +29,17 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
     private final CouponRepository couponRepository;
     private final BasketRepository basketRepository;
     private final StockRepository stockRepository;
+    private final ModelMapper mapper;
 
 
     @Override
     public List<OrderDto> records() {
         return orderRepository.findAllByUserUsername(SecurityUtils.username())
                 .stream()
-                .map(entity -> toDto(entity))
+                .map(entity -> mapper.map(entity, OrderDto.class))
                 .collect(Collectors.toList());
     }
 
-    private OrderDto toDto(Order entity) {
-        return OrderDto.builder()
-                .id(entity.getId())
-                .approval(entity.isApproval())
-                .payment(entity.getPayment())
-                .quantity(entity.getQuantity())
-                .couponPercent(entity.getCouponPercent())
-                .purchased(entity.isPurchased())
-                .stockResponse(StockServiceImpl
-                        .getStockResponse(entity.getStock()))
-                .shipStatus(entity.isShipStatus())
-                .build();
-    }
 
     @Override
     public void delete(Long id) {
@@ -64,7 +53,7 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
 
     @Override
     public OrderDto findById(Long id) {
-        return toDto(orderRepository.findById(id).get());
+        return mapper.map(orderRepository.findById(id).get(), OrderDto.class);
     }
 
     @Override
@@ -88,9 +77,12 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
     @Override
     public List<OrderDto> records(Status status) {
         return orderRepository
-                .findAllByUserUsernameAndBillStatus(SecurityUtils.username(), status)
+                .findAllByUserUsernameAndBillStatus(
+                        SecurityUtils.username(),
+                        status
+                )
                 .stream()
-                .map(entity -> toDto(entity))
+                .map(entity -> mapper.map(entity, OrderDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -115,7 +107,7 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
                         SecurityUtils.username()
                 )
                 .stream()
-                .map(entity -> toDto(entity))
+                .map(entity -> mapper.map(entity, OrderDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -124,20 +116,31 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
         List<Order> orders = new ArrayList<>();
         switch (selectFilerOrder) {
             case APPROVAL:
-                orders = orderRepository.findAllByStockProductVendorUserUsernameAndApproval(SecurityUtils.username(), true);
+                orders = orderRepository
+                        .findAllByStockProductVendorUserUsernameAndApproval(
+                                SecurityUtils.username(),
+                                true);
                 break;
             case NOT_APPROVAL:
-                orders = orderRepository.findAllByStockProductVendorUserUsernameAndApproval(SecurityUtils.username(), false);
+                orders = orderRepository
+                        .findAllByStockProductVendorUserUsernameAndApproval(
+                                SecurityUtils.username(),
+                                false);
                 break;
             case PURCHASED:
-                orders = orderRepository.findAllByStockProductVendorUserUsernameAndPurchased(SecurityUtils.username(), true);
+                orders = orderRepository
+                        .findAllByStockProductVendorUserUsernameAndPurchased(
+                                SecurityUtils.username(),
+                                true);
                 break;
             case NOT_PURCHASED:
-                orders = orderRepository.findAllByStockProductVendorUserUsernameAndPurchased(SecurityUtils.username(), false);
+                orders = orderRepository.findAllByStockProductVendorUserUsernameAndPurchased(
+                        SecurityUtils.username(),
+                        false);
         }
         return orders
                 .stream()
-                .map(entity -> toDto(entity))
+                .map(entity -> mapper.map(entity, OrderDto.class))
                 .collect(Collectors.toList());
     }
 }

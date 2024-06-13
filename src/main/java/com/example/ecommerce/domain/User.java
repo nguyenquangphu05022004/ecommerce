@@ -2,20 +2,16 @@ package com.example.ecommerce.domain;
 
 import com.example.ecommerce.domain.dto.ENUM.Role;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.*;
 
 @Entity
 @Table(name = "users")
-@Data
+@Setter
 @Getter
 @NoArgsConstructor
-@ToString
 @SuperBuilder(toBuilder = true)
 public class User extends Base{
     @Column(length = 20)
@@ -38,11 +34,10 @@ public class User extends Base{
     private List<Evaluation> evaluations = new ArrayList<>();
     @OneToOne(mappedBy = "user")
     private Verify verify;
-
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
     @ManyToMany(mappedBy = "users")
     private List<Conversation> conversations = new ArrayList<>();
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

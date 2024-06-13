@@ -25,7 +25,10 @@ public class ChatMessageMapper {
                                 chatMessage.getSenderToConversation(),
                                 username
                         ))
-                .updatedAt(SystemUtils.getFormatDate(chatMessage.getModifiedDate(), "dd/MM/yyyy HH:mm"))
+                .updatedAt(SystemUtils.getFormatDate(
+                        chatMessage.getModifiedDate(),
+                        SystemUtils.VN_DATE
+                ))
                 .content(chatMessage.getContent())
                 .messageType(
                         chatMessage.getUserSender()

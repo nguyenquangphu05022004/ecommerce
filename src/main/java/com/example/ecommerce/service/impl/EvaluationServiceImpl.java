@@ -13,6 +13,7 @@ import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IImageService;
 import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,37 +30,40 @@ public class EvaluationServiceImpl implements IEvaluationService {
     private final EvaluationRepository evaluationRepository;
     private final UserRepository userRepository;
     private final IImageService imageService;
-    private final IFilesStorageService filesStorageService;
-
-
+    private final ModelMapper mapper;
     @Override
     @Transactional
-    public EvaluationDto saveOrUpdate(EvaluationRequest evaluationDto,
+    public EvaluationDto saveOrUpdate(EvaluationRequest request,
                                       List<MultipartFile> images) {
         User user = userRepository.findByUsername(SecurityUtils.username()).get();
-
         Optional<Evaluation> optionalEvaluation = evaluationRepository
                 .findByUserUsernameAndProductId(
                         SecurityUtils.username(),
-                        evaluationDto.getProductId()
+                        request.getProductId()
                 );
         Evaluation evaluation = null;
         if (optionalEvaluation.isPresent()) {
-            evaluation = optionalEvaluation.get();
-            List<Image> imageOfEvaluation = evaluation.getImages() == null
-                    ? new ArrayList<>() : evaluation.getImages();
-            evaluation = (Evaluation) Convert.EVAL.toEntity(evaluation, evaluationDto);
+            evaluation = optionalEvaluation.get().toBuilder()
+                    .rating(request.getRating())
+                    .content(request.getContent().isEmpty()
+                            || request.getContent().isBlank()
+                            ? evaluation.getContent()
+                            : request.getContent())
+                    .build();
+            evaluation.getImages().stream().forEach(
+                    image -> imageService.deleteFile(image.getName(), image.getId())
+            );
+
         } else {
-            evaluation = (Evaluation) Convert.EVAL.toEntity(evaluationDto);
+            evaluation = mapper.map(request, Evaluation.class);
         }
         evaluation.setUser(user);
+        List<Image> imageEvaluations = images.stream().map(
+                file -> imageService.uploadFile(file, SystemUtils.TAG)
+        ).collect(Collectors.toList());
+        evaluation.setImages(imageEvaluations);
         evaluation = evaluationRepository.save(evaluation);
-        for (MultipartFile mul : images) {
-            if (mul != null) {
-                imageService.uploadFile(mul, SystemUtils.SHORT_URL_EVALUATION);
-            }
-        }
-        return (EvaluationDto) Convert.EVAL.toDto(evaluation);
+        return mapper.map(evaluation, EvaluationDto.class);
     }
 
     @Override

@@ -5,11 +5,12 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "languages")
-@Data
+@Setter
 @Getter
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor

@@ -6,13 +6,15 @@ import com.example.ecommerce.domain.Image;
 import com.example.ecommerce.domain.User;
 import com.example.ecommerce.domain.dto.ENUM.Role;
 import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
-import com.example.ecommerce.domain.dto.user.UserDto;
+import com.example.ecommerce.domain.dto.user.UserResponseInfo;
+import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IImageService;
 import com.example.ecommerce.service.IUserService;
 import com.example.ecommerce.utils.SystemUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,27 +23,21 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service("userService")
+@Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final IImageService imageService;
     private final IFilesStorageService filesStorageService;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository,
-                           PasswordEncoder passwordEncoder,
-                           IImageService imageService,
-                           IFilesStorageService filesStorageService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.imageService = imageService;
-        this.filesStorageService = filesStorageService;
-    }
+    private final ModelMapper mapper;
 
     @Override
-    public List<UserDto> records() {
-        return GenericService.records(userRepository, Convert.USER);
+    public List<UserResponseInfo> records() {
+        return userRepository.findAll()
+                .stream()
+                .map(e -> mapper.map(e, UserResponseInfo.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -55,35 +51,36 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserDto findById(Long id) {
+    public UserResponseInfo findById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("UserId", id + ""));
+        return mapper.map(user, UserResponseInfo.class);
+    }
+
+    @Override
+    public UserResponseInfo saveOrUpdate(UserResponseInfo userResponseInfo) {
+        User user = null;
+        if (SecurityUtils.username() != null) {
+            User oldUser = userRepository.findByUsername(SecurityUtils.username()).get();
+        } else {
+            user = null;
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         return null;
     }
 
     @Override
-    public UserDto saveOrUpdate(UserDto userDto) {
-        User user = null;
-        if (SecurityUtils.username() != null) {
-            User oldUser = userRepository.findByUsername(SecurityUtils.username()).get();
-            user = (User) Convert.USER.toEntity(oldUser, userDto);
-        } else {
-            user = (User) Convert.USER.toEntity(userDto);
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-        return (UserDto) Convert.USER.toDto(userRepository.save(user));
+    public UserResponseInfo findUserByUsername(String username) {
+        return mapper.map(userRepository.findByUsername(username).get(), UserResponseInfo.class);
     }
 
     @Override
-    public UserDto findUserByUsername(String username) {
-        return (UserDto) Convert.USER.toDto(userRepository.findByUsername(username).get());
-    }
-
-    @Override
-    public List<UserDto> getListUserByRole(Role role) {
+    public List<UserResponseInfo> getListUserByRole(Role role) {
         List<User> users = userRepository.findAllByRole(role);
-        List<UserDto> userDtos = users.stream()
-                .map(e -> (UserDto) Convert.USER.toDto(e))
+        List<UserResponseInfo> userResponseInfos = users.stream()
+                .map(e -> mapper.map(e, UserResponseInfo.class))
                 .collect(Collectors.toList());
-        return userDtos;
+        return userResponseInfos;
     }
 
     @Override
@@ -114,7 +111,7 @@ public class UserServiceImpl implements IUserService {
             else {
                  avatar = imageService.uploadFile(
                          multipartFile,
-                        SystemUtils.SHORT_URL_AVATAR);
+                        SystemUtils.TAG);
             }
             user.setAvatar(avatar);
             userRepository.save(user);

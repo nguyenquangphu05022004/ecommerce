@@ -10,9 +10,10 @@ public class ProductSortServiceImpl implements ProductSortService {
 
     @Override
     public List<ProductDto> sortByPrice(List<ProductDto> products) {
-//        Collections.sort(products, (ProductDto p1, ProductDto p2) -> {
-//            return p2.getPrice() - p1.getPrice();
-//        });
+        Collections.sort(products, (ProductDto p1, ProductDto p2) -> {
+//            return p2.getStocks().get(0).getPrice() - p2.getStocks().get(0).getPrice();
+            return 0;
+        });
         return products;
     }
 
@@ -27,7 +28,7 @@ public class ProductSortServiceImpl implements ProductSortService {
     @Override
     public List<ProductDto> sortByNumberOfSeller(List<ProductDto> products) {
         Collections.sort(products, (ProductDto p1, ProductDto p2) -> {
-            return p2.getTrackProductSeller().getNumberOfProductsSold() - p1.getTrackProductSeller().getNumberOfProductsSold();
+            return p2.getProductSeller().getNumberOfProductsSold() - p1.getProductSeller().getNumberOfProductsSold();
         });
         return products;
     }
