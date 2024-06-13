@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.dto.DecorationDto;
+import com.example.ecommerce.domain.dto.product.DecorationResponse;
 import com.example.ecommerce.domain.Decoration;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.DecorationRepository;
@@ -18,13 +18,13 @@ public class DecorationServiceImpl implements IDecorationService {
     private final ModelMapper mapper;
     private final DecorationRepository decorationRepository;
     @Override
-    public void save(DecorationDto request) {
+    public void save(DecorationResponse request) {
         Decoration decoration = mapper.map(request, Decoration.class);
         decorationRepository.save(decoration);
     }
 
     @Override
-    public void update(Long id, DecorationDto request) {
+    public void update(Long id, DecorationResponse request) {
         Decoration decoration = decorationRepository
                 .findById(id)
                 .orElseThrow(
@@ -45,12 +45,12 @@ public class DecorationServiceImpl implements IDecorationService {
     }
 
     @Override
-    public List<DecorationDto> listDecoration() {
+    public List<DecorationResponse> listDecoration() {
         return decorationRepository
                 .findAll()
                 .stream()
                 .map(
-                        decoration -> mapper.map(decoration, DecorationDto.class)
+                        decoration -> mapper.map(decoration, DecorationResponse.class)
                 )
                 .collect(Collectors.toList());
     }

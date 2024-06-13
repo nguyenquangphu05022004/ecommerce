@@ -1,5 +1,6 @@
 package com.example.ecommerce.domain;
 
+import com.example.ecommerce.domain.dto.ENUM.Payment;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -7,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "orders")
 @NoArgsConstructor
-@Data
+@Setter
 @Getter
 @SuperBuilder(toBuilder = true)
 public class Order extends Base{

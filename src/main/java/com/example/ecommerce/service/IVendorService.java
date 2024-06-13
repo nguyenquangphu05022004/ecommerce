@@ -1,8 +1,7 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.domain.response.vendor.VendorResponseInbox;
-import com.example.ecommerce.dto.CouponDto;
-import com.example.ecommerce.dto.VendorDto;
+import com.example.ecommerce.domain.dto.chat.VendorResponseInbox;
+import com.example.ecommerce.domain.dto.user.VendorDto;
 
 import java.util.List;
 

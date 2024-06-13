@@ -13,17 +13,9 @@ import java.util.Random;
 public class SystemUtils {
     public static int totalPage = 0;
     public static final Integer NUMBER_OF_ITEM = 9;
-    public static final String FOLDER_AVATAR = "avatar";
-    public static final String FOLDER_PRODUCT_IMAGE = "image-product";
-    public static final String FOLDER_EVALUATION_IMAGE = "image-evaluation";
-    public static final String FOLDER_CATEGORY_IMAGE = "image-category";
-    public static final String SHORT_URL_AVATAR = "files/avatar";
-    public static final String SHORT_URL_PRODUCT = "files/image-product";
-    public static final String SHORT_URL_CATEGORY="files/image-category";
-    public static final String SHORT_URL_EVALUATION="files/image-evaluation";
-    public static final String FOLDER_STOCK_IMAGE = "image-stock";
-    public static final String SHORT_URL_STOCK = "files/image-stock";
-
+    public static final String VN_DATE = "dd/MM/yyyy HH:mm:ss";
+    public static final String EN_DATE = "yyyy/MM/dd HH:mm:ss";
+    public static final String TAG = "image";
     public static String code() {
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i < 12; i++) {

@@ -1,6 +1,6 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.response.ConversationResponse;
+import com.example.ecommerce.domain.dto.chat.ConversationResponse;
 import com.example.ecommerce.service.IConversationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

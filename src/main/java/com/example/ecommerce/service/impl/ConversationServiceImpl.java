@@ -1,9 +1,9 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.converter.impl.ConversationMapper;
+import com.example.ecommerce.converter.ConversationMapper;
 import com.example.ecommerce.domain.Conversation;
 import com.example.ecommerce.domain.User;
-import com.example.ecommerce.domain.response.ConversationResponse;
+import com.example.ecommerce.domain.dto.chat.ConversationResponse;
 import com.example.ecommerce.repository.ConversationRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IConversationService;

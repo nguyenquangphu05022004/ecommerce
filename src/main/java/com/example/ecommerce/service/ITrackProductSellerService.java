@@ -1,7 +1,6 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.dto.TrackProductSellerDto;
-import org.springframework.data.domain.Pageable;
+import com.example.ecommerce.domain.dto.product.TrackProductSellerDto;
 
 import java.util.List;
 

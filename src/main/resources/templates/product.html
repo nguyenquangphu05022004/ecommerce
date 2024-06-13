@@ -14,8 +14,8 @@
                 <div class="row g-4">
                     <div class="col-lg-6">
                             <a href="#">
-                                <img  th:if="${product.stockResponses.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                <img id = "image-product" th:unless="${product.stockResponses.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${product.stockResponses.get(0).images.get(0).shortUrl}, fileName=${product.stockResponses.get(0).images.get(0).name})}" class="img-fluid w-100 rounded-top" alt="">
+                                <img  th:if="${product.stocks.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid w-100 rounded-top" alt="">
+                                <img id = "image-product" th:unless="${product.stocks.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${product.stocks.get(0).images.get(0).shortUrl}, fileName=${product.stocks.get(0).images.get(0).name})}" class="img-fluid w-100 rounded-top" alt="">
                             </a>
                     </div>
                     <div class="col-lg-6">
@@ -38,7 +38,7 @@
                         </div>
                         <div>
                             <h4 class="text-center">Thể loại</h4>
-                            <div class="input-group mb-3" th:each="stock, state : ${product.stockResponses}">
+                            <div class="input-group mb-3" th:each="stock, state : ${product.stocks}">
                                 <label class="h6" style="font-size: 20px; margin-right: 10px" th:for="${stock.id}">[[${stock.decoration.color}]] - [[${stock.decoration.size}]]</label>
                                 <p style="margin-right: 10px">Số lượng([[${stock.quantityOfProduct}]]) </p>
                                 <input
@@ -308,12 +308,12 @@
                 <div th:each="p : ${products}" th:if="${p.id != product.id}" class="border border-primary rounded position-relative">
                     <div class="vesitable-img">
                         <a th:href="@{/products/{productId}/{productName}(productId=${p.id}, productName=${p.language.nameVn})}">
-                            <img th:if="${p.stockResponses.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid-redesign w-100 rounded-top" alt="">
-                            <img th:unless="${p.stockResponses.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${p.stockResponses.get(0).images.get(0).shortUrl}, fileName=${p.stockResponses.get(0).images.get(0).name})}" class="img-fluid-redesign w-100 rounded-top" alt="">
+                            <img th:if="${p.stocks.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid-redesign w-100 rounded-top" alt="">
+                            <img th:unless="${p.stocks.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${p.stocks.get(0).images.get(0).shortUrl}, fileName=${p.stocks.get(0).images.get(0).name})}" class="img-fluid-redesign w-100 rounded-top" alt="">
                         </a>
                     </div>
                     <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
-                         style="top: 10px; right: 10px;">[[${product.category.name}]    ]
+                         style="top: 10px; right: 10px;">[[${product.category.name}]]
                     </div>
                     <div class="p-4 pb-0 rounded-bottom">
                         <a th:href="@{/products/{productId}/{productName}(productId=${p.id}, productName=${p.language.nameVn})}"><h4 class="text-truncate">[[${p.language.nameVn}]]</h4></a>

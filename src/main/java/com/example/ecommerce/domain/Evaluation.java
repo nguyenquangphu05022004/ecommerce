@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "evaluations")
 @NoArgsConstructor
-@Data
+@Setter
 @Getter
 @SuperBuilder(toBuilder = true)
 
@@ -27,7 +28,6 @@ public class Evaluation extends Base {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private Integer numberOfLike;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 }

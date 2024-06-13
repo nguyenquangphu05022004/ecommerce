@@ -1,12 +1,11 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.dto.ProductDto;
-import com.example.ecommerce.dto.TrackProductSellerDto;
 import com.example.ecommerce.domain.TrackProductSeller;
+import com.example.ecommerce.domain.dto.product.TrackProductSellerDto;
 import com.example.ecommerce.repository.TrackProductSellerRepository;
 import com.example.ecommerce.service.ITrackProductSellerService;
-import com.example.ecommerce.utils.Convert;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,30 +15,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("trackProductService")
+@RequiredArgsConstructor
 public class TrackProductServiceImpl implements ITrackProductSellerService {
     private final TrackProductSellerRepository trackProductSellerRepository;
-
-    @Autowired
-    public TrackProductServiceImpl(TrackProductSellerRepository trackProductSellerRepository) {
-        this.trackProductSellerRepository = trackProductSellerRepository;
-    }
+    private final ModelMapper mapper;
 
     @Override
     public List<TrackProductSellerDto> getListTopNumberByNumberOfSold( int page, int size) {
         Pageable paging = PageRequest.of(page - 1, size,
                 Sort.by("numberOfProductsSold").descending());
+        TrackProductSellerDto st = null;
         List<TrackProductSeller> trackProductSellers = trackProductSellerRepository
                 .findAll(paging).getContent();
         return trackProductSellers.stream()
-                .map(trackEntity -> {
-                    return TrackProductSellerDto
-                            .builder()
-                            .id(trackEntity.getId())
-                            .product((ProductDto) Convert.PRO.
-                                    toDto(trackEntity.getProduct()))
-                            .numberOfProductsSold(trackEntity.
-                                    getNumberOfProductsSold())
-                            .build();
-                }).collect(Collectors.toList());
+                .map(trackEntity -> mapper.map(trackEntity, TrackProductSellerDto.class))
+                .collect(Collectors.toList());
     }
 }

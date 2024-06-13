@@ -1,6 +1,6 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.dto.DecorationDto;
+import com.example.ecommerce.domain.dto.product.DecorationResponse;
 import com.example.ecommerce.service.IDecorationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -16,12 +16,12 @@ public class DecorationController {
 
     @GetMapping("/admin/decorations")
     public String getFormCreateDecoration(Model model) {
-        model.addAttribute("decoration", new DecorationDto());
+        model.addAttribute("decoration", new DecorationResponse());
         return "admin/decoration/create";
     }
     @PostMapping("/admin/decorations")
-    public String getFormCreateDecoration(@ModelAttribute DecorationDto decorationDto) {
-        decorationService.save(decorationDto);
+    public String getFormCreateDecoration(@ModelAttribute DecorationResponse decorationResponse) {
+        decorationService.save(decorationResponse);
         return "redirect:/admin/decorations";
     }
 }

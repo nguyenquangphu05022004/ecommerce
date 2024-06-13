@@ -1,10 +1,10 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.dto.CategoryDto;
-import com.example.ecommerce.dto.ProductDto;
-import com.example.ecommerce.dto.TrackProductSellerDto;
-import com.example.ecommerce.dto.UserDto;
+import com.example.ecommerce.domain.dto.product.CategoryDto;
+import com.example.ecommerce.domain.dto.product.ProductDto;
+import com.example.ecommerce.domain.dto.product.TrackProductSellerDto;
+import com.example.ecommerce.domain.dto.user.UserResponseInfo;
 import com.example.ecommerce.service.*;
 import com.example.ecommerce.utils.SystemUtils;
 import jakarta.servlet.http.Cookie;
@@ -73,8 +73,8 @@ public class HomeController {
 
     @GetMapping("/sign-up")
     public String getRegisterPage(Model model) {
-        UserDto userDto = new UserDto();
-        model.addAttribute("user", userDto);
+        UserResponseInfo userResponseInfo = new UserResponseInfo();
+        model.addAttribute("user", userResponseInfo);
         return "register";
     }
 
@@ -91,7 +91,7 @@ public class HomeController {
 
     @GetMapping("/user/profile")
     public String getPageUserProfile(Model model) {
-        UserDto user = userService.findUserByUsername(SecurityUtils.username());
+        UserResponseInfo user = userService.findUserByUsername(SecurityUtils.username());
         model.addAttribute("user", user);
         return "profile";
     }

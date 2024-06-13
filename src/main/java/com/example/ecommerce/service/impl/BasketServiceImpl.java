@@ -1,8 +1,8 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.dto.BasketRequest;
-import com.example.ecommerce.dto.BasketDto;
+import com.example.ecommerce.domain.dto.product.BasketRequest;
+import com.example.ecommerce.domain.dto.product.BasketDto;
 import com.example.ecommerce.domain.Basket;
 import com.example.ecommerce.domain.Stock;
 import com.example.ecommerce.domain.User;
@@ -31,7 +31,6 @@ public class BasketServiceImpl implements IBasketService {
         return baskets.stream()
                 .map(entity -> {
                     BasketDto basket = mapper.map(entity, BasketDto.class);
-                    basket.setStockResponse(StockServiceImpl.getStockResponse(entity.getStock()));
                     return basket;
                 })
                 .collect(Collectors.toList());

@@ -1,9 +1,9 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.dto.DecorationDto;
-import com.example.ecommerce.dto.ProductDto;
-import com.example.ecommerce.dto.StockRequest;
-import com.example.ecommerce.dto.StockResponse;
+import com.example.ecommerce.domain.dto.product.DecorationResponse;
+import com.example.ecommerce.domain.dto.product.ProductDto;
+import com.example.ecommerce.domain.dto.product.StockRequest;
+import com.example.ecommerce.domain.dto.product.StockResponse;
 import com.example.ecommerce.service.IDecorationService;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.IStockService;
@@ -24,8 +24,8 @@ public class StockController {
     @GetMapping("/vendor/products/stock/add")
     public String getFormCreateStockForProduct(Model model) {
         List<ProductDto> listProductOfVendor = productService.findAllByVendor();
-        List<DecorationDto> decorationDtoList = decorationService.listDecoration();
-        model.addAttribute("decorations", decorationDtoList);
+        List<DecorationResponse> decorationResponseList = decorationService.listDecoration();
+        model.addAttribute("decorations", decorationResponseList);
         model.addAttribute("products", listProductOfVendor);
         model.addAttribute("stockRequest", new StockRequest());
         return "admin/product/create-stock";
@@ -42,5 +42,7 @@ public class StockController {
     public StockResponse getById(@PathVariable("stockId") Long stockId) {
         return stockService.findById(stockId);
     }
+
+
 
 }

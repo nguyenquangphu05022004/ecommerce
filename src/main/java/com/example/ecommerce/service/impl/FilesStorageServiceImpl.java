@@ -1,29 +1,24 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.dto.Resources;
+import com.example.ecommerce.domain.dto.utilize.Resources;
 import com.example.ecommerce.service.IFilesStorageService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 @Service
+@RequiredArgsConstructor
 public class FilesStorageServiceImpl implements IFilesStorageService {
     private final Resources resources;
     private  Path root = null;
-
-    @Autowired
-    public FilesStorageServiceImpl(Resources resources) {
-        this.resources = resources;
-    }
-
 
     @Override
     public void saveFile(MultipartFile multipartFile) {

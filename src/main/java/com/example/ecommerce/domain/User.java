@@ -1,23 +1,17 @@
 package com.example.ecommerce.domain;
 
-import com.example.ecommerce.controller.FilesStorageController;
+import com.example.ecommerce.domain.dto.ENUM.Role;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import java.util.*;
 
 @Entity
 @Table(name = "users")
-@Data
+@Setter
 @Getter
 @NoArgsConstructor
-@ToString
 @SuperBuilder(toBuilder = true)
 public class User extends Base{
     @Column(length = 20)
@@ -40,15 +34,10 @@ public class User extends Base{
     private List<Evaluation> evaluations = new ArrayList<>();
     @OneToOne(mappedBy = "user")
     private Verify verify;
-
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
     @ManyToMany(mappedBy = "users")
     private List<Conversation> conversations = new ArrayList<>();
-
-
-    @Transient
-    @Value("${image.default}")
-    private String defaultAvatar;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -68,7 +57,7 @@ public class User extends Base{
     @Transient
     public String defaultImage() {
         if(this.avatar == null) {
-            return this.defaultAvatar;
+            return "https://ssl.gstatic.com/accounts/ui/avatar_2x.png";
         }
         return "/files/image/" + this.avatar.getName();
     }

@@ -3,6 +3,7 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IUserService;
 import com.example.ecommerce.utils.SystemUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -11,16 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
+@RequiredArgsConstructor
 public class FilesStorageController {
 
     private final IUserService userService;
     private final IFilesStorageService filesStorageService;
-    @Autowired
-    public FilesStorageController(IUserService userService,
-                                  IFilesStorageService filesStorageService) {
-        this.userService = userService;
-        this.filesStorageService = filesStorageService;
-    }
 
 
     /**
@@ -34,7 +30,7 @@ public class FilesStorageController {
     public String uploadFile(@RequestParam("file") MultipartFile file,
                              @PathVariable("type") String type) {
         try {
-            if (type.equals(SystemUtils.FOLDER_AVATAR)) {
+            if (type.equals(SystemUtils.TAG)) {
                 userService.updateAvatar(file);
             }
             return "redirect:/user/profile";

@@ -1,7 +1,6 @@
 package com.example.ecommerce.repository;
 
 import com.example.ecommerce.domain.Vendor;
-import com.example.ecommerce.domain.response.vendor.VendorResponseInbox;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

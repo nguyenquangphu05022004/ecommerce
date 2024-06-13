@@ -3,9 +3,10 @@ package com.example.ecommerce.domain;
 import jakarta.persistence.Embeddable;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 @Embeddable
-@Data
+@Setter
 @Getter
 public class UserContactDetails {
     private String fullName;

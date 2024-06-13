@@ -7,12 +7,13 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "trackProductSellers")
 @Getter
-@Data
+@Setter
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 public class TrackProductSeller extends Base {

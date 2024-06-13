@@ -1,11 +1,11 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.converter.impl.ChatMessageMapper;
+import com.example.ecommerce.converter.ChatMessageMapper;
 import com.example.ecommerce.domain.ChatMessage;
 import com.example.ecommerce.domain.Conversation;
 import com.example.ecommerce.domain.User;
-import com.example.ecommerce.domain.request.ChatMessageRequest;
-import com.example.ecommerce.domain.response.ChatMessageResponse;
+import com.example.ecommerce.domain.dto.chat.ChatMessageRequest;
+import com.example.ecommerce.domain.dto.chat.ChatMessageResponse;
 import com.example.ecommerce.repository.ChatMessageRepository;
 import com.example.ecommerce.repository.ConversationRepository;
 import com.example.ecommerce.repository.UserRepository;

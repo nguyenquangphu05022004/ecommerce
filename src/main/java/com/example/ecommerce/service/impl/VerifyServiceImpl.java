@@ -29,7 +29,7 @@ public class VerifyServiceImpl implements VerifyService {
     @Override
     public boolean update(String code, String password) {
         Optional<Verify> optional = verifyRepository.findByCode(code);
-        if(optional.isEmpty() || optional.get().isExpired()) {
+        if(optional.isEmpty() || !optional.get().isExpired()) {
             return false;
         }
         Verify verify = optional.get();

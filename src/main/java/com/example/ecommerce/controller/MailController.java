@@ -1,6 +1,6 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.dto.EmailDetails;
+import com.example.ecommerce.domain.dto.utilize.EmailDetails;
 import com.example.ecommerce.service.EmailService;
 import com.example.ecommerce.utils.EmailUtils;
 import com.example.ecommerce.utils.SystemUtils;
@@ -29,7 +29,7 @@ public class MailController {
                 .build().toString();
         EmailDetails emailDetails = EmailDetails.builder()
                 .recipient(email)
-                .msgBody(EmailUtils.bodyMessageForgotPassword(url))
+                .linkVerify(url)
                 .subject(EmailUtils.FORGOT_PASSWORD)
                 .code(code)
                 .build();

@@ -1,7 +1,7 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.dto.BasketDto;
-import com.example.ecommerce.dto.BasketRequest;
+import com.example.ecommerce.domain.dto.product.BasketDto;
+import com.example.ecommerce.domain.dto.product.BasketRequest;
 import com.example.ecommerce.service.impl.BasketServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
