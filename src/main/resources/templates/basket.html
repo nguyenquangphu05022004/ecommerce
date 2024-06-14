@@ -27,25 +27,25 @@
             <tr th:each="basket: ${baskets}" th:id="${basket.id}">
                 <th scope="row">
                     <div class="d-flex align-items-center">
-                        <img th:if="${basket.stockResponse.images.size == 0}"
+                        <img th:if="${basket.stock.images.size == 0}"
                              src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
                              class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
-                        <img th:unless="${basket.stockResponse.images.size == 0}"
-                             th:src="@{/{shortUrl}/{fileName}(shortUrl=${basket.stockResponse.images.get(0).shortUrl}, fileName=${basket.stockResponse.images.get(0).name})}"
+                        <img th:unless="${basket.stock.images.size == 0}"
+                             th:src="@{/{shortUrl}/{fileName}(shortUrl=${basket.stock.images.get(0).shortUrl}, fileName=${basket.stock.images.get(0).name})}"
                              class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
                     </div>
                 </th>
                 <td>
-                    <p class="mb-0 mt-4" th:text="${basket.stockResponse.productResponse.name}"></p>
+                    <p class="mb-0 mt-4" th:text="${basket.stock.product.language.nameVn}"></p>
                 </td>
                 <td>
                     <p class="mb-0 mt-4">
-                        [[${basket.stockResponse.decoration.color != null ? basket.stockResponse.decoration.color + ' - ' : '' }]]
-                        [[${basket.stockResponse.decoration.size != null ? basket.stockResponse.decoration.size  : '' }]]
+                        [[${basket.stock.decoration.color != null ? basket.stock.decoration.color + ' - ' : '' }]]
+                        [[${basket.stock.decoration.size != null ? basket.stock.decoration.size  : '' }]]
                     </p>
                 </td>
                 <td>
-                    <p class="mb-0 mt-4" th:text="${basket.stockResponse.formatPrice}"></p>
+                    <p class="mb-0 mt-4" th:text="${basket.stock.formatPrice}"></p>
                 </td>
                 <td>
                     <div class="input-group quantity mt-4" style="width: 100px;">
@@ -83,7 +83,7 @@
                 </td>
                 <td th:id="${'productQuantity' + basket.id + 'basket'}">
                     <a
-                            th:href="@{/orders/product/{productName}?numberOfProduct={numberOfProduct}&stockId={stockId}(productName=${basket.stockResponse.productResponse.name}, stockId = ${basket.stockResponse.id}, numberOfProduct=${basket.quantity})}"
+                            th:href="@{/orders/product/{productName}?numberOfProduct={numberOfProduct}&stockId={stockId}(productName=${basket.stock.product.language.nameVn}, stockId = ${basket.stock.id}, numberOfProduct=${basket.quantity})}"
                             class="btn btn-md rounded-circle bg-light border mt-4">
                         <i class="fab fa-btc"></i>
                     </a>

@@ -19,7 +19,7 @@ public class EvaluationDto extends BaseDto {
     private String content;
     private UserResponseInfo user;
     private List<ImageDto> images =new ArrayList<>();
-
+    private ProductDto product;
     public String getFormatDate(){
         return SystemUtils.getFormatDate(getModifiedDate(), "dd-MM-yyyy HH:mm:ss");
     }

@@ -19,9 +19,7 @@ import java.util.List;
 public class VendorDto extends BaseDto {
     private String shopName;
     private UserResponseInfo user;
-    private List<ProductDto> products = new ArrayList<>();
     private Integer perMoneyDelivery;
-    private CouponDto couponDto;
 
     public String getFormatMoneyDelivery() {
         return SystemUtils.getFormatNumber(perMoneyDelivery);

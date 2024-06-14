@@ -24,8 +24,11 @@ public class Order extends Base{
     private Payment payment;
     @OneToOne(mappedBy = "order")
     private Bill bill;
+
+    @ManyToOne
+    @JoinColumn(name = "coupon_id")
+    private Coupon coupon;
     private boolean approval;
-    private int couponPercent;
     private boolean purchased;
     private boolean shipStatus;
 }

@@ -18,6 +18,7 @@ public class CouponDto extends BaseDto {
     private String content;
     private LocalDateTime start;
     private LocalDateTime end;
+    public VendorResponseCoupon vendor;
     private boolean isExpired;
     //check current day is event start
     public String getFormatStart() {
@@ -25,5 +26,11 @@ public class CouponDto extends BaseDto {
     }
     public String getFormatEnd() {
         return SystemUtils.getFormatDate(end, "dd-MM-yyyy HH:mm:ss");
+    }
+    @Getter
+    @Setter
+    public static class VendorResponseCoupon {
+        private Long id;
+        private String shopName;
     }
 }

@@ -64,7 +64,7 @@
                                         th:data-bs-target="${'#modal-code-' + coupon.id}">Nhận ngay
                                 </button>
                             </div>
-                            <div th:unless="${coupon.expired == false}">
+                            <div th:unless="${coupon.isExpired == false}">
                                 <span class="text-danger">Sự kiện chưa bắt đầu/kết thúc.</span>
                             </div>
 

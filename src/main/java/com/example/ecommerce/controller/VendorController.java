@@ -58,7 +58,7 @@ public class VendorController {
     @PostMapping("/vendor/product/{productId}/coupon")
     @ResponseBody
     public CouponDto checkCouponExistsOrValid(@PathVariable("productId") Long productId,
-                                                  @RequestParam("couponCode") String couponCode) {
+                                              @RequestParam("couponCode") String couponCode) {
         return couponService.findByCodeAndProductId(couponCode, productId);
     }
 

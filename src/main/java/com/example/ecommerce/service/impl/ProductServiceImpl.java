@@ -3,17 +3,18 @@ package com.example.ecommerce.service.impl;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.Product;
 import com.example.ecommerce.domain.Vendor;
+import com.example.ecommerce.domain.dto.ENUM.SortProductType;
 import com.example.ecommerce.domain.dto.product.ProductDto;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IProductService;
+import com.example.ecommerce.utils.SortUtils;
 import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +33,7 @@ public class ProductServiceImpl implements IProductService {
     public List<ProductDto> records() {
         List<Product> products = productRepository.findAll();
         return products.stream()
-                .map(product ->mapToDto(product))
+                .map(product -> mapToDto(product))
                 .collect(Collectors.toList());
     }
 
@@ -81,80 +82,9 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductDto> search(String query, Long categoryId,
-                                   Long vendorId, Integer startPrice,
-                                   Integer endPrice, int page) {
-        Pageable paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
-        Page<Product> pages = null;
-        if (vendorId != null) {
-            if (query == null && categoryId == 0 && startPrice == 0 && endPrice == 0) {
-                pages = productRepository.findAllByVendorId(vendorId, paging);
-            } else if (query == null && categoryId == 0 && startPrice != 0 && endPrice != 0) {
-                pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndVendorId(vendorId, startPrice, endPrice, paging);
-            } else if (query == null && categoryId != null) {
-                if (startPrice != 0 && endPrice != 0) {
-                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndCategoryIdAndVendorId(vendorId, categoryId, startPrice, endPrice, paging);
-                } else {
-                    pages = productRepository.findAllByCategoryIdAndVendorId(vendorId, categoryId, paging);
-                }
-            } else if (query != null && categoryId == 0) {
-                if (startPrice != 0 && endPrice != 0) {
-                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndVendorId(vendorId, query, startPrice, endPrice, paging);
-                } else {
-                    pages = productRepository.findAllByProductNameAndVendorId(vendorId, query, paging);
-                }
-            } else if (query != null && categoryId != 0) {
-                if (startPrice != 0 && endPrice != 0) {
-                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndCategoryIdAndVendorId(vendorId, query, categoryId, startPrice, endPrice, paging);
-                } else {
-                    pages = productRepository.findAllByProductNameAndCategoryIdAndVendorId(vendorId, query, categoryId, paging);
-                }
-            }
-        } else {
-            if (query == null && categoryId == 0 && startPrice != 0 && endPrice != 0) {
-                pages = productRepository.findAllByPriceBetweenStartPriceAndEndPrice(startPrice, endPrice, paging);
-            } else if (query == null && categoryId != null) {
-                if (startPrice != 0 && endPrice != 0) {
-                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndCategoryId(categoryId, startPrice, endPrice, paging);
-                } else {
-                    pages = productRepository.findAllByCategoryId(categoryId, paging);
-                }
-            } else if (query != null && categoryId == 0) {
-                if (startPrice != 0 && endPrice != 0) {
-                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductName(query, startPrice, endPrice, paging);
-                } else {
-                    pages = productRepository.findAllByProductName(query, paging);
-                }
-            } else if (query != null && categoryId != null) {
-                if (startPrice != 0 && endPrice != 0) {
-                    pages = productRepository.findAllByPriceBetweenStartPriceAndEndPriceAndProductNameAndCategoryId(query, categoryId, startPrice, endPrice, paging);
-                } else {
-                    pages = productRepository.findAllByProductNameAndCategoryId(query, categoryId, paging);
-                }
-            }
-        }
-        SystemUtils.totalPage = pages.getTotalPages();
-        List<Product> products = pages.getContent();
-        return products.stream()
-                .map((entity) -> mapToDto(entity))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<ProductDto> findAllByVendor() {
         String username = SecurityUtils.username();
         return productRepository.findAllByVendorUserUsername(username)
-                .stream()
-                .map(e -> mapToDto(e))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ProductDto> findAllByVendor(Long vendorId, Integer page) {
-        Pageable paging = PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM);
-        Page<Product> productPages = productRepository.findAllByVendorId(vendorId, paging);
-        SystemUtils.totalPage = productPages.getTotalPages();
-        return productPages.getContent()
                 .stream()
                 .map(e -> mapToDto(e))
                 .collect(Collectors.toList());
@@ -178,9 +108,51 @@ public class ProductServiceImpl implements IProductService {
 //        return billRepository.existsByOrderBillStatusAndOrderProductIdAndOrderUserUsername(Status.SUCCESS,productId, username);
     }
 
+
+    @Override
+    public List<ProductDto> searchProduct(Long categoryId,
+                                          Long vendorId,
+                                          String query,
+                                          Integer startPrice,
+                                          Integer endPrice,
+                                          SortProductType sortProductType,
+                                          int page) {
+
+        Page<Product> productsPage = productRepository.findAll(PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM));
+        SystemUtils.totalPage = productsPage.getTotalPages();
+        List<ProductDto> products = productsPage.get()
+                .filter(product -> {
+                    if (categoryId <= 0) return true;
+                    return product.getCategory().getId() == categoryId;
+                })
+                .filter(product -> {
+                    if (vendorId <= 0) return true;
+                    return product.getVendor().getId() == vendorId;
+                })
+                .filter(product -> {
+                    String regex = ".*" + query + ".*";
+                    if (query.isBlank() || query.isEmpty()) return true;
+                    return (product.getLanguage().getNameEn().matches(regex) ||
+                            product.getLanguage().getNameVn().matches(regex));
+                })
+                .filter(product -> {
+                    if (startPrice == 0 && endPrice == 0) return true;
+                    return product.getStocks()
+                            .stream()
+                            .anyMatch(stock -> stock.getPrice() >= startPrice
+                                    && stock.getPrice() <= endPrice);
+                })
+                .map(product -> mapToDto(product))
+                .collect(Collectors.toList());
+        SortUtils.sortProduct(sortProductType, products);
+        return products;
+    }
+
     public ProductDto mapToDto(Product product) {
-        product.getStocks().stream().forEach(e -> {
+        product.getStocks().stream().forEach(e -> e.setProduct(null));
+        product.getEvaluations().stream().forEach(e -> {
             e.setProduct(null);
+            e.setUser(null);
         });
         return mapper.map(product, ProductDto.class);
     }

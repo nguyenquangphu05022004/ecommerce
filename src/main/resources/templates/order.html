@@ -89,13 +89,13 @@
                     >
                 </div>
                 <hr>
-                <p class="text-dark fw-bold h4">Shop: [[${stock.productResponse.vendorResponse.name}]]</p>
+                <p class="text-dark fw-bold h4">Shop: [[${stock.product.vendor.shopName}]]</p>
                 <div class="mt-5">
                     <input type="text"
                            class="border-0 border-bottom rounded me-5 mb-4"
                            id="coupon"
                            placeholder="Coupon Code">
-                    <button th:onclick="checkCoupon([[${stock.id}]])" class="btn border-secondary rounded-pill text-primary" type="button">Apply Coupon</button>
+                    <button th:onclick="checkCoupon([[${stock.product.id}]])" class="btn border-secondary rounded-pill text-primary" type="button">Apply Coupon</button>
                 </div>
                 <div class="table-responsive">
                     <table class="table">
@@ -120,14 +120,14 @@
                                     <img th:unless="${stock.images.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${stock.images.get(0).shortUrl}, fileName=${stock.images.get(0).name})}" class="img-fluid" alt="">
                                 </div>
                             </th>
-                            <td class="py-5" th:text="${stock.productResponse.name}"></td>
+                            <td class="py-5" th:text="${stock.product.language.nameVn}"></td>
                             <td class="py-5">
                                 [[${stock.decoration.color != null ? stock.decoration.color + ' - ' : '' }]]
                                 [[${stock.decoration.size != null ? stock.decoration.size  : '' }]]
                             </td>
                             <td class="py-5" th:text="${stock.formatPrice}"></td>
                             <td class="py-5">[[${param.numberOfProduct}]]</td>
-                            <td class="py-5">[[${stock.productResponse.vendorResponse.formatMoneyDelivery}]]</td>
+                            <td class="py-5">[[${stock.product.vendor.formatMoneyDelivery}]]</td>
                             <td class="py-5" id="coupon-decrease">0 %</td>
                             <td class="py-5">[[${totalPrice}]]</td>
                             <td class="py-5" >
@@ -196,6 +196,7 @@
             stockId: stockId,
             payment: form.elements["delivery"].value,
             quantity: numberOfProduct[0],
+            couponId: document.getElementById('value-id-coupon').value
         }
         console.log(order)
         $.ajax({

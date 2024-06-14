@@ -170,8 +170,10 @@
                         <p class="text-dark fs-5 fw-bold mb-0">Giá: ${product.formatPrice}</p>
                     </div>
                     <div class="d-flex justify-content-between flex-lg-wrap mb-4">
-                        <a href="/shop/vendor/${product.vendor.id}/search"
-                           class="text-dark fs-5 fw-bold mb-0">Shop:
+                        <a
+                            onclick="searchByVendorId(${product.vendor.id})"
+                            style="cursor: pointer;"
+                           class="fs-5 fw-bold mb-0">Shop:
                             ${product.vendor.shopName}</a>
                     </div>
                     <div class="row text-center">
@@ -212,70 +214,36 @@
     }
 
     function getPage(page) {
-        console.log(getHrefSearch(getDateSearch(), page))
-        let path = document.location.pathname;
-        if(path.includes("products")) {
-            window.location.href = getHrefSearch(getDateSearch(), page, 1)
-        } else {
-            window.location.href = getHrefSearch(getDateSearch(), page, 0)
-        }
+        const vendor = [[${vendorId}]] === null ? '0' : [[${vendorId}]]
+        const sort = [[${sortProductType}]] === null ? 'DEFAULT' : [[${sortProductType}]];
+        window.location.href = getHrefSearch(getDateSearch(), page, vendor, sort)
     }
-
+    function searchByVendorId(vendor) {
+        const page = parseInt([[${page}]])
+        const sort = [[${sortProductType}]] === null ? 'DEFAULT' : [[${sortProductType}]];
+        let url = document.location.href;
+        url = getHrefSearch(getDateSearch(), page, vendor, sort)
+        window.location.href = url;
+    }
     function searchProductByCondittion() {
-        const path = document.location.search;
-        if(path.includes("page")) {
-            const num =path.charAt(6) + "";
-            if((typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num)) {
-                window.location.href = getHrefSearch(getDateSearch(), parseInt(num) - 1, 1)
-            } else {
-                alert("Page invalid: " + num);
-            }
-        } else {
-            window.location.href = getHrefSearch(getDateSearch(), 0, 1)
-        }
+        const page = parseInt([[${page}]])
+        const vendor = [[${vendorId}]] === null ? '0' : [[${vendorId}]]
+        const sort = [[${sortProductType}]] === null ? 'DEFAULT' : [[${sortProductType}]];
+        window.location.href = getHrefSearch(getDateSearch(), page, vendor, sort)
     }
-
-    function getHrefSearch(dataSearch, page, searchByCondittion) {
+    function getHrefSearch(dataSearch, page, vendorId, sort) {
+        let path = ''
         const host = document.location.origin
-        let path = document.location.pathname;
-        let search = ''
-         if(searchByCondittion == 0) {
-            path=`/shop`
-            search = `?page=${page + 1}`;
-        }
-        else if (path.includes("vendor")) {
-            search = `?page=${page + 1}&categoryId=${dataSearch.categoryId}&query=${dataSearch.query}&startPrice=${dataSearch.startPrice}&endPrice=${dataSearch.endPrice}`;
-        } else {
-            path = "/shop/products/search";
-             search = `?page=${page + 1}&categoryId=${dataSearch.categoryId}&query=${dataSearch.query}&startPrice=${dataSearch.startPrice}&endPrice=${dataSearch.endPrice}`;
-        }
-        let url = host + path + search;
+        path = `/shop/search/products?categoryId=${dataSearch.categoryId}&query=${dataSearch.query}&startPrice=${dataSearch.startPrice}&endPrice=${dataSearch.endPrice}&page=${page + 1}&vendorId=${vendorId}&sortProductType=${sort}`
+        let url = host + path;
         return url;
 
     }
-
     function sortProduct() {
-        const dataSort = [[${products}]];
-        const type = document.getElementById("sort-product").value;
-        const url = new URL(`[(@{/products/sort})]`, location).href + '?type=' + type;
-        $.ajax({
-            type:'post',
-            url: url,
-            data: JSON.stringify(dataSort),
-            headers: {
-                "Content-Type": "application/json"
-            },
-            success:function (data) {
-                let html = ``;
-                data.forEach(product => {
-                    html += getElementProduct(product);
-                })
-                $("#products").html(html);
-            },
-            error: function () {
-                alert("error sort product")
-            }
-        })
+        const sort = document.getElementById("sort-product").value;
+        const vendor = [[${vendorId}]] === null ? '0' : [[${vendorId}]]
+        const page = parseInt([[${page}]])
+        window.location.href=getHrefSearch(getDateSearch(), page, vendor, sort);
     }
 </script>
 </body>

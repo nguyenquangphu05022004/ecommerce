@@ -36,7 +36,7 @@ public class UserServiceImpl implements IUserService {
     public List<UserResponseInfo> records() {
         return userRepository.findAll()
                 .stream()
-                .map(e -> mapper.map(e, UserResponseInfo.class))
+                .map(e -> mapToDto(e))
                 .collect(Collectors.toList());
     }
 
@@ -54,7 +54,7 @@ public class UserServiceImpl implements IUserService {
     public UserResponseInfo findById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("UserId", id + ""));
-        return mapper.map(user, UserResponseInfo.class);
+        return mapToDto(user);
     }
 
     @Override
@@ -71,14 +71,14 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserResponseInfo findUserByUsername(String username) {
-        return mapper.map(userRepository.findByUsername(username).get(), UserResponseInfo.class);
+        return mapToDto(userRepository.findByUsername(username).get());
     }
 
     @Override
     public List<UserResponseInfo> getListUserByRole(Role role) {
         List<User> users = userRepository.findAllByRole(role);
         List<UserResponseInfo> userResponseInfos = users.stream()
-                .map(e -> mapper.map(e, UserResponseInfo.class))
+                .map(e -> mapToDto(e))
                 .collect(Collectors.toList());
         return userResponseInfos;
     }
@@ -129,5 +129,11 @@ public class UserServiceImpl implements IUserService {
     public UserInboxResponse findByUsername(String username) {
         User user = userRepository.findByUsername(username).get();
         return UserMapper.maptoResponse(user);
+    }
+    private UserResponseInfo mapToDto(User user) {
+        user.getEvaluations().stream()
+                .forEach(eval -> eval.setUser(null));
+        return mapper.map(user, UserResponseInfo.class);
+
     }
 }

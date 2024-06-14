@@ -9,9 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
-    @Query("select c from Coupon c inner " +
-            "join Product p on c.vendor.id = p.vendor.id where p.id = :productId and c.code = :code")
-    Optional<Coupon> findByCodeAndProductIdAndExpiredIsFalse(@Param("code") String code,@Param("productId") Long productId);
+    @Query("select c from Coupon c inner join Vendor v on c.vendor.id = v.id inner join " +
+            "Product p on p.vendor.id = v.id where p.id = :productId and c.code = :code")
+    Optional<Coupon> findByCodeAndProductId(@Param("code") String code,
+                                            @Param("productId") Long productId);
     List<Coupon> findAllByVendorIdOrderByStartDesc(Long vendorId);
     List<Coupon> findAllByOrderByStartDesc();
 }

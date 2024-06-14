@@ -22,4 +22,5 @@ public class UserResponseInfo extends BaseDto {
     private ImageDto avatar;
     private Role role;
     private UserContactDetails userContactDetails;
+    private List<EvaluationDto> evaluations = new ArrayList<>();
 }

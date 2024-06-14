@@ -17,10 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class Vendor extends Base{
-    /*
-    vendor:
-        id, nameShop, listProduct, perMoneyDelivery
-     */
     @Column(columnDefinition = "nvarchar(100)",nullable = false)
     private String shopName;
     @OneToOne(cascade = CascadeType.ALL)

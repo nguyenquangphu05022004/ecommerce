@@ -5,6 +5,7 @@ import com.example.ecommerce.converter.CouponConverterImpl;
 import com.example.ecommerce.domain.Coupon;
 import com.example.ecommerce.domain.Vendor;
 import com.example.ecommerce.domain.dto.product.CouponDto;
+import com.example.ecommerce.exception.ExpireCodeException;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.CouponRepository;
 import com.example.ecommerce.repository.VendorRepository;
@@ -55,15 +56,14 @@ public class CouponServiceImpl implements ICouponService {
 
     @Override
     public CouponDto findByCodeAndProductId(String code, Long productId) {
-        Optional<Coupon> opCoupon = couponRepository
-                .findByCodeAndProductIdAndExpiredIsFalse(
-                        code,
+        Coupon coupon = couponRepository.findByCodeAndProductId(
+                        code.trim(),
                         productId
-                );
-        if (opCoupon.isEmpty() || opCoupon.get().couponIsExpired()) {
-            throw new NotFoundException("Code", code);
+                )
+                .orElseThrow(() -> new NotFoundException("CouponCode", code));
+        if (coupon.couponIsExpired()) {
+            throw new ExpireCodeException("CouponCode", code);
         } else {
-            Coupon coupon = opCoupon.get();
             return mapper.map(coupon, CouponDto.class);
         }
     }
@@ -71,7 +71,10 @@ public class CouponServiceImpl implements ICouponService {
 
     private List<CouponDto> toDto(List<Coupon> coupons) {
         return coupons.stream()
-                .map(e -> mapper.map(e, CouponDto.class))
+                .map(e -> mapper.map(e, CouponDto.class)
+                        .toBuilder()
+                        .isExpired(e.couponIsExpired())
+                        .build())
                 .collect(Collectors.toList());
     }
 }

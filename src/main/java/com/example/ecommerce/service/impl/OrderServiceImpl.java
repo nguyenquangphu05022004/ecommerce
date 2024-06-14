@@ -1,6 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.domain.Coupon;
 import com.example.ecommerce.domain.Order;
 import com.example.ecommerce.domain.dto.ENUM.Status;
 import com.example.ecommerce.domain.Stock;
@@ -63,11 +64,19 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
         user.setUserContactDetails(orderDto.getContactDetails());
         Stock stock = stockRepository.findById(orderDto.getStockId())
                 .orElseThrow(() -> new NotFoundException("StockId", orderDto.getStockId() + ""));
+        Coupon coupon = orderDto.getCouponId() != null ?
+                couponRepository
+                        .findById(orderDto.getCouponId())
+                        .orElseThrow()
+                : null;
+
+
         Order order = Order.builder()
                 .stock(stock)
                 .payment(orderDto.getPayment())
                 .quantity(orderDto.getQuantity())
                 .user(user)
+                .coupon(coupon)
                 .build();
         orderRepository.save(order);
         basketRepository.deleteByStockIdAndUserId(stock.getId(), user.getId());
