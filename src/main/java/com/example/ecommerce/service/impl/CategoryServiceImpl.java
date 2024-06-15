@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements ICategoryService {
     public List<CategoryDto> records() {
         return categoryRepository.findAll()
                 .stream()
-                .map(category -> mapper.map(category, CategoryDto.class))
+                .map(category -> mapToDto(category))
                 .collect(Collectors.toList());
     }
 
@@ -53,7 +53,7 @@ public class CategoryServiceImpl implements ICategoryService {
                 .orElseThrow(
                         () -> new NotFoundException("CategoryId", id + "")
                 );
-        return mapper.map(category, CategoryDto.class);
+        return mapToDto(category);
     }
 
     @Transactional
@@ -75,7 +75,7 @@ public class CategoryServiceImpl implements ICategoryService {
                 Image image = imageService.uploadFile(request.getFile(), SystemUtils.TAG);
                 category.setImage(image);
             }
-            return mapper.map(category, CategoryDto.class);
+            return mapToDto(category);
         } else {
             Category category = Category.builder()
                     .name(request.getName())
@@ -85,7 +85,14 @@ public class CategoryServiceImpl implements ICategoryService {
                 category.setImage(image);
             }
             category = categoryRepository.save(category);
-            return mapper.map(category, CategoryDto.class);
+            return mapToDto(category);
         }
+    }
+
+    private CategoryDto mapToDto(Category category) {
+        return mapper.map(category, CategoryDto.class)
+                .toBuilder()
+                .numberOfProduct(category.getProducts().size())
+                .build();
     }
 }

@@ -154,7 +154,14 @@ public class ProductServiceImpl implements IProductService {
             e.setProduct(null);
             e.setUser(null);
         });
-        return mapper.map(product, ProductDto.class);
+        return mapper.map(product, ProductDto.class)
+                .toBuilder()
+                .numberOfProductSold(
+                        product
+                        .getProductSeller()
+                        .getNumberOfProductsSold()
+                )
+                .build();
     }
 
 }

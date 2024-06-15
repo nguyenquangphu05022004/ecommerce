@@ -24,7 +24,6 @@ public class TrackProductServiceImpl implements ITrackProductSellerService {
     public List<TrackProductSellerDto> getListTopNumberByNumberOfSold( int page, int size) {
         Pageable paging = PageRequest.of(page - 1, size,
                 Sort.by("numberOfProductsSold").descending());
-        TrackProductSellerDto st = null;
         List<TrackProductSeller> trackProductSellers = trackProductSellerRepository
                 .findAll(paging).getContent();
         return trackProductSellers.stream()

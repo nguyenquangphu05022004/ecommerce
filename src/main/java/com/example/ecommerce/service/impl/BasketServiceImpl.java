@@ -49,7 +49,7 @@ public class BasketServiceImpl implements IBasketService {
 
 
     @Override
-    public void saveOrUpdate(BasketRequest basketRequest) {
+    public BasketDto saveOrUpdate(BasketRequest basketRequest) {
         Basket basket = null;
         User user = userRepository.findByUsername(SecurityUtils.username()).get();
         Optional<Basket> optionBasket = basketRepository
@@ -58,22 +58,19 @@ public class BasketServiceImpl implements IBasketService {
                                 user.getId(),
                                 basketRequest.getStockId()
                         );
-
         if (optionBasket.isPresent()) {
             basket = optionBasket.get();
-            if(basket.getTotalPrice() <= 0) throw new RuntimeException("Total price is negative");
-            else {
-                if(basketRequest.getOperator() == '+') {
-                    basket = basket.toBuilder()
-                            .quantity(basket.getQuantity() + 1)
-                            .build();
-                } else {
-                    basket = basket.toBuilder()
-                            .quantity(basket.getQuantity() - 1)
-                            .build();
-                }
-                basketRepository.save(basket);
+            if (basketRequest.getOperator() == '+') {
+                basket = basket.toBuilder()
+                        .quantity(basket.getQuantity() + 1)
+                        .build();
+            } else {
+                if (basket.getQuantity() == 1) throw new RuntimeException("Number Of Product not zero");
+                basket = basket.toBuilder()
+                        .quantity(basket.getQuantity() - 1)
+                        .build();
             }
+            basketRepository.save(basket);
         } else {
             basket = Basket.builder()
                     .quantity(1)
@@ -84,5 +81,6 @@ public class BasketServiceImpl implements IBasketService {
                     .build();
             basketRepository.save(basket);
         }
+        return mapper.map(basket, BasketDto.class);
     }
 }

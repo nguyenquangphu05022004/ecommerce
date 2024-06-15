@@ -70,43 +70,39 @@
     function getAllOrder() {
         const statusSelect = document.getElementById("status");
         const statusValue = statusSelect.value;
-        let theUrl = "";
-        if (statusValue === "ALL") {
-            theUrl = `[(@{/vendor/orders/product})]`;
-        } else {
-            theUrl = `[(@{/vendor/orders/product/${statusValue}})]`;
-        }
+        let theUrl = `[(@{/vendor/orders/product?selectFilterOrder=${statusValue}})]`;
         callApi('get', " ", theUrl, (value) => {
             let html = '';
+            console.log(value)
             if(value.length > 0) {
                 value.forEach(order => {
                     let src = "";
-                    if(order.stockResponse.images.length > 0) {
-                        src=`/${order.stockResponse.images[0].shortUrl}/${order.stockResponse.images[0].name}`
+                    if(order.stock.images.length > 0) {
+                        src=`/${order.stock.images[0].shortUrl}/${order.stock.images[0].name}`
                     } else {
                         src = "https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
                     }
                     const buttonApproval = order.approval === false ? `<button class="btn btn-primary" onClick="approvalOrder(${order.id})">Xác nhận</button>` : 'Đang tiến hành'
                     html += `<tr>
                             <th scope="col">${order.id}</th>
-                            <th scope="col">${order.stockResponse.productResponse.name}</th>
+                            <th scope="col">${order.stock.product.language.nameVn}</th>
                             <th scope="col">
                                 <img src="${src}" height="100" class="rounded-top" >
                             </th>
-                             <th scope="col">${order.stockResponse.decoration.color} - ${order.stockResponse.decoration.size}</th>
-                            <th scope="col">${order.stockResponse.formatPrice}</th>
+                             <th scope="col">${order.stock.decoration.color} - ${order.stock.decoration.size}</th>
+                            <th scope="col">${order.stock.formatPrice}</th>
                             <th scope="col">${order.quantity}</th>
                             <th scope="col">${order.couponPercent != null ? order.couponPercent : "0"} %</th>
                             <th scope="col">${order.formatTotalPrice}</th>
                             <th scope="col">${order.approval === false ? 'Chưa nhận đơn' : 'Đã nhận đơn'}</th>
                             <th scope="col">${order.payment === 'PAY_BY_BANK' ? 'Thanh toán qua ngân hàng' : 'Thanh toán tại nhà'}</th>
                             <th scope="col">${order.purchased === true ? 'Đã thanh toán' : 'Chưa thanh toán'}</th>
-                            <th scope="col"><button class="btn btn-primary" onclick="checkStockOfProduct(${order.stockResponse.id})">Check</button></th>
+                            <th scope="col"><button class="btn btn-primary" onclick="checkStockOfProduct(${order.stock.id})">Check</button></th>
                             <th scope="col">${buttonApproval}</th>
                         </tr>`
                 })
+                $("#tableOfOrder").html(html)
             }
-            $("#tableOfOrder").html(html)
         })
     }
 

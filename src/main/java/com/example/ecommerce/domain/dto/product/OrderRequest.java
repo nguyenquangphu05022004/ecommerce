@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OrderRequest {
-    private UserContactDetails contactDetails;
+    private UserContactDetails userContactDetails;
     private Long stockId;
     private Integer quantity;
     private Payment payment;

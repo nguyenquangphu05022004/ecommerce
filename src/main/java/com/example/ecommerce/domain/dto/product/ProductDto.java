@@ -18,7 +18,7 @@ public class ProductDto extends BaseDto {
     private String description;
     private MapName language;
     private List<EvaluationDto> evaluations = new ArrayList<>();
-    private TrackProductSellerResponse productSeller;
+    private int numberOfProductSold;
     private List<StockResponse> stocks = new ArrayList<>();
 
     public Integer getAverageEvaluation() {

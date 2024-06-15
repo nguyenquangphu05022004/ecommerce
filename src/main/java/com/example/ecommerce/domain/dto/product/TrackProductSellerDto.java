@@ -15,18 +15,5 @@ import java.util.List;
 @SuperBuilder(toBuilder = true)
 public class TrackProductSellerDto extends BaseDto {
     private Integer numberOfProductsSold;
-    private ProductResponseTrack product;
-    @Getter
-    @Setter
-    public static class ProductResponseTrack {
-        private Long id;
-        private MapName language;
-        private List<StockResponseTrack> stocks;
-        @Getter
-        @Setter
-        public static class StockResponseTrack {
-            private Integer price;
-        }
-    }
-
+    private ProductDto product;
 }

@@ -32,19 +32,15 @@ public class BasketController {
     }
 
     @PostMapping("/baskets")
-    @ResponseStatus(HttpStatus.OK)
-    public void createBasket(@RequestBody BasketRequest basketDto, HttpServletResponse response) {
-        basketService.saveOrUpdate(basketDto);
+    @ResponseBody
+    public BasketDto createBasket(@RequestBody BasketRequest request,
+                             HttpServletResponse response) {
+        var basket = basketService.saveOrUpdate(request);
         Cookie numberOfBasketCookie = new Cookie("basket", basketService.count().toString());
         numberOfBasketCookie.setMaxAge(10 * 365 * 24 * 60 * 60);
         numberOfBasketCookie.setPath("/");
         response.addCookie(numberOfBasketCookie);
-    }
-
-    @PutMapping("/baskets")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateBasket(@RequestBody BasketRequest basketDto) {
-         basketService.saveOrUpdate(basketDto);
+        return basket;
     }
     @GetMapping("/baskets/{basketId}")
     @ResponseBody

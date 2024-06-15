@@ -6,7 +6,7 @@ import com.example.ecommerce.domain.dto.product.BasketRequest;
 import java.util.List;
 
 public interface IBasketService {
-    void saveOrUpdate(BasketRequest basketRequest);
+    BasketDto saveOrUpdate(BasketRequest basketRequest);
     List<BasketDto> records();
     void delete(Long id);
     Long count();

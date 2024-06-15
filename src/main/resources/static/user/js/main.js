@@ -213,3 +213,21 @@ showChat.addEventListener('click', () => {
         showChat.innerText = 'Chat'
     }
 })
+
+function getTotalBasket() {
+    let cookieValue = "0";
+    let name = 'basket' + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            cookieValue = c.substring(name.length, c.length);
+            break;
+        }
+    }
+    document.getElementById("basket").innerHTML = cookieValue;
+}

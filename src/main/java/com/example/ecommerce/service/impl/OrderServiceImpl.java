@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderService {
+public class OrderServiceImpl implements IOrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final CouponRepository couponRepository;
@@ -61,7 +61,7 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
     @Transactional
     public OrderDto saveOrUpdate(OrderRequest orderDto) {
         User user = userRepository.findByUsername(SecurityUtils.username()).get();
-        user.setUserContactDetails(orderDto.getContactDetails());
+        user.setUserContactDetails(orderDto.getUserContactDetails());
         Stock stock = stockRepository.findById(orderDto.getStockId())
                 .orElseThrow(() -> new NotFoundException("StockId", orderDto.getStockId() + ""));
         Coupon coupon = orderDto.getCouponId() != null ?
@@ -69,7 +69,6 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
                         .findById(orderDto.getCouponId())
                         .orElseThrow()
                 : null;
-
 
         Order order = Order.builder()
                 .stock(stock)
@@ -109,21 +108,16 @@ public class OrderServiceImpl implements IGenericService<OrderDto>, IOrderServic
         order.setPurchased(true);
         orderRepository.save(order);
     }
-
-    @Override
-    public List<OrderDto> getAllOrder() {
-        return orderRepository.findAllByStockProductVendorUserUsername(
-                        SecurityUtils.username()
-                )
-                .stream()
-                .map(entity -> mapper.map(entity, OrderDto.class))
-                .collect(Collectors.toList());
-    }
-
     @Override
     public List<OrderDto> getAllOrder(SelectFilterOrder selectFilerOrder) {
         List<Order> orders = new ArrayList<>();
         switch (selectFilerOrder) {
+            case ALL:
+                orders = orderRepository
+                        .findAllByStockProductVendorUserUsername(
+                                SecurityUtils.username()
+                        );
+                break;
             case APPROVAL:
                 orders = orderRepository
                         .findAllByStockProductVendorUserUsernameAndApproval(

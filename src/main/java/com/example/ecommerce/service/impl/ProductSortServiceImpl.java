@@ -27,7 +27,7 @@ public class ProductSortServiceImpl implements ProductSortService {
     @Override
     public List<ProductDto> sortByNumberOfSeller(List<ProductDto> products) {
         Collections.sort(products, (ProductDto p1, ProductDto p2) -> {
-            return p2.getProductSeller().getNumberOfProductsSold() - p1.getProductSeller().getNumberOfProductsSold();
+            return p2.getNumberOfProductSold() - p1.getNumberOfProductSold();
         });
         return products;
     }

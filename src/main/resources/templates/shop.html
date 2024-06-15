@@ -143,6 +143,13 @@
         } else {
             src = "https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
         }
+        let rate = ``;
+        for (let j = 0; j < product.averageEvaluation; j++) {
+            rate += '<i class="fas fa-star text-primary"></i>';
+        }
+        for (let j = product.averageEvaluation; j < 5; j++) {
+            rate += '<i class="fas fa-star text-dark"></i>';
+        }
         return `<div class="col-md-6 col-lg-6 col-xl-4">
             <div class="rounded position-relative fruite-item">
                 <div class="fruite-img">
@@ -155,7 +162,13 @@
                      style="top: 10px; left: 10px;"
 
                 >
-                    Thể loại: ${product.category.name}
+                    ${product.category.name}
+                </div>
+                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
+                     style="top: 10px; right: 10px;"
+
+                >
+                    ${rate}
                 </div>
                 <div class="p-4 border border-secondary border-top-0 rounded-bottom">
                     <div class="col-12 text-truncate h4">
@@ -166,9 +179,10 @@
                             Mô tả: ${product.description}
                         </div>
                     </p>
-                    <div class="d-flex justify-content-between flex-lg-wrap mb-4">
+                    <div class="d-flex justify-content-between flex-lg-wrap mb-1">
                         <p class="text-dark fs-5 fw-bold mb-0">Giá: ${product.formatPrice}</p>
                     </div>
+                    <p class="mb-1" style="color: red; font-weight: bold">Đã bán: ${product.numberOfProductSold}</p>
                     <div class="d-flex justify-content-between flex-lg-wrap mb-4">
                         <a
                             onclick="searchByVendorId(${product.vendor.id})"
@@ -183,9 +197,10 @@
                                 Mua</a>
                         </div>
                         <div class="col-lg-6">
-                            <a href="##"
+                            <button
+                                onclick="addNewBasket(${product.stocks[0].id})"
                                class="btn border border-secondary rounded-pill px-3 text-primary w-100">
-                                Thêm</a>
+                                Thêm</button>
                         </div>
                     </div>
                 </div>
@@ -244,6 +259,31 @@
         const vendor = [[${vendorId}]] === null ? '0' : [[${vendorId}]]
         const page = parseInt([[${page}]])
         window.location.href=getHrefSearch(getDateSearch(), page, vendor, sort);
+    }
+
+    function addNewBasket(stockId) {
+        let theUrl = `[(@{/baskets})]`;
+        const url = new URL(theUrl, document.location);
+        const basket = {
+            "stockId": stockId,
+            "operator": '+'
+        }
+        $.ajax({
+            type: "post",
+            url: url.href,
+            data: JSON.stringify(basket),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            success: function (data) {
+                getTotalBasket()
+                alert("Đã thêm vào giỏ hàng!")
+
+            },
+            error: function () {
+                alert("Error")
+            }
+        })
     }
 </script>
 </body>

@@ -157,42 +157,13 @@
             <div class="col-lg-4 col-xl-3">
                 <div class="row g-4 fruite">
                     <div class="col-lg-12">
-                        <div class="input-group w-100 mx-auto d-flex mb-4">
-                            <input type="search" class="form-control p-3" placeholder="keywords"
-                                   aria-describedby="search-icon-1">
-                            <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
-                        </div>
                         <div class="mb-4">
-                            <h4>Categories</h4>
+                            <h4>Thể Loại</h4>
                             <ul class="list-unstyled fruite-categorie">
-                                <li>
+                                <li th:each="category: ${categories}">
                                     <div class="d-flex justify-content-between fruite-name">
-                                        <a href="#"><i class="fas fa-apple-alt me-2"></i>Apples</a>
-                                        <span>(3)</span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="d-flex justify-content-between fruite-name">
-                                        <a href="#"><i class="fas fa-apple-alt me-2"></i>Oranges</a>
-                                        <span>(5)</span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="d-flex justify-content-between fruite-name">
-                                        <a href="#"><i class="fas fa-apple-alt me-2"></i>Strawbery</a>
-                                        <span>(2)</span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="d-flex justify-content-between fruite-name">
-                                        <a href="#"><i class="fas fa-apple-alt me-2"></i>Banana</a>
-                                        <span>(8)</span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="d-flex justify-content-between fruite-name">
-                                        <a href="#"><i class="fas fa-apple-alt me-2"></i>Pumpkin</a>
-                                        <span>(5)</span>
+                                        <a th:href="@{/shop/search/products?categoryId={categoryId}(categoryId=${category.id})}"><i class="fas me-2"></i>[[${category.name}]]</a>
+                                        <span>([[${category.numberOfProduct}]])</span>
                                     </div>
                                 </li>
                             </ul>
@@ -320,8 +291,13 @@
                         <p class="text-truncate">[[${p.description}]]</p>
                         <div class="d-flex justify-content-between flex-lg-wrap">
                             <p class="text-dark fs-5 fw-bold">[[${p.formatPrice}]]</p>
-                            <a href="#" class="btn border border-secondary rounded-pill px-3 py-1 mb-4 text-primary"><i
-                                    class="fa fa-shopping-bag me-2 text-primary"></i>Thêm</a>
+                            <button
+                               th:onclick="addNewBasket([[${p.stocks.get(0).id}]])"
+                               class="btn border border-secondary rounded-pill px-3 py-1 mb-4 text-primary"><i
+                                    class="fa fa-shopping-bag me-2 text-primary"
+                            >
+
+                            </i>Thêm</button>
                         </div>
                     </div>
                 </div>
@@ -331,17 +307,9 @@
 </div>
 <!-- Single Product End -->
 <script th:inline="javascript">
-    function createBasket() {
-        const typeProduct = document.getElementsByName("type")
-        let stockId;
-        for(let i = 0; i < typeProduct.length; i++) {
-            if(typeProduct[i].checked) {
-                stockId = typeProduct[i].value; break;
-            }
-        }
+    function addNewBasket(stockId) {
         let theUrl = `[(@{/baskets})]`;
         const url = new URL(theUrl, document.location);
-        const formQuantity = document.getElementById("quantity")
         const basket = {
             "stockId": stockId,
             "operator": '+'
@@ -354,31 +322,24 @@
                 "Content-Type": "application/json"
             },
             success: function (data) {
-                // if(typeof data === 'string') {
-                //     window.location.href=new URL('[(@{/login})]', document.location).href;
-                // } else {
-                //     let cookieValue = "0";
-                //     let name = 'basket' + "=";
-                //     let decodedCookie = decodeURIComponent(document.cookie);
-                //     let ca = decodedCookie.split(';');
-                //     for(let i = 0; i <ca.length; i++) {
-                //         let c = ca[i];
-                //         while (c.charAt(0) == ' ') {
-                //             c = c.substring(1);
-                //         }
-                //         if (c.indexOf(name) == 0) {
-                //             cookieValue =  c.substring(name.length, c.length);
-                //             break;
-                //         }
-                //     }
-                //     document.getElementById("basket").innerHTML = cookieValue;
-                    alert("Đã thêm vào giỏ hàng!")
+                getTotalBasket()
+                alert("Đã thêm vào giỏ hàng!")
 
             },
             error: function () {
                 alert("Error")
             }
         })
+    }
+    function createBasket() {
+        const typeProduct = document.getElementsByName("type")
+        let stockId;
+        for(let i = 0; i < typeProduct.length; i++) {
+            if(typeProduct[i].checked) {
+                stockId = typeProduct[i].value; break;
+            }
+        }
+        addNewBasket(stockId)
     }
 
     function callApi(type, data, theUrl, success) {

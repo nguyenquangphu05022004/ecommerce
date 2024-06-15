@@ -7,17 +7,12 @@ import com.example.ecommerce.domain.dto.ENUM.SelectFilterOrder;
 
 import java.util.List;
 
-public interface IOrderService {
+public interface IOrderService extends IGenericService<OrderDto>{
     OrderDto saveOrUpdate(OrderRequest orderRequest);
     List<OrderDto> records(Status status);
     void approval(Long orderId);
     void updatePayment(Long orderId);
 
-    /**
-     *
-     * Method get list order that are created by user of vendor
-     */
-    List<OrderDto> getAllOrder();
     List<OrderDto> getAllOrder(SelectFilterOrder status);
 
 }

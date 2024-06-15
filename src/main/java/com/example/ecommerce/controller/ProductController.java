@@ -29,9 +29,8 @@ public class ProductController {
     @GetMapping("/vendor/products/add")
     public String getFormProduct(Model model) {
         ProductDto productDto = new ProductDto();
-        List<CategoryDto> categoryDtos = categoryService.records();
         model.addAttribute("product", productDto);
-        model.addAttribute("categories", categoryDtos);
+        model.addAttribute("categories", getListCategory());
         return "admin/product/create-products";
     }
 
@@ -59,6 +58,7 @@ public class ProductController {
                                  Model model) {
         ProductDto productDto = productService.findById(productId);
         boolean wasBoughtByUser = productService.productWasBoughtByUser(productId, SecurityUtils.username());
+        model.addAttribute("categories", getListCategory());
         model.addAttribute("evaluation", new EvaluationDto());
         model.addAttribute("was_bought", wasBoughtByUser);
         model.addAttribute("product", productDto);
@@ -108,17 +108,20 @@ public class ProductController {
             String sortProductType,
             Model model
     ) {
-        List<CategoryDto> categoryDtos = categoryService.records();
         model.addAttribute("vendorId", vendorId);
         model.addAttribute("products", productDtos);
         model.addAttribute("categoryId", categoryId);
-        model.addAttribute("categories", categoryDtos);
+        model.addAttribute("categories", getListCategory());
         model.addAttribute("keyword", query);
         model.addAttribute("totalPage", SystemUtils.totalPage);
         model.addAttribute("startPrice", startPrice);
         model.addAttribute("endPrice", endPrice);
         model.addAttribute("sortProductType", sortProductType);
         model.addAttribute("page", page - 1);
+    }
+
+    private List<CategoryDto> getListCategory() {
+        return categoryService.records();
     }
 
 }

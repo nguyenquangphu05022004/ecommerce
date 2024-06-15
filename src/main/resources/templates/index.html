@@ -163,13 +163,38 @@
                                 </div>
                                 <p class="mb-1 h4">${product.formatPrice}</p>
                                 <p class="mb-3">Đã bán: ${productSellers[i].numberOfProductsSold}</p>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i
-                                        class="fa fa-shopping-bag me-2 text-primary"></i>Thêm</a>
+                                <button onclick="addNewBasket(${product.stocks[0].id})"
+                                    class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                        class="fa fa-shopping-bag me-2 text-primary"></i>Thêm</button>
                             </div>
                         </div>
                     </div>
                 </div>`);
         }
+    }
+    function addNewBasket(stockId) {
+        let theUrl = `[(@{/baskets})]`;
+        const url = new URL(theUrl, document.location);
+        const basket = {
+            "stockId": stockId,
+            "operator": '+'
+        }
+        $.ajax({
+            type: "post",
+            url: url.href,
+            data: JSON.stringify(basket),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            success: function (data) {
+                getTotalBasket()
+                alert("Đã thêm vào giỏ hàng!")
+
+            },
+            error: function () {
+                alert("Error")
+            }
+        })
     }
 </script>
 </body>

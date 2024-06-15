@@ -19,5 +19,4 @@ public class UserInboxResponse {
     private String image;
     private Boolean active;
     private List<ConversationResponse> conversationResponses = new ArrayList<>();
-
 }

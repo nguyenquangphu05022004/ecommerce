@@ -7,6 +7,7 @@ import com.example.ecommerce.domain.dto.product.OrderDto;
 import com.example.ecommerce.domain.dto.product.OrderRequest;
 import com.example.ecommerce.domain.dto.product.StockResponse;
 import com.example.ecommerce.domain.dto.user.UserResponseInfo;
+import com.example.ecommerce.service.IOrderService;
 import com.example.ecommerce.service.IStockService;
 import com.example.ecommerce.service.IUserService;
 import com.example.ecommerce.service.impl.OrderServiceImpl;
@@ -23,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderServiceImpl orderService;
+    private final IOrderService orderService;
     private final IUserService userService;
     private final IStockService stockService;
 
@@ -85,12 +86,9 @@ public class OrderController {
     }
     @GetMapping("/vendor/orders/product")
     @ResponseBody
-    public List<OrderDto> getListOrder() {
-        return orderService.getAllOrder();
-    }
-    @GetMapping("/vendor/orders/product/{selectFilterOrder}")
-    @ResponseBody
-    public List<OrderDto> getListOrder(@PathVariable("selectFilterOrder") SelectFilterOrder selectFilerOrder) {
-        return orderService.getAllOrder(selectFilerOrder);
+    public List<OrderDto> getListOrder(@RequestParam("selectFilterOrder")
+                                           SelectFilterOrder selectFilerOrder) {
+        List<OrderDto> orders = orderService.getAllOrder(selectFilerOrder);
+        return orders;
     }
 }
