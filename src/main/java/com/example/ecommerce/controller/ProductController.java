@@ -5,6 +5,7 @@ import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.dto.ENUM.SortProductType;
 import com.example.ecommerce.domain.dto.product.CategoryDto;
 import com.example.ecommerce.domain.dto.product.EvaluationDto;
+import com.example.ecommerce.domain.dto.product.EvaluationRequest;
 import com.example.ecommerce.domain.dto.product.ProductDto;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.impl.CategoryServiceImpl;
@@ -59,7 +60,7 @@ public class ProductController {
         ProductDto productDto = productService.findById(productId);
         boolean wasBoughtByUser = productService.productWasBoughtByUser(productId, SecurityUtils.username());
         model.addAttribute("categories", getListCategory());
-        model.addAttribute("evaluation", new EvaluationDto());
+        model.addAttribute("evaluation", new EvaluationRequest());
         model.addAttribute("was_bought", wasBoughtByUser);
         model.addAttribute("product", productDto);
         model.addAttribute("products", productService.findProductByCategoryId(productDto.getCategory().getId(), 0));

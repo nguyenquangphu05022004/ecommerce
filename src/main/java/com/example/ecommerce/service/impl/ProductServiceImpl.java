@@ -2,6 +2,7 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.Product;
+import com.example.ecommerce.domain.User;
 import com.example.ecommerce.domain.Vendor;
 import com.example.ecommerce.domain.dto.ENUM.SortProductType;
 import com.example.ecommerce.domain.dto.product.ProductDto;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -152,8 +154,14 @@ public class ProductServiceImpl implements IProductService {
         product.getStocks().stream().forEach(e -> e.setProduct(null));
         product.getEvaluations().stream().forEach(e -> {
             e.setProduct(null);
-            e.setUser(null);
+            e.setUser(User.builder()
+                    .username(e.getUser().getUsername())
+                    .avatar(e.getUser().getAvatar())
+                    .build());
         });
+        Collections.sort(product.getEvaluations(),
+                (v1, v2) -> v2.getModifiedDate()
+                        .compareTo(v1.getModifiedDate()));
         return mapper.map(product, ProductDto.class)
                 .toBuilder()
                 .numberOfProductSold(

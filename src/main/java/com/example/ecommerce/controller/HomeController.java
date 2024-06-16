@@ -4,6 +4,7 @@ import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.dto.product.CategoryDto;
 import com.example.ecommerce.domain.dto.product.ProductDto;
 import com.example.ecommerce.domain.dto.product.TrackProductSellerDto;
+import com.example.ecommerce.domain.dto.user.UserRequest;
 import com.example.ecommerce.domain.dto.user.UserResponseInfo;
 import com.example.ecommerce.service.*;
 import com.example.ecommerce.utils.SystemUtils;
@@ -73,7 +74,7 @@ public class HomeController {
 
     @GetMapping("/sign-up")
     public String getRegisterPage(Model model) {
-        UserResponseInfo userResponseInfo = new UserResponseInfo();
+        UserRequest userResponseInfo = new UserRequest();
         model.addAttribute("user", userResponseInfo);
         return "register";
     }

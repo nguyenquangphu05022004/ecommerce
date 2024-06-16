@@ -1,11 +1,12 @@
 <html
         xmlns:th="http://thymeleaf.org"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:sec="http://www.thymeleaf.org"
         layout:decorate="~{/layout.html}">
 <head>
     <title th:text="${product.language.nameVn}"></title>
 </head>
-<body layout:fragment="body" th:onload="initElemnts()">
+<body layout:fragment="body" >
 <!-- Single Product Start -->
 <div class="container-fluid mt-5" style="padding-top: 52px;">
     <div class="container py-5">
@@ -100,9 +101,23 @@
                                 <p>[[${product.description}]]</p>
 
                             </div>
-                            <div class="tab-pane" id="nav-mission"
-                                 role="tabpanel" aria-labelledby="nav-mission-tab">
-
+                            <div class="tab-pane" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
+                                <div class="d-flex" th:each="evaluation : ${product.evaluations}" th:id="${'evaluation_' + evaluation.id}">
+                                    <img th:src="@{{url}(url=${evaluation.user.defaultImage})}" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
+                                    <div class="">
+                                        <p class="mb-2" style="font-size: 14px;">[[${evaluation.formatDate}]]</p>
+                                        <div class="d-flex justify-content-between">
+                                            <h5>[[${evaluation.user.username}]]</h5>
+                                            <div class="d-flex mb-3" style="right: 0">
+                                                [[${evaluation.rating}]]*
+                                            </div>
+                                        </div>
+                                        <p class="text-dark">[[${evaluation.content}]]</p>
+                                        <img th:each="image : ${evaluation.images}" th:src="@{/files/image/{imageName}(imageName=${image.name})}"
+                                             class="img-fluid rounded p-3"
+                                             style="width: 100px; height: 100px;" alt="">
+                                    </div>
+                                </div>
                             </div>
                             <div class="tab-pane" id="nav-vision" role="tabpanel">
                                 <p class="text-dark">Tempor erat elitr rebum at clita. Diam dolor diam ipsum et tempor
@@ -113,15 +128,24 @@
                             </div>
                         </div>
                     </div>
-                    <form id="form-comment" th:action="@{/evaluations/{productId}(productId=${product.id})}"
-                          method="post" th:if="${was_bought == true}" th:object="${evaluation}"
+
+                    <form  th:action="@{/evaluations}"
+                           id="form-comment"
+                          method="post"  th:object="${evaluation}"
+                          sec:authorize="isAuthenticated()"
                           enctype="multipart/form-data"
                     >
                         <h4 class="fw-bold">Để Lại Đánh Giá</h4>
+                        <input type="hidden" th:value="${product.id}"
+                               name="productId"
+                               th:field="*{productId}"
+                               id="productId"
+                               >
                         <div class="row g-4">
                             <div class="col-lg-12">
                                 <div class="border-bottom rounded my-4">
                                     <textarea name="content"
+                                              sec:value="fgg"
                                               class="form-control border-0"
                                               th:field="*{content}"
                                               cols="30" rows="8"
@@ -129,7 +153,11 @@
                                     ></textarea>
                                 </div>
                                 <div class="border-bottom rounded my-4">
-                                    <input type="file" multiple class="form-control" name="image">
+                                    <input type="file" multiple
+                                           class="form-control"
+                                           name="image"
+                                           th:field="*{files}"
+                                    >
                                 </div>
                                 <input type="hidden" name="rating" th:field="*{rating}" id="rating">
                             </div>
@@ -362,14 +390,13 @@
 
     var valueRating = 1;
 
-    function initElemnts() {
+    function initElements() {
         //evaluations
-        const product = [[${product}]]
-        let html = '';
-        product.evaluations.forEach(evaluation => {
-            html += evaluationHtml(evaluation)
-        })
-        $("#nav-mission").html(html);
+        // let html = '';
+        // [[${product}]].evaluations.forEach(evaluation => {
+        //     html += evaluationHtml(evaluation)
+        // })
+        // $("#nav-mission").html(html);
     }
 
     function evaluationHtml(data) {
@@ -438,6 +465,9 @@
             }
         })
     }
+    document.getElementById('form-comment').addEventListener('submit', () => {
+        document.getElementById('productId').value = [[${product.id}]]
+    })
 </script>
 </div>
 </body>

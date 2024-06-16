@@ -3,6 +3,7 @@ package com.example.ecommerce.service.impl;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.Evaluation;
 import com.example.ecommerce.domain.Image;
+import com.example.ecommerce.domain.Product;
 import com.example.ecommerce.domain.User;
 import com.example.ecommerce.domain.dto.product.EvaluationDto;
 import com.example.ecommerce.domain.dto.product.EvaluationRequest;
@@ -33,8 +34,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
     private final ModelMapper mapper;
     @Override
     @Transactional
-    public EvaluationDto saveOrUpdate(EvaluationRequest request,
-                                      List<MultipartFile> images) {
+    public EvaluationDto saveOrUpdate(EvaluationRequest request) {
         User user = userRepository.findByUsername(SecurityUtils.username()).get();
         Optional<Evaluation> optionalEvaluation = evaluationRepository
                 .findByUserUsernameAndProductId(
@@ -55,14 +55,31 @@ public class EvaluationServiceImpl implements IEvaluationService {
             );
 
         } else {
-            evaluation = mapper.map(request, Evaluation.class);
+            evaluation = mapper.map(request, Evaluation.class)
+                    .toBuilder()
+                    .product(Product.builder()
+                            .id(request.getProductId()).build())
+                    .build();
         }
         evaluation.setUser(user);
-        List<Image> imageEvaluations = images.stream().map(
-                file -> imageService.uploadFile(file, SystemUtils.TAG)
-        ).collect(Collectors.toList());
+        List<Image> imageEvaluations = request.getFiles()
+                .stream()
+                .filter(file -> !(file.getOriginalFilename().isEmpty()
+                        || file.getOriginalFilename().isBlank()))
+                .map(file -> imageService.uploadFile(file, SystemUtils.TAG))
+                .collect(Collectors.toList());
         evaluation.setImages(imageEvaluations);
-        evaluation = evaluationRepository.save(evaluation);
+        Evaluation saved = evaluationRepository.save(evaluation);
+        return EvaluationDto.builder().id(saved.getId()).build();
+    }
+
+    private EvaluationDto mapToDto(Evaluation evaluation) {
+        evaluation.setProduct(null);
+        User user = evaluation.getUser();
+        evaluation.setUser(User.builder()
+                .username(user.getUsername())
+                .avatar(user.getAvatar())
+                .build());
         return mapper.map(evaluation, EvaluationDto.class);
     }
 

@@ -7,8 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface IEvaluationService {
-    EvaluationDto saveOrUpdate(EvaluationRequest evaluationRequest,
-                               List<MultipartFile> images);
+    EvaluationDto saveOrUpdate(EvaluationRequest evaluationRequest);
     long count();
     void delete(Long id);
 

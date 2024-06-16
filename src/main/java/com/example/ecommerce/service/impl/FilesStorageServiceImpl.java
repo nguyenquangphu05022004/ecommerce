@@ -26,7 +26,7 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
             root = Paths.get(resources.getUrlFilesStorage());
         }
         try {
-            Files.copy(multipartFile.getInputStream(), root.resolve(multipartFile.getOriginalFilename()));
+            Files.write(root.resolve(multipartFile.getOriginalFilename()), multipartFile.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -63,5 +63,15 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public boolean fileIsExists(String fileName) {
+        if(root == null) {
+            root = Paths.get(resources.getUrlFilesStorage());
+        }
+        Path path = root.resolve(fileName);
+        if(Files.isReadable(path)) return true;
+        return false;
     }
 }

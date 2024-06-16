@@ -33,8 +33,14 @@ public class VendorServiceImpl implements IGenericService<VendorDto>, IVendorSer
     public List<VendorDto> records() {
         return vendorRepository.findAll()
                 .stream()
-                .map(vendor -> mapper.map(vendor, VendorDto.class))
+                .map(vendor -> mapToDto(vendor))
                 .collect(Collectors.toList());
+    }
+
+    private VendorDto mapToDto(Vendor vendor) {
+        vendor.setUser(null);
+        vendor.setProducts(null);
+        return mapper.map(vendor, VendorDto.class);
     }
 
     @Override
@@ -49,16 +55,13 @@ public class VendorServiceImpl implements IGenericService<VendorDto>, IVendorSer
 
     @Override
     public VendorDto findById(Long id) {
-        return mapper.map(
-                vendorRepository.findById(id)
-                        .orElseThrow(
-                                () -> new NotFoundException(
-                                        "VendorId",
-                                        id + ""
-                                )
-                        ),
-                VendorDto.class
-        );
+        return mapToDto(vendorRepository.findById(id)
+                .orElseThrow(
+                        () -> new NotFoundException(
+                                "VendorId",
+                                id + ""
+                        )
+                ));
     }
 
     @Override
@@ -68,7 +71,7 @@ public class VendorServiceImpl implements IGenericService<VendorDto>, IVendorSer
         Vendor vendor = new Vendor();
         vendor.setUser(user);
         vendor.setShopName(vendorDto.getShopName());
-        return mapper.map(vendorRepository.save(vendor), VendorDto.class);
+        return mapToDto(vendorRepository.save(vendor));
     }
 
     @Override

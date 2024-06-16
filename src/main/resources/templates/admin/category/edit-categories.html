@@ -23,14 +23,17 @@
                     <label for="name">Tên thể loại</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <img th:if="${category.thumbnail == null}" src='http://ssl.gstatic.com/accounts/ui/avatar_2x.png'
+                    <img th:if="${image == null}" src='http://ssl.gstatic.com/accounts/ui/avatar_2x.png'
                          class="avatar img-circle img-thumbnail"
                          width="400px"
                          alt="avatar">
-                    <img th:unless="${category.thumbnail == null}"
-                         th:src="@{/{shortUrl}/{fileName}(shortUrl=${category.thumbnail.shortUrl}, fileName=${category.thumbnail.name})}"
+                    <img th:unless="${image == null}"
+                         th:src="@{/files/{shortUrl}/{fileName}(shortUrl=${image.shortUrl}, fileName=${image.name})}"
                          class="img-thumbnail" width="400px">
-                    <input type="file" name="file" class="text-center center-block file-upload mb-4">
+                    <input type="file" name="file"
+                           class="text-center center-block file-upload mb-4"
+                           th:field="*{file}"
+                    >
                     <label for="name">Ảnh</label>
                 </div>
                 <div class="form-floating">
