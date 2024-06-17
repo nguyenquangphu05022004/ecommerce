@@ -218,86 +218,6 @@
                         </div>
                     </div>
                     <div id="inbox-users">
-                        <a href="#" class="list-group-item list-group-item-action border-0">
-                            <div class="d-flex align-items-start">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar5.png"
-                                     class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
-                                <div class="flex-grow-1 ml-3">
-                                    Vanessa Tucker
-                                    <div class="small"><span class="fas fa-circle chat-online"></span> Online</div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0">
-                            <div class="d-flex align-items-start">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar2.png"
-                                     class="rounded-circle mr-1" alt="William Harris" width="40" height="40">
-                                <div class="flex-grow-1 ml-3">
-                                    William Harris
-                                    <div class="small"><span class="fas fa-circle chat-online"></span> Online</div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0">
-                            <div class="d-flex align-items-start">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png"
-                                     class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
-                                <div class="flex-grow-1 ml-3">
-                                    Sharon Lessman
-                                    <div class="small"><span class="fas fa-circle chat-online"></span> Online</div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0">
-                            <div class="d-flex align-items-start">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar4.png"
-                                     class="rounded-circle mr-1" alt="Christina Mason" width="40" height="40">
-                                <div class="flex-grow-1 ml-3">
-                                    Christina Mason
-                                    <div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0">
-                            <div class="d-flex align-items-start">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar5.png"
-                                     class="rounded-circle mr-1" alt="Fiona Green" width="40" height="40">
-                                <div class="flex-grow-1 ml-3">
-                                    Fiona Green
-                                    <div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0">
-                            <div class="d-flex align-items-start">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar2.png"
-                                     class="rounded-circle mr-1" alt="Doris Wilder" width="40" height="40">
-                                <div class="flex-grow-1 ml-3">
-                                    Doris Wilder
-                                    <div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0">
-                            <div class="d-flex align-items-start">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar4.png"
-                                     class="rounded-circle mr-1" alt="Haley Kennedy" width="40" height="40">
-                                <div class="flex-grow-1 ml-3">
-                                    Haley Kennedy
-                                    <div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0">
-                            <div class="d-flex align-items-start">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png"
-                                     class="rounded-circle mr-1" alt="Jennifer Chang" width="40" height="40">
-                                <div class="flex-grow-1 ml-3">
-                                    Jennifer Chang
-                                    <div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-                                </div>
-                            </div>
-                        </a>
                     </div>
                     <hr class="d-block d-lg-none mt-1 mb-0">
                 </div>
@@ -309,13 +229,15 @@
                         <div class="chat-messages p-4" id="history-message">
                         </div>
                     </div>
-
-                    <form id="form-message">
+                    <form id="form-message" enctype="multipart/form-data">
                         <div class="flex-grow-0 py-3 px-4 border-top">
-                            <div class="input-group">
+                            <div class="input-group mb-3">
                                 <input type="text" class="form-control" id="write-msg" placeholder="Type your message">
                                 <button class="btn btn-primary" type="submit">Send</button>
                             </div>
+                           <div>
+                               <input type="file" multiple id="files">
+                           </div>
                         </div>
                     </form>
 

@@ -9,8 +9,11 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAllByUserUsername(@Param("username") String username);
+    List<Order> findAllByUserUsernameAndStatus(String username,
+                                               Status status);
+
+
     List<Order> findAllByStockProductVendorUserUsername(String username);
     List<Order> findAllByStockProductVendorUserUsernameAndApproval(String username, boolean approval);
     List<Order> findAllByStockProductVendorUserUsernameAndPurchased(String username, boolean purchased);
-    List<Order> findAllByUserUsernameAndBillStatus(String username, Status status);
 }

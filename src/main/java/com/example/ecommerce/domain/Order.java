@@ -1,6 +1,7 @@
 package com.example.ecommerce.domain;
 
 import com.example.ecommerce.domain.dto.ENUM.Payment;
+import com.example.ecommerce.domain.dto.ENUM.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -22,13 +23,12 @@ public class Order extends Base{
     private Integer quantity;
     @Enumerated(EnumType.STRING)
     private Payment payment;
-    @OneToOne(mappedBy = "order")
-    private Bill bill;
-
     @ManyToOne
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     private boolean approval;
     private boolean purchased;
-    private boolean shipStatus;
+    private boolean received;
 }

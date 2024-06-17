@@ -41,10 +41,10 @@
                                     class="border-0 form-select-sm bg-light me-3"
                                     th:onchange="sortProduct()"
                             >
-                                <option value="DEFAULT">Không</option>
-                                <option value="RATE_AVERAGE">Đánh giá cao</option>
-                                <option value="NUMBER_OF_SELLER">Mua nhiều</option>
-                                <option value="PRICE">Giá</option>
+                                <option
+                                        th:each="sortType : ${sortTypes}"
+                                        th:selected="${sortType.name == sortProductType}"
+                                        th:value="${sortType.name}">[[${sortType.value}]]</option>
                             </select>
                         </div>
                     </div>

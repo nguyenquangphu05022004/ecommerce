@@ -10,7 +10,9 @@ const message_input = document.querySelector('#write-msg')
 const vendorNameInput = document.getElementById('vendor_name')
 const baseUrl = window.location.origin
 const search_vendor_form = document.getElementById('search-vendor')
-let listUsername = [username];
+let dataFiles = []
+const fileIn = document.getElementById('files')
+    let listUsername = [username];
 function onConnect() {
     stomClient.subscribe(
         `/topic/public/listUserMessage/${username}`, receivedListChat)
@@ -119,12 +121,13 @@ async function onSendMessage(event) {
            })
            .catch(() => alert("Xay ra loi khi tao phong chat"));
    }
+
+    const data = {
+        'content': message_input.value}
     stomClient.send(
         `/app/chat.sendMessage/${username}/${sendConversationId}`,
         {},
-        JSON.stringify({
-            'content': message_input.value
-        })
+        JSON.stringify(data)
     )
     message_input.value = ''
 }
@@ -189,7 +192,6 @@ function receivedMessage(payload) {
     }
 }
 
-
 function searchVendorByName(e) {
     e.preventDefault();
     sendConversationId = null;
@@ -230,6 +232,5 @@ function searchVendorByName(e) {
 
 
 }
-
 form_sendMessage.addEventListener('submit', onSendMessage, true)
 search_vendor_form.addEventListener('submit', searchVendorByName, true)

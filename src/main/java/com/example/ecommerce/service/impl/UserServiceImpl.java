@@ -6,6 +6,7 @@ import com.example.ecommerce.domain.Image;
 import com.example.ecommerce.domain.User;
 import com.example.ecommerce.domain.dto.ENUM.Role;
 import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
+import com.example.ecommerce.domain.dto.user.UserRequest;
 import com.example.ecommerce.domain.dto.user.UserResponseInfo;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.UserRepository;
@@ -57,16 +58,18 @@ public class UserServiceImpl implements IUserService {
         return mapToDto(user);
     }
 
+
     @Override
-    public UserResponseInfo saveOrUpdate(UserResponseInfo userResponseInfo) {
+    public UserResponseInfo saveOrUpdate(UserRequest request) {
         User user = null;
         if (SecurityUtils.username() != null) {
             User oldUser = userRepository.findByUsername(SecurityUtils.username()).get();
         } else {
-            user = null;
+            user = mapper.map(request, User.class);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setRole(Role.USER);
         }
-        return null;
+        return mapToDto(userRepository.save(user));
     }
 
     @Override

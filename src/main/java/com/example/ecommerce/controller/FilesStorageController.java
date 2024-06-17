@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class FilesStorageController {
@@ -26,17 +28,9 @@ public class FilesStorageController {
      * -> USER: Update avatar;
      * -> PRODUCT: image-product
      */
-    @PostMapping("/files/upload/{type}")
-    public String uploadFile(@RequestParam("file") MultipartFile file,
-                             @PathVariable("type") String type) {
-        try {
-            if (type.equals(SystemUtils.TAG)) {
-                userService.updateAvatar(file);
-            }
-            return "redirect:/user/profile";
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    @PostMapping("/files/upload")
+    public String uploadFile(@RequestParam("files") List<MultipartFile> file) {
+        return null;
     }
 
 

@@ -37,7 +37,7 @@ public class OrderServiceImpl implements IOrderService {
     public List<OrderDto> records() {
         return orderRepository.findAllByUserUsername(SecurityUtils.username())
                 .stream()
-                .map(entity -> mapper.map(entity, OrderDto.class))
+                .map(entity -> mapToDto(entity))
                 .collect(Collectors.toList());
     }
 
@@ -54,7 +54,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public OrderDto findById(Long id) {
-        return mapper.map(orderRepository.findById(id).get(), OrderDto.class);
+        return mapToDto(orderRepository.findById(id).get());
     }
 
     @Override
@@ -83,14 +83,17 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public List<OrderDto> records(Status status) {
+    public List<OrderDto> getAllOrderOfCustomer(Status status) {
+        if(status == Status.ALL) {
+            return records();
+        }
         return orderRepository
-                .findAllByUserUsernameAndBillStatus(
+                .findAllByUserUsernameAndStatus(
                         SecurityUtils.username(),
                         status
                 )
                 .stream()
-                .map(entity -> mapper.map(entity, OrderDto.class))
+                .map(entity -> mapToDto(entity))
                 .collect(Collectors.toList());
     }
 
@@ -109,7 +112,7 @@ public class OrderServiceImpl implements IOrderService {
         orderRepository.save(order);
     }
     @Override
-    public List<OrderDto> getAllOrder(SelectFilterOrder selectFilerOrder) {
+    public List<OrderDto> getAllOrderOfVendor(SelectFilterOrder selectFilerOrder) {
         List<Order> orders = new ArrayList<>();
         switch (selectFilerOrder) {
             case ALL:
@@ -143,7 +146,12 @@ public class OrderServiceImpl implements IOrderService {
         }
         return orders
                 .stream()
-                .map(entity -> mapper.map(entity, OrderDto.class))
+                .map(entity -> mapToDto(entity))
                 .collect(Collectors.toList());
+    }
+
+    private OrderDto mapToDto(Order entity) {
+        entity.getUser().setVendor(null);
+        return mapper.map(entity, OrderDto.class);
     }
 }

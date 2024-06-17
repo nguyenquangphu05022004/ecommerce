@@ -16,7 +16,9 @@ public class ChatMessageMapper {
                         .fullName(chatMessage.getUserSender().getRole() == Role.VENDOR
                                 ? chatMessage.getUserSender().getVendor().getShopName()
                                 : chatMessage.getUserSender()
-                                .getUserContactDetails().getFullName())
+                                .getUserContactDetails() == null ?
+                                chatMessage.getUserSender().getUsername()
+                                : chatMessage.getUserSender().getUserContactDetails().getFullName())
                         .image(chatMessage.getUserSender().defaultImage())
                         .username(chatMessage.getUserSender().getUsername())
                         .build())
