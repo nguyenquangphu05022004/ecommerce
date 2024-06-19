@@ -29,4 +29,15 @@ public class Stock extends Base{
     @OneToMany(cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "stock")
+    private List<Order> orders = new ArrayList<>();
+
+
+    @Transient
+    public void updateQuantity() {
+        this.orders.stream()
+                .filter(e -> e.isReceived() || e.isPurchased())
+                .forEach(e -> this.quantityOfProduct -= e.getQuantity());
+    }
+
 }

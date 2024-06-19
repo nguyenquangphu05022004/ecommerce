@@ -34,7 +34,7 @@ public class UserServiceImpl implements IUserService {
     private final ModelMapper mapper;
 
     @Override
-    public List<UserResponseInfo> records() {
+    public List<UserResponseInfo> getAll() {
         return userRepository.findAll()
                 .stream()
                 .map(e -> mapToDto(e))
@@ -44,11 +44,6 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void delete(Long id) {
         userRepository.deleteById(id);
-    }
-
-    @Override
-    public Long count() {
-        return userRepository.count();
     }
 
     @Override

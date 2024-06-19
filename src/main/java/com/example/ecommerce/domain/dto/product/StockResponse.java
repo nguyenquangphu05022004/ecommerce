@@ -1,5 +1,6 @@
 package com.example.ecommerce.domain.dto.product;
 
+import com.example.ecommerce.domain.Order;
 import com.example.ecommerce.domain.dto.BaseDto;
 import com.example.ecommerce.utils.SystemUtils;
 import lombok.AllArgsConstructor;

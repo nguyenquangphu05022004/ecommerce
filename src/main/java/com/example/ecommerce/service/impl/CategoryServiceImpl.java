@@ -30,7 +30,7 @@ public class CategoryServiceImpl implements ICategoryService {
     private final ModelMapper mapper;
     private final IImageService imageService;
     @Override
-    public List<CategoryDto> records() {
+    public List<CategoryDto> getAll() {
         return categoryRepository.findAll()
                 .stream()
                 .map(category -> mapToDto(category))
@@ -42,10 +42,6 @@ public class CategoryServiceImpl implements ICategoryService {
         categoryRepository.deleteById(id);
     }
 
-    @Override
-    public Long count() {
-        return categoryRepository.count();
-    }
 
     @Override
     public CategoryDto findById(Long id) {

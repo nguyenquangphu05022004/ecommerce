@@ -2,6 +2,7 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.domain.dto.product.CategoryDto;
 import com.example.ecommerce.domain.dto.product.CategoryRequest;
+import com.example.ecommerce.service.ICategoryService;
 import com.example.ecommerce.service.impl.CategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequestMapping("/admin")
 public class CategoryController {
 
-    private final CategoryServiceImpl categoryService;
+    private final ICategoryService categoryService;
 
     @Autowired
     public CategoryController(CategoryServiceImpl categoryService) {
@@ -54,7 +55,7 @@ public class CategoryController {
 
     @GetMapping("/categories")
     public String getListCategories(Model model) {
-        List<CategoryDto> categoryDtos = categoryService.records();
+        List<CategoryDto> categoryDtos = categoryService.getAll();
         model.addAttribute("categories", categoryDtos);
         return "admin/category/list-categories";
     }

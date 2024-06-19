@@ -15,6 +15,5 @@ public interface IUserService extends IGenericService<UserResponseInfo> {
     boolean changePassword(String oldPassword, String newPassword);
     void updateAvatar(MultipartFile multipartFile);
     boolean isExistsEmail(String email);
-
     UserInboxResponse findByUsername(String username);
 }

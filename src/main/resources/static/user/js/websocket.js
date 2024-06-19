@@ -2,6 +2,9 @@
 let stomClient = null;
 let username = document.getElementById("authen_username").textContent;
 const inboxChatUser = document.getElementById("inbox-users")
+const inboxChatUser_tablet = document.getElementById("inbox-users-tablet")
+const vendorNameInput_tablet = document.getElementById('vendor_name_tablet')
+const search_vendor_form_tablet = document.getElementById('search-vendor-tablet')
 const messageHistory = document.getElementById('history-message')
 const infoChatUser = document.getElementById("info-chat-user")
 const form_sendMessage = document.querySelector('#form-message')
@@ -55,6 +58,8 @@ async function getListMessageOfConverstation(id) {
                             </div>
                         </div>`
             listUsername.push(id.split('_')[2])
+            document.getElementById("shop-responsible").textContent = "Shop: " + document.getElementById(`conversation-name-${id.split('_')[1]}`).textContent
+
         } else {
             sendConversationId = id;
             const response = await fetch(`${baseUrl}/message/user/${username}/conversation/${sendConversationId}`);
@@ -100,6 +105,7 @@ async function getListMessageOfConverstation(id) {
                                 <strong>${messages.length > 0 && messages[0].conversationResponse.conversationName}</strong>
                             </div>
                         </div>`
+            document.getElementById("shop-responsible").textContent = "Shop: " + messages[0].conversationResponse.conversationName
         }
 
 }
@@ -153,6 +159,7 @@ function receivedListChat(payload) {
                         </a>`
     }
     inboxChatUser.innerHTML = `${html}`;
+    inboxChatUser_tablet.innerHTML = `${html}`;
 }
 
 function receivedMessage(payload) {
@@ -191,17 +198,17 @@ function receivedMessage(payload) {
         // getChatInbox.innerHTML = `<p style="font-weight: bold">${message.usernameSender === username ? 'Bạn: ' + message.content : message.userSenderFullName + ': ' + message.content}</p>`
     }
 }
-
-function searchVendorByName(e) {
-    e.preventDefault();
-    sendConversationId = null;
-    const vendorName = vendorNameInput.value;
+function searchVendor(inputVendor, inboxVendor) {
+    const vendorName = inputVendor.value;
     const response = fetch(`${baseUrl}/vendors/name?name=${vendorName}`);
     response.then(res => res.json())
         .then(vendorResponses => {
             let html = '';
             vendorResponses.forEach(vendor => {
+                console.log("vendor: ", vendor)
+                console.log("image: ", vendor.user.image)
                 if(vendor.user.conversationResponses === null) {
+                    console.log("image: ", vendor.user.image)
                     html += `<a href="#" class="list-group-item list-group-item-action border-0" id='null_${vendor.id}' onclick="getListMessageOfConverstation('null_${vendor.id}_${vendor.user.username}')">
                             <div class="d-flex align-items-start">
                                 <img src="${vendor.user.image}"
@@ -227,10 +234,19 @@ function searchVendorByName(e) {
                     })
                 }
             })
-            inboxChatUser.innerHTML = `${html}`;
+            inboxVendor.innerHTML = `${html}`;
         })
-
-
+}
+function searchVendorByName(e) {
+    e.preventDefault();
+    sendConversationId = null;
+    searchVendor(vendorNameInput, inboxChatUser);
+}
+function searchVendorTablet(e) {
+    e.preventDefault();
+    sendConversationId = null;
+    searchVendor(vendorNameInput_tablet, inboxChatUser_tablet);
 }
 form_sendMessage.addEventListener('submit', onSendMessage, true)
 search_vendor_form.addEventListener('submit', searchVendorByName, true)
+search_vendor_form_tablet.addEventListener('submit', searchVendorTablet, true)

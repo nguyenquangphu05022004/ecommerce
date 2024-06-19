@@ -2,6 +2,7 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.domain.dto.product.BasketDto;
 import com.example.ecommerce.domain.dto.product.BasketRequest;
+import com.example.ecommerce.service.IBasketService;
 import com.example.ecommerce.service.impl.BasketServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,7 +18,7 @@ import java.util.List;
 @CrossOrigin("*")
 public class BasketController {
 
-    private final BasketServiceImpl basketService;
+    private final IBasketService basketService;
 
     @Autowired
     public BasketController(BasketServiceImpl basketService) {

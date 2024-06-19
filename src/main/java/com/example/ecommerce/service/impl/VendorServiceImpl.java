@@ -1,6 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.converter.ConversationMapper;
 import com.example.ecommerce.domain.dto.chat.ConversationResponse;
 import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
 import com.example.ecommerce.domain.dto.chat.VendorResponseInbox;
@@ -23,14 +24,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class VendorServiceImpl implements IGenericService<VendorDto>, IVendorService {
+public class VendorServiceImpl implements IVendorService {
     private final VendorRepository vendorRepository;
     private final UserRepository userRepository;
     private final ModelMapper mapper;
 
 
     @Override
-    public List<VendorDto> records() {
+    public List<VendorDto> getAll() {
         return vendorRepository.findAll()
                 .stream()
                 .map(vendor -> mapToDto(vendor))
@@ -48,10 +49,6 @@ public class VendorServiceImpl implements IGenericService<VendorDto>, IVendorSer
         vendorRepository.deleteById(id);
     }
 
-    @Override
-    public Long count() {
-        return vendorRepository.count();
-    }
 
     @Override
     public VendorDto findById(Long id) {
@@ -88,13 +85,7 @@ public class VendorServiceImpl implements IGenericService<VendorDto>, IVendorSer
                     .filter(conversation -> conversation.getUsers()
                             .stream()
                             .anyMatch(user -> user.getUsername().equals(username)))
-                    .map(conversation -> {
-                        return ConversationResponse.builder()
-                                .conversationName(
-                                        conversation.getConversationName(username)
-                                )
-                                .id(conversation.getId()).build();
-                    })
+                    .map(conversation -> ConversationMapper.mapperToConversationResponse(conversation, username))
                     .collect(Collectors.toList());
             return VendorResponseInbox.builder()
                     .user(

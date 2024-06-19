@@ -32,9 +32,6 @@ public class FilesStorageController {
     public String uploadFile(@RequestParam("files") List<MultipartFile> file) {
         return null;
     }
-
-
-
     @GetMapping(value = "/files/{type}/{fileName}",
             produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ResponseBody

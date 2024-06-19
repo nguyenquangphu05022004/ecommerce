@@ -64,14 +64,4 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
             throw new RuntimeException(e);
         }
     }
-
-    @Override
-    public boolean fileIsExists(String fileName) {
-        if(root == null) {
-            root = Paths.get(resources.getUrlFilesStorage());
-        }
-        Path path = root.resolve(fileName);
-        if(Files.isReadable(path)) return true;
-        return false;
-    }
 }

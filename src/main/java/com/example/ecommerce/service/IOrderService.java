@@ -12,7 +12,6 @@ public interface IOrderService extends IGenericService<OrderDto>{
     List<OrderDto> getAllOrderOfCustomer(Status status);
     void approval(Long orderId);
     void updatePayment(Long orderId);
-
     List<OrderDto> getAllOrderOfVendor(SelectFilterOrder status);
 
 }

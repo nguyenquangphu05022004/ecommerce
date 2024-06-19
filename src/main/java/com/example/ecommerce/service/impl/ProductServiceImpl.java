@@ -1,12 +1,12 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.Product;
-import com.example.ecommerce.domain.User;
-import com.example.ecommerce.domain.Vendor;
+import com.example.ecommerce.domain.*;
 import com.example.ecommerce.domain.dto.ENUM.SortProductType;
 import com.example.ecommerce.domain.dto.product.ProductDto;
+import com.example.ecommerce.domain.dto.product.ProductRequest;
 import com.example.ecommerce.exception.NotFoundException;
+import com.example.ecommerce.repository.CategoryRepository;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IProductService;
@@ -30,9 +30,10 @@ public class ProductServiceImpl implements IProductService {
     private final ProductRepository productRepository;
     private final VendorRepository vendorRepository;
     private final ModelMapper mapper;
+    private final CategoryRepository categoryRepository;
 
     @Override
-    public List<ProductDto> records() {
+    public List<ProductDto> getAll() {
         List<Product> products = productRepository.findAll();
         return products.stream()
                 .map(product -> mapToDto(product))
@@ -44,10 +45,6 @@ public class ProductServiceImpl implements IProductService {
         productRepository.deleteById(id);
     }
 
-    @Override
-    public Long count() {
-        return productRepository.count();
-    }
 
     @Override
     public ProductDto findById(Long id) {
@@ -60,17 +57,16 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     @Transactional
-    public ProductDto saveOrUpdate(ProductDto productDto) {
+    public void saveOrUpdate(ProductRequest request) {
         Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username());
-        Product product = null;
-        if (productDto.getId() != null) {
-            return null;
-        } else {
-            product = mapper.map(productDto, Product.class);
-        }
-        product.setVendor(vendor);
-        return mapToDto(productRepository.save(product));
-
+        Category category = categoryRepository.findById(request.getCategoryId()).get();
+        Product product = Product.builder()
+                .vendor(vendor)
+                .language(new Language(request.getLanguage().getNameVn(), request.getLanguage().getNameEn()))
+                .category(category)
+                .description(request.getDescription())
+                .build();
+        productRepository.save(product);
     }
 
     @Override
@@ -93,9 +89,9 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductDto> findAll(int page) {
+    public List<ProductDto> findAll(int page, int numberOfItem) {
         Page<Product> productPages = productRepository
-                .findAll(PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM));
+                .findAll(PageRequest.of(page, numberOfItem));
         SystemUtils.totalPage = productPages.getTotalPages();
         return productPages.getContent()
                 .stream()
@@ -151,23 +147,32 @@ public class ProductServiceImpl implements IProductService {
     }
 
     public ProductDto mapToDto(Product product) {
-        product.getStocks().stream().forEach(e -> e.setProduct(null));
-        product.getEvaluations().stream().forEach(e -> {
-            e.setProduct(null);
-            e.setUser(User.builder()
-                    .username(e.getUser().getUsername())
-                    .avatar(e.getUser().getAvatar())
-                    .build());
-        });
-        Collections.sort(product.getEvaluations(),
-                (v1, v2) -> v2.getModifiedDate()
-                        .compareTo(v1.getModifiedDate()));
+        if (product.getStocks() != null) {
+            product.getStocks().stream().forEach(e -> {
+                e.setProduct(null);
+                e.updateQuantity();
+            });
+        }
+        if (product.getEvaluations() != null) {
+            product.getEvaluations().stream().forEach(e -> {
+                e.setProduct(null);
+                e.setUser(User.builder()
+                        .username(e.getUser().getUsername())
+                        .avatar(e.getUser().getAvatar())
+                        .build());
+            });
+            Collections.sort(product.getEvaluations(),
+                    (v1, v2) -> v2.getModifiedDate()
+                            .compareTo(v1.getModifiedDate()));
+        }
         return mapper.map(product, ProductDto.class)
                 .toBuilder()
                 .numberOfProductSold(
-                        product
-                        .getProductSeller()
-                        .getNumberOfProductsSold()
+                        product.getProductSeller() != null ?
+                                product
+                                        .getProductSeller()
+                                        .getNumberOfProductsSold()
+                                : 0
                 )
                 .build();
     }

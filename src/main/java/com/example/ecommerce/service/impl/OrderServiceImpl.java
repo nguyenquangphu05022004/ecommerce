@@ -11,7 +11,6 @@ import com.example.ecommerce.domain.dto.product.OrderRequest;
 import com.example.ecommerce.domain.dto.ENUM.SelectFilterOrder;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.*;
-import com.example.ecommerce.service.IGenericService;
 import com.example.ecommerce.service.IOrderService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -34,7 +33,7 @@ public class OrderServiceImpl implements IOrderService {
 
 
     @Override
-    public List<OrderDto> records() {
+    public List<OrderDto> getAll() {
         return orderRepository.findAllByUserUsername(SecurityUtils.username())
                 .stream()
                 .map(entity -> mapToDto(entity))
@@ -47,10 +46,7 @@ public class OrderServiceImpl implements IOrderService {
         orderRepository.deleteById(id);
     }
 
-    @Override
-    public Long count() {
-        return orderRepository.count();
-    }
+
 
     @Override
     public OrderDto findById(Long id) {
@@ -85,7 +81,7 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public List<OrderDto> getAllOrderOfCustomer(Status status) {
         if(status == Status.ALL) {
-            return records();
+            return getAll();
         }
         return orderRepository
                 .findAllByUserUsernameAndStatus(

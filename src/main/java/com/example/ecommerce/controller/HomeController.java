@@ -42,8 +42,8 @@ public class HomeController {
      */
     @RequestMapping({"/", "/home", ""})
     public String getHomePage(Model model, HttpServletResponse response) {
-        List<ProductDto> productDtos = productService.findAll(0);
-        List<CategoryDto> categoryDtos = categoryService.records();
+        List<ProductDto> productDtos = productService.findAll(0, SystemUtils.NUMBER_OF_ITEM - 1);
+        List<CategoryDto> categoryDtos = categoryService.getAll();
         List<TrackProductSellerDto> trackProductSellerDtos =
                 trackProductSellerService.getListTopNumberByNumberOfSold(1, 9);
         Cookie numberOfBasketCookie = new Cookie("basket", basketService.count().toString());
@@ -58,8 +58,8 @@ public class HomeController {
     @GetMapping("/shop")
     public String getShopPage(Model model,
                               @RequestParam(name = "page", defaultValue = "1", required = false) int page) {
-        List<CategoryDto> categoryDtos = categoryService.records();
-        List<ProductDto> productDtos = productService.findAll(page - 1);
+        List<CategoryDto> categoryDtos = categoryService.getAll();
+        List<ProductDto> productDtos = productService.findAll(page - 1, SystemUtils.NUMBER_OF_ITEM);
         model.addAttribute("sortTypes", Arrays.asList(SortProductType.values()));
         model.addAttribute("sortProductType", SortProductType.DEFAULT);
         model.addAttribute("categories", categoryDtos);

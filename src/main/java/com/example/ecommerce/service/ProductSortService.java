@@ -9,5 +9,4 @@ public interface ProductSortService {
     List<ProductDto> sortByRateAverage(List<ProductDto> products);
     List<ProductDto> sortByNumberOfSeller(List<ProductDto> products);
     List<ProductDto> sortByDefault(List<ProductDto> products);
-
 }

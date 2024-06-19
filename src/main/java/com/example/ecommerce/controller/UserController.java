@@ -39,7 +39,7 @@ public class UserController {
 
     @GetMapping("/admin/users")
     public String getListUser(Model model) {
-        List<UserResponseInfo> userResponseInfos = userService.records();
+        List<UserResponseInfo> userResponseInfos = userService.getAll();
         model.addAttribute("users", userResponseInfos);
         return "admin/user/list-users";
     }

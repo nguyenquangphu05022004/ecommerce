@@ -3,8 +3,7 @@ package com.example.ecommerce.service;
 import java.util.List;
 
 public interface IGenericService<Dto> {
-    List<Dto> records();
+    List<Dto> getAll();
     void delete(Long id);
-    Long count();
     Dto findById(Long id);
 }
