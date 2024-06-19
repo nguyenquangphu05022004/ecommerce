@@ -535,10 +535,34 @@ body{margin-top:20px;}
 .chat-messages {
     display: flex;
     flex-direction: column;
-    max-height: 500px;
+    max-height: 350px;
     overflow-y: scroll;
 }
-
+.tablet-mobile-message {
+    display: none;
+}
+.pc-responsive {
+    display: block;
+}
+@media only screen and (max-width: 990px) {
+   .tablet-mobile-message {
+       display: block;
+   }
+    .pc-responsive {
+        display: none;
+    }
+    .chat-messages {
+        display: flex;
+        flex-direction: column;
+        max-height: 200px;
+        overflow-y: scroll;
+    }
+    .dropdown-menu.show {
+        display: block;
+        max-height: 200px;
+        overflow-y: scroll;
+    }
+}
 .chat-message-left,
 .chat-message-right {
     display: flex;

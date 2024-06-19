@@ -4,18 +4,19 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.dto.ENUM.SortProductType;
 import com.example.ecommerce.domain.dto.product.CategoryDto;
-import com.example.ecommerce.domain.dto.product.EvaluationDto;
 import com.example.ecommerce.domain.dto.product.EvaluationRequest;
 import com.example.ecommerce.domain.dto.product.ProductDto;
+import com.example.ecommerce.domain.dto.product.ProductRequest;
+import com.example.ecommerce.service.ICategoryService;
 import com.example.ecommerce.service.IProductService;
-import com.example.ecommerce.service.impl.CategoryServiceImpl;
-import com.example.ecommerce.utils.SortUtils;
 import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -23,22 +24,20 @@ import java.util.List;
 public class ProductController {
 
     private final IProductService productService;
-    private final CategoryServiceImpl categoryService;
+    private final ICategoryService categoryService;
 
 
 
     @GetMapping("/vendor/products/add")
     public String getFormProduct(Model model) {
-        ProductDto productDto = new ProductDto();
-        model.addAttribute("product", productDto);
         model.addAttribute("categories", getListCategory());
         return "admin/product/create-products";
     }
 
     @PostMapping("/vendor/products/add")
-    @ResponseBody
-    public ProductDto createProduct(@RequestBody ProductDto productDto) {
-        return productService.saveOrUpdate(productDto);
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createProduct(@RequestBody ProductRequest request) {
+         productService.saveOrUpdate(request);
     }
 
     @GetMapping("/vendor/product/{productId}/images/upload")
@@ -70,7 +69,7 @@ public class ProductController {
     @GetMapping("/products")
     @ResponseBody
     public List<ProductDto> getAllProducts() {
-        List<ProductDto> products = productService.records();
+        List<ProductDto> products = productService.getAll();
         return products;
     }
 
@@ -94,6 +93,7 @@ public class ProductController {
                 sortProductType,
                 page - 1
         );
+        model.addAttribute("sortTypes", Arrays.asList(SortProductType.values()));
         saveAttribute(products,vendorId,
                 query, categoryId,
                 page, startPrice, endPrice,
@@ -122,7 +122,7 @@ public class ProductController {
     }
 
     private List<CategoryDto> getListCategory() {
-        return categoryService.records();
+        return categoryService.getAll();
     }
 
 }

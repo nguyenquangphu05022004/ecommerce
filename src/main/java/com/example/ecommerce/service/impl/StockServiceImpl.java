@@ -33,7 +33,7 @@ public class StockServiceImpl implements IStockService {
     private final ModelMapper mapper;
 
     @Override
-    public List<StockResponse> records() {
+    public List<StockResponse> getAll() {
         return null;
     }
 
@@ -42,10 +42,6 @@ public class StockServiceImpl implements IStockService {
 
     }
 
-    @Override
-    public Long count() {
-        return null;
-    }
 
     @Override
     public StockResponse findById(Long id) {

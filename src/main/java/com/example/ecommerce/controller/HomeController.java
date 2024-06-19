@@ -1,6 +1,7 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.domain.dto.ENUM.SortProductType;
 import com.example.ecommerce.domain.dto.product.CategoryDto;
 import com.example.ecommerce.domain.dto.product.ProductDto;
 import com.example.ecommerce.domain.dto.product.TrackProductSellerDto;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -40,8 +42,8 @@ public class HomeController {
      */
     @RequestMapping({"/", "/home", ""})
     public String getHomePage(Model model, HttpServletResponse response) {
-        List<ProductDto> productDtos = productService.findAll(0);
-        List<CategoryDto> categoryDtos = categoryService.records();
+        List<ProductDto> productDtos = productService.findAll(0, SystemUtils.NUMBER_OF_ITEM - 1);
+        List<CategoryDto> categoryDtos = categoryService.getAll();
         List<TrackProductSellerDto> trackProductSellerDtos =
                 trackProductSellerService.getListTopNumberByNumberOfSold(1, 9);
         Cookie numberOfBasketCookie = new Cookie("basket", basketService.count().toString());
@@ -56,8 +58,10 @@ public class HomeController {
     @GetMapping("/shop")
     public String getShopPage(Model model,
                               @RequestParam(name = "page", defaultValue = "1", required = false) int page) {
-        List<CategoryDto> categoryDtos = categoryService.records();
-        List<ProductDto> productDtos = productService.findAll(page - 1);
+        List<CategoryDto> categoryDtos = categoryService.getAll();
+        List<ProductDto> productDtos = productService.findAll(page - 1, SystemUtils.NUMBER_OF_ITEM);
+        model.addAttribute("sortTypes", Arrays.asList(SortProductType.values()));
+        model.addAttribute("sortProductType", SortProductType.DEFAULT);
         model.addAttribute("categories", categoryDtos);
         model.addAttribute("products", productDtos);
         model.addAttribute("totalPage", SystemUtils.totalPage);
@@ -74,8 +78,8 @@ public class HomeController {
 
     @GetMapping("/sign-up")
     public String getRegisterPage(Model model) {
-        UserRequest userResponseInfo = new UserRequest();
-        model.addAttribute("user", userResponseInfo);
+        UserRequest request = new UserRequest();
+        model.addAttribute("user", request);
         return "register";
     }
 

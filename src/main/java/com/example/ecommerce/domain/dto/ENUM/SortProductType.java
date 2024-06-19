@@ -1,8 +1,18 @@
 package com.example.ecommerce.domain.dto.ENUM;
 
 public enum SortProductType {
-    NUMBER_OF_SELLER,
-    RATE_AVERAGE,
-    PRICE,
-    DEFAULT;
+
+    DEFAULT("Mặc định"),
+    RATE_AVERAGE("Đánh giá cao"),
+    NUMBER_OF_SELLER("Số lượng bán"),
+    PRICE("Giá bán");
+
+    private String value;
+    SortProductType(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

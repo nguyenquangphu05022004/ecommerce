@@ -15,7 +15,7 @@ public class SystemUtils {
     public static final Integer NUMBER_OF_ITEM = 9;
     public static final String VN_DATE = "dd/MM/yyyy HH:mm:ss";
     public static final String EN_DATE = "yyyy/MM/dd HH:mm:ss";
-    public static final String TAG = "image";
+    public static final String TAG = "files/image";
     public static String code() {
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i < 12; i++) {

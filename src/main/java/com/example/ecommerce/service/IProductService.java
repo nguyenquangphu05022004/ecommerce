@@ -2,14 +2,15 @@ package com.example.ecommerce.service;
 
 import com.example.ecommerce.domain.dto.ENUM.SortProductType;
 import com.example.ecommerce.domain.dto.product.ProductDto;
+import com.example.ecommerce.domain.dto.product.ProductRequest;
 
 import java.util.List;
 
 public interface IProductService extends IGenericService<ProductDto> {
-    ProductDto saveOrUpdate(ProductDto productDto);
+    void saveOrUpdate(ProductRequest request);
     List<ProductDto> findProductByCategoryId(Long categoryId, int page);
     List<ProductDto> findAllByVendor();
-    List<ProductDto> findAll(int page);
+    List<ProductDto> findAll(int page, int numberOfItem);
 
     boolean productWasBoughtByUser(Long productId, String username);
     List<ProductDto> searchProduct(

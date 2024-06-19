@@ -25,7 +25,7 @@ public class BillServiceImpl implements IBillService {
     }
 
     @Override
-    public List<BillDto> records() {
+    public List<BillDto> getAll() {
         return null;
 //        return billRepository
 //                .findAllByOrderProductVendorUserUsername(SecurityUtils.username())
@@ -39,10 +39,6 @@ public class BillServiceImpl implements IBillService {
         billRepository.deleteById(id);
     }
 
-    @Override
-    public Long count() {
-        return billRepository.count();
-    }
 
     @Override
     public BillDto findById(Long id) {

@@ -28,22 +28,6 @@
                     <label for="nameEn">Tên không dấu</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="number"
-                           class="form-control"
-                           id="price"
-                           name="price"
-                           placeholder="Giá tiền">
-                    <label for="price">Giá tiền</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="number"
-                           class="form-control"
-                           id="quantity"
-                           name="quantity"
-                           placeholder="Số lượng">
-                    <label for="quantity">Số lượng</label>
-                </div>
-                <div class="form-floating mb-3">
                     <select class="form-select"
                             id="categoryId"
                             aria-label="Floating label select example"
@@ -51,7 +35,8 @@
                     >
                         <option selected>Chọn thể loại</option>
                         <span th:each="category :${categories}">
-                            <option th:value=${category.id} th:text="${category.name}"></option>
+                            <option th:value=${category.id}
+                                    th:text="${category.name}"></option>
                         </span>
                     </select>
                     <label for="categoryId">Thể loại</label>
@@ -79,12 +64,8 @@
                     nameVn: form.elements['nameVn'].value,
                     nameEn: form.elements['nameEn'].value
                 },
-                price: form.elements['price'].value,
                 description: form.elements['description'].value,
-                category: {
-                    id: form.elements['categoryId'].value
-                },
-                quantity: form.elements['quantity'].value,
+                categoryId: form.elements['categoryId'].value
             }
             $.ajax({
                 type:'post',

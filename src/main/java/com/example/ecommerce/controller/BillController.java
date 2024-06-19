@@ -24,7 +24,7 @@ public class BillController {
 
     @GetMapping("/vendor/products/bills")
     public String getAllBillOfVendor(Model model) {
-        List<BillDto> bills = billService.records()
+        List<BillDto> bills = billService.getAll()
                 .stream()
                 .map(bill -> {
                     String urlUpdateStatus = MvcUriComponentsBuilder

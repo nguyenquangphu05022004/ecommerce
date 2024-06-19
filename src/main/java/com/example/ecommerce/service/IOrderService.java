@@ -9,10 +9,9 @@ import java.util.List;
 
 public interface IOrderService extends IGenericService<OrderDto>{
     OrderDto saveOrUpdate(OrderRequest orderRequest);
-    List<OrderDto> records(Status status);
+    List<OrderDto> getAllOrderOfCustomer(Status status);
     void approval(Long orderId);
     void updatePayment(Long orderId);
-
-    List<OrderDto> getAllOrder(SelectFilterOrder status);
+    List<OrderDto> getAllOrderOfVendor(SelectFilterOrder status);
 
 }

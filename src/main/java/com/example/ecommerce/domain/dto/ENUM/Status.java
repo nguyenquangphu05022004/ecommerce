@@ -1,16 +1,16 @@
 package com.example.ecommerce.domain.dto.ENUM;
 
 public enum Status {
+    ALL("Tất cả"),
     SUCCESS("Thành công"),
     PROCESSING("Đang tiến hành"),
-
-    CANCEL("Đã hủy");
-    private String name;
-    Status(String name) {
-        this.name = name;
+    NOT_APPROVAL("Chưa nhận đơn");
+    private String value;
+    Status(String value) {
+        this.value = value;
     }
 
-    public String getName() {
-        return name;
+    public String getValue() {
+        return value;
     }
 }

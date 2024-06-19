@@ -33,7 +33,7 @@ public class Conversation extends Base{
                     if(user.getRole() == Role.VENDOR) {
                         return user.getVendor().getShopName();
                     }
-                    return user.getUserContactDetails().getFullName();
+                    return user.getUserContactDetails() != null ? user.getUserContactDetails().getFullName() : user.getUsername();
                 })
                 .collect(Collectors.joining(", "));
         return conversationName;

@@ -2,6 +2,7 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.domain.dto.ENUM.Role;
 import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
+import com.example.ecommerce.domain.dto.user.UserRequest;
 import com.example.ecommerce.domain.dto.user.UserResponseInfo;
 import com.example.ecommerce.domain.singleton.UserTrack;
 import com.example.ecommerce.service.IUserService;
@@ -31,22 +32,22 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerAccount(@ModelAttribute UserResponseInfo userResponseInfo) {
-        userService.saveOrUpdate(userResponseInfo);
+    public String registerAccount(@ModelAttribute UserRequest request) {
+        userService.saveOrUpdate(request);
         return "redirect:/login";
     }
 
     @GetMapping("/admin/users")
     public String getListUser(Model model) {
-        List<UserResponseInfo> userResponseInfos = userService.records();
+        List<UserResponseInfo> userResponseInfos = userService.getAll();
         model.addAttribute("users", userResponseInfos);
         return "admin/user/list-users";
     }
 
     @PostMapping("/users")
     @ResponseBody
-    public UserResponseInfo updateUserProfile(@RequestBody UserResponseInfo userResponseInfo)   {
-        return userService.saveOrUpdate(userResponseInfo);
+    public UserResponseInfo updateUserProfile(@RequestBody UserRequest request)   {
+        return userService.saveOrUpdate(request);
     }
 
     @PostMapping("/change-password")

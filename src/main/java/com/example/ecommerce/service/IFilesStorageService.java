@@ -7,6 +7,4 @@ public interface IFilesStorageService {
     void saveFile(MultipartFile multipartFile);
     Resource loadFile(String fileName);
     void deleteFile(String fileName);
-    boolean fileIsExists(String fileName);
-
 }

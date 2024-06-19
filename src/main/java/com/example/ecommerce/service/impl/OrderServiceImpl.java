@@ -11,7 +11,6 @@ import com.example.ecommerce.domain.dto.product.OrderRequest;
 import com.example.ecommerce.domain.dto.ENUM.SelectFilterOrder;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.*;
-import com.example.ecommerce.service.IGenericService;
 import com.example.ecommerce.service.IOrderService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -34,10 +33,10 @@ public class OrderServiceImpl implements IOrderService {
 
 
     @Override
-    public List<OrderDto> records() {
+    public List<OrderDto> getAll() {
         return orderRepository.findAllByUserUsername(SecurityUtils.username())
                 .stream()
-                .map(entity -> mapper.map(entity, OrderDto.class))
+                .map(entity -> mapToDto(entity))
                 .collect(Collectors.toList());
     }
 
@@ -47,14 +46,11 @@ public class OrderServiceImpl implements IOrderService {
         orderRepository.deleteById(id);
     }
 
-    @Override
-    public Long count() {
-        return orderRepository.count();
-    }
+
 
     @Override
     public OrderDto findById(Long id) {
-        return mapper.map(orderRepository.findById(id).get(), OrderDto.class);
+        return mapToDto(orderRepository.findById(id).get());
     }
 
     @Override
@@ -83,14 +79,17 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public List<OrderDto> records(Status status) {
+    public List<OrderDto> getAllOrderOfCustomer(Status status) {
+        if(status == Status.ALL) {
+            return getAll();
+        }
         return orderRepository
-                .findAllByUserUsernameAndBillStatus(
+                .findAllByUserUsernameAndStatus(
                         SecurityUtils.username(),
                         status
                 )
                 .stream()
-                .map(entity -> mapper.map(entity, OrderDto.class))
+                .map(entity -> mapToDto(entity))
                 .collect(Collectors.toList());
     }
 
@@ -109,7 +108,7 @@ public class OrderServiceImpl implements IOrderService {
         orderRepository.save(order);
     }
     @Override
-    public List<OrderDto> getAllOrder(SelectFilterOrder selectFilerOrder) {
+    public List<OrderDto> getAllOrderOfVendor(SelectFilterOrder selectFilerOrder) {
         List<Order> orders = new ArrayList<>();
         switch (selectFilerOrder) {
             case ALL:
@@ -143,7 +142,12 @@ public class OrderServiceImpl implements IOrderService {
         }
         return orders
                 .stream()
-                .map(entity -> mapper.map(entity, OrderDto.class))
+                .map(entity -> mapToDto(entity))
                 .collect(Collectors.toList());
+    }
+
+    private OrderDto mapToDto(Order entity) {
+        entity.getUser().setVendor(null);
+        return mapper.map(entity, OrderDto.class);
     }
 }

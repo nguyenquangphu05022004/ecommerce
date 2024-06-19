@@ -22,10 +22,10 @@
                                             name="status"
                                             th:onchange="getAllOrder()"
                                     >
-                                        <option selected value="ALL">Tất cả</option>
-                                        <option value="SUCCESS">Đã mua</option>
-                                        <option value="PROCESSING">Đang tiến hành</option>
-                                        <option value="CANCEL">Đã hủy</option>
+                                        <option th:each="status : ${statusOrders}"
+                                                th:value="${status.name}"
+                                                th:selected="${status.name == 'ALL'}"
+                                        >[[${status.value}]]</option>
                                     </select>
                                 </div>
                                 <h4>Test Card</h4>
@@ -55,6 +55,7 @@
                                         <th scope="col">Trạng thái</th>
                                         <th scope="col">Hình thức</th>
                                         <th scope="col">Thanh toán</th>
+                                        <th scope="col">Nhận hàng</th>
                                         <th scope="col">Sửa</th>
                                     </tr>
                                     </thead>
@@ -74,12 +75,7 @@
     function getAllOrder() {
         const statusSelect = document.getElementById("status");
         const statusValue = statusSelect.value;
-        let theUrl = "";
-        if (statusValue === "ALL") {
-            theUrl = `[(@{/orders})]`;
-        } else {
-            theUrl = `[(@{/orders/${statusValue}})]`;
-        }
+        let theUrl = `[(@{/orders/${statusValue}})]`;
         callApi('get', " ", theUrl, (value) => {
             let html = '';
             if(value.length > 0) {
@@ -106,6 +102,7 @@
                             <th scope="col">${order.approval === false ? 'Chưa nhận đơn' : 'Đã nhận đơn'}</th>
                             <th scope="col">${order.approval === true ? order.payment === 'PAY_BY_BANK' ? order.purchased === false ?  `<button class="btn btn-primary" onClick="paymentOverBank(${order.id}, ${order.totalPrice})">Thanh toán qua ngân hàng</button>` : 'Thanh toán qua ngân hàng' : 'Thanh toán tại nhà' : 'Đang kiểm tra kho'}</th>
                             <th scope="col">${order.purchased === false ? 'Chưa thanh toán' : 'Đã thanh toán'}</th>
+                            <th scope="col">${order.received === false ? 'Chưa nhận' : 'Đã nhận'}</th>
                             <th scope="col">${buttonDelete}</th>
                         </tr>`
                 })
