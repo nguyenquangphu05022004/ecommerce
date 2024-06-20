@@ -122,8 +122,8 @@
                             </th>
                             <td class="py-5" th:text="${stock.product.language.nameVn}"></td>
                             <td class="py-5">
-                                [[${stock.decoration.color != null ? stock.decoration.color + ' - ' : '' }]]
-                                [[${stock.decoration.size != null ? stock.decoration.size  : '' }]]
+                                [[${stock.color}]]
+                                [[${stockType != null ? ' - ' + stockType.size.name : ''}]]
                             </td>
                             <td class="py-5" th:text="${stock.formatPrice}"></td>
                             <td class="py-5">[[${param.numberOfProduct}]]</td>
@@ -196,7 +196,8 @@
             stockId: stockId,
             payment: form.elements["delivery"].value,
             quantity: numberOfProduct[0],
-            couponId: document.getElementById('value-id-coupon').value
+            couponId: document.getElementById('value-id-coupon').value,
+            stockClassificationId: [[${stockType}]] == null ? null : [[${stockType}]].id
         }
         console.log(order)
         $.ajax({

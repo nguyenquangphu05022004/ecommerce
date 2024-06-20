@@ -56,7 +56,8 @@ public class SecurityConfig {
                             "/sign-up", "/login", "/user/**", "/products/**",
                             "/admin/css/**", "/admin/js/**", "/admin/lib/**",
                             "/forget-password",
-                            "/admin/scss/**", "/forget-password/new-pass", "/files/**")
+                            "/admin/scss/**", "/forget-password/new-pass", "/files/**",
+                            "/stocks/**")
                     .permitAll()
                     .requestMatchers("/admin/home").hasAnyAuthority(Role.VENDOR.getAuthority(), Role.ADMIN.getAuthority())
                     .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.getAuthority())

@@ -94,7 +94,7 @@
                             <th scope="col">
                                 <img src="${src}" height="100" class="rounded-top" >
                             </th>
-                             <th scope="col">${order.stock.decoration.color} - ${order.stock.decoration.size}</th>
+                             <th scope="col">${order.stock.color}${order.size === null ? '' : ' - ' + order.size}</th>
                             <th scope="col">${order.stock.formatPrice}</th>
                             <th scope="col">${order.quantity}</th>
                             <th scope="col">${order.couponPercent != null ? order.couponPercent : "0"} %</th>

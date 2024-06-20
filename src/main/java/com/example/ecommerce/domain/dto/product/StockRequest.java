@@ -1,18 +1,23 @@
 package com.example.ecommerce.domain.dto.product;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.example.ecommerce.domain.dto.ENUM.Color;
+import com.example.ecommerce.domain.dto.ENUM.Size;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StockRequest {
+    private Long id;
     private String code;
     private Long productId;
-    private Long decorationId;
-    private Integer quantityOfProduct;
+    private Color color;
+    private String formatClassification; //(quantity,size);(quantity,size)
     private Integer price;
     private List<MultipartFile> multipartFiles;
 }

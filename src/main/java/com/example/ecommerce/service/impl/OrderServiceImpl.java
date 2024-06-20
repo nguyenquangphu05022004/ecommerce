@@ -1,11 +1,8 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.Coupon;
-import com.example.ecommerce.domain.Order;
+import com.example.ecommerce.domain.*;
 import com.example.ecommerce.domain.dto.ENUM.Status;
-import com.example.ecommerce.domain.Stock;
-import com.example.ecommerce.domain.User;
 import com.example.ecommerce.domain.dto.product.OrderDto;
 import com.example.ecommerce.domain.dto.product.OrderRequest;
 import com.example.ecommerce.domain.dto.ENUM.SelectFilterOrder;
@@ -29,6 +26,7 @@ public class OrderServiceImpl implements IOrderService {
     private final CouponRepository couponRepository;
     private final BasketRepository basketRepository;
     private final StockRepository stockRepository;
+    private final StockClassificationRepository stockClassificationRepository;
     private final ModelMapper mapper;
 
 
@@ -65,13 +63,20 @@ public class OrderServiceImpl implements IOrderService {
                         .findById(orderDto.getCouponId())
                         .orElseThrow()
                 : null;
-
+        StockClassification stockClassification = stockClassificationRepository
+                .findById(orderDto.getStockClassificationId())
+                .orElseThrow(() -> new NotFoundException(
+                        "StockClassificationId",
+                        orderDto.getStockClassificationId() + "")
+                );
         Order order = Order.builder()
                 .stock(stock)
                 .payment(orderDto.getPayment())
                 .quantity(orderDto.getQuantity())
                 .user(user)
                 .coupon(coupon)
+                .size(stockClassification.getSize())
+                .status(Status.NOT_APPROVAL)
                 .build();
         orderRepository.save(order);
         basketRepository.deleteByStockIdAndUserId(stock.getId(), user.getId());
@@ -148,6 +153,9 @@ public class OrderServiceImpl implements IOrderService {
 
     private OrderDto mapToDto(Order entity) {
         entity.getUser().setVendor(null);
+        entity.getUser().setEvaluations(null);
+        entity.getStock().setOrders(null);
+        entity.getStock().getProduct().setStocks(null);
         return mapper.map(entity, OrderDto.class);
     }
 }

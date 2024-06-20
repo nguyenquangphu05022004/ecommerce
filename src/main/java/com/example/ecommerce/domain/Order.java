@@ -1,6 +1,7 @@
 package com.example.ecommerce.domain;
 
 import com.example.ecommerce.domain.dto.ENUM.Payment;
+import com.example.ecommerce.domain.dto.ENUM.Size;
 import com.example.ecommerce.domain.dto.ENUM.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,6 +21,8 @@ public class Order extends Base{
     @ManyToOne
     @JoinColumn(name = "stock_id")
     private Stock stock;
+    @Enumerated(EnumType.STRING)
+    private Size size;
     private Integer quantity;
     @Enumerated(EnumType.STRING)
     private Payment payment;

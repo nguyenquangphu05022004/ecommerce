@@ -15,10 +15,12 @@ import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -116,9 +118,8 @@ public class ProductServiceImpl implements IProductService {
                                           SortProductType sortProductType,
                                           int page) {
 
-        Page<Product> productsPage = productRepository.findAll(PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM));
-        SystemUtils.totalPage = productsPage.getTotalPages();
-        List<ProductDto> products = productsPage.get()
+        List<Product> listProducts = productRepository.findAll();
+        List<ProductDto> products = listProducts.stream()
                 .filter(product -> {
                     if (categoryId <= 0) return true;
                     return product.getCategory().getId() == categoryId;
@@ -142,15 +143,21 @@ public class ProductServiceImpl implements IProductService {
                 })
                 .map(product -> mapToDto(product))
                 .collect(Collectors.toList());
-        SortUtils.sortProduct(sortProductType, products);
-        return products;
+        SystemUtils.totalPage = (int)Math.ceil((double)products.size() / (double)SystemUtils.NUMBER_OF_ITEM);
+        List<ProductDto> productDtos = new ArrayList<>();
+        for(int i = page * SystemUtils.NUMBER_OF_ITEM;
+            i < Math.min(page * SystemUtils.NUMBER_OF_ITEM + SystemUtils.NUMBER_OF_ITEM, products.size());
+            i++) {
+            productDtos.add(products.get(i));
+        }
+        SortUtils.sortProduct(sortProductType, productDtos);
+        return productDtos;
     }
 
     public ProductDto mapToDto(Product product) {
         if (product.getStocks() != null) {
             product.getStocks().stream().forEach(e -> {
                 e.setProduct(null);
-                e.updateQuantity();
             });
         }
         if (product.getEvaluations() != null) {

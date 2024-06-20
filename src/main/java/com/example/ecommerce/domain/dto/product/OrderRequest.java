@@ -13,4 +13,5 @@ public class OrderRequest {
     private Integer quantity;
     private Payment payment;
     private Long couponId;
+    private Long stockClassificationId;
 }

@@ -1,7 +1,9 @@
 package com.example.ecommerce.domain.dto.product;
 
-import com.example.ecommerce.domain.Order;
+import com.example.ecommerce.domain.StockClassification;
 import com.example.ecommerce.domain.dto.BaseDto;
+import com.example.ecommerce.domain.dto.ENUM.Color;
+import com.example.ecommerce.domain.dto.ENUM.Size;
 import com.example.ecommerce.utils.SystemUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,11 +21,11 @@ import java.util.List;
 @SuperBuilder(toBuilder = true)
 public class StockResponse extends BaseDto {
     private String code;
-    private Integer quantityOfProduct;
     private List<ImageDto> images = new ArrayList<>();
     private ProductResponse product;
-    private DecorationResponse decoration;
+    private Color color;
     private Integer price;
+    private List<StockClassificationResponse> stockClassifications = new ArrayList<>();
 
     public String getFormatPrice() {
         return SystemUtils.getFormatNumber(price);
