@@ -21,8 +21,9 @@ public class Order extends Base{
     @ManyToOne
     @JoinColumn(name = "stock_id")
     private Stock stock;
-    @Enumerated(EnumType.STRING)
-    private Size size;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "stock_classification_id")
+    private StockClassification stockClassification;
     private Integer quantity;
     @Enumerated(EnumType.STRING)
     private Payment payment;

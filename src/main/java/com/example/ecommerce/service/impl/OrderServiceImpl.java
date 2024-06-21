@@ -45,7 +45,6 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
-
     @Override
     public OrderDto findById(Long id) {
         return mapToDto(orderRepository.findById(id).get());
@@ -75,7 +74,7 @@ public class OrderServiceImpl implements IOrderService {
                 .quantity(orderDto.getQuantity())
                 .user(user)
                 .coupon(coupon)
-                .size(stockClassification.getSize())
+                .stockClassification(stockClassification)
                 .status(Status.NOT_APPROVAL)
                 .build();
         orderRepository.save(order);
@@ -85,7 +84,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public List<OrderDto> getAllOrderOfCustomer(Status status) {
-        if(status == Status.ALL) {
+        if (status == Status.ALL) {
             return getAll();
         }
         return orderRepository
@@ -102,16 +101,22 @@ public class OrderServiceImpl implements IOrderService {
     public void approval(Long orderId) {
         Order order = orderRepository.findById(orderId).get();
         order.setApproval(true);
+        order.setStatus(Status.PROCESSING);
         orderRepository.save(order);
     }
 
     @Override
+    @Transactional
     public void updatePayment(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("OrderId", orderId + ""));
         order.setPurchased(true);
+        StockClassification stockClassification = order.getStockClassification();
+        stockClassification.setSeller(order.getQuantity() + stockClassification.getSeller());
+        order.setStockClassification(stockClassification);
         orderRepository.save(order);
     }
+
     @Override
     public List<OrderDto> getAllOrderOfVendor(SelectFilterOrder selectFilerOrder) {
         List<Order> orders = new ArrayList<>();

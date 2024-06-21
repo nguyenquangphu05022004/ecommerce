@@ -143,15 +143,13 @@ public class ProductServiceImpl implements IProductService {
                 })
                 .map(product -> mapToDto(product))
                 .collect(Collectors.toList());
-        SystemUtils.totalPage = (int)Math.ceil((double)products.size() / (double)SystemUtils.NUMBER_OF_ITEM);
-        List<ProductDto> productDtos = new ArrayList<>();
-        for(int i = page * SystemUtils.NUMBER_OF_ITEM;
-            i < Math.min(page * SystemUtils.NUMBER_OF_ITEM + SystemUtils.NUMBER_OF_ITEM, products.size());
-            i++) {
-            productDtos.add(products.get(i));
-        }
-        SortUtils.sortProduct(sortProductType, productDtos);
-        return productDtos;
+        SystemUtils.totalPage = (int) Math.ceil((double) products.size() / (double) SystemUtils.NUMBER_OF_ITEM);
+        products = products.stream()
+                .skip(page * SystemUtils.NUMBER_OF_ITEM)
+                .limit(Math.min(page * SystemUtils.NUMBER_OF_ITEM + SystemUtils.NUMBER_OF_ITEM, products.size()))
+                .collect(Collectors.toList());
+        SortUtils.sortProduct(sortProductType, products);
+        return products;
     }
 
     public ProductDto mapToDto(Product product) {
@@ -172,15 +170,12 @@ public class ProductServiceImpl implements IProductService {
                     (v1, v2) -> v2.getModifiedDate()
                             .compareTo(v1.getModifiedDate()));
         }
-        return mapper.map(product, ProductDto.class)
+        ProductDto productDto = mapper.map(product, ProductDto.class)
                 .toBuilder()
-                .numberOfProductSold(
-                        product.getProductSeller() != null ?
-                                product
-                                        .getProductSeller()
-                                        .getNumberOfProductsSold()
-                                : 0
-                )
+                .build();
+        return productDto.toBuilder()
+                .numberOfProductSold(ProductSortServiceImpl
+                        .getTotalSeller(productDto))
                 .build();
     }
 

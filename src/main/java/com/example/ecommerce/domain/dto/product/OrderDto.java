@@ -2,11 +2,13 @@ package com.example.ecommerce.domain.dto.product;
 
 import com.example.ecommerce.domain.dto.BaseDto;
 import com.example.ecommerce.domain.dto.ENUM.Payment;
-import com.example.ecommerce.domain.dto.ENUM.Size;
 import com.example.ecommerce.domain.dto.ENUM.Status;
 import com.example.ecommerce.domain.dto.user.UserResponseInfo;
 import com.example.ecommerce.utils.SystemUtils;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Setter
@@ -15,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class OrderDto extends BaseDto {
-    private Size size;
+    private StockClassificationResponse stockClassification;
     private UserResponseInfo user;
     private StockResponse stock;
     private Integer quantity;

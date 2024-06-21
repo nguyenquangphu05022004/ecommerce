@@ -21,8 +21,10 @@ public class Basket extends Base{
     @ManyToOne
     @JoinColumn(name = "stock_id")
     private Stock stock;
+    @ManyToOne
+    @JoinColumn(name = "stock_classification_id")
+    private StockClassification stockClassification;
     private Integer quantity;
-
     @Transient
     public Integer getTotalPrice() {
         if(quantity != null && stock != null && stock.getPrice() != null) {

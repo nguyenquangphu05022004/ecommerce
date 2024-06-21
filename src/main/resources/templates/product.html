@@ -59,8 +59,8 @@
                                     <option th:selected="${state.first}"
                                             th:each="stockClassificationResponse, state : ${product.stocks.get(0).stockClassifications}"
                                             th:value="${stockClassificationResponse.id}"
-                                            th:disabled="${stockClassificationResponse.quantityOfProduct == 0}"
-                                            th:text="${stockClassificationResponse.size.name + ' - ' + stockClassificationResponse.quantityOfProduct + '(Số lượng)'}"
+                                            th:if="${stockClassificationResponse.quantityCurrent != 0}"
+                                            th:text="${stockClassificationResponse.size.name + ' - '  + 'Còn lại(' + stockClassificationResponse.quantityCurrent + ')'}"
                                     ></option>
                                 </select>
                             </div>
@@ -229,11 +229,10 @@
                         <div class="d-flex justify-content-between flex-lg-wrap">
                             <p class="text-dark fs-5 fw-bold">[[${p.formatPrice}]]</p>
                             <button
-                               th:onclick="addNewBasket([[${p.stocks.get(0).id}]])"
+                               th:onclick="addNewBasket([[${p.stocks.get(0).id}]], [[${p.stocks.get(0).stockClassifications.get(0).id}]])"
                                class="btn border border-secondary rounded-pill px-3 py-1 mb-4 text-primary"><i
                                     class="fa fa-shopping-bag me-2 text-primary"
                             >
-
                             </i>Thêm</button>
                         </div>
                     </div>
@@ -244,12 +243,13 @@
 </div>
 <!-- Single Product End -->
 <script th:inline="javascript">
-    function addNewBasket(stockId) {
+    function addNewBasket(stockId, stockClassificationId) {
         let theUrl = `[(@{/baskets})]`;
         const url = new URL(theUrl, document.location);
         const basket = {
             "stockId": stockId,
-            "operator": '+'
+            "operator": '+',
+            "stockClassificationId": stockClassificationId
         }
         $.ajax({
             type: "post",
@@ -269,14 +269,9 @@
         })
     }
     function createBasket() {
-        const typeProduct = document.getElementsByName("type")
-        let stockId;
-        for(let i = 0; i < typeProduct.length; i++) {
-            if(typeProduct[i].checked) {
-                stockId = typeProduct[i].value; break;
-            }
-        }
-        addNewBasket(stockId)
+        const stockID = document.getElementById("color-product").value;
+        const stockClassificationId = document.getElementById("size-product").value;
+        addNewBasket(stockID, stockClassificationId)
     }
 
     function callApi(type, data, theUrl, success) {
@@ -298,16 +293,6 @@
     }
 
     var valueRating = 1;
-
-    function initElements() {
-        //evaluations
-        // let html = '';
-        // [[${product}]].evaluations.forEach(evaluation => {
-        //     html += evaluationHtml(evaluation)
-        // })
-        // $("#nav-mission").html(html);
-    }
-
     function evaluationHtml(data) {
         let rate = ``;
         for (let i = 1; i <= data.rating; i++) {
@@ -355,14 +340,17 @@
         const quantity = document.getElementById("quantity").value;
         const stockId = document.getElementById("color-product").value;
         const stockTypeElement = document.getElementById("size-product");
-        if(stockTypeElement) {
-            const stockTypeId = stockTypeElement.value;
-            const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}&stockType=${stockTypeId}`, location).href;
-            window.location.href = url;
-        } else {
-            const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}&stockType=0`, location).href;
-            window.location.href = url;
-        }
+        const stockTypeId = stockTypeElement.value;
+        const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}&stockType=${stockTypeId}`, location).href;
+        window.location.href = url;
+        // if(stockTypeElement) {
+        //     const stockTypeId = stockTypeElement.value;
+        //     const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}&stockType=${stockTypeId}`, location).href;
+        //     window.location.href = url;
+        // } else {
+        //     const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}&stockType=0`, location).href;
+        //     window.location.href = url;
+        // }
     }
 
     function getStockById() {
@@ -371,16 +359,18 @@
             console.log(res)
             const element = document.getElementById('image-product');
             const priceProduct = document.getElementById('price-product')
-            const selectElement = document.getElementById('size-product');
-            let html = ``;
-            res.stockClassifications.forEach((stockClassfication, index) => {
-                if(stockClassfication.quantityOfProduct > 0) {
-                    html += `<option selected="${index === 0}"
+            if(document.getElementById('size-product')) {
+                const selectElement = document.getElementById('size-product');
+                let html = ``;
+                res.stockClassifications.forEach((stockClassfication, index) => {
+                    if (stockClassfication.quantityOfProduct > 0) {
+                        html += `<option selected="${index === 0}"
                                         value="${stockClassfication.id}"
                                 >${stockClassfication.size + ' - ' + stockClassfication.quantityOfProduct + '(Số lượng)'}</option>`
-                }
-            })
-            selectElement.innerHTML = html
+                    }
+                })
+                selectElement.innerHTML = html
+            }
             priceProduct.innerHTML = getFormatNumber(res.price)
             if(res.images.length > 0) {
                 element.src = "/" + res.images[0].shortUrl + "/" + res.images[0].name;

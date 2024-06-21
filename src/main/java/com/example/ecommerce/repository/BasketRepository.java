@@ -9,7 +9,9 @@ import java.util.Optional;
 
 public interface BasketRepository extends JpaRepository<Basket, Long> {
     List<Basket> findAllByUserUsername(String username);
-    Optional<Basket> findByUserIdAndStockId(Long userId, Long stockId);
+    Optional<Basket> findByUserIdAndStockIdAndStockClassificationId(Long userId,
+                                                                    Long stockId,
+                                                                    Long stockClassificationId);
     Long countAllByUserUsername(String username);
 
     @Modifying

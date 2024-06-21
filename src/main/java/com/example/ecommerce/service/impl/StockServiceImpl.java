@@ -69,7 +69,8 @@ public class StockServiceImpl implements IStockService {
                         String[] pairs = word.split(";");
                         return new StockClassification(
                                 Integer.parseInt(pairs[0]),
-                                Size.valueOf(pairs[1])
+                                Size.valueOf(pairs[1]),
+                                0
                         );
                     } catch (Exception e) {
                         System.out.println("Error convert formatClassification to Enum or Number");
@@ -79,10 +80,13 @@ public class StockServiceImpl implements IStockService {
                 .collect(Collectors.toList());
         Stock stock = null;
         List<Image> images = null;
-        if (stockRequest.getId() != null && stockRequest.getMultipartFiles().get(0).isEmpty()) {
-            stock = stockRepository.findById(stockRequest
-                            .getId())
-                    .orElseThrow(() -> new NotFoundException("StockId", stockRequest.getId() + ""));
+        if (stockRequest.getId() != null &&
+                stockRequest.getMultipartFiles().get(0).isEmpty()) {
+            stock = stockRepository.findById(stockRequest.getId())
+                    .orElseThrow(() -> new NotFoundException(
+                            "StockId",
+                            stockRequest.getId() + ""
+                    ));
             images = stock.getImages();
         } else {
             images = stockRequest.getMultipartFiles()

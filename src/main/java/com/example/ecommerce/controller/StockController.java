@@ -1,5 +1,4 @@
 package com.example.ecommerce.controller;
-
 import com.example.ecommerce.domain.dto.ENUM.Color;
 import com.example.ecommerce.domain.dto.product.ProductDto;
 import com.example.ecommerce.domain.dto.product.StockRequest;
@@ -56,7 +55,7 @@ public class StockController {
     @PostMapping("/vendor/products/stock/add")
     public String createStockForProduct(@ModelAttribute StockRequest stockRequest,
                                         @RequestParam("files")List<MultipartFile> files) {
-        stockRequest.setMultipartFiles(files);
+          stockRequest.setMultipartFiles(files);
         stockService.save(stockRequest);
         return "redirect:/stocks/add";
     }
@@ -65,7 +64,4 @@ public class StockController {
     public StockResponse getById(@PathVariable("stockId") Long stockId) {
         return stockService.findById(stockId);
     }
-
-
-
 }

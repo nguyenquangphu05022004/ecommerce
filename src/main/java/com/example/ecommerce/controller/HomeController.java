@@ -8,6 +8,7 @@ import com.example.ecommerce.domain.dto.product.TrackProductSellerDto;
 import com.example.ecommerce.domain.dto.user.UserRequest;
 import com.example.ecommerce.domain.dto.user.UserResponseInfo;
 import com.example.ecommerce.service.*;
+import com.example.ecommerce.utils.SortUtils;
 import com.example.ecommerce.utils.SystemUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,21 +36,26 @@ public class HomeController {
     public String getHomeAdmin() {
         return "admin/admin-control";
     }
-    /**
-     * Chức năng:
-     * 1, Xem danh mục, sản phẩm
-     * 2, Tạo đơn hàng, giỏ hàng
-     */
+
     @RequestMapping({"/", "/home", ""})
     public String getHomePage(Model model, HttpServletResponse response) {
         List<ProductDto> productDtos = productService.findAll(0, SystemUtils.NUMBER_OF_ITEM - 1);
         List<CategoryDto> categoryDtos = categoryService.getAll();
-        List<TrackProductSellerDto> trackProductSellerDtos =
-                trackProductSellerService.getListTopNumberByNumberOfSold(1, 9);
+        List<ProductDto> productTopSellers = productService.getAll();
+        SortUtils.sortProduct(
+                SortProductType.NUMBER_OF_SELLER,
+                productTopSellers
+        );
+
         Cookie numberOfBasketCookie = new Cookie("basket", basketService.count().toString());
         numberOfBasketCookie.setMaxAge(10 * 365 * 24 * 60 * 60);
         response.addCookie(numberOfBasketCookie);
-        model.addAttribute("trackProductSellers", trackProductSellerDtos);
+        model.addAttribute(
+                "productTopSellers",
+                productTopSellers
+                        .stream()
+                        .limit(SystemUtils.NUMBER_OF_ITEM)
+                        .toList());
         model.addAttribute("products", productDtos);
         model.addAttribute("categories", categoryDtos);
         return "index";
@@ -68,7 +74,6 @@ public class HomeController {
         model.addAttribute("page", page - 1);
         return "shop";
     }
-
 
 
     @GetMapping("/login")
@@ -100,10 +105,12 @@ public class HomeController {
         model.addAttribute("user", user);
         return "profile";
     }
+
     @GetMapping("/change-password")
     public String getPageChangePassword() {
         return "change-password";
     }
+
     @GetMapping("/forget-password")
     public String getPageForgetPassword() {
         return "forget-password";

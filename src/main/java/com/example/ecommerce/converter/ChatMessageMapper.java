@@ -5,6 +5,8 @@ import com.example.ecommerce.domain.dto.ENUM.Role;
 import com.example.ecommerce.domain.dto.chat.ChatMessageResponse;
 import com.example.ecommerce.utils.SystemUtils;
 
+import java.util.stream.Collectors;
+
 public class ChatMessageMapper {
 
     public static ChatMessageResponse mappertoChatMessageResponse(
@@ -27,6 +29,10 @@ public class ChatMessageMapper {
                                 chatMessage.getSenderToConversation(),
                                 username
                         ))
+                .urlMedia(chatMessage.getImages() != null ?
+                        chatMessage.getImages().stream()
+                                .map(image -> String.format("files/%s/%s", image.getShortUrl(), image.getName()))
+                                .collect(Collectors.toList()) : null)
                 .updatedAt(SystemUtils.getFormatDate(
                         chatMessage.getModifiedDate(),
                         SystemUtils.VN_DATE

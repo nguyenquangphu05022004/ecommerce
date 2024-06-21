@@ -5,18 +5,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
 @Entity
 @Table(name = "stock_classifications")
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class StockClassification extends Base{
     private Integer quantityOfProduct;
     @Enumerated(EnumType.STRING)
     private Size size;
+    private int seller;
 }
