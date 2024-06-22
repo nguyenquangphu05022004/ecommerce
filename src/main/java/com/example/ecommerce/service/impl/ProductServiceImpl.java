@@ -2,9 +2,9 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.*;
-import com.example.ecommerce.domain.dto.ENUM.SortProductType;
-import com.example.ecommerce.domain.dto.product.ProductDto;
-import com.example.ecommerce.domain.dto.product.ProductRequest;
+import com.example.ecommerce.domain.dto.SortProductType;
+import com.example.ecommerce.domain.dto.ProductDto;
+import com.example.ecommerce.domain.dto.ProductRequest;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.CategoryRepository;
 import com.example.ecommerce.repository.ProductRepository;
@@ -15,12 +15,10 @@ import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

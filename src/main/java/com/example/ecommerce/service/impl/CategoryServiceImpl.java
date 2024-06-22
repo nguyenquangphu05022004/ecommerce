@@ -1,20 +1,16 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.converter.CategoryConverter;
-import com.example.ecommerce.domain.Image;
-import com.example.ecommerce.domain.dto.product.CategoryDto;
 import com.example.ecommerce.domain.Category;
-import com.example.ecommerce.domain.dto.product.CategoryRequest;
+import com.example.ecommerce.domain.Image;
+import com.example.ecommerce.domain.dto.CategoryDto;
+import com.example.ecommerce.domain.dto.CategoryRequest;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.CategoryRepository;
 import com.example.ecommerce.service.ICategoryService;
-import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IImageService;
 import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

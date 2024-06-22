@@ -1,8 +1,6 @@
 package com.example.ecommerce.domain.dto.chat;
 
-import com.example.ecommerce.domain.Image;
 import com.example.ecommerce.domain.dto.BaseDto;
-import com.example.ecommerce.domain.dto.product.ImageDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

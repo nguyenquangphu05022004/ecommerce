@@ -1,11 +1,10 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.domain.dto.product.ProductDto;
+import com.example.ecommerce.domain.dto.ProductDto;
 import com.example.ecommerce.service.ProductSortService;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProductSortServiceImpl implements ProductSortService {
 

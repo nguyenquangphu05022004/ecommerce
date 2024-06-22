@@ -41,7 +41,7 @@
                 <td>
                     <p class="mb-0 mt-4">
                         [[${basket.stock.color != null ? basket.stock.color: '' }]]
-                        [[${basket.stockClassification != null ? ' - ' + basket.stockClassification.size.name: '' }]]
+                        [[${basket.stockClassification.size.name != 'NO_SIZE' ? ' - ' + basket.stockClassification.size.name: '' }]]
                     </p>
                 </td>
                 <td>
@@ -83,7 +83,7 @@
                 </td>
                 <td>
                     <a      th:id="${'order' + basket.stock.id + 'basket'}"
-                            th:href="@{/orders/product/{productName}?numberOfProduct={numberOfProduct}&stockId={stockId}(productName=${basket.stock.product.language.nameVn}, stockId = ${basket.stock.id}, numberOfProduct=${basket.quantity})}"
+                            th:href="@{/orders/product/{productName}?numberOfProduct={numberOfProduct}&stockId={stockId}&stockType={stockType}(productName=${basket.stock.product.language.nameVn}, stockId = ${basket.stock.id}, numberOfProduct=${basket.quantity}, stockType=${basket.stockClassification.id})}"
                             class="btn btn-md rounded-circle bg-light border mt-4">
                         <i class="fab fa-btc"></i>
                     </a>
@@ -113,7 +113,7 @@
                 console.log(data)
                 $(`#totalPrice${data.id}`).html(data.formatTotalPrice)
                 const tagA = document.getElementById(`order${stockId}basket`)
-                tagA.href=`/orders/product/${data.stock.product.language.nameVn}?numberOfProduct=${data.quantity}&stockId=${data.stock.id}&&stockType=${data.stockClassification.id}`
+                tagA.href=`/orders/product/${data.stock.product.language.nameVn}?numberOfProduct    =${data.quantity}&stockId=${data.stock.id}&&stockType=${data.stockClassification.id}`
             },
             () => {
                 alert("Số lượng sản phẩm phải > 0!!")

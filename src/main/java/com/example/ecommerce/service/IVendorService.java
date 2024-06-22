@@ -1,7 +1,7 @@
 package com.example.ecommerce.service;
 
 import com.example.ecommerce.domain.dto.chat.VendorResponseInbox;
-import com.example.ecommerce.domain.dto.user.VendorDto;
+import com.example.ecommerce.domain.dto.VendorDto;
 
 import java.util.List;
 

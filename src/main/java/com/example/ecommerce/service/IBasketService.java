@@ -1,7 +1,7 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.domain.dto.product.BasketDto;
-import com.example.ecommerce.domain.dto.product.BasketRequest;
+import com.example.ecommerce.domain.dto.BasketDto;
+import com.example.ecommerce.domain.dto.BasketRequest;
 
 import java.util.List;
 

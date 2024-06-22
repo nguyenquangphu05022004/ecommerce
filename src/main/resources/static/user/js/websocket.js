@@ -67,8 +67,13 @@ async function getListMessageOfConverstation(id) {
         console.log(messages);
         let html = ''
         for (let i = 0; i < messages.length; i++) {
+            let image = ''
+            messages[i].urlMedia.forEach(url => {
+                image += `<img src="${url}" width="250px"style="cursor: pointer"/>`
+            })
+
             if (messages[i].messageType === 'SEND') {
-                html += `<div class="chat-message-right pb-4">
+                html += `<div class="chat-message-right pb-4" xmlns="http://www.w3.org/1999/html">
                                 <div>
                                     <img src="${messages[i].userSender.image}"
                                          class="rounded-circle mr-1" alt="Chris Wood" width="40" height="40">
@@ -77,6 +82,8 @@ async function getListMessageOfConverstation(id) {
                                 <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
                                     <div class="font-weight-bold mb-1" style="font-weight: bold">Bạn</div>
                                     ${messages[i].content}
+                                    <br/>
+                                    ${image}
                                 </div>
                             </div>`
             } else {
@@ -89,6 +96,8 @@ async function getListMessageOfConverstation(id) {
                                 <div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
                                     <div class="font-weight-bold mb-1" style="font-weight: bold">${messages[i].userSender.fullName}</div>
                                         ${messages[i].content}
+                                        <br/>
+                                         ${image}
                                 </div>
                             </div>`
             }
@@ -131,7 +140,7 @@ async function onSendMessage(event) {
 
     const formData = new FormData();
     formData.append("file", fileIn.files[0]);
-    callApi('post',
+    callApiMessage('post',
         formData,
         `/messages?message=${message_input.value}&conversationId=${sendConversationId}`,
         (data) => {
@@ -177,6 +186,10 @@ function receivedMessage(payload) {
     const message = JSON.parse(payload.body)
     if ((message.conversationResponse.id + '') === (sendConversationId + '')) {
         let html = ''
+        let image = ''
+        message.urlMedia.forEach(url => {
+            image += `<img src="${url}" width="250px"style="cursor: pointer"/>`
+        })
         if (message.userSender.username === username) {
             html = `<div class="chat-message-right pb-4">
                                 <div>
@@ -187,6 +200,8 @@ function receivedMessage(payload) {
                                 <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
                                     <div class="font-weight-bold mb-1" style="font-weight: bold">Bạn</div>
                                     ${message.content}
+                                    <br/>
+                                         ${image}
                                 </div>
                             </div>`
         } else {
@@ -199,6 +214,8 @@ function receivedMessage(payload) {
                                 <div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
                                     <div class="font-weight-bold mb-1" style="font-weight: bold">${message.userSender.fullName}</div>
                                         ${message.content}
+                                        <br/>
+                                         ${image}
                                 </div>
                             </div>`
         }
@@ -266,7 +283,13 @@ form_sendMessage.addEventListener('submit', onSendMessage, true)
 search_vendor_form.addEventListener('submit', searchVendorByName, true)
 search_vendor_form_tablet.addEventListener('submit', searchVendorTablet, true)
 
-function callApi(type, data, theUrl, success) {
+
+
+function showImage(imageId) {
+    alert(imageId)
+}
+
+function callApiMessage(type, data, theUrl, success) {
     const url = new URL(theUrl, document.location);
     console.log(url.href)
     $.ajax({

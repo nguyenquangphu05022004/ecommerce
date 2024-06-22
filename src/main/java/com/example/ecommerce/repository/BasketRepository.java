@@ -16,6 +16,5 @@ public interface BasketRepository extends JpaRepository<Basket, Long> {
 
     @Modifying
     void deleteByStockIdAndUserId(Long id, Long id1);
-//    Basket updateBasketQuantityById(Long id, Integer quantity);
 
 }

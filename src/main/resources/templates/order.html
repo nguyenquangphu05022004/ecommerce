@@ -123,7 +123,7 @@
                             <td class="py-5" th:text="${stock.product.language.nameVn}"></td>
                             <td class="py-5">
                                 [[${stock.color}]]
-                                [[${stockType != null ? ' - ' + stockType.size.name : ''}]]
+                                [[${stockType != null && stockType.size.name == 'NO_SIZE' ? ' - ' + stockType.size.name : ''}]]
                             </td>
                             <td class="py-5" th:text="${stock.formatPrice}"></td>
                             <td class="py-5">[[${param.numberOfProduct}]]</td>
@@ -236,7 +236,7 @@
     }
     function checkCoupon(productId) {
         const code = document.getElementById("coupon").value;
-        callApi('post', '', `[(@{/vendor/product/${productId}/coupon?couponCode=${code}})]`, (coupon) => {
+        callApi('post', '', `[(@{/coupons/vendor/product/${productId}?couponCode=${code}})]`, (coupon) => {
             $("#coupon-decrease").html(coupon.percent + '%')
             let totalPrice = [[${totalPrice}]];
             totalPrice = parseFloat(totalPrice.replace(/,/g, ''));

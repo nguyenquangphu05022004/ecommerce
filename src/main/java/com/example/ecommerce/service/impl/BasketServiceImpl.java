@@ -2,8 +2,8 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.StockClassification;
-import com.example.ecommerce.domain.dto.product.BasketRequest;
-import com.example.ecommerce.domain.dto.product.BasketDto;
+import com.example.ecommerce.domain.dto.BasketRequest;
+import com.example.ecommerce.domain.dto.BasketDto;
 import com.example.ecommerce.domain.Basket;
 import com.example.ecommerce.domain.Stock;
 import com.example.ecommerce.domain.User;

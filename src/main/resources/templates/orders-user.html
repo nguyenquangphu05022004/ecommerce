@@ -94,13 +94,13 @@
                             <th scope="col">
                                 <img src="${src}" height="100" class="rounded-top" >
                             </th>
-                             <th scope="col">${order.stock.color}${order.stockClassification === null ? '' : ' - ' + order.stockClassification.size}</th>
+                             <th scope="col">${order.stock.color}${order.stockClassification != null && order.stockClassification.size === 'NO_SIZE' ? '' : ' - ' + order.stockClassification.size}</th>
                             <th scope="col">${order.stock.formatPrice}</th>
                             <th scope="col">${order.quantity}</th>
                             <th scope="col">${order.couponPercent != null ? order.couponPercent : "0"} %</th>
                             <th scope="col">${order.formatTotalPrice}</th>
-                            <th scope="col">${order.approval === false ? 'Chưa nhận đơn' : 'Đã nhận đơn'}</th>
-                            <th scope="col">${order.approval === true ? order.payment === 'PAY_BY_BANK' ? order.purchased === false ?  `<button class="btn btn-primary" onClick="paymentOverBank(${order.id}, ${order.totalPrice})">Thanh toán qua ngân hàng</button>` : 'Thanh toán qua ngân hàng' : 'Thanh toán tại nhà' : 'Đang kiểm tra kho'}</th>
+                            <th scope="col">${order.approval === false ? 'Đang kiểm tra kho' : 'Đã nhận đơn'}</th>
+                            <th scope="col">${order.payment === 'PAY_BY_BANK' ? order.approval === false ? 'Thanh toán qua ngân hàng' : order.purchased === false ?  `<button class="btn btn-primary" onClick="paymentOverBank(${order.id}, ${order.totalPrice})">Thanh toán qua ngân hàng</button>` : 'Thanh toán qua ngân hàng' : 'Thanh toán tại nhà'}</th>
                             <th scope="col">${order.purchased === false ? 'Chưa thanh toán' : 'Đã thanh toán'}</th>
                             <th scope="col">${order.received === false ? 'Chưa nhận' : 'Đã nhận'}</th>
                             <th scope="col">${buttonDelete}</th>

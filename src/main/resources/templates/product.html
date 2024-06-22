@@ -51,7 +51,7 @@
                                         th:text="${stock.color.value}"
                                 ></option>
                             </select>
-                            <div th:if="${product.stocks.get(0).stockClassifications.size > 0}">
+                            <div th:if="${product.stocks.get(0).stockClassifications.get(0).size.name != 'NO_SIZE'}">
                                 <h4 class="text-center">Kích cỡ</h4>
                                 <select id="size-product"
                                         name="size-product"
@@ -61,6 +61,17 @@
                                             th:value="${stockClassificationResponse.id}"
                                             th:if="${stockClassificationResponse.quantityCurrent != 0}"
                                             th:text="${stockClassificationResponse.size.name + ' - '  + 'Còn lại(' + stockClassificationResponse.quantityCurrent + ')'}"
+                                    ></option>
+                                </select>
+                            </div>
+                            <div th:unless="${product.stocks.get(0).stockClassifications.get(0).size.name != 'NO_SIZE'}">
+                                <select id="size-product"
+                                        name="size-product"
+                                        disabled
+                                        class="form-select mb-3">
+                                    <option
+                                            th:value="${product.stocks.get(0).stockClassifications.get(0).id}"
+                                            th:text="${'Còn lại(' + product.stocks.get(0).stockClassifications.get(0).quantityCurrent + ')'}"
                                     ></option>
                                 </select>
                             </div>
@@ -83,13 +94,13 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
-                                <button th:onclick="red_order([[${product.id}]], [[${product.language.nameVn}]])"
-                                   class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i
+                                <button  th:onclick="red_order([[${product.id}]], [[${product.language.nameVn}]])"
+                                   class="size-100 btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i
                                         class="fa fa-shopping-bag me-2 text-primary"></i>Đặt hàng</button>
                             </div>
                             <div class="col-lg-6">
                                 <a href="##" th:onclick="createBasket()"
-                                   class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
+                                   class="size-100 btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
                                     <i class="fa fa-shopping-bag   me-2 text-primary"></i>Thêm giỏ hàng</a></div>
                         </div>
 
@@ -366,7 +377,7 @@
                     if (stockClassfication.quantityOfProduct > 0) {
                         html += `<option selected="${index === 0}"
                                         value="${stockClassfication.id}"
-                                >${stockClassfication.size + ' - ' + stockClassfication.quantityOfProduct + '(Số lượng)'}</option>`
+                                >${(stockClassfication.size === 'NO_SIZE' ? '' : stockClassfication.size + ' - ')  + 'Còn lại(' + stockClassfication.quantityOfProduct + ')'}</option>`
                     }
                 })
                 selectElement.innerHTML = html

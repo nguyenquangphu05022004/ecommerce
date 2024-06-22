@@ -1,18 +1,20 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.dto.ENUM.SortProductType;
-import com.example.ecommerce.domain.dto.product.CategoryDto;
-import com.example.ecommerce.domain.dto.product.ProductDto;
-import com.example.ecommerce.domain.dto.product.TrackProductSellerDto;
-import com.example.ecommerce.domain.dto.user.UserRequest;
-import com.example.ecommerce.domain.dto.user.UserResponseInfo;
+import com.example.ecommerce.domain.dto.SortProductType;
+import com.example.ecommerce.domain.dto.CategoryDto;
+import com.example.ecommerce.domain.dto.ProductDto;
+import com.example.ecommerce.domain.dto.UserRequest;
+import com.example.ecommerce.domain.dto.UserResponseInfo;
+import com.example.ecommerce.domain.dto.UserTrack;
 import com.example.ecommerce.service.*;
 import com.example.ecommerce.utils.SortUtils;
 import com.example.ecommerce.utils.SystemUtils;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +26,10 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class HomeController {
     private final IProductService productService;
     private final ICategoryService categoryService;
-    private final ITrackProductSellerService trackProductSellerService;
     private final IUserService userService;
     private final IBasketService basketService;
 
@@ -119,6 +121,14 @@ public class HomeController {
     @GetMapping("/chat")
     public String chatPage() {
         return "chat";
+    }
+
+    @GetMapping("/system/logout")
+    public String logout(HttpServletRequest request) {
+        log.info("User {} was logout", SecurityUtils.username());
+        UserTrack.getInstance().getMap().remove(SecurityUtils.username());
+        request.getSession().invalidate();
+        return "redirect:/login?logout";
     }
 
 }

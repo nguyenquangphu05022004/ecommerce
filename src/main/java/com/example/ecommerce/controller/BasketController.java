@@ -1,13 +1,13 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.dto.product.BasketDto;
-import com.example.ecommerce.domain.dto.product.BasketRequest;
+import com.example.ecommerce.domain.dto.BasketDto;
+import com.example.ecommerce.domain.dto.BasketRequest;
 import com.example.ecommerce.service.IBasketService;
 import com.example.ecommerce.service.impl.BasketServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +32,7 @@ public class BasketController {
         return "basket";
     }
 
-    @PostMapping("/baskets")
+    @PostMapping(value = "/baskets", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public BasketDto createBasket(@RequestBody BasketRequest request,
                              HttpServletResponse response) {

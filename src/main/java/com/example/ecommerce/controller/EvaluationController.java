@@ -1,7 +1,7 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.dto.product.EvaluationDto;
-import com.example.ecommerce.domain.dto.product.EvaluationRequest;
+import com.example.ecommerce.domain.dto.EvaluationDto;
+import com.example.ecommerce.domain.dto.EvaluationRequest;
 import com.example.ecommerce.service.IEvaluationService;
 import com.example.ecommerce.service.impl.EvaluationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.example.ecommerce.converter;
 
 import com.example.ecommerce.domain.ChatMessage;
-import com.example.ecommerce.domain.dto.ENUM.Role;
+import com.example.ecommerce.domain.Role;
 import com.example.ecommerce.domain.dto.chat.ChatMessageResponse;
 import com.example.ecommerce.utils.SystemUtils;
 
@@ -31,7 +31,7 @@ public class ChatMessageMapper {
                         ))
                 .urlMedia(chatMessage.getImages() != null ?
                         chatMessage.getImages().stream()
-                                .map(image -> String.format("files/%s/%s", image.getShortUrl(), image.getName()))
+                                .map(image -> String.format("%s/%s", image.getShortUrl(), image.getName()))
                                 .collect(Collectors.toList()) : null)
                 .updatedAt(SystemUtils.getFormatDate(
                         chatMessage.getModifiedDate(),

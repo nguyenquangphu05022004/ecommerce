@@ -1,8 +1,8 @@
 package com.example.ecommerce.controller;
-import com.example.ecommerce.domain.dto.ENUM.Color;
-import com.example.ecommerce.domain.dto.product.ProductDto;
-import com.example.ecommerce.domain.dto.product.StockRequest;
-import com.example.ecommerce.domain.dto.product.StockResponse;
+import com.example.ecommerce.domain.Color;
+import com.example.ecommerce.domain.dto.ProductDto;
+import com.example.ecommerce.domain.dto.StockRequest;
+import com.example.ecommerce.domain.dto.StockResponse;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.IStockService;
 import lombok.RequiredArgsConstructor;

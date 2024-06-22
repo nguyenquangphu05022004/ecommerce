@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
                 .content(request.getContent())
                 .userSender(user)
                 .senderToConversation(conversationById.get())
+                .images(new ArrayList<>())
                 .build();
         if(file != null) {
             var image = imageService.uploadFile(file, SystemUtils.TAG);
@@ -71,7 +73,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
                 .findAllBySenderToConversationId(
                         conversationId
                 );
-        return chatMessages
+        List<ChatMessageResponse> messageResponse = chatMessages
                 .stream()
                 .map(chatMessage -> {
                     return ChatMessageMapper.mappertoChatMessageResponse(
@@ -80,5 +82,6 @@ public class ChatMessageServiceImpl implements IChatMessageService {
                     );
                 })
                 .collect(Collectors.toList());
+        return messageResponse;
     }
 }

@@ -562,6 +562,12 @@ body{margin-top:20px;}
         max-height: 200px;
         overflow-y: scroll;
     }
+    .button-add-product {
+        margin-top: 20px;
+    }
+    .size-100 {
+        width: 100%;
+    }
 }
 .chat-message-left,
 .chat-message-right {

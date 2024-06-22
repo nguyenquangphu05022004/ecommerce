@@ -1,6 +1,6 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.dto.utilize.EmailDetails;
+import com.example.ecommerce.domain.dto.EmailDetails;
 import com.example.ecommerce.service.EmailService;
 import com.example.ecommerce.utils.EmailUtils;
 import com.example.ecommerce.utils.SystemUtils;

@@ -133,7 +133,7 @@
                             </div>
                             <a th:href="@{/change-password}" style="color: #000; font-size: 18px"
                                class="dropdown-item">Đổi mật khẩu</a>
-                            <a th:href="@{/logout}" style="color: #000; font-size: 18px" class="dropdown-item">Đăng
+                            <a th:href="@{/system/logout}" style="color: #000; font-size: 18px" class="dropdown-item">Đăng
                                 xuất</a>
                         </div>
                     </div>
@@ -199,7 +199,7 @@
     </div>
 </div>
 <!-- Copyright End -->
-
+<div id="show-image-click"></div>
 <!-- Back to Top -->
 <a id="show-chat" sec:authorize="isAuthenticated()" class="btn btn-primary border-3 border-primary show-chat-support">Chat</a>
 <main class="content show-chat-support-dialog">

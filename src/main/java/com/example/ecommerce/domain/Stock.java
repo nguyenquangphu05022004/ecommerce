@@ -1,7 +1,5 @@
 package com.example.ecommerce.domain;
 
-import com.example.ecommerce.domain.dto.ENUM.Color;
-import com.example.ecommerce.domain.dto.ENUM.Size;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
