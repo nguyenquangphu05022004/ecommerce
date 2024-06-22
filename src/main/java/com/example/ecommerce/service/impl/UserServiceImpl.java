@@ -4,13 +4,12 @@ import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.converter.UserMapper;
 import com.example.ecommerce.domain.Image;
 import com.example.ecommerce.domain.User;
-import com.example.ecommerce.domain.dto.ENUM.Role;
+import com.example.ecommerce.domain.Role;
 import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
-import com.example.ecommerce.domain.dto.user.UserRequest;
-import com.example.ecommerce.domain.dto.user.UserResponseInfo;
+import com.example.ecommerce.domain.dto.UserRequest;
+import com.example.ecommerce.domain.dto.UserResponseInfo;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.UserRepository;
-import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IImageService;
 import com.example.ecommerce.service.IUserService;
 import com.example.ecommerce.utils.SystemUtils;
@@ -30,7 +29,6 @@ public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final IImageService imageService;
-    private final IFilesStorageService filesStorageService;
     private final ModelMapper mapper;
 
     @Override
@@ -96,26 +94,10 @@ public class UserServiceImpl implements IUserService {
     @Override
     @Transactional
     public void updateAvatar(MultipartFile multipartFile) {
-        try {
-            User user = userRepository.findByUsername(SecurityUtils.username()).get();
-            Image avatar = null;
-            if (user.getAvatar() != null) {
-                filesStorageService.deleteFile(user.getAvatar().getName());
-                avatar = user.getAvatar().toBuilder()
-                        .name(multipartFile.getOriginalFilename())
-                        .build();
-                filesStorageService.saveFile(multipartFile);
-            }
-            else {
-                 avatar = imageService.uploadFile(
-                         multipartFile,
-                        SystemUtils.TAG);
-            }
-            user.setAvatar(avatar);
-            userRepository.save(user);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        Image image = imageService.uploadFile(multipartFile, SystemUtils.TAG);
+        User user = userRepository.findByUsername(SecurityUtils.username()).get();
+        user.setAvatar(image);
+        userRepository.save(user);
     }
 
     @Override

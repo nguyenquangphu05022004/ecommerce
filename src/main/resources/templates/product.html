@@ -38,20 +38,42 @@
                             </script>
                         </div>
                         <div>
-                            <h4 class="text-center">Thể loại</h4>
-                            <div class="input-group mb-3" th:each="stock, state : ${product.stocks}">
-                                <label class="h6" style="font-size: 20px; margin-right: 10px" th:for="${stock.id}">[[${stock.decoration.color != null ? stock.decoration.color + ' - ' : '' + stock.decoration.size != null ? stock.decoration.size : ''}]] </label>
-                                <p style="margin-right: 10px">Số lượng([[${stock.quantityOfProduct}]]) </p>
-                                <input
-                                        type="radio"
-                                        class="form-check"
-                                        th:id='${stock.id}'
-                                        name="type"
-                                        style="height:20px; width:20px; vertical-align: middle;"
+                            <h4 class="text-center">Màu sắc</h4>
+                            <select id="color-product"
+                                    name="color-product"
+                                    class="form-select mb-3"
+                                    th:onchange="getStockById()"
+                            >
+                                <option th:selected="${state.first}"
+                                        th:each="stock, state : ${product.stocks}"
+                                        th:if="${stock.color != null}"
                                         th:value="${stock.id}"
-                                        th:onChange="getStockById([[${stock.id}]])"
-                                        th:checked = "${state.first}"
-                                />
+                                        th:text="${stock.color.value}"
+                                ></option>
+                            </select>
+                            <div th:if="${product.stocks.get(0).stockClassifications.get(0).size.name != 'NO_SIZE'}">
+                                <h4 class="text-center">Kích cỡ</h4>
+                                <select id="size-product"
+                                        name="size-product"
+                                        class="form-select mb-3">
+                                    <option th:selected="${state.first}"
+                                            th:each="stockClassificationResponse, state : ${product.stocks.get(0).stockClassifications}"
+                                            th:value="${stockClassificationResponse.id}"
+                                            th:if="${stockClassificationResponse.quantityCurrent != 0}"
+                                            th:text="${stockClassificationResponse.size.name + ' - '  + 'Còn lại(' + stockClassificationResponse.quantityCurrent + ')'}"
+                                    ></option>
+                                </select>
+                            </div>
+                            <div th:unless="${product.stocks.get(0).stockClassifications.get(0).size.name != 'NO_SIZE'}">
+                                <select id="size-product"
+                                        name="size-product"
+                                        disabled
+                                        class="form-select mb-3">
+                                    <option
+                                            th:value="${product.stocks.get(0).stockClassifications.get(0).id}"
+                                            th:text="${'Còn lại(' + product.stocks.get(0).stockClassifications.get(0).quantityCurrent + ')'}"
+                                    ></option>
+                                </select>
                             </div>
                         </div>
                         <div class="input-group quantity mb-5" style="width: 100px;">
@@ -72,13 +94,13 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
-                                <button th:onclick="red_order([[${product.id}]], [[${product.language.nameVn}]])"
-                                   class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i
+                                <button  th:onclick="red_order([[${product.id}]], [[${product.language.nameVn}]])"
+                                   class="size-100 btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i
                                         class="fa fa-shopping-bag me-2 text-primary"></i>Đặt hàng</button>
                             </div>
                             <div class="col-lg-6">
                                 <a href="##" th:onclick="createBasket()"
-                                   class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
+                                   class="size-100 btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
                                     <i class="fa fa-shopping-bag   me-2 text-primary"></i>Thêm giỏ hàng</a></div>
                         </div>
 
@@ -218,11 +240,10 @@
                         <div class="d-flex justify-content-between flex-lg-wrap">
                             <p class="text-dark fs-5 fw-bold">[[${p.formatPrice}]]</p>
                             <button
-                               th:onclick="addNewBasket([[${p.stocks.get(0).id}]])"
+                               th:onclick="addNewBasket([[${p.stocks.get(0).id}]], [[${p.stocks.get(0).stockClassifications.get(0).id}]])"
                                class="btn border border-secondary rounded-pill px-3 py-1 mb-4 text-primary"><i
                                     class="fa fa-shopping-bag me-2 text-primary"
                             >
-
                             </i>Thêm</button>
                         </div>
                     </div>
@@ -233,12 +254,13 @@
 </div>
 <!-- Single Product End -->
 <script th:inline="javascript">
-    function addNewBasket(stockId) {
+    function addNewBasket(stockId, stockClassificationId) {
         let theUrl = `[(@{/baskets})]`;
         const url = new URL(theUrl, document.location);
         const basket = {
             "stockId": stockId,
-            "operator": '+'
+            "operator": '+',
+            "stockClassificationId": stockClassificationId
         }
         $.ajax({
             type: "post",
@@ -258,14 +280,9 @@
         })
     }
     function createBasket() {
-        const typeProduct = document.getElementsByName("type")
-        let stockId;
-        for(let i = 0; i < typeProduct.length; i++) {
-            if(typeProduct[i].checked) {
-                stockId = typeProduct[i].value; break;
-            }
-        }
-        addNewBasket(stockId)
+        const stockID = document.getElementById("color-product").value;
+        const stockClassificationId = document.getElementById("size-product").value;
+        addNewBasket(stockID, stockClassificationId)
     }
 
     function callApi(type, data, theUrl, success) {
@@ -287,16 +304,6 @@
     }
 
     var valueRating = 1;
-
-    function initElements() {
-        //evaluations
-        // let html = '';
-        // [[${product}]].evaluations.forEach(evaluation => {
-        //     html += evaluationHtml(evaluation)
-        // })
-        // $("#nav-mission").html(html);
-    }
-
     function evaluationHtml(data) {
         let rate = ``;
         for (let i = 1; i <= data.rating; i++) {
@@ -342,21 +349,39 @@
     }
     function red_order(productId, productName) {
         const quantity = document.getElementById("quantity").value;
-        const typeProduct = document.getElementsByName("type")
-        let stockId;
-        for(let i = 0; i < typeProduct.length; i++) {
-            if(typeProduct[i].checked) {
-                stockId = typeProduct[i].value; break;
-            }
-        }
-        const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}`, location).href;
+        const stockId = document.getElementById("color-product").value;
+        const stockTypeElement = document.getElementById("size-product");
+        const stockTypeId = stockTypeElement.value;
+        const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}&stockType=${stockTypeId}`, location).href;
         window.location.href = url;
+        // if(stockTypeElement) {
+        //     const stockTypeId = stockTypeElement.value;
+        //     const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}&stockType=${stockTypeId}`, location).href;
+        //     window.location.href = url;
+        // } else {
+        //     const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}&stockType=0`, location).href;
+        //     window.location.href = url;
+        // }
     }
 
-    function getStockById(stockId) {
+    function getStockById() {
+        const stockId = document.getElementById('color-product').value;
         callApi('get', '', `[(@{/stocks/${stockId}})]`, (res) => {
+            console.log(res)
             const element = document.getElementById('image-product');
             const priceProduct = document.getElementById('price-product')
+            if(document.getElementById('size-product')) {
+                const selectElement = document.getElementById('size-product');
+                let html = ``;
+                res.stockClassifications.forEach((stockClassfication, index) => {
+                    if (stockClassfication.quantityOfProduct > 0) {
+                        html += `<option selected="${index === 0}"
+                                        value="${stockClassfication.id}"
+                                >${(stockClassfication.size === 'NO_SIZE' ? '' : stockClassfication.size + ' - ')  + 'Còn lại(' + stockClassfication.quantityOfProduct + ')'}</option>`
+                    }
+                })
+                selectElement.innerHTML = html
+            }
             priceProduct.innerHTML = getFormatNumber(res.price)
             if(res.images.length > 0) {
                 element.src = "/" + res.images[0].shortUrl + "/" + res.images[0].name;

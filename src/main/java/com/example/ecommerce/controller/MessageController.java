@@ -5,14 +5,14 @@ import com.example.ecommerce.domain.dto.chat.ChatMessageResponse;
 import com.example.ecommerce.service.IChatMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,22 +22,17 @@ import java.util.List;
 public class MessageController {
 
     private final IChatMessageService chatMessageService;
-
-    @MessageMapping("/chat.sendMessage/{usernameSender}/{conversationId}")
-    @SendTo("/topic/public/conversation/{conversationId}")
-    public ChatMessageResponse sendMessage(
-            @Payload ChatMessageRequest chatMessage,
-            @DestinationVariable("usernameSender") String usernameSender,
-            @DestinationVariable("conversationId") Long conversationId
+    @PostMapping("/messages")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addMessage(
+           @RequestParam("conversationId") Long conversationId,
+           @RequestParam("message") String message,
+           @RequestParam(value = "file", required = false) MultipartFile file
     ) {
-        chatMessage.setUsernameSender(usernameSender);
-        chatMessage.setSenderToConversationId(conversationId);
-        return chatMessageService.createMessage(chatMessage);
+         chatMessageService.createMessage(
+                 new ChatMessageRequest(message, conversationId),
+                 file);
     }
-
-
-
-
 
     @GetMapping("/message/user/{username}/conversation/{conversationId}")
     @ResponseBody

@@ -2,7 +2,7 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.domain.User;
 import com.example.ecommerce.domain.Verify;
-import com.example.ecommerce.domain.dto.utilize.EmailDetails;
+import com.example.ecommerce.domain.dto.EmailDetails;
 import com.example.ecommerce.domain.dto.utilize.SendEmailTask;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VerifyRepository;

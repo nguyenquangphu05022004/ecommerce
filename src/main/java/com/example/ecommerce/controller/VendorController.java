@@ -2,8 +2,8 @@ package com.example.ecommerce.controller;
 
 
 import com.example.ecommerce.domain.dto.chat.VendorResponseInbox;
-import com.example.ecommerce.domain.dto.product.CouponDto;
-import com.example.ecommerce.domain.dto.user.VendorDto;
+import com.example.ecommerce.domain.dto.CouponDto;
+import com.example.ecommerce.domain.dto.VendorDto;
 import com.example.ecommerce.service.ICouponService;
 import com.example.ecommerce.service.IVendorService;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +55,7 @@ public class VendorController {
         model.addAttribute("vendorId", vendorId);
         return "coupon";
     }
-    @PostMapping("/vendor/product/{productId}/coupon")
+    @PostMapping("/coupons/vendor/product/{productId}")
     @ResponseBody
     public CouponDto checkCouponExistsOrValid(@PathVariable("productId") Long productId,
                                               @RequestParam("couponCode") String couponCode) {

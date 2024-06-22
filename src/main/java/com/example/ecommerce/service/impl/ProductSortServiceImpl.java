@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.domain.dto.product.ProductDto;
+import com.example.ecommerce.domain.dto.ProductDto;
 import com.example.ecommerce.service.ProductSortService;
 
 import java.util.Collections;
@@ -23,9 +23,24 @@ public class ProductSortServiceImpl implements ProductSortService {
     @Override
     public List<ProductDto> sortByNumberOfSeller(List<ProductDto> products) {
         Collections.sort(products, (p1, p2) ->
-            p2.getNumberOfProductSold() - p1.getNumberOfProductSold()
+                {
+                    int sellerP1 = getTotalSeller(p1);
+                    int sellerP2 = getTotalSeller(p2);
+                    return sellerP2 - sellerP1;
+                }
         );
         return products;
+    }
+
+    public static int getTotalSeller(ProductDto p1) {
+        return p1.getStocks()
+                .stream()
+                .mapToInt(stock -> {
+                    return stock.getStockClassifications()
+                            .stream()
+                            .mapToInt(stockClassification -> stockClassification.getSeller())
+                            .sum();
+                }).sum();
     }
 
     @Override

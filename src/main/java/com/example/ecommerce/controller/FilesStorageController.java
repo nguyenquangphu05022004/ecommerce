@@ -19,18 +19,10 @@ public class FilesStorageController {
 
     private final IUserService userService;
     private final IFilesStorageService filesStorageService;
-
-
-    /**
-     * @param file: file want to upload
-     * @return: page current
-     * {type}: have two values is: USER and PRODUCT;
-     * -> USER: Update avatar;
-     * -> PRODUCT: image-product
-     */
     @PostMapping("/files/upload")
-    public String uploadFile(@RequestParam("files") List<MultipartFile> file) {
-        return null;
+    public String uploadFile(@RequestParam("file") MultipartFile file) {
+        userService.updateAvatar(file);
+        return "redirect:/user/profile";
     }
     @GetMapping(value = "/files/{type}/{fileName}",
             produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)

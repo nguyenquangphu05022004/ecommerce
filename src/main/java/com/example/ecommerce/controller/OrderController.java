@@ -1,16 +1,17 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.dto.ENUM.SelectFilterOrder;
-import com.example.ecommerce.domain.dto.ENUM.Status;
-import com.example.ecommerce.domain.dto.product.OrderDto;
-import com.example.ecommerce.domain.dto.product.OrderRequest;
-import com.example.ecommerce.domain.dto.product.StockResponse;
-import com.example.ecommerce.domain.dto.user.UserResponseInfo;
+import com.example.ecommerce.domain.StockClassification;
+import com.example.ecommerce.domain.dto.SelectFilterOrder;
+import com.example.ecommerce.domain.Status;
+import com.example.ecommerce.domain.dto.OrderDto;
+import com.example.ecommerce.domain.dto.OrderRequest;
+import com.example.ecommerce.domain.dto.StockResponse;
+import com.example.ecommerce.domain.dto.UserResponseInfo;
+import com.example.ecommerce.repository.StockClassificationRepository;
 import com.example.ecommerce.service.IOrderService;
 import com.example.ecommerce.service.IStockService;
 import com.example.ecommerce.service.IUserService;
-import com.example.ecommerce.service.impl.OrderServiceImpl;
 import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,13 +30,18 @@ public class OrderController {
     private final IOrderService orderService;
     private final IUserService userService;
     private final IStockService stockService;
-
+    private final StockClassificationRepository classificationRepository;
     @GetMapping("/orders/product/**")
     public String getFormCheckOut(@RequestParam("numberOfProduct") Integer numberOfProduct,
                                   @RequestParam("stockId") Long stockId,
+                                  @RequestParam("stockType") Long stockClassificationId,
                                   Model model) {
         StockResponse stockDto = stockService.findById(stockId);
-        UserResponseInfo userResponseInfo = userService.findUserByUsername(SecurityUtils.username());
+        UserResponseInfo userResponseInfo = userService
+                .findUserByUsername(SecurityUtils.username());
+        Optional<StockClassification> exist =
+                classificationRepository.findById(stockClassificationId);
+        if(exist.isPresent()) model.addAttribute("stockType", exist.get());
         model.addAttribute("stock", stockDto);
         model.addAttribute("user", userResponseInfo);
         model.addAttribute("totalPrice",

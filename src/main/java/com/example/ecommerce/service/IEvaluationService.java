@@ -1,10 +1,7 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.domain.dto.product.EvaluationDto;
-import com.example.ecommerce.domain.dto.product.EvaluationRequest;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
+import com.example.ecommerce.domain.dto.EvaluationDto;
+import com.example.ecommerce.domain.dto.EvaluationRequest;
 
 public interface IEvaluationService {
     EvaluationDto saveOrUpdate(EvaluationRequest evaluationRequest);

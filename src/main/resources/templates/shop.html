@@ -198,8 +198,8 @@
                         </div>
                         <div class="col-lg-6">
                             <button
-                                onclick="addNewBasket(${product.stocks[0].id})"
-                               class="btn border border-secondary rounded-pill px-3 text-primary w-100">
+                                onclick="addNewBasket(${product.stocks[0].id}, ${product.stocks[0].stockClassifications.length > 0 ? product.stocks[0].stockClassifications[0].id : 0})"
+                               class="button-add-product btn border border-secondary rounded-pill px-3 text-primary w-100">
                                 Thêm</button>
                         </div>
                     </div>
@@ -261,12 +261,13 @@
         window.location.href=getHrefSearch(getDateSearch(), page, vendor, sort);
     }
 
-    function addNewBasket(stockId) {
+    function addNewBasket(stockId, stockClassificationId) {
         let theUrl = `[(@{/baskets})]`;
         const url = new URL(theUrl, document.location);
         const basket = {
             "stockId": stockId,
-            "operator": '+'
+            "operator": '+',
+            "stockClassificationId": stockClassificationId
         }
         $.ajax({
             type: "post",

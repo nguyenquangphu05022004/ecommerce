@@ -2,9 +2,9 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.*;
-import com.example.ecommerce.domain.dto.ENUM.SortProductType;
-import com.example.ecommerce.domain.dto.product.ProductDto;
-import com.example.ecommerce.domain.dto.product.ProductRequest;
+import com.example.ecommerce.domain.dto.SortProductType;
+import com.example.ecommerce.domain.dto.ProductDto;
+import com.example.ecommerce.domain.dto.ProductRequest;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.CategoryRepository;
 import com.example.ecommerce.repository.ProductRepository;
@@ -116,9 +116,8 @@ public class ProductServiceImpl implements IProductService {
                                           SortProductType sortProductType,
                                           int page) {
 
-        Page<Product> productsPage = productRepository.findAll(PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM));
-        SystemUtils.totalPage = productsPage.getTotalPages();
-        List<ProductDto> products = productsPage.get()
+        List<Product> listProducts = productRepository.findAll();
+        List<ProductDto> products = listProducts.stream()
                 .filter(product -> {
                     if (categoryId <= 0) return true;
                     return product.getCategory().getId() == categoryId;
@@ -142,6 +141,11 @@ public class ProductServiceImpl implements IProductService {
                 })
                 .map(product -> mapToDto(product))
                 .collect(Collectors.toList());
+        SystemUtils.totalPage = (int) Math.ceil((double) products.size() / (double) SystemUtils.NUMBER_OF_ITEM);
+        products = products.stream()
+                .skip(page * SystemUtils.NUMBER_OF_ITEM)
+                .limit(Math.min(page * SystemUtils.NUMBER_OF_ITEM + SystemUtils.NUMBER_OF_ITEM, products.size()))
+                .collect(Collectors.toList());
         SortUtils.sortProduct(sortProductType, products);
         return products;
     }
@@ -150,7 +154,6 @@ public class ProductServiceImpl implements IProductService {
         if (product.getStocks() != null) {
             product.getStocks().stream().forEach(e -> {
                 e.setProduct(null);
-                e.updateQuantity();
             });
         }
         if (product.getEvaluations() != null) {
@@ -165,15 +168,12 @@ public class ProductServiceImpl implements IProductService {
                     (v1, v2) -> v2.getModifiedDate()
                             .compareTo(v1.getModifiedDate()));
         }
-        return mapper.map(product, ProductDto.class)
+        ProductDto productDto = mapper.map(product, ProductDto.class)
                 .toBuilder()
-                .numberOfProductSold(
-                        product.getProductSeller() != null ?
-                                product
-                                        .getProductSeller()
-                                        .getNumberOfProductsSold()
-                                : 0
-                )
+                .build();
+        return productDto.toBuilder()
+                .numberOfProductSold(ProductSortServiceImpl
+                        .getTotalSeller(productDto))
                 .build();
     }
 

@@ -2,11 +2,11 @@ package com.example.ecommerce.controller;
 
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.dto.ENUM.SortProductType;
-import com.example.ecommerce.domain.dto.product.CategoryDto;
-import com.example.ecommerce.domain.dto.product.EvaluationRequest;
-import com.example.ecommerce.domain.dto.product.ProductDto;
-import com.example.ecommerce.domain.dto.product.ProductRequest;
+import com.example.ecommerce.domain.dto.SortProductType;
+import com.example.ecommerce.domain.dto.CategoryDto;
+import com.example.ecommerce.domain.dto.EvaluationRequest;
+import com.example.ecommerce.domain.dto.ProductDto;
+import com.example.ecommerce.domain.dto.ProductRequest;
 import com.example.ecommerce.service.ICategoryService;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.utils.SystemUtils;

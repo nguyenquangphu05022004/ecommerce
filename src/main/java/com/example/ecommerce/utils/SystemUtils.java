@@ -11,10 +11,9 @@ import java.util.Random;
 
 @PropertySource("classpath:application.properties")
 public class SystemUtils {
-    public static int totalPage = 0;
+    public static int totalPage = 1;
     public static final Integer NUMBER_OF_ITEM = 9;
     public static final String VN_DATE = "dd/MM/yyyy HH:mm:ss";
-    public static final String EN_DATE = "yyyy/MM/dd HH:mm:ss";
     public static final String TAG = "files/image";
     public static String code() {
         StringBuilder builder = new StringBuilder();

@@ -1,12 +1,13 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.dto.ENUM.Role;
+import com.example.ecommerce.domain.Role;
 import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
-import com.example.ecommerce.domain.dto.user.UserRequest;
-import com.example.ecommerce.domain.dto.user.UserResponseInfo;
-import com.example.ecommerce.domain.singleton.UserTrack;
+import com.example.ecommerce.domain.dto.UserRequest;
+import com.example.ecommerce.domain.dto.UserResponseInfo;
+import com.example.ecommerce.domain.dto.UserTrack;
 import com.example.ecommerce.service.IUserService;
 import com.example.ecommerce.service.VerifyService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -53,12 +54,14 @@ public class UserController {
     @PostMapping("/change-password")
     public String changePassword(@RequestParam("oldPassword") String oldPass,
                                  @RequestParam("newPassword") String newPass,
-                                 @RequestParam("reNewPassword") String reNewPassword) {
+                                 @RequestParam("reNewPassword") String reNewPassword,
+                                 HttpServletRequest request) {
         if (newPass.isEmpty() || reNewPassword.isEmpty() || !newPass.equals(reNewPassword)) {
             return "redirect:/change-password?error=true";
         } else {
             userService.changePassword(oldPass, newPass);
-            return "redirect:/change-password?status=true";
+            request.getSession().invalidate();
+            return "redirect:/login";
         }
     }
 

@@ -2,7 +2,7 @@ package com.example.ecommerce.converter;
 
 import com.example.ecommerce.domain.Conversation;
 import com.example.ecommerce.domain.dto.chat.ConversationResponse;
-import com.example.ecommerce.domain.singleton.UserTrack;
+import com.example.ecommerce.domain.dto.UserTrack;
 
 public class ConversationMapper {
 

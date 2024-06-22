@@ -1,8 +1,8 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.domain.dto.ENUM.SortProductType;
-import com.example.ecommerce.domain.dto.product.ProductDto;
-import com.example.ecommerce.domain.dto.product.ProductRequest;
+import com.example.ecommerce.domain.dto.SortProductType;
+import com.example.ecommerce.domain.dto.ProductDto;
+import com.example.ecommerce.domain.dto.ProductRequest;
 
 import java.util.List;
 

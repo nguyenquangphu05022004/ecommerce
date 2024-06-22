@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -16,6 +18,7 @@ public class ChatMessageResponse extends BaseDto {
     private ConversationResponse conversationResponse;
     private MessageType messageType;
     private String updatedAt;
+    private List<String> urlMedia;
     public static enum MessageType {
         RECEIVE,
         SEND

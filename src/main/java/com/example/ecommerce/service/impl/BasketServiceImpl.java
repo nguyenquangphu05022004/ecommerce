@@ -1,8 +1,9 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.dto.product.BasketRequest;
-import com.example.ecommerce.domain.dto.product.BasketDto;
+import com.example.ecommerce.domain.StockClassification;
+import com.example.ecommerce.domain.dto.BasketRequest;
+import com.example.ecommerce.domain.dto.BasketDto;
 import com.example.ecommerce.domain.Basket;
 import com.example.ecommerce.domain.Stock;
 import com.example.ecommerce.domain.User;
@@ -53,10 +54,11 @@ public class BasketServiceImpl implements IBasketService {
         Basket basket = null;
         User user = userRepository.findByUsername(SecurityUtils.username()).get();
         Optional<Basket> optionBasket = basketRepository
-                .findByUserIdAndStockId
+                .findByUserIdAndStockIdAndStockClassificationId
                         (
                                 user.getId(),
-                                basketRequest.getStockId()
+                                basketRequest.getStockId(),
+                                basketRequest.getStockClassificationId()
                         );
         if (optionBasket.isPresent()) {
             basket = optionBasket.get();
@@ -76,6 +78,9 @@ public class BasketServiceImpl implements IBasketService {
                     .quantity(1)
                     .stock(Stock.builder()
                             .id(basketRequest.getStockId())
+                            .build())
+                    .stockClassification(StockClassification.builder()
+                            .id(basketRequest.getStockClassificationId())
                             .build())
                     .user(user)
                     .build();

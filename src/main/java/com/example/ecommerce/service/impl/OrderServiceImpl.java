@@ -1,14 +1,11 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.Coupon;
-import com.example.ecommerce.domain.Order;
-import com.example.ecommerce.domain.dto.ENUM.Status;
-import com.example.ecommerce.domain.Stock;
-import com.example.ecommerce.domain.User;
-import com.example.ecommerce.domain.dto.product.OrderDto;
-import com.example.ecommerce.domain.dto.product.OrderRequest;
-import com.example.ecommerce.domain.dto.ENUM.SelectFilterOrder;
+import com.example.ecommerce.domain.*;
+import com.example.ecommerce.domain.Status;
+import com.example.ecommerce.domain.dto.OrderDto;
+import com.example.ecommerce.domain.dto.OrderRequest;
+import com.example.ecommerce.domain.dto.SelectFilterOrder;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IOrderService;
@@ -29,6 +26,7 @@ public class OrderServiceImpl implements IOrderService {
     private final CouponRepository couponRepository;
     private final BasketRepository basketRepository;
     private final StockRepository stockRepository;
+    private final StockClassificationRepository stockClassificationRepository;
     private final ModelMapper mapper;
 
 
@@ -45,7 +43,6 @@ public class OrderServiceImpl implements IOrderService {
     public void delete(Long id) {
         orderRepository.deleteById(id);
     }
-
 
 
     @Override
@@ -65,13 +62,20 @@ public class OrderServiceImpl implements IOrderService {
                         .findById(orderDto.getCouponId())
                         .orElseThrow()
                 : null;
-
+        StockClassification stockClassification = stockClassificationRepository
+                .findById(orderDto.getStockClassificationId())
+                .orElseThrow(() -> new NotFoundException(
+                        "StockClassificationId",
+                        orderDto.getStockClassificationId() + "")
+                );
         Order order = Order.builder()
                 .stock(stock)
                 .payment(orderDto.getPayment())
                 .quantity(orderDto.getQuantity())
                 .user(user)
                 .coupon(coupon)
+                .stockClassification(stockClassification)
+                .status(Status.NOT_APPROVAL)
                 .build();
         orderRepository.save(order);
         basketRepository.deleteByStockIdAndUserId(stock.getId(), user.getId());
@@ -80,7 +84,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public List<OrderDto> getAllOrderOfCustomer(Status status) {
-        if(status == Status.ALL) {
+        if (status == Status.ALL) {
             return getAll();
         }
         return orderRepository
@@ -97,16 +101,22 @@ public class OrderServiceImpl implements IOrderService {
     public void approval(Long orderId) {
         Order order = orderRepository.findById(orderId).get();
         order.setApproval(true);
+        order.setStatus(Status.PROCESSING);
         orderRepository.save(order);
     }
 
     @Override
+    @Transactional
     public void updatePayment(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("OrderId", orderId + ""));
         order.setPurchased(true);
+        StockClassification stockClassification = order.getStockClassification();
+        stockClassification.setSeller(order.getQuantity() + stockClassification.getSeller());
+        order.setStockClassification(stockClassification);
         orderRepository.save(order);
     }
+
     @Override
     public List<OrderDto> getAllOrderOfVendor(SelectFilterOrder selectFilerOrder) {
         List<Order> orders = new ArrayList<>();
@@ -148,6 +158,9 @@ public class OrderServiceImpl implements IOrderService {
 
     private OrderDto mapToDto(Order entity) {
         entity.getUser().setVendor(null);
+        entity.getUser().setEvaluations(null);
+        entity.getStock().setOrders(null);
+        entity.getStock().getProduct().setStocks(null);
         return mapper.map(entity, OrderDto.class);
     }
 }

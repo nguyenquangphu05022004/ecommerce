@@ -1,5 +1,6 @@
 package com.example.ecommerce.domain.dto.utilize;
 
+import com.example.ecommerce.domain.dto.EmailDetails;
 import com.example.ecommerce.utils.EmailUtils;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;

@@ -1,10 +1,9 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.converter.CouponConverterImpl;
 import com.example.ecommerce.domain.Coupon;
 import com.example.ecommerce.domain.Vendor;
-import com.example.ecommerce.domain.dto.product.CouponDto;
+import com.example.ecommerce.domain.dto.CouponDto;
 import com.example.ecommerce.exception.ExpireCodeException;
 import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.CouponRepository;
@@ -13,10 +12,8 @@ import com.example.ecommerce.service.ICouponService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

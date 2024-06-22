@@ -1,0 +1,80 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/admin/layout}">
+
+<head>
+    <title>Stock</title>
+</head>
+<body layout:fragment="body">
+<div class="col-sm-12 col-xl-12">
+    <div class="bg-light rounded h-100 p-4">
+        <h6 class="mb-4">Update kho hàng</h6>
+        <form th:action= "@{/vendor/products/stock/edit/{stockId}(stockId=${stock.id})}"
+              method = "post" role="form" th:object="${stock}"
+              enctype="multipart/form-data">
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{productId}">
+            <div class="form-floating mb-3">
+                <input type="text"
+                       class="form-control"
+                       id="code"
+                       name="code"
+                       th:field="*{code}"
+                       placeholder="Ví dụ: giày">
+                <label for="code">Product Code</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text"
+                       class="form-control"
+                       id="price"
+                       name="price"
+                       th:field="*{price}"
+                       placeholder="Ví dụ: giày">
+                <label for="price">Price</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input class="form-control" type="text" disabled
+                       id="check"
+                       value="Example: quantity;size,quantity;size => 20;S,30;M">
+                <label for="check">Ví dụ về nhập mẫu của phân loại</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text"
+                       class="form-control"
+                       id="formatClassification"
+                       name="formatClassification"
+                       th:field="*{formatClassification}"
+                       placeholder="Example: quantity;size,quantity;size">
+                <label for="formatClassification">Phân loại</label>
+            </div>
+            <div class="form-floating mb-4">
+                <select
+                        th:field="*{color}"
+                >
+                    <span th:each="color : ${colors}">
+                        <option th:value="${color.name}">[[${color.value}]]</option>
+                    </span>
+                </select>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="file"
+                       class="form-control"
+                       id="files"
+                       name="files"
+                       th:field="*{multipartFiles}"
+                       placeholder="Ví dụ: giay">
+                <label for="files">Image</label>
+            </div>
+            <div class="form-floating mb-3">
+               <img
+                       th:each="image : ${images}"
+                       th:src="@{/{shortUrl}/{fileName}(shortUrl=${image.shortUrl}, fileName=${image.name})}"
+               >
+            </div>
+            <button type="submit" class="btn btn-primary w-100">ADD</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
