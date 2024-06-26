@@ -13,6 +13,8 @@ services:
       - uploadsImage:/app/src/main/resources/static/uploads
     ports:
       - 8081:8081
+    depends_on:
+      - mysql_db
   phpmyadmin:
     image: phpmyadmin
     ports:

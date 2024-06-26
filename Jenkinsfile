@@ -16,8 +16,8 @@ pipeline {
 
             steps {
                 withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
-                    sh 'docker build -t irohas2004/ecommerce:2.8 .'
-                    sh 'docker push irohas2004/ecommerce:2.8'
+                    sh 'docker build -t irohas2004/ecommerce:latest .'
+                    sh 'docker push irohas2004/ecommerce:latest'
                 }
             }
         }
@@ -33,7 +33,7 @@ pipeline {
 
                     sh 'docker network create mynetwork'
                     sh 'docker run -d --name mysql_db -v `pwd`/mydata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=irohas2004 --network mynetwork mysql:8.0'
-                    sh 'docker run -d --name ecommerce-app -v `pwd`/uploadsImage:/app/src/main/resources/static/uploads -p 8081:8081 --network mynetwork irohas2004/ecommerce:2.8'
+                    sh 'docker run -d --name ecommerce-app -v `pwd`/uploadsImage:/app/src/main/resources/static/uploads -p 8081:8081 --network mynetwork irohas2004/ecommerce:latest'
                     sh 'docker run -d --name phpmyadmin -p 8085:80 -e PMA_HOST=mysql_db --network mynetwork --link mysql_db phpmyadmin'
                 }
             }
