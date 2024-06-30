@@ -25,8 +25,9 @@ public class Vendor extends Base{
     @OneToMany(mappedBy = "vendor")
     private List<Product> products = new ArrayList<>();
     private Integer perMoneyDelivery;
-
     @OneToMany(mappedBy = "vendor")
     private List<Coupon> coupons = new ArrayList<>();
-
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "vendor_favorite_id")
+    private VendorFavorite vendorFavorite;
 }

@@ -6,9 +6,7 @@ import com.example.ecommerce.domain.dto.SortProductType;
 import com.example.ecommerce.domain.dto.ProductDto;
 import com.example.ecommerce.domain.dto.ProductRequest;
 import com.example.ecommerce.exception.NotFoundException;
-import com.example.ecommerce.repository.CategoryRepository;
-import com.example.ecommerce.repository.ProductRepository;
-import com.example.ecommerce.repository.VendorRepository;
+import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.utils.SortUtils;
 import com.example.ecommerce.utils.SystemUtils;
@@ -31,6 +29,7 @@ public class ProductServiceImpl implements IProductService {
     private final VendorRepository vendorRepository;
     private final ModelMapper mapper;
     private final CategoryRepository categoryRepository;
+    private final NotificationRepository notificationRepository;
 
     @Override
     public List<ProductDto> getAll() {
@@ -66,6 +65,18 @@ public class ProductServiceImpl implements IProductService {
                 .category(category)
                 .description(request.getDescription())
                 .build();
+        product.notification(
+                notificationRepository.save(
+                        new Notification(
+                                String.format(
+                                        "%s vừa có sản phẩm mới, có lẽ bạn sẽ thích: %s",
+                                       vendor.getShopName(),
+                                       product.getLanguage().getNameVn()
+                                ),
+                                product
+                        )
+                )
+        );
         productRepository.save(product);
     }
 
@@ -172,9 +183,11 @@ public class ProductServiceImpl implements IProductService {
                 .toBuilder()
                 .build();
         return productDto.toBuilder()
+                .vendor(VendorServiceImpl.mapToDto(product.getVendor()))
                 .numberOfProductSold(ProductSortServiceImpl
                         .getTotalSeller(productDto))
                 .build();
     }
+
 
 }

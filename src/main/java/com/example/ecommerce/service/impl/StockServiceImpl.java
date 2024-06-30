@@ -1,15 +1,13 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.domain.Image;
-import com.example.ecommerce.domain.Product;
-import com.example.ecommerce.domain.Stock;
-import com.example.ecommerce.domain.StockClassification;
-import com.example.ecommerce.domain.Size;
+import com.example.ecommerce.domain.*;
 import com.example.ecommerce.domain.dto.StockRequest;
 import com.example.ecommerce.domain.dto.StockResponse;
 import com.example.ecommerce.exception.NotFoundException;
+import com.example.ecommerce.repository.NotificationRepository;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.StockRepository;
+import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IImageService;
 import com.example.ecommerce.service.IStockService;
 import com.example.ecommerce.utils.SystemUtils;
@@ -31,6 +29,8 @@ public class StockServiceImpl implements IStockService {
     private final IImageService imageService;
     private final ProductRepository productRepository;
     private final ModelMapper mapper;
+    private final NotificationRepository notificationRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<StockResponse> getAll() {
@@ -105,7 +105,7 @@ public class StockServiceImpl implements IStockService {
                     })
                     .collect(Collectors.toList());
         }
-        if(stock == null) {
+        if (stock == null) {
             stock = new Stock();
         }
         stock = stock.toBuilder()
@@ -118,6 +118,17 @@ public class StockServiceImpl implements IStockService {
                 .id(stockRequest.getId())
                 .build();
         stockRepository.save(stock);
+        stock.getProduct().notification
+                (
+                        notificationRepository.save(
+                                new Notification(
+                                        String.format(
+                                                "Sản phẩm: %s vừa có thêm loại mặt hàng mới vui lòng kiểm tra",
+                                                product.getLanguage().getNameVn()),
+                                        product
+                                )
+                        )
+                );
     }
 
     @Override

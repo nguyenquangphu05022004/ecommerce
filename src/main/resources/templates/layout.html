@@ -67,6 +67,32 @@
                     <a th:href="@{/coupons}" class="nav-item nav-link text-dark " style="font-size: 22px">Giảm giá</a>
                     <a th:href="@{/seller}" class="nav-item nav-link text-dark " style="font-size: 22px">Bán Hàng</a>
                 </div>
+                <!-- Navbar -->
+                <ul sec:authorize="isAuthenticated()" class="navbar-nav d-flex flex-row me-1">
+                    <li class="nav-item me-3 me-lg-0">
+                        <div class="dropdown">
+                            <a data-mdb-dropdown-init class="me-3 dropdown-toggle hidden-arrow" href="#" id="navbarDropdownMenuLink"
+                               role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-bell text-primary fa-2x"></i>
+                                <span class="position-absolute bg-secondary
+                        rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
+                                      id="notification"
+                                      style="top: -5px; left: 15px; height: 20px; min-width: 20px;">[[${numberOfNotification}]]</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                                <div th:each="notification : ${notifications}">
+                                    <a th:href="@{/products/{productId}/{productName}(productId=${notification.product.id}, productName=${notification.product.language.nameVn})}" class="dropdown-item">
+                                        <h6 class="fw-normal mb-0 text-truncate" style="max-width: 300px">[[${notification.message}]]</h6>
+                                        <small>15 minutes ago</small>
+                                    </a>
+                                    <hr class="dropdown-divider">
+                                </div>
+                                <a href="#" class="dropdown-item text-center">See all notifications</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <!-- Navbar -->
                 <div class="d-flex m-3 me-0">
                     <a th:href="@{/user/my-basket}"
                        class="position-relative me-4 my-auto"

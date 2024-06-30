@@ -5,17 +5,16 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Data
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-
 public class VendorDto extends BaseDto {
     private String shopName;
-    private UserResponseInfo user;
     private Integer perMoneyDelivery;
-
+    private int numberOfProduct;
+    private int numberOfUserFavorite;
     public String getFormatMoneyDelivery() {
         return SystemUtils.getFormatNumber(perMoneyDelivery);
     }
+
 }

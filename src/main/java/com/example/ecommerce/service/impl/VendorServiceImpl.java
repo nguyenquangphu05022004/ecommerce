@@ -2,6 +2,9 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.converter.ConversationMapper;
+import com.example.ecommerce.domain.Role;
+import com.example.ecommerce.domain.VendorFavorite;
+import com.example.ecommerce.domain.dto.VendorRequest;
 import com.example.ecommerce.domain.dto.chat.ConversationResponse;
 import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
 import com.example.ecommerce.domain.dto.chat.VendorResponseInbox;
@@ -13,9 +16,11 @@ import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IVendorService;
+import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +30,6 @@ import java.util.stream.Collectors;
 public class VendorServiceImpl implements IVendorService {
     private final VendorRepository vendorRepository;
     private final UserRepository userRepository;
-    private final ModelMapper mapper;
 
 
     @Override
@@ -36,10 +40,17 @@ public class VendorServiceImpl implements IVendorService {
                 .collect(Collectors.toList());
     }
 
-    private VendorDto mapToDto(Vendor vendor) {
-        vendor.setUser(null);
-        vendor.setProducts(null);
-        return mapper.map(vendor, VendorDto.class);
+    public static VendorDto mapToDto(Vendor vendor) {
+        VendorDto vendorResponse = SystemUtils.mapper.map(vendor, VendorDto.class)
+                .toBuilder()
+                .numberOfProduct(vendor.getProducts().size())
+                .numberOfUserFavorite(
+                        vendor.getVendorFavorite() != null ?
+                                vendor.getVendorFavorite().getUsers().size() :
+                                0
+                )
+                .build();
+        return vendorResponse;
     }
 
     @Override
@@ -60,12 +71,18 @@ public class VendorServiceImpl implements IVendorService {
     }
 
     @Override
-    public VendorDto saveOrUpdate(VendorDto vendorDto) {
-        User user = userRepository.findById(vendorDto.getUser().getId()).get();
-        user.setRole(vendorDto.getUser().getRole());
-        Vendor vendor = new Vendor();
-        vendor.setUser(user);
-        vendor.setShopName(vendorDto.getShopName());
+    public VendorDto saveOrUpdate(VendorRequest request) {
+        User user = userRepository.findByUsername(request.getUsername())
+                        .orElseThrow(() -> new NotFoundException(
+                                "Username",
+                                request.getUsername()
+                        ));
+        user.setRole(Role.VENDOR);
+        Vendor vendor = Vendor.builder()
+                .user(user)
+                .shopName(request.getShopName())
+                .perMoneyDelivery(request.getPerMoneyDelivery())
+                .build();
         return mapToDto(vendorRepository.save(vendor));
     }
 
@@ -112,5 +129,23 @@ public class VendorServiceImpl implements IVendorService {
                     .build();
         }).toList();
         return vendorResponses;
+    }
+
+    @Override
+    @Transactional
+    public void followUser(Long vendorId) {
+        User user = userRepository.findByUsername(
+                SecurityUtils.username()
+        ).orElseThrow();
+        Vendor vendor = vendorRepository.findById(vendorId)
+                .orElseThrow(() -> new NotFoundException(
+                        "VendorId",
+                        vendorId.toString()
+                ));
+        if(vendor.getVendorFavorite() == null) {
+            vendor.setVendorFavorite(new VendorFavorite());
+        }
+        vendor.getVendorFavorite().addUser(user);
+        vendorRepository.save(vendor);
     }
 }

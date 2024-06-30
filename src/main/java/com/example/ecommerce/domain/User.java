@@ -12,7 +12,7 @@ import java.util.*;
 @Getter
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class User extends Base{
+public class User extends Base {
     @Column(length = 20)
     private String username;
     private String password;
@@ -37,6 +37,8 @@ public class User extends Base{
     private List<Order> orders = new ArrayList<>();
     @ManyToMany(mappedBy = "users")
     private List<Conversation> conversations = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Notification> notifications = new ArrayList<>();
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -46,8 +48,6 @@ public class User extends Base{
     }
 
 
-
-
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), username);
@@ -55,7 +55,7 @@ public class User extends Base{
 
     @Transient
     public String defaultImage() {
-        if(this.avatar == null) {
+        if (this.avatar == null) {
             return "https://ssl.gstatic.com/accounts/ui/avatar_2x.png";
         }
         return "/files/image/" + this.avatar.getName();

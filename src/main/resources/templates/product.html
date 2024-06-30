@@ -6,7 +6,7 @@
 <head>
     <title th:text="${product.language.nameVn}"></title>
 </head>
-<body layout:fragment="body" >
+<body layout:fragment="body">
 <!-- Single Product Start -->
 <div class="container-fluid mt-5" style="padding-top: 52px;">
     <div class="container py-5">
@@ -14,10 +14,14 @@
             <div class="col-lg-8 col-xl-9">
                 <div class="row g-4">
                     <div class="col-lg-6">
-                            <a href="#">
-                                <img  th:if="${product.stocks.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                <img id = "image-product" th:unless="${product.stocks.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${product.stocks.get(0).images.get(0).shortUrl}, fileName=${product.stocks.get(0).images.get(0).name})}" class="img-fluid w-100 rounded-top" alt="">
-                            </a>
+                        <a href="#">
+                            <img th:if="${product.stocks.size == 0}"
+                                 src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
+                                 class="img-fluid w-100 rounded-top" alt="">
+                            <img id="image-product" th:unless="${product.stocks.size == 0}"
+                                 th:src="@{/{shortUrl}/{fileName}(shortUrl=${product.stocks.get(0).images.get(0).shortUrl}, fileName=${product.stocks.get(0).images.get(0).name})}"
+                                 class="img-fluid w-100 rounded-top" alt="">
+                        </a>
                     </div>
                     <div class="col-lg-6">
                         <h4 class="fw-bold mb-3">[[${product.language.nameVn}]]</h4>
@@ -94,9 +98,11 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
-                                <button  th:onclick="red_order([[${product.id}]], [[${product.language.nameVn}]])"
-                                   class="size-100 btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i
-                                        class="fa fa-shopping-bag me-2 text-primary"></i>Đặt hàng</button>
+                                <button th:onclick="red_order([[${product.id}]], [[${product.language.nameVn}]])"
+                                        class="size-100 btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
+                                    <i
+                                            class="fa fa-shopping-bag me-2 text-primary"></i>Đặt hàng
+                                </button>
                             </div>
                             <div class="col-lg-6">
                                 <a href="##" th:onclick="createBasket()"
@@ -106,15 +112,48 @@
 
                     </div>
                     <div class="col-lg-12">
+                        <div class="d-flex flex-wrap justify-content-around">
+                            <div class="d-flex flex-column mb-3">
+                                <h5 class="text-center">[[${product.vendor.shopName}]]</h5>
+                                <div class="d-flex flex-row ju">
+                                    <button class="btn btn-primary" style="margin-right: 10px" th:onclick="followVendor([[${product.vendor.id}]])">Theo doi</button>
+                                    <a class="btn btn-primary" th:href="@{/shop/search/products?vendorId={vendorId}(vendorId=${product.vendor.id})}">Xem Shop</a>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-row justify-content-around">
+                                <div class="d-flex justify-content-between flex-column">
+                                    <div class="d-flex flex-row justify-content-between" style="margin-right: 20px; width: 180px">
+                                        <p style="font-size: 18px;">Danh gia</p>
+                                        <a style="font-size: 18px;"  th:href="@{/evaluations/vendor/{vendorId}(vendorId=${product.vendor.id})}" class="text-danger">52</a>
+                                    </div>
+                                    <div class="d-flex flex-row justify-content-between"style="margin-right: 20px; width: 180px">
+                                        <p style="font-size: 18px;">San pham</p>
+                                        <a style="font-size: 18px;" class="text-danger" th:href="@{/shop/search/products?vendorId={vendorId}(vendorId=${product.vendor.id})}">[[${product.vendor.numberOfProduct}]]</a>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between flex-column">
+                                    <div class="d-flex flex-row justify-content-between" style="margin-right: 20px; width: 180px">
+                                        <p style="font-size: 18px;">Tham gia</p>
+                                        <p style="font-size: 18px;" class="text-danger">52</p>
+                                    </div>
+                                    <div class="d-flex flex-row justify-content-between" style="margin-right: 20px; width: 180px" >
+                                        <p style="font-size: 18px;">Nguoi theo doi</p>
+                                        <p style="font-size: 18px;" class="text-danger" >[[${product.vendor.numberOfUserFavorite}]]</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
                         <nav>
                             <div class="nav nav-tabs mb-3">
                                 <button class="nav-link active border-white border-bottom-0" type="button" role="tab"
                                         id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about"
-                                        aria-controls="nav-about" aria-selected="true">Mô tả
+                                        aria-controls="nav-about" aria-selected="true">mô tả
                                 </button>
                                 <button class="nav-link border-white border-bottom-0" type="button" role="tab"
                                         id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission"
-                                        aria-controls="nav-mission" aria-selected="false">Đánh giá
+                                        aria-controls="nav-mission" aria-selected="false">đánh giá
                                 </button>
                             </div>
                         </nav>
@@ -124,8 +163,11 @@
 
                             </div>
                             <div class="tab-pane" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
-                                <div class="d-flex" th:each="evaluation : ${product.evaluations}" th:id="${'evaluation_' + evaluation.id}">
-                                    <img th:src="@{{url}(url=${evaluation.user.defaultImage})}" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
+                                <div class="d-flex" th:each="evaluation : ${product.evaluations}"
+                                     th:id="${'evaluation_' + evaluation.id}">
+                                    <img th:src="@{{url}(url=${evaluation.user.defaultImage})}"
+                                         class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;"
+                                         alt="">
                                     <div class="">
                                         <p class="mb-2" style="font-size: 14px;">[[${evaluation.formatDate}]]</p>
                                         <div class="d-flex justify-content-between">
@@ -135,7 +177,8 @@
                                             </div>
                                         </div>
                                         <p class="text-dark">[[${evaluation.content}]]</p>
-                                        <img th:each="image : ${evaluation.images}" th:src="@{/files/image/{imageName}(imageName=${image.name})}"
+                                        <img th:each="image : ${evaluation.images}"
+                                             th:src="@{/files/image/{imageName}(imageName=${image.name})}"
                                              class="img-fluid rounded p-3"
                                              style="width: 100px; height: 100px;" alt="">
                                     </div>
@@ -151,9 +194,9 @@
                         </div>
                     </div>
 
-                    <form  th:action="@{/evaluations}"
-                           id="form-comment"
-                          method="post"  th:object="${evaluation}"
+                    <form th:action="@{/evaluations}"
+                          id="form-comment"
+                          method="post" th:object="${evaluation}"
                           sec:authorize="isAuthenticated()"
                           enctype="multipart/form-data"
                     >
@@ -162,7 +205,7 @@
                                name="productId"
                                th:field="*{productId}"
                                id="productId"
-                               >
+                        >
                         <div class="row g-4">
                             <div class="col-lg-12">
                                 <div class="border-bottom rounded my-4">
@@ -196,7 +239,8 @@
                                         </div>
                                     </div>
                                     <button type="submit"
-                                       class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">Đăng
+                                            class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
+                                        Đăng
                                     </button>
                                 </div>
                             </div>
@@ -212,113 +256,124 @@
                             <ul class="list-unstyled fruite-categorie">
                                 <li th:each="category: ${categories}">
                                     <div class="d-flex justify-content-between fruite-name">
-                                        <a th:href="@{/shop/search/products?categoryId={categoryId}(categoryId=${category.id})}"><i class="fas me-2"></i>[[${category.name}]]</a>
+                                        <a th:href="@{/shop/search/products?categoryId={categoryId}(categoryId=${category.id})}"><i
+                                                class="fas me-2"></i>[[${category.name}]]</a>
                                         <span>([[${category.numberOfProduct}]])</span>
                                     </div>
                                 </li>
                             </ul>
                         </div>
                     </div>
+                </div>
             </div>
-        </div>
-        <h1 class="fw-bold mb-0">Các sản phẩm liên quan</h1>
-        <div class="vesitable">
-            <div class="owl-carousel vegetable-carousel justify-content-center" id="relative-product">
-                <div th:each="p : ${products}" th:if="${p.id != product.id}" class="border border-primary rounded position-relative">
-                    <div class="vesitable-img">
-                        <a th:href="@{/products/{productId}/{productName}(productId=${p.id}, productName=${p.language.nameVn})}">
-                            <img th:if="${p.stocks.size == 0}" src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg" class="img-fluid-redesign w-100 rounded-top" alt="">
-                            <img th:unless="${p.stocks.size == 0}"th:src="@{/{shortUrl}/{fileName}(shortUrl=${p.stocks.get(0).images.get(0).shortUrl}, fileName=${p.stocks.get(0).images.get(0).name})}" class="img-fluid-redesign w-100 rounded-top" alt="">
-                        </a>
-                    </div>
-                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
-                         style="top: 10px; right: 10px;">[[${product.category.name}]]
-                    </div>
-                    <div class="p-4 pb-0 rounded-bottom">
-                        <a th:href="@{/products/{productId}/{productName}(productId=${p.id}, productName=${p.language.nameVn})}"><h4 class="text-truncate">[[${p.language.nameVn}]]</h4></a>
-                        <p class="text-truncate">[[${p.description}]]</p>
-                        <div class="d-flex justify-content-between flex-lg-wrap">
-                            <p class="text-dark fs-5 fw-bold">[[${p.formatPrice}]]</p>
-                            <button
-                               th:onclick="addNewBasket([[${p.stocks.get(0).id}]], [[${p.stocks.get(0).stockClassifications.get(0).id}]])"
-                               class="btn border border-secondary rounded-pill px-3 py-1 mb-4 text-primary"><i
-                                    class="fa fa-shopping-bag me-2 text-primary"
-                            >
-                            </i>Thêm</button>
+            <h1 class="fw-bold mb-0">Các sản phẩm liên quan</h1>
+            <div class="vesitable">
+                <div class="owl-carousel vegetable-carousel justify-content-center" id="relative-product">
+                    <div th:each="p : ${products}" th:if="${p.id != product.id && p.stocks.size != 0}"
+                         class="border border-primary rounded position-relative">
+                        <div class="vesitable-img">
+                            <a th:href="@{/products/{productId}/{productName}(productId=${p.id}, productName=${p.language.nameVn})}">
+                                <img th:if="${p.stocks.size == 0}"
+                                     src="https://as2.ftcdn.net/v2/jpg/00/73/00/39/1000_F_73003953_DVFZYwH4iXxOlsNSVqljeqkNBg6xIUDM.jpg"
+                                     class="img-fluid-redesign w-100 rounded-top" alt="">
+                                <img th:unless="${p.stocks.size == 0}"
+                                     th:src="@{/{shortUrl}/{fileName}(shortUrl=${p.stocks.get(0).images.get(0).shortUrl}, fileName=${p.stocks.get(0).images.get(0).name})}"
+                                     class="img-fluid-redesign w-100 rounded-top" alt="">
+                            </a>
+                        </div>
+                        <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
+                             style="top: 10px; right: 10px;">[[${product.category.name}]]
+                        </div>
+                        <div class="p-4 pb-0 rounded-bottom">
+                            <a th:href="@{/products/{productId}/{productName}(productId=${p.id}, productName=${p.language.nameVn})}">
+                                <h4 class="text-truncate">[[${p.language.nameVn}]]</h4></a>
+                            <p class="text-truncate">[[${p.description}]]</p>
+                            <div class="d-flex justify-content-between flex-lg-wrap">
+                                <p class="text-dark fs-5 fw-bold">[[${p.formatPrice}]]</p>
+                                <button
+                                        th:onclick="addNewBasket([[${p.stocks.get(0).id}]], [[${p.stocks.get(0).stockClassifications.get(0).id}]])"
+                                        class="btn border border-secondary rounded-pill px-3 py-1 mb-4 text-primary"><i
+                                        class="fa fa-shopping-bag me-2 text-primary"
+                                >
+                                </i>Thêm
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Single Product End -->
-<script th:inline="javascript">
-    function addNewBasket(stockId, stockClassificationId) {
-        let theUrl = `[(@{/baskets})]`;
-        const url = new URL(theUrl, document.location);
-        const basket = {
-            "stockId": stockId,
-            "operator": '+',
-            "stockClassificationId": stockClassificationId
-        }
-        $.ajax({
-            type: "post",
-            url: url.href,
-            data: JSON.stringify(basket),
-            headers: {
-                "Content-Type": "application/json"
-            },
-            success: function (data) {
-                getTotalBasket()
-                alert("Đã thêm vào giỏ hàng!")
-
-            },
-            error: function () {
-                alert("Error")
+    <!-- Single Product End -->
+    <script th:inline="javascript">
+        function addNewBasket(stockId, stockClassificationId) {
+            let theUrl = `[(@{/baskets})]`;
+            const url = new URL(theUrl, document.location);
+            const basket = {
+                "stockId": stockId,
+                "operator": '+',
+                "stockClassificationId": stockClassificationId
             }
-        })
-    }
-    function createBasket() {
-        const stockID = document.getElementById("color-product").value;
-        const stockClassificationId = document.getElementById("size-product").value;
-        addNewBasket(stockID, stockClassificationId)
-    }
+            $.ajax({
+                type: "post",
+                url: url.href,
+                data: JSON.stringify(basket),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                success: function (data) {
+                    getTotalBasket()
+                    alert("Đã thêm vào giỏ hàng!")
 
-    function callApi(type, data, theUrl, success) {
-        const url = new URL(theUrl, document.location);
-        $.ajax({
-            type: type,
-            url: url.href,
-            data: data,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            success: function (data) {
-                success(data);
-            },
-            error: function () {
-                alert("Error")
+                },
+                error: function () {
+                    alert("Error")
+                }
+            })
+        }
+
+        function createBasket() {
+            const stockID = document.getElementById("color-product").value;
+            const stockClassificationId = document.getElementById("size-product").value;
+            addNewBasket(stockID, stockClassificationId)
+        }
+
+        function callApi(type, data, theUrl, success) {
+            const url = new URL(theUrl, document.location);
+            console.log(url.href)
+            $.ajax({
+                type: type,
+                url: url.href,
+                data: data,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                success: function (data) {
+                    success(data);
+                },
+                error: function () {
+                    alert("Error")
+                }
+            })
+        }
+
+        var valueRating = 1;
+
+        function evaluationHtml(data) {
+            let rate = ``;
+            for (let i = 1; i <= data.rating; i++) {
+                rate += `<i class="fa fa-star text-secondary"></i>`
             }
-        })
-    }
+            for (let i = data.rating + 1; i <= 5; i++) {
+                rate += `<i class="fa fa-star"></i>`
+            }
+            let images = ``;
+            for (let i = 0; i < data.images.length; i++) {
+                const image = data.images[i];
+                images += `<img src="/${image.shortUrl}/${image.name}" class="img-fluid rounded p-3" style="width: 100px; height: 100px;" alt="">`
+            }
 
-    var valueRating = 1;
-    function evaluationHtml(data) {
-        let rate = ``;
-        for (let i = 1; i <= data.rating; i++) {
-            rate += `<i class="fa fa-star text-secondary"></i>`
-        }
-        for (let i = data.rating + 1; i <= 5; i++) {
-            rate += `<i class="fa fa-star"></i>`
-        }
-        let images = ``;
-        for(let i = 0; i < data.images.length; i++) {
-            const image = data.images[i];
-            images += `<img src="/${image.shortUrl}/${image.name}" class="img-fluid rounded p-3" style="width: 100px; height: 100px;" alt="">`
-        }
-
-        let html = `<div class="d-flex">
+            let html = `<div class="d-flex">
                                     <img src="/${data.user.avatar.shortUrl}/${data.user.avatar.name}" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
                                     <div class="">
                                         <p class="mb-2" style="font-size: 14px;">${data.formatDate}</p>
@@ -332,66 +387,81 @@
                                         ${images}
                                     </div>
                                 </div>`
-        return html;
-    }
-
-    function rating(value) {
-        for (let i = 1; i <= value; i++) {
-            const rate = document.getElementById("rate#" + i);
-            rate.classList.add("text-primary")
+            return html;
         }
-        for (let i = value + 1; i <= 5; i++) {
-            const rate = document.getElementById("rate#" + i);
-            rate.classList.remove("text-primary")
-        }
-        valueRating = value
-        document.getElementById("rating").value = valueRating;
-    }
-    function red_order(productId, productName) {
-        const quantity = document.getElementById("quantity").value;
-        const stockId = document.getElementById("color-product").value;
-        const stockTypeElement = document.getElementById("size-product");
-        const stockTypeId = stockTypeElement.value;
-        const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}&stockType=${stockTypeId}`, location).href;
-        window.location.href = url;
-        // if(stockTypeElement) {
-        //     const stockTypeId = stockTypeElement.value;
-        //     const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}&stockType=${stockTypeId}`, location).href;
-        //     window.location.href = url;
-        // } else {
-        //     const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}&stockType=0`, location).href;
-        //     window.location.href = url;
-        // }
-    }
 
-    function getStockById() {
-        const stockId = document.getElementById('color-product').value;
-        callApi('get', '', `[(@{/stocks/${stockId}})]`, (res) => {
-            console.log(res)
-            const element = document.getElementById('image-product');
-            const priceProduct = document.getElementById('price-product')
-            if(document.getElementById('size-product')) {
-                const selectElement = document.getElementById('size-product');
-                let html = ``;
-                res.stockClassifications.forEach((stockClassfication, index) => {
-                    if (stockClassfication.quantityOfProduct > 0) {
-                        html += `<option selected="${index === 0}"
+        function rating(value) {
+            for (let i = 1; i <= value; i++) {
+                const rate = document.getElementById("rate#" + i);
+                rate.classList.add("text-primary")
+            }
+            for (let i = value + 1; i <= 5; i++) {
+                const rate = document.getElementById("rate#" + i);
+                rate.classList.remove("text-primary")
+            }
+            valueRating = value
+            document.getElementById("rating").value = valueRating;
+        }
+
+        function red_order(productId, productName) {
+            const quantity = document.getElementById("quantity").value;
+            const stockId = document.getElementById("color-product").value;
+            const stockTypeElement = document.getElementById("size-product");
+            const stockTypeId = stockTypeElement.value;
+            const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}&stockType=${stockTypeId}`, location).href;
+            window.location.href = url;
+            // if(stockTypeElement) {
+            //     const stockTypeId = stockTypeElement.value;
+            //     const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}&stockType=${stockTypeId}`, location).href;
+            //     window.location.href = url;
+            // } else {
+            //     const url = new URL(`[(@{/orders/product/${productName}?numberOfProduct=${quantity}})]&stockId=${stockId}&stockType=0`, location).href;
+            //     window.location.href = url;
+            // }
+        }
+
+        function followVendor(vendorId) {
+            callApi(
+                'post',
+                '',
+                `/vendors/follow/${vendorId}`,
+                () => alert("Da theo doi")
+            )
+        }
+
+        function chatVendor(vendorId) {
+            alert("VendorId: " + vendorId)
+        }
+
+        function getStockById() {
+            const stockId = document.getElementById('color-product').value;
+            callApi('get', '', `[(@{/stocks/${stockId}})]`, (res) => {
+                console.log(res)
+                const element = document.getElementById('image-product');
+                const priceProduct = document.getElementById('price-product')
+                if (document.getElementById('size-product')) {
+                    const selectElement = document.getElementById('size-product');
+                    let html = ``;
+                    res.stockClassifications.forEach((stockClassfication, index) => {
+                        if (stockClassfication.quantityOfProduct > 0) {
+                            html += `<option selected="${index === 0}"
                                         value="${stockClassfication.id}"
-                                >${(stockClassfication.size === 'NO_SIZE' ? '' : stockClassfication.size + ' - ')  + 'Còn lại(' + stockClassfication.quantityOfProduct + ')'}</option>`
-                    }
-                })
-                selectElement.innerHTML = html
-            }
-            priceProduct.innerHTML = getFormatNumber(res.price)
-            if(res.images.length > 0) {
-                element.src = "/" + res.images[0].shortUrl + "/" + res.images[0].name;
-            }
+                                >${(stockClassfication.size === 'NO_SIZE' ? '' : stockClassfication.size + ' - ') + 'Còn lại(' + stockClassfication.quantityOfProduct + ')'}</option>`
+                        }
+                    })
+                    selectElement.innerHTML = html
+                }
+                priceProduct.innerHTML = getFormatNumber(res.price)
+                if (res.images.length > 0) {
+                    element.src = "/" + res.images[0].shortUrl + "/" + res.images[0].name;
+                }
+            })
+        }
+
+        document.getElementById('form-comment').addEventListener('submit', () => {
+            document.getElementById('productId').value = [[${product.id}]]
         })
-    }
-    document.getElementById('form-comment').addEventListener('submit', () => {
-        document.getElementById('productId').value = [[${product.id}]]
-    })
-</script>
+    </script>
 </div>
 </body>
 </html>

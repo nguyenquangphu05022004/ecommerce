@@ -1,12 +1,10 @@
 package com.example.ecommerce.controller;
 
 
-import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.dto.SortProductType;
 import com.example.ecommerce.domain.dto.CategoryDto;
-import com.example.ecommerce.domain.dto.EvaluationRequest;
 import com.example.ecommerce.domain.dto.ProductDto;
 import com.example.ecommerce.domain.dto.ProductRequest;
+import com.example.ecommerce.domain.dto.SortProductType;
 import com.example.ecommerce.service.ICategoryService;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.utils.SystemUtils;
@@ -53,18 +51,7 @@ public class ProductController {
         return "admin/product/list-products";
     }
 
-    @GetMapping("/products/{productId}/**")
-    public String getProductById(@PathVariable("productId") Long productId,
-                                 Model model) {
-        ProductDto productDto = productService.findById(productId);
-        boolean wasBoughtByUser = productService.productWasBoughtByUser(productId, SecurityUtils.username());
-        model.addAttribute("categories", getListCategory());
-        model.addAttribute("evaluation", new EvaluationRequest());
-        model.addAttribute("was_bought", wasBoughtByUser);
-        model.addAttribute("product", productDto);
-        model.addAttribute("products", productService.findProductByCategoryId(productDto.getCategory().getId(), 0));
-        return "product";
-    }
+
 
     @GetMapping("/products")
     @ResponseBody

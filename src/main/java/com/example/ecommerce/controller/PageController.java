@@ -1,12 +1,11 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.dto.SortProductType;
-import com.example.ecommerce.domain.dto.CategoryDto;
-import com.example.ecommerce.domain.dto.ProductDto;
-import com.example.ecommerce.domain.dto.UserRequest;
-import com.example.ecommerce.domain.dto.UserResponseInfo;
-import com.example.ecommerce.domain.dto.UserTrack;
+import com.example.ecommerce.domain.Status;
+import com.example.ecommerce.domain.StockClassification;
+import com.example.ecommerce.domain.dto.*;
+import com.example.ecommerce.repository.NotificationRepository;
+import com.example.ecommerce.repository.StockClassificationRepository;
 import com.example.ecommerce.service.*;
 import com.example.ecommerce.utils.SortUtils;
 import com.example.ecommerce.utils.SystemUtils;
@@ -18,21 +17,24 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class HomeController {
+public class PageController {
     private final IProductService productService;
     private final ICategoryService categoryService;
     private final IUserService userService;
+    private final IStockService stockService;
+    private final StockClassificationRepository classificationRepository;
     private final IBasketService basketService;
-
 
     @GetMapping("/admin/home")
     public String getHomeAdmin() {
@@ -60,7 +62,16 @@ public class HomeController {
                         .toList());
         model.addAttribute("products", productDtos);
         model.addAttribute("categories", categoryDtos);
+        setNotifications(model);
         return "index";
+    }
+
+    @GetMapping("/user/my-basket")
+    public String getPageBasket(Model model) {
+        List<BasketDto> baskets = basketService.records();
+        model.addAttribute("baskets", baskets);
+        setNotifications(model);
+        return "basket";
     }
 
     @GetMapping("/shop")
@@ -74,6 +85,7 @@ public class HomeController {
         model.addAttribute("products", productDtos);
         model.addAttribute("totalPage", SystemUtils.totalPage);
         model.addAttribute("page", page - 1);
+        setNotifications(model);
         return "shop";
     }
 
@@ -129,6 +141,66 @@ public class HomeController {
         UserTrack.getInstance().getMap().remove(SecurityUtils.username());
         request.getSession().invalidate();
         return "redirect:/login?logout";
+    }
+
+    @GetMapping("/orders/product/**")
+    public String pageOrder(@RequestParam("numberOfProduct") Integer numberOfProduct,
+                            @RequestParam("stockId") Long stockId,
+                            @RequestParam("stockType") Long stockClassificationId,
+                            Model model) {
+        StockResponse stockDto = stockService.findById(stockId);
+        UserResponseInfo userResponseInfo = userService
+                .findUserByUsername(SecurityUtils.username());
+        Optional<StockClassification> exist =
+                classificationRepository.findById(stockClassificationId);
+        if (exist.isPresent()) model.addAttribute("stockType", exist.get());
+        model.addAttribute("stock", stockDto);
+        model.addAttribute("user", userResponseInfo);
+        model.addAttribute("totalPrice",
+                SystemUtils.getFormatNumber((
+                        numberOfProduct * stockDto.getPrice()
+                                + stockDto.getProduct()
+                                .getVendor()
+                                .getPerMoneyDelivery())));
+        model.addAttribute("numberOfProduct", numberOfProduct);
+        setNotifications(model);
+        return "order";
+    }
+
+    @GetMapping("/vendor/orders")
+    public String getPageOrderAdmin() {
+        return "admin/order-product";
+    }
+
+    @GetMapping("/user/order")
+    public String getOrderPageOfUser(Model model) {
+        model.addAttribute("statusOrders", Arrays.asList(Status.values()));
+        setNotifications(model);
+        return "orders-user";
+    }
+
+    @GetMapping("/products/{productId}/**")
+    public String getPageDetailProduct(@PathVariable("productId") Long productId,
+                                       Model model) {
+        ProductDto productDto = productService.findById(productId);
+        boolean wasBoughtByUser = productService.productWasBoughtByUser(productId, SecurityUtils.username());
+        model.addAttribute("categories", categoryService.getAll());
+        model.addAttribute("evaluation", new EvaluationRequest());
+        model.addAttribute("was_bought", wasBoughtByUser);
+        model.addAttribute("product", productDto);
+        model.addAttribute("products", productService.findProductByCategoryId(productDto.getCategory().getId(), 0));
+        setNotifications(model);
+        return "product";
+    }
+
+    private void setNotifications(Model model) {
+        if (SecurityUtils.username() != null) {
+            List<NotificationResponse> notifications = userService
+                    .findUserByUsername(SecurityUtils.username())
+                    .getNotifications();
+            model.addAttribute("numberOfNotification", notifications.size());
+            model.addAttribute("notifications", notifications);
+        }
     }
 
 }

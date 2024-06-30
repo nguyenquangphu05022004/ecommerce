@@ -15,7 +15,7 @@ import java.util.List;
 @SuperBuilder(toBuilder = true)
 public class ProductDto extends BaseDto {
     private CategoryDto category;
-    private StockResponse.ProductResponse.VendorResponse vendor;
+    private VendorDto vendor;
     private String description;
     private MapName language;
     private List<EvaluationDto> evaluations = new ArrayList<>();
