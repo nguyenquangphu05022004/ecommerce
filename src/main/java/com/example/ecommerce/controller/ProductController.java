@@ -60,53 +60,53 @@ public class ProductController {
         return products;
     }
 
-    @GetMapping("/shop/search/products")
-    public String searchProducts(
-            @RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
-            @RequestParam(value = "vendorId", defaultValue = "0") Long vendorId,
-            @RequestParam(value = "query", defaultValue = "") String query,
-            @RequestParam(value = "startPrice", defaultValue = "0") Integer startPrice,
-            @RequestParam(value = "endPrice", defaultValue = "0") Integer endPrice,
-            @RequestParam(value="page", defaultValue = "1") int page,
-            @RequestParam(value = "sortProductType", defaultValue = "DEFAULT") SortProductType sortProductType,
-            Model model
-    ) {
-        List<ProductDto> products = productService.searchProduct(
-                categoryId,
-                vendorId,
-                query,
-                startPrice,
-                endPrice,
-                sortProductType,
-                page - 1
-        );
-        model.addAttribute("sortTypes", Arrays.asList(SortProductType.values()));
-        saveAttribute(products,vendorId,
-                query, categoryId,
-                page, startPrice, endPrice,
-                sortProductType.name(), model);
-        return "shop";
-    }
-
-    private void saveAttribute(
-            List<ProductDto> productDtos,
-            Long vendorId, String query,
-            Long categoryId, int page,
-            int startPrice, int endPrice,
-            String sortProductType,
-            Model model
-    ) {
-        model.addAttribute("vendorId", vendorId);
-        model.addAttribute("products", productDtos);
-        model.addAttribute("categoryId", categoryId);
-        model.addAttribute("categories", getListCategory());
-        model.addAttribute("keyword", query);
-        model.addAttribute("totalPage", SystemUtils.totalPage);
-        model.addAttribute("startPrice", startPrice);
-        model.addAttribute("endPrice", endPrice);
-        model.addAttribute("sortProductType", sortProductType);
-        model.addAttribute("page", page - 1);
-    }
+//    @GetMapping("/shop/search/products")
+//    public String searchProducts(
+//            @RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
+//            @RequestParam(value = "vendorId", defaultValue = "0") Long vendorId,
+//            @RequestParam(value = "query", defaultValue = "") String query,
+//            @RequestParam(value = "startPrice", defaultValue = "0") Integer startPrice,
+//            @RequestParam(value = "endPrice", defaultValue = "0") Integer endPrice,
+//            @RequestParam(value="page", defaultValue = "1") int page,
+//            @RequestParam(value = "sortProductType", defaultValue = "DEFAULT") SortProductType sortProductType,
+//            Model model
+//    ) {
+//        List<ProductDto> products = productService.searchProduct(
+//                categoryId,
+//                vendorId,
+//                query,
+//                startPrice,
+//                endPrice,
+//                sortProductType,
+//                page - 1
+//        );
+//        model.addAttribute("sortTypes", Arrays.asList(SortProductType.values()));
+//        saveAttribute(products,vendorId,
+//                query, categoryId,
+//                page, startPrice, endPrice,
+//                sortProductType.name(), model);
+//        return "shop";
+//    }
+//
+//    private void saveAttribute(
+//            List<ProductDto> productDtos,
+//            Long vendorId, String query,
+//            Long categoryId, int page,
+//            int startPrice, int endPrice,
+//            String sortProductType,
+//            Model model
+//    ) {
+//        model.addAttribute("vendorId", vendorId);
+//        model.addAttribute("products", productDtos);
+//        model.addAttribute("categoryId", categoryId);
+//        model.addAttribute("categories", getListCategory());
+//        model.addAttribute("keyword", query);
+//        model.addAttribute("totalPage", SystemUtils.totalPage);
+//        model.addAttribute("startPrice", startPrice);
+//        model.addAttribute("endPrice", endPrice);
+//        model.addAttribute("sortProductType", sortProductType);
+//        model.addAttribute("page", page - 1);
+//    }
 
     private List<CategoryDto> getListCategory() {
         return categoryService.getAll();

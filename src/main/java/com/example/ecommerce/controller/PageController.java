@@ -75,15 +75,34 @@ public class PageController {
     }
 
     @GetMapping("/shop")
-    public String getShopPage(Model model,
-                              @RequestParam(name = "page", defaultValue = "1", required = false) int page) {
-        List<CategoryDto> categoryDtos = categoryService.getAll();
-        List<ProductDto> productDtos = productService.findAll(page - 1, SystemUtils.NUMBER_OF_ITEM);
+    public String getShopPage(
+            @RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
+            @RequestParam(value = "vendorId", defaultValue = "0") Long vendorId,
+            @RequestParam(value = "query", defaultValue = "") String query,
+            @RequestParam(value = "startPrice", defaultValue = "0") Integer startPrice,
+            @RequestParam(value = "endPrice", defaultValue = "0") Integer endPrice,
+            @RequestParam(value="page", defaultValue = "1") int page,
+            @RequestParam(value = "sortProductType", defaultValue = "DEFAULT") SortProductType sortProductType,
+            Model model) {
+        List<ProductDto> products = productService.searchProduct(
+                categoryId,
+                vendorId,
+                query,
+                startPrice,
+                endPrice,
+                sortProductType,
+                page - 1
+        );
         model.addAttribute("sortTypes", Arrays.asList(SortProductType.values()));
-        model.addAttribute("sortProductType", SortProductType.DEFAULT);
-        model.addAttribute("categories", categoryDtos);
-        model.addAttribute("products", productDtos);
+        model.addAttribute("vendorId", vendorId);
+        model.addAttribute("products", products);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("categories", categoryService.getAll());
+        model.addAttribute("keyword", query);
         model.addAttribute("totalPage", SystemUtils.totalPage);
+        model.addAttribute("startPrice", startPrice);
+        model.addAttribute("endPrice", endPrice);
+        model.addAttribute("sortProductType", sortProductType);
         model.addAttribute("page", page - 1);
         setNotifications(model);
         return "shop";
