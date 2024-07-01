@@ -249,7 +249,7 @@
     function getHrefSearch(dataSearch, page, vendorId, sort) {
         let path = ''
         const host = document.location.origin
-        path = `/shop/search/products?categoryId=${dataSearch.categoryId}&query=${dataSearch.query}&startPrice=${dataSearch.startPrice}&endPrice=${dataSearch.endPrice}&page=${page + 1}&vendorId=${vendorId}&sortProductType=${sort}`
+        path = `/shop?categoryId=${dataSearch.categoryId}&query=${dataSearch.query}&startPrice=${dataSearch.startPrice}&endPrice=${dataSearch.endPrice}&page=${page + 1}&vendorId=${vendorId}&sortProductType=${sort}`
         let url = host + path;
         return url;
 

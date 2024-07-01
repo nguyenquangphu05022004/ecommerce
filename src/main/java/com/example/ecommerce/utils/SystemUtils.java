@@ -2,6 +2,7 @@ package com.example.ecommerce.utils;
 
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.impl.FilesStorageServiceImpl;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 
@@ -11,6 +12,7 @@ import java.util.Random;
 
 @PropertySource("classpath:application.properties")
 public class SystemUtils {
+    public static final ModelMapper mapper = new ModelMapper();
     public static int totalPage = 1;
     public static final Integer NUMBER_OF_ITEM = 9;
     public static final String VN_DATE = "dd/MM/yyyy HH:mm:ss";
@@ -39,4 +41,5 @@ public class SystemUtils {
         DateTimeFormatter format = DateTimeFormatter.ofPattern(pattern);
         return format.format(localDateTime);
     }
+
 }

@@ -20,7 +20,7 @@ public class UserResponseInfo extends BaseDto {
     private Role role;
     private UserContactDetails userContactDetails;
     private List<EvaluationDto> evaluations = new ArrayList<>();
-
+    private List<NotificationResponse> notifications;
     public String getDefaultImage() {
         if(this.avatar == null) {
             return "https://ssl.gstatic.com/accounts/ui/avatar_2x.png";

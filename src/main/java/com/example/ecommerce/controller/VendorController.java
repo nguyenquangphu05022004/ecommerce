@@ -1,12 +1,14 @@
 package com.example.ecommerce.controller;
 
 
+import com.example.ecommerce.domain.dto.VendorRequest;
 import com.example.ecommerce.domain.dto.chat.VendorResponseInbox;
 import com.example.ecommerce.domain.dto.CouponDto;
 import com.example.ecommerce.domain.dto.VendorDto;
 import com.example.ecommerce.service.ICouponService;
 import com.example.ecommerce.service.IVendorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +27,8 @@ public class VendorController {
         return "admin/user/update-users";
     }
     @PostMapping("/vendors")
-    public VendorDto updateUserToVendor(@RequestBody VendorDto vendorDto) {
-        VendorDto vendor =  vendorService.saveOrUpdate(vendorDto);
+    public VendorDto updateUserToVendor(@RequestBody VendorRequest vendorRequest) {
+        VendorDto vendor =  vendorService.saveOrUpdate(vendorRequest);
         return vendor;
     }
     @GetMapping("/vendor/coupon/add")
@@ -70,4 +72,12 @@ public class VendorController {
     ) {
         return vendorService.findAllByName(vendorName);
     }
+
+
+    @PostMapping("/vendors/follow/{vendorId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void followUser(@PathVariable("vendorId") Long vendorId) {
+        vendorService.followUser(vendorId);
+    }
+
 }

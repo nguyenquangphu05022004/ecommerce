@@ -25,12 +25,6 @@ public class BasketController {
         this.basketService = basketService;
     }
 
-    @GetMapping("/user/my-basket")
-    public String getMyBasket(Model model) {
-        List<BasketDto> baskets = basketService.records();
-        model.addAttribute("baskets", baskets);
-        return "basket";
-    }
 
     @PostMapping(value = "/baskets", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
