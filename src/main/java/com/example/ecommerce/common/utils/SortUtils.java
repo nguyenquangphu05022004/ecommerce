@@ -1,4 +1,4 @@
-package com.example.ecommerce.utils;
+package com.example.ecommerce.common.utils;
 
 import com.example.ecommerce.domain.dto.ProductDto;
 import com.example.ecommerce.domain.dto.SortProductType;

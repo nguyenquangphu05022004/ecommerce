@@ -12,7 +12,7 @@ import com.example.ecommerce.repository.ConversationRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IChatMessageService;
 import com.example.ecommerce.service.IImageService;
-import com.example.ecommerce.utils.SystemUtils;
+import com.example.ecommerce.common.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;

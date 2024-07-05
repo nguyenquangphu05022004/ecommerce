@@ -2,8 +2,8 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.domain.dto.EmailDetails;
 import com.example.ecommerce.service.EmailService;
-import com.example.ecommerce.utils.EmailUtils;
-import com.example.ecommerce.utils.SystemUtils;
+import com.example.ecommerce.common.utils.EmailUtils;
+import com.example.ecommerce.common.utils.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

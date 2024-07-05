@@ -16,15 +16,12 @@ public class JpaAuditing {
 
     @Bean
     public AuditorAware<String> auditorProvider() {
-        return new AuditorAware<String>() {
-            @Override
-            public Optional<String> getCurrentAuditor() {
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                if((authentication instanceof AnonymousAuthenticationToken)) {
-                    return null;
-                }
-                return Optional.of("ADMIN");
+        return () -> {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if((authentication instanceof AnonymousAuthenticationToken)) {
+                return null;
             }
+            return Optional.of("ADMIN");
         };
     }
 

@@ -19,17 +19,13 @@ public class Stock extends Base{
     private String code;
     @Enumerated(EnumType.STRING)
     private Color color;
-
     @OneToMany(cascade = CascadeType.ALL)
     private List<StockClassification> stockClassifications = new ArrayList<>();
-
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
-
     @OneToMany(mappedBy = "stock")
     private List<Order> orders = new ArrayList<>();
-
 }

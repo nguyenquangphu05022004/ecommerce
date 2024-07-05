@@ -1,18 +1,14 @@
 package com.example.ecommerce.config;
 
-import com.example.ecommerce.domain.Role;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.ecommerce.common.enums.Permission;
+import com.example.ecommerce.common.enums.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 
 
@@ -20,76 +16,57 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsService userService;
-
-    @Autowired
-    public SecurityConfig(UserDetailsService userService) {
-        this.userService = userService;
-    }
-
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    // verify user(from browser with user in database if valid -> success else error
-    public void config(AuthenticationManagerBuilder authenticationManager) {
-        authenticationManager.authenticationProvider(authenticationProvider());
-    }
-
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(encoder());
-        daoAuthenticationProvider.setUserDetailsService(userService);
-        return daoAuthenticationProvider;
-    }
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> {
-            request
-                    .requestMatchers(HttpMethod.GET,"/shop/**", "/home","/",
-                            "/sign-up", "/login", "/user/**", "/products/**",
-                            "/admin/css/**", "/admin/js/**", "/admin/lib/**",
-                            "/forget-password",
-                            "/admin/scss/**", "/forget-password/new-pass", "/files/**",
-                            "/coupons/**",
-                            "/system/logout",
-                            "/stocks/**")
-                    .permitAll()
-                    .requestMatchers("/admin/home").hasAnyAuthority(Role.VENDOR.getAuthority(), Role.ADMIN.getAuthority())
-                    .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.getAuthority())
-                    .requestMatchers(HttpMethod.POST, "/register",
-                            "/send-email/forgot-password",
-                            "/forget-password/new-pass", "/products/sort").permitAll()
-                    .requestMatchers( "/vendor/**", "/vendors")
-                    .hasAnyAuthority(Role.VENDOR.getAuthority(), Role.ADMIN.getAuthority())
-                    .requestMatchers("/chat").authenticated()
-                    .anyRequest().authenticated();
+                    request
+                            .requestMatchers(HttpMethod.GET, SecurityUrlConstants.COMMON_URL)
+                            .permitAll()
+                            .requestMatchers(HttpMethod.GET, SecurityUrlConstants.USER_URL)
+                            .hasAnyRole(
+                                    Role.ADMIN.name(),
+                                    Role.VENDOR.name()
+                            )
+                            .requestMatchers(HttpMethod.POST, SecurityUrlConstants.USER_URL)
+                            .hasAnyAuthority(
+                                    Permission.ADMIN_CREATE.name(),
+                                    Permission.VENDOR_CREATE.name()
+                            )
+                            .requestMatchers(HttpMethod.PUT, SecurityUrlConstants.USER_URL)
+                            .hasAnyAuthority(
+                                    Permission.ADMIN_UPDATE.name(),
+                                    Permission.VENDOR_UPDATE.name()
+                            )
+                            .requestMatchers(HttpMethod.DELETE, SecurityUrlConstants.USER_URL)
+                            .hasAnyAuthority(
+                                    Permission.ADMIN_DELETE.name(),
+                                    Permission.VENDOR_DELETE.name()
+                            )
+                            .anyRequest().authenticated();
 
-        })
-                .formLogin(form -> {
-                    form.loginPage("/login")
-                            .defaultSuccessUrl("/home")
-                            .usernameParameter("username")
-                            .passwordParameter("password")
-                            .loginProcessingUrl("/login")
-                            .failureUrl("/login?error=true")
-                            .permitAll();
                 })
-                .rememberMe(httpSecurityRememberMeConfigurer -> {
-                    httpSecurityRememberMeConfigurer
-                            .rememberMeParameter("rememberMe");
-                })
-                .exceptionHandling(exception -> {
-                    exception.accessDeniedPage("/404");
+                .logout(logout -> {
+                    logout.logoutUrl("/api/v1/auth/logout")
+                            .addLogoutHandler(
+                                    (request, response, authentication) ->
+                                            SecurityContextHolder.clearContext()
+                            );
                 })
                 .build();
     }
+}
 
-
-
+class SecurityUrlConstants {
+    public static final String[] COMMON_URL = {
+            "/api/v1/auth/**",
+            "/api/v1/products/**",
+            "/api/v1/categories/**",
+            "/api/v1/vendors/**",
+            "/api/v1/coupons/**",
+            "/api/v1/stocks/**",
+            "/api/v1/files/**"
+    };
+    public static final String USER_URL = "/api/v1/users/**";
 }

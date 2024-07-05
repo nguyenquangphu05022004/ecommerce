@@ -1,16 +1,11 @@
-package com.example.ecommerce.utils;
+package com.example.ecommerce.common.utils;
 
-import com.example.ecommerce.service.IFilesStorageService;
-import com.example.ecommerce.service.impl.FilesStorageServiceImpl;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
-@PropertySource("classpath:application.properties")
 public class SystemUtils {
     public static final ModelMapper mapper = new ModelMapper();
     public static int totalPage = 1;

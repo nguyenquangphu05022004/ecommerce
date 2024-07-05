@@ -12,7 +12,7 @@ import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IImageService;
 import com.example.ecommerce.service.IUserService;
-import com.example.ecommerce.utils.SystemUtils;
+import com.example.ecommerce.common.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;

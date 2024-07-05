@@ -2,7 +2,7 @@ package com.example.ecommerce.domain.dto;
 
 import com.example.ecommerce.domain.Payment;
 import com.example.ecommerce.domain.Status;
-import com.example.ecommerce.utils.SystemUtils;
+import com.example.ecommerce.common.utils.SystemUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

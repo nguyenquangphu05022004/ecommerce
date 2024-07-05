@@ -8,7 +8,7 @@ import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.CategoryRepository;
 import com.example.ecommerce.service.ICategoryService;
 import com.example.ecommerce.service.IImageService;
-import com.example.ecommerce.utils.SystemUtils;
+import com.example.ecommerce.common.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class CategoryServiceImpl implements ICategoryService {
     private final ModelMapper mapper;
     private final IImageService imageService;
     @Override
-    public List<CategoryDto> getAll() {
+    public List<CategoryDto> findAll() {
         return categoryRepository.findAll()
                 .stream()
                 .map(category -> mapToDto(category))
@@ -49,7 +49,8 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Transactional
-    public CategoryDto saveOrUpdate(CategoryRequest request) {
+    @Override
+    public void save(CategoryRequest request) {
         Optional<Category> optional = categoryRepository
                                         .findById(request.getId());
         if(optional.isPresent()) {
@@ -67,7 +68,6 @@ public class CategoryServiceImpl implements ICategoryService {
                 Image image = imageService.uploadFile(request.getFile(), SystemUtils.TAG);
                 category.setImage(image);
             }
-            return mapToDto(category);
         } else {
             Category category = Category.builder()
                     .name(request.getName())
@@ -77,7 +77,6 @@ public class CategoryServiceImpl implements ICategoryService {
                 category.setImage(image);
             }
             category = categoryRepository.save(category);
-            return mapToDto(category);
         }
     }
 

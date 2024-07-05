@@ -16,9 +16,8 @@ import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IVendorService;
-import com.example.ecommerce.utils.SystemUtils;
+import com.example.ecommerce.common.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

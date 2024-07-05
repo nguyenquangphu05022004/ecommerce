@@ -4,17 +4,14 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.domain.dto.CategoryDto;
 import com.example.ecommerce.domain.dto.ProductDto;
 import com.example.ecommerce.domain.dto.ProductRequest;
-import com.example.ecommerce.domain.dto.SortProductType;
 import com.example.ecommerce.service.ICategoryService;
 import com.example.ecommerce.service.IProductService;
-import com.example.ecommerce.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Controller

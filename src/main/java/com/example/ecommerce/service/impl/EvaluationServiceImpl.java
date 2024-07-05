@@ -11,7 +11,7 @@ import com.example.ecommerce.repository.EvaluationRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IEvaluationService;
 import com.example.ecommerce.service.IImageService;
-import com.example.ecommerce.utils.SystemUtils;
+import com.example.ecommerce.common.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;

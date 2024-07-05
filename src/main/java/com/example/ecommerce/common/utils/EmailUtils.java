@@ -1,4 +1,4 @@
-package com.example.ecommerce.utils;
+package com.example.ecommerce.common.utils;
 
 public class EmailUtils {
 
