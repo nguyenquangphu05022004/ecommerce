@@ -2,25 +2,28 @@ package com.example.ecommerce.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder(toBuilder = true)
 @Entity
 @Table(name = "chat_messages")
-public class ChatMessage extends Base{
+public class ChatMessage extends BaseEntity {
     private String content;
+
     @ManyToOne
-    @JoinColumn(name = "user_sender_id")
-    private User userSender;
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @ManyToOne
-    @JoinColumn(name = "sender_conversation")
-    private Conversation senderToConversation;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Image> images;
+    @JoinColumn(name = "conversation_id")
+    private Conversation conversation;
+
+    @OneToMany(mappedBy = "chatMessage",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatMessageImage> images;
 }

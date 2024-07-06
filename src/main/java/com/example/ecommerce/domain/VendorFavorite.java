@@ -18,7 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-public class VendorFavorite extends Base implements Mediator{
+public class VendorFavorite extends BaseEntity implements Mediator{
 
     @OneToMany(cascade = CascadeType.ALL)
     private Set<User> users = new HashSet<>();

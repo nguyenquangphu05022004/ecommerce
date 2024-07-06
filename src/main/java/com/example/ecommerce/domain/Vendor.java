@@ -1,7 +1,6 @@
 package com.example.ecommerce.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +15,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class Vendor extends Base{
+public class Vendor extends BaseEntity {
     @Column(columnDefinition = "nvarchar(100)",nullable = false)
     private String shopName;
     @OneToOne(cascade = CascadeType.ALL)

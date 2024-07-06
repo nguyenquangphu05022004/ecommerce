@@ -1,7 +1,8 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.domain.dto.CategoryDto;
-import com.example.ecommerce.domain.dto.CategoryRequest;
+
+import com.example.ecommerce.service.dto.CategoryDto;
+import com.example.ecommerce.service.request.CategoryRequest;
 
 import java.util.List;
 

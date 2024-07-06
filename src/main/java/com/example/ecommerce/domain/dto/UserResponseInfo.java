@@ -1,6 +1,5 @@
 package com.example.ecommerce.domain.dto;
 
-import com.example.ecommerce.domain.Role;
 import com.example.ecommerce.domain.UserContactDetails;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

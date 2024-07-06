@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +17,7 @@ import java.time.LocalDateTime;
 @Setter
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class Coupon extends Base {
+public class Coupon extends BaseEntity {
     private String code;
     private String content;
     private Integer percent;

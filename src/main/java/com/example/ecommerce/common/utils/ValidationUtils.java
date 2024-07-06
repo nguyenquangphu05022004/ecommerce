@@ -10,7 +10,7 @@ public class ValidationUtils {
             throw new GeneralException(String.format(CAN_NOT_BE_EMPTY, field));
         }
     }
-    public static void fieldCheckNullOrEmpty(Integer value, String field) {
+    public static void fieldCheckNullOrEmpty(Number value, String field) {
         if(value == null) {
             throw new GeneralException(String.format(CAN_NOT_BE_EMPTY, field));
         }

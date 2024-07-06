@@ -4,7 +4,6 @@ import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.converter.UserMapper;
 import com.example.ecommerce.domain.Image;
 import com.example.ecommerce.domain.User;
-import com.example.ecommerce.domain.Role;
 import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
 import com.example.ecommerce.domain.dto.UserRequest;
 import com.example.ecommerce.domain.dto.UserResponseInfo;

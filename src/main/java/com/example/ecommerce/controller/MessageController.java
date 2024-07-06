@@ -1,15 +1,11 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.domain.dto.chat.ChatMessageRequest;
-import com.example.ecommerce.domain.dto.chat.ChatMessageResponse;
 import com.example.ecommerce.service.IChatMessageService;
+import com.example.ecommerce.service.dto.ChatMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,16 +30,11 @@ public class MessageController {
                  file);
     }
 
-    @GetMapping("/message/user/{username}/conversation/{conversationId}")
+    @GetMapping("/messages/conversation/{conversationId}")
     @ResponseBody
-    public List<ChatMessageResponse> getListMessageByConversationId(
-            @PathVariable("username") String username,
+    public List<ChatMessageDto> getListMessageByConversation(
             @PathVariable("conversationId") Long conversationId
     ) {
-        return chatMessageService.getListMessageByConversationId(conversationId, username);
+        return chatMessageService.getListMessageByConversationId(conversationId);
     }
-
-
-
-
 }

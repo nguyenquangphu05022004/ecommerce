@@ -1,7 +1,6 @@
 package com.example.ecommerce.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder(toBuilder = true)
 @Table(name = "basket")
-public class Basket extends Base{
+public class Basket extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -24,6 +23,7 @@ public class Basket extends Base{
     @ManyToOne
     @JoinColumn(name = "stock_classification_id")
     private StockClassification stockClassification;
+
     private Integer quantity;
     @Transient
     public Integer getTotalPrice() {

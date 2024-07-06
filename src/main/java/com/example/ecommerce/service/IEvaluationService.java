@@ -1,13 +1,12 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.domain.dto.EvaluationDto;
-import com.example.ecommerce.domain.dto.EvaluationRequest;
+
+import com.example.ecommerce.service.request.EvaluationRequest;
 
 public interface IEvaluationService {
-    EvaluationDto saveOrUpdate(EvaluationRequest evaluationRequest);
+    void createEvaluation(EvaluationRequest evaluationRequest);
     long count();
     void delete(Long id);
-
 }
 
 

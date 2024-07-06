@@ -2,7 +2,6 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.converter.ConversationMapper;
-import com.example.ecommerce.domain.Role;
 import com.example.ecommerce.domain.VendorFavorite;
 import com.example.ecommerce.domain.dto.VendorRequest;
 import com.example.ecommerce.domain.dto.chat.ConversationResponse;

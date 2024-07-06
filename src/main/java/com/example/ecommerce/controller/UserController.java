@@ -1,6 +1,5 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.Role;
 import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
 import com.example.ecommerce.domain.dto.UserRequest;
 import com.example.ecommerce.domain.dto.UserResponseInfo;

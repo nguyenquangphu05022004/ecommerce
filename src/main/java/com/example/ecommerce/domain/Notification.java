@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Notification extends Base{
+public class Notification extends BaseEntity {
     private String message;
     @ManyToOne
     @JoinColumn(name = "product_id")

@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @Getter
 @SuperBuilder(toBuilder = true)
-public class Order extends Base{
+public class Order extends BaseEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
@@ -21,18 +21,21 @@ public class Order extends Base{
     @ManyToOne
     @JoinColumn(name = "stock_id")
     private Stock stock;
+
     @ManyToOne
     @JoinColumn(name = "stock_classification_id")
     private StockClassification stockClassification;
 
 
     private Integer quantity;
+
     @Enumerated(EnumType.STRING)
     private Payment payment;
 
     @ManyToOne
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 

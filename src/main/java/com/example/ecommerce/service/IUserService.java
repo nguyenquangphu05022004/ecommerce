@@ -3,7 +3,6 @@ package com.example.ecommerce.service;
 import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
 import com.example.ecommerce.domain.dto.UserRequest;
 import com.example.ecommerce.domain.dto.UserResponseInfo;
-import com.example.ecommerce.domain.Role;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

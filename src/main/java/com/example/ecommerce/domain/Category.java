@@ -1,7 +1,6 @@
 package com.example.ecommerce.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,15 +15,16 @@ import java.util.List;
 @Getter
 @Setter
 @SuperBuilder(toBuilder = true)
-public class Category extends Base{
-
+public class Category extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @OneToOne
-    @JoinColumn(name = "image_id")
-    private Image image;
+    @Column(unique = true)
+    private String slug;
 
-    @OneToMany(mappedBy = "category")
-    private List<Product> products = new ArrayList<>();
+    @OneToOne(mappedBy = "category",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private CategoryImage image;
+
 }

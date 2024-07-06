@@ -1,7 +1,9 @@
 package com.example.ecommerce.domain;
 
+import com.example.ecommerce.common.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +12,11 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "conversations")
 @Setter
-@Builder
+@SuperBuilder(toBuilder = true)
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Conversation extends Base{
+public class Conversation extends BaseEntity {
 
     @ManyToMany
     @JoinTable(name = "conversation_user", joinColumns = @JoinColumn(name = "conversation_id"),
@@ -36,14 +38,5 @@ public class Conversation extends Base{
                 })
                 .collect(Collectors.joining(", "));
         return conversationName;
-    }
-    @Transient
-    public String getImageOfConversation(String username) {
-        String imageUrl = users.stream()
-                .filter(user -> user.getUsername()
-                        .compareTo(username) != 0)
-                .map(user ->  user.defaultImage())
-                .collect(Collectors.joining(", "));
-        return imageUrl;
     }
 }

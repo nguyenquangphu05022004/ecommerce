@@ -2,7 +2,6 @@ package com.example.ecommerce.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class Language extends Base{
+public class Language extends BaseEntity {
 
     private String nameVn;
     private String nameEn;

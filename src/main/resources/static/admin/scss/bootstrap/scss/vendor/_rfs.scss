@@ -8,7 +8,7 @@
 
 // Configuration
 
-// Base value
+// BaseEntity value
 $rfs-base-value: 1.25rem !default;
 $rfs-unit: rem !default;
 
@@ -218,7 +218,7 @@ $rfs-mq-property-height: if($rfs-mode == max-media-query, max-height, min-height
           // Calculate difference between $value and the minimum value
           $value-diff: abs($value) - $value-min;
 
-          // Base value formatting
+          // BaseEntity value formatting
           $min-width: if($rfs-unit == rem, #{$value-min / $rfs-rem-value}rem, #{$value-min}px);
 
           // Use negative value if needed

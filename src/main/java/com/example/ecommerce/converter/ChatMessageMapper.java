@@ -1,7 +1,6 @@
 package com.example.ecommerce.converter;
 
 import com.example.ecommerce.domain.ChatMessage;
-import com.example.ecommerce.domain.Role;
 import com.example.ecommerce.domain.dto.chat.ChatMessageResponse;
 import com.example.ecommerce.common.utils.SystemUtils;
 

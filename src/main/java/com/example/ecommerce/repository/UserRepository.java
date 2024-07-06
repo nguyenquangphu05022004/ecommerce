@@ -1,6 +1,5 @@
 package com.example.ecommerce.repository;
 
-import com.example.ecommerce.domain.Role;
 import com.example.ecommerce.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

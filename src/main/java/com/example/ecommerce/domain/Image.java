@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Image extends Base{
+public class Image extends BaseEntity {
     private String name;
     private String shortUrl;
 

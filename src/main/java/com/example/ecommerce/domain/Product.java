@@ -3,7 +3,6 @@ package com.example.ecommerce.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @SuperBuilder(toBuilder = true)
-public class Product extends Base implements Observer<Notification> {
+public class Product extends BaseEntity implements Observer<Notification> {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "language_id")
     private Language language;

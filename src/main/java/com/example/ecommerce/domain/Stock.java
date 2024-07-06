@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class Stock extends Base{
+public class Stock extends BaseEntity {
     private Integer price;
     private String code;
     @Enumerated(EnumType.STRING)

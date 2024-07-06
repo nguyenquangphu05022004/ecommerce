@@ -1,7 +1,6 @@
 package com.example.ecommerce.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class Verify extends Base{
+public class Verify extends BaseEntity {
     @Column(columnDefinition = "varchar(12)",unique = true)
     private String code;
     @OneToOne(cascade = CascadeType.ALL)

@@ -1,5 +1,6 @@
 package com.example.ecommerce.domain;
 
+import com.example.ecommerce.common.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -12,31 +13,39 @@ import java.util.*;
 @Getter
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class User extends Base {
-    @Column(length = 20)
+public class User extends BaseEntity {
+    @Column(length = 30, unique = true)
     private String username;
+    @Column(length = 30)
     private String password;
-    @Column(length = 50)
+
+    @Column(length = 50, unique = true)
     private String email;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "image_id")
-    private Image avatar;
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserImage userImage;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @Embedded
     private UserContactDetails userContactDetails;
+
     @OneToOne(mappedBy = "user")
     private Vendor vendor;
+
     @OneToMany(mappedBy = "user")
     private List<Evaluation> evaluations = new ArrayList<>();
+
     @OneToOne(mappedBy = "user")
     private Verify verify;
+
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
+
     @ManyToMany(mappedBy = "users")
     private List<Conversation> conversations = new ArrayList<>();
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Notification> notifications = new ArrayList<>();
     @Override
@@ -51,13 +60,5 @@ public class User extends Base {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), username);
-    }
-
-    @Transient
-    public String defaultImage() {
-        if (this.avatar == null) {
-            return "https://ssl.gstatic.com/accounts/ui/avatar_2x.png";
-        }
-        return "/files/image/" + this.avatar.getName();
     }
 }
