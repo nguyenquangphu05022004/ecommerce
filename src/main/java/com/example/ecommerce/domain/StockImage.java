@@ -7,7 +7,6 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -16,8 +15,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder(toBuilder = true)
 @Getter
-@Setter
-public class StockImage extends FileEntity{
+public class StockImage extends FileEntity {
     @ManyToOne
     @JoinColumn(name = "stock_id")
     private Stock stock;

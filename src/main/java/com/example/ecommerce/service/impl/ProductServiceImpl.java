@@ -1,24 +1,29 @@
 package com.example.ecommerce.service.impl;
 
+import com.example.ecommerce.common.utils.SortUtils;
+import com.example.ecommerce.common.utils.SystemUtils;
+import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.*;
 import com.example.ecommerce.domain.dto.SortProductType;
-import com.example.ecommerce.domain.dto.ProductDto;
-import com.example.ecommerce.domain.dto.ProductRequest;
-import com.example.ecommerce.exception.NotFoundException;
-import com.example.ecommerce.repository.*;
+import com.example.ecommerce.handler.exception.GeneralException;
+import com.example.ecommerce.repository.CategoryRepository;
+import com.example.ecommerce.repository.NotificationRepository;
+import com.example.ecommerce.repository.ProductRepository;
+import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IProductService;
-import com.example.ecommerce.common.utils.SortUtils;
-import com.example.ecommerce.common.utils.SystemUtils;
+import com.example.ecommerce.service.dto.ProductDto;
+import com.example.ecommerce.service.mapper.IMapper;
+import com.example.ecommerce.service.request.ProductRequest;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,17 +32,10 @@ public class ProductServiceImpl implements IProductService {
 
     private final ProductRepository productRepository;
     private final VendorRepository vendorRepository;
-    private final ModelMapper mapper;
     private final CategoryRepository categoryRepository;
     private final NotificationRepository notificationRepository;
-
-    @Override
-    public List<ProductDto> getAll() {
-        List<Product> products = productRepository.findAll();
-        return products.stream()
-                .map(product -> mapToDto(product))
-                .collect(Collectors.toList());
-    }
+    @Qualifier("productMapper")
+    private final IMapper<Product, ProductRequest, ProductDto> mapper;
 
     @Override
     public void delete(Long id) {
@@ -47,21 +45,27 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductDto findById(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(
-                        () -> new NotFoundException("ProductId", id + "")
-                );
-        return mapToDto(product);
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if(optionalProduct.isPresent()) {
+            return mapper.toDto(optionalProduct.get());
+        }
+        throw new GeneralException(String.format("Product id %s not found", id));
     }
 
     @Override
     @Transactional
-    public void saveOrUpdate(ProductRequest request) {
+    public void save(ProductRequest request) {
+        ValidationUtils.fieldCheckNullOrEmpty(request.getCategoryId(), "ProductRequest CategoryId");
+        ValidationUtils.fieldCheckNullOrEmpty(request.getDescription(), "ProductRequest Description");
+        ValidationUtils.fieldCheckNullOrEmpty(request.getNameEn(), "ProductRequest NameVn");
+        ValidationUtils.fieldCheckNullOrEmpty(request.getNameVn(), "ProductRequest NameEn");
+
         Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username());
         Category category = categoryRepository.findById(request.getCategoryId()).get();
+
         Product product = Product.builder()
                 .vendor(vendor)
-                .language(new Language(request.getLanguage().getNameVn(), request.getLanguage().getNameEn()))
+                .language(new Language(request.getNameVn(), request.getNameEn()))
                 .category(category)
                 .description(request.getDescription())
                 .build();
@@ -82,42 +86,31 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<ProductDto> findProductByCategoryId(Long categoryId, int page) {
-        return productRepository.findAllByCategoryId(
-                        categoryId,
-                        PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM))
-                .stream()
-                .map(e -> mapToDto(e))
-                .collect(Collectors.toList());
+        Page<Product> result = productRepository.findAllByCategoryId(
+                categoryId,
+                PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM));
+        return mapper.toDtoList(result.getContent());
     }
 
     @Override
     public List<ProductDto> findAllByVendor() {
         String username = SecurityUtils.username();
-        return productRepository.findAllByVendorUserUsername(username)
-                .stream()
-                .map(e -> mapToDto(e))
-                .collect(Collectors.toList());
+        List<Product> products = productRepository.findAllByVendorUserUsername(username);
+        return mapper.toDtoList(products);
     }
 
     @Override
     public List<ProductDto> findAll(int page, int numberOfItem) {
-        Page<Product> productPages = productRepository
+        Page<Product> result = productRepository
                 .findAll(PageRequest.of(page, numberOfItem));
-        SystemUtils.totalPage = productPages.getTotalPages();
-        return productPages.getContent()
-                .stream()
-                .map(e -> mapToDto(e))
-                .collect(Collectors.toList());
+        return mapper.toDtoList(result.getContent());
     }
 
 
     @Override
     public boolean productWasBoughtByUser(Long productId, String username) {
         return false;
-//        return billRepository.existsByOrderBillStatusAndOrderProductIdAndOrderUserUsername(Status.SUCCESS,productId, username);
     }
-
-
     @Override
     public List<ProductDto> searchProduct(Long categoryId,
                                           Long vendorId,
@@ -160,34 +153,4 @@ public class ProductServiceImpl implements IProductService {
         SortUtils.sortProduct(sortProductType, products);
         return products;
     }
-
-    public ProductDto mapToDto(Product product) {
-        if (product.getStocks() != null) {
-            product.getStocks().stream().forEach(e -> {
-                e.setProduct(null);
-            });
-        }
-        if (product.getEvaluations() != null) {
-            product.getEvaluations().stream().forEach(e -> {
-                e.setProduct(null);
-                e.setUser(User.builder()
-                        .username(e.getUser().getUsername())
-                        .avatar(e.getUser().getAvatar())
-                        .build());
-            });
-            Collections.sort(product.getEvaluations(),
-                    (v1, v2) -> v2.getModifiedDate()
-                            .compareTo(v1.getModifiedDate()));
-        }
-        ProductDto productDto = mapper.map(product, ProductDto.class)
-                .toBuilder()
-                .build();
-        return productDto.toBuilder()
-                .vendor(VendorServiceImpl.mapToDto(product.getVendor()))
-                .numberOfProductSold(ProductSortServiceImpl
-                        .getTotalSeller(productDto))
-                .build();
-    }
-
-
 }

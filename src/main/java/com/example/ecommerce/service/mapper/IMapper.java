@@ -6,4 +6,8 @@ public interface IMapper <Entity, Request, Dto>{
     Entity toEntity(Request request);
     Dto toDto(Entity entity);
     List<Dto> toDtoList(List<Entity> entities);
+
+    default Entity toEntity(Request request, Entity entity) {
+        return null;
+    }
 }

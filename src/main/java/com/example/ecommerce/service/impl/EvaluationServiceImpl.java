@@ -25,11 +25,15 @@ public class EvaluationServiceImpl implements IEvaluationService {
     private final IMapper<Evaluation, EvaluationRequest, EvaluationDto> mapper;
     @Override
     @Transactional
-    public void createEvaluation(EvaluationRequest request) {
+    public void save(EvaluationRequest request) {
         ValidationUtils.fieldCheckNullOrEmpty(request.getContent(), "Evaluation Content");
         ValidationUtils.fieldCheckNullOrEmpty(request.getRating(), "Evaluation Rating");
         ValidationUtils.fieldCheckNullOrEmpty(request.getProductId(), "Evaluation ProductID");
         Evaluation evaluation = mapper.toEntity(request);
+        if(evaluation.getId() != null) {
+            var old = evaluationRepository.findById(evaluation.getId()).get();
+            evaluation = mapper.toEntity(request, old);
+        }
         evaluationRepository.save(evaluation);
     }
 

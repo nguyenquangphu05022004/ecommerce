@@ -17,15 +17,19 @@ import java.util.List;
 public class Stock extends BaseEntity {
     private Integer price;
     private String code;
-    @Enumerated(EnumType.STRING)
+
+    @ManyToOne
+    @JoinColumn(name = "color_id")
     private Color color;
-    @OneToMany(cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StockClassification> stockClassifications = new ArrayList<>();
+
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Image> images = new ArrayList<>();
-    @OneToMany(mappedBy = "stock")
-    private List<Order> orders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "stock",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StockImage> images = new ArrayList<>();
 }
+

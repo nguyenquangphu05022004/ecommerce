@@ -1,6 +1,5 @@
 package com.example.ecommerce.domain.dto;
 
-import com.example.ecommerce.domain.Size;
 import lombok.Getter;
 import lombok.Setter;
 

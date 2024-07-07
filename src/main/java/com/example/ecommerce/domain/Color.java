@@ -1,17 +1,30 @@
 package com.example.ecommerce.domain;
 
-public enum Color {
-    NO_COLOR("Không màu"),
-    RED("Đỏ"), WHITE("Trắng"), BLUE("Xanh dương"),
-    GREEN("Xanh lá"), YELLOW("Vàng"), PINK("Hồng"),
-    VIOLET("Tím"), BLACK("Đen");
-    private String value;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-     Color(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
+@Entity
+@Table(name = "colors")
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Color extends BaseEntity{
+    @Column(unique = true)
+    private String name;
+    @OneToOne(mappedBy = "color", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ColorImage colorImage;
+}
+@Entity
+@Table(name = "color_images")
+@Getter
+@SuperBuilder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
+class ColorImage extends FileEntity{
+    @OneToOne
+    @JoinColumn(name = "color_id")
+    private Color color;
 }

@@ -1,7 +1,10 @@
 package com.example.ecommerce.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
@@ -30,6 +33,9 @@ public class Product extends BaseEntity implements Observer<Notification> {
     @OneToMany(mappedBy = "product")
     private List<Stock> stocks = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
     @Override
     public void notification(Notification notification) {
         System.out.println(String.format(
@@ -42,3 +48,6 @@ public class Product extends BaseEntity implements Observer<Notification> {
                 .forEach(user -> user.getNotifications().add(notification));
     }
 }
+
+
+

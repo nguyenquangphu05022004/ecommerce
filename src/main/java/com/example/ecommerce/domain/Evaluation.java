@@ -1,6 +1,7 @@
 package com.example.ecommerce.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,4 +33,15 @@ public class Evaluation extends BaseEntity {
 
     @OneToMany(mappedBy = "evaluation",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EvaluationImage> images = new ArrayList<>();
+}
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "tbl_evaluation_images")
+class EvaluationImage extends FileEntity{
+    @ManyToOne
+    @JoinColumn(name = "evaluation_id")
+    private Evaluation evaluation;
 }

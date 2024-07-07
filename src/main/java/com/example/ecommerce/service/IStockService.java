@@ -1,9 +1,11 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.domain.dto.StockRequest;
-import com.example.ecommerce.domain.dto.StockResponse;
 
-public interface IStockService extends IGenericService<StockResponse> {
+import com.example.ecommerce.service.dto.StockDto;
+import com.example.ecommerce.service.request.StockRequest;
+
+public interface IStockService  {
     void save(StockRequest stockRequest);
-    void update(Long stockId);
+    void delete(Long id);
+    StockDto findById(Long id);
 }

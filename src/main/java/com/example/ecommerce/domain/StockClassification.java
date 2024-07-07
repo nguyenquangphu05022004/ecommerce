@@ -1,9 +1,6 @@
 package com.example.ecommerce.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -16,7 +13,11 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class StockClassification extends BaseEntity {
     private Integer quantityOfProduct;
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "size_id")
     private Size size;
     private int seller;
+    @ManyToOne
+    @JoinColumn(name = "stock_id")
+    private Stock stock;
 }

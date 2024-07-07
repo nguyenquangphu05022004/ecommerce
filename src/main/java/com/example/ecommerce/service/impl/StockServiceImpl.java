@@ -1,25 +1,22 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.domain.*;
-import com.example.ecommerce.domain.dto.StockRequest;
-import com.example.ecommerce.domain.dto.StockResponse;
-import com.example.ecommerce.exception.NotFoundException;
+import com.example.ecommerce.common.utils.ValidationUtils;
+import com.example.ecommerce.domain.Stock;
+import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.NotificationRepository;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.StockRepository;
-import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IImageService;
 import com.example.ecommerce.service.IStockService;
-import com.example.ecommerce.common.utils.SystemUtils;
+import com.example.ecommerce.service.dto.StockDto;
+import com.example.ecommerce.service.mapper.IMapper;
+import com.example.ecommerce.service.request.StockRequest;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -28,111 +25,38 @@ public class StockServiceImpl implements IStockService {
     private final StockRepository stockRepository;
     private final IImageService imageService;
     private final ProductRepository productRepository;
-    private final ModelMapper mapper;
     private final NotificationRepository notificationRepository;
-    private final UserRepository userRepository;
-
-    @Override
-    public List<StockResponse> getAll() {
-        return null;
-    }
+    @Qualifier("stockMapper")
+    private final IMapper<Stock, StockRequest, StockDto> mapper;
 
     @Override
     public void delete(Long id) {
-
+        stockRepository.deleteById(id);
     }
 
     @Override
-    public StockResponse findById(Long id) {
-        Stock stock = stockRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("StockId", id + "")
-        );
-        return mapper.map(stock, StockResponse.class);
+    public StockDto findById(Long id) {
+        Optional<Stock> optionalStock = stockRepository.findById(id);
+        if(optionalStock.isPresent()) {
+            return mapper.toDto(optionalStock.get());
+        }
+        throw new GeneralException(String.format("Stock id %s not found", id));
     }
 
     @Override
     @Transactional
     public void save(StockRequest stockRequest) {
-        Product product = productRepository.findById(
-                stockRequest.getProductId()
-        ).orElseThrow(() -> new NotFoundException(
-                "ProductId", stockRequest.getProductId() + ""
-        ));
-        String[] words = stockRequest.getFormatClassification()
-                .replaceAll("\\s+", "")
-                .split(",");
-        List<StockClassification> stockClassifications = Arrays.stream(words)
-                .map(word -> {
-                    //quantity;size,quantity;size
-                    try {
-                        String[] pairs = word.split(";");
-                        return new StockClassification(
-                                Integer.parseInt(pairs[0]),
-                                Size.valueOf(pairs[1]),
-                                0
-                        );
-                    } catch (Exception e) {
-                        System.out.println("Error convert formatClassification to Enum or Number");
-                        throw e;
-                    }
-                })
-                .collect(Collectors.toList());
-        Stock stock = null;
-        List<Image> images = null;
-        if (stockRequest.getId() != null &&
-                stockRequest.getMultipartFiles().get(0).isEmpty()) {
-            stock = stockRepository.findById(stockRequest.getId())
-                    .orElseThrow(() -> new NotFoundException(
-                            "StockId",
-                            stockRequest.getId() + ""
-                    ));
-            images = stock.getImages();
-        } else {
-            images = stockRequest.getMultipartFiles()
-                    .stream()
-                    .map(multipartFile -> {
-                        Optional<Image> image = imageService
-                                .loadByFileName(
-                                        multipartFile.getOriginalFilename()
-                                );
-                        if (image.isEmpty()) {
-                            return imageService.uploadFile(
-                                    multipartFile,
-                                    SystemUtils.TAG
-                            );
-                        }
-                        return image.get();
-                    })
-                    .collect(Collectors.toList());
+        ValidationUtils.fieldCheckNullOrEmpty(stockRequest.getProductId(), "productId");
+        ValidationUtils.fieldCheckNullOrEmpty(stockRequest.getPrice(), "price");
+        ValidationUtils.fieldCheckNullOrEmpty(stockRequest.getCode(), "code");
+        var stock = mapper.toEntity(stockRequest);
+        if(stock.getId() != null) {
+            Stock old = stockRepository.findById(stock.getId()).get();
+            if(old.getColor() != null)
+                ValidationUtils.fieldCheckNullOrEmpty(stockRequest.getColorId(), "colorId");
+            stock = mapper.toEntity(stockRequest, stock);
         }
-        if (stock == null) {
-            stock = new Stock();
-        }
-        stock = stock.toBuilder()
-                .stockClassifications(stockClassifications)
-                .code(stockRequest.getCode())
-                .images(images)
-                .price(stockRequest.getPrice())
-                .product(product)
-                .color(stockRequest.getColor())
-                .id(stockRequest.getId())
-                .build();
         stockRepository.save(stock);
-        stock.getProduct().notification
-                (
-                        notificationRepository.save(
-                                new Notification(
-                                        String.format(
-                                                "Sản phẩm: %s vừa có thêm loại mặt hàng mới vui lòng kiểm tra",
-                                                product.getLanguage().getNameVn()),
-                                        product
-                                )
-                        )
-                );
     }
 
-    @Override
-    public void update(Long stockId) {
-
-    }
 }

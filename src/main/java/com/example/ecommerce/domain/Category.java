@@ -1,6 +1,7 @@
 package com.example.ecommerce.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,4 +28,16 @@ public class Category extends BaseEntity {
             orphanRemoval = true)
     private CategoryImage image;
 
+}
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Entity
+@Table(name = "categories_images")
+class CategoryImage extends FileEntity{
+    @OneToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

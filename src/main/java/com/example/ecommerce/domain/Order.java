@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+import java.util.Set;
+
 @Entity
 @Table(name = "orders")
 @NoArgsConstructor
@@ -18,16 +21,8 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "stock_id")
-    private Stock stock;
-
-    @ManyToOne
-    @JoinColumn(name = "stock_classification_id")
-    private StockClassification stockClassification;
-
-
-    private Integer quantity;
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<LineItem> lineItems;
 
     @Enumerated(EnumType.STRING)
     private Payment payment;

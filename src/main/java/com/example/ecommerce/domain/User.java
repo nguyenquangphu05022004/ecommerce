@@ -2,10 +2,15 @@ package com.example.ecommerce.domain;
 
 import com.example.ecommerce.common.enums.Role;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -56,9 +61,21 @@ public class User extends BaseEntity {
         return Objects.equals(username, user.username);
     }
 
-
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), username);
     }
+}
+
+@Getter
+@Setter
+@SuperBuilder(toBuilder = true)
+@Entity
+@Table(name = "user_images")
+@NoArgsConstructor
+@AllArgsConstructor
+class UserImage extends FileEntity{
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
