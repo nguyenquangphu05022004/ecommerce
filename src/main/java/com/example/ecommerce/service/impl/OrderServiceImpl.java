@@ -1,12 +1,11 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.*;
+import com.example.ecommerce.domain.Order;
 import com.example.ecommerce.domain.Status;
 import com.example.ecommerce.domain.dto.OrderDto;
 import com.example.ecommerce.domain.dto.OrderRequest;
 import com.example.ecommerce.domain.dto.SelectFilterOrder;
-import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IOrderService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,10 +30,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public List<OrderDto> getAll() {
-        return orderRepository.findAllByUserUsername(SecurityUtils.username())
-                .stream()
-                .map(entity -> mapToDto(entity))
-                .collect(Collectors.toList());
+        return null;
     }
 
 
@@ -47,38 +42,12 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public OrderDto findById(Long id) {
-        return mapToDto(orderRepository.findById(id).get());
+        return null;
     }
 
     @Override
     @Transactional
     public OrderDto saveOrUpdate(OrderRequest orderDto) {
-        User user = userRepository.findByUsername(SecurityUtils.username()).get();
-        user.setUserContactDetails(orderDto.getUserContactDetails());
-        Stock stock = stockRepository.findById(orderDto.getStockId())
-                .orElseThrow(() -> new NotFoundException("StockId", orderDto.getStockId() + ""));
-        Coupon coupon = orderDto.getCouponId() != null ?
-                couponRepository
-                        .findById(orderDto.getCouponId())
-                        .orElseThrow()
-                : null;
-        StockClassification stockClassification = stockClassificationRepository
-                .findById(orderDto.getStockClassificationId())
-                .orElseThrow(() -> new NotFoundException(
-                        "StockClassificationId",
-                        orderDto.getStockClassificationId() + "")
-                );
-        Order order = Order.builder()
-                .stock(stock)
-                .payment(orderDto.getPayment())
-                .quantity(orderDto.getQuantity())
-                .user(user)
-                .coupon(coupon)
-                .stockClassification(stockClassification)
-                .status(Status.NOT_APPROVAL)
-                .build();
-        orderRepository.save(order);
-        basketRepository.deleteByStockIdAndUserId(stock.getId(), user.getId());
         return null;
     }
 
@@ -87,14 +56,7 @@ public class OrderServiceImpl implements IOrderService {
         if (status == Status.ALL) {
             return getAll();
         }
-        return orderRepository
-                .findAllByUserUsernameAndStatus(
-                        SecurityUtils.username(),
-                        status
-                )
-                .stream()
-                .map(entity -> mapToDto(entity))
-                .collect(Collectors.toList());
+        return null;
     }
 
     @Override
@@ -108,13 +70,7 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     @Transactional
     public void updatePayment(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("OrderId", orderId + ""));
-        order.setPurchased(true);
-        StockClassification stockClassification = order.getStockClassification();
-        stockClassification.setSeller(order.getQuantity() + stockClassification.getSeller());
-        order.setStockClassification(stockClassification);
-        orderRepository.save(order);
+
     }
 
     @Override
@@ -150,17 +106,7 @@ public class OrderServiceImpl implements IOrderService {
                         SecurityUtils.username(),
                         false);
         }
-        return orders
-                .stream()
-                .map(entity -> mapToDto(entity))
-                .collect(Collectors.toList());
+        return null;
     }
 
-    private OrderDto mapToDto(Order entity) {
-        entity.getUser().setVendor(null);
-        entity.getUser().setEvaluations(null);
-        entity.getStock().setOrders(null);
-        entity.getStock().getProduct().setStocks(null);
-        return mapper.map(entity, OrderDto.class);
-    }
 }

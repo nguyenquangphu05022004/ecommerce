@@ -1,21 +1,18 @@
 package com.example.ecommerce.service.impl;
 
+import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.converter.ConversationMapper;
-import com.example.ecommerce.domain.VendorFavorite;
+import com.example.ecommerce.domain.Vendor;
+import com.example.ecommerce.domain.dto.UserTrack;
+import com.example.ecommerce.domain.dto.VendorDto;
 import com.example.ecommerce.domain.dto.VendorRequest;
 import com.example.ecommerce.domain.dto.chat.ConversationResponse;
 import com.example.ecommerce.domain.dto.chat.UserInboxResponse;
 import com.example.ecommerce.domain.dto.chat.VendorResponseInbox;
-import com.example.ecommerce.domain.dto.UserTrack;
-import com.example.ecommerce.domain.dto.VendorDto;
-import com.example.ecommerce.domain.User;
-import com.example.ecommerce.domain.Vendor;
-import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IVendorService;
-import com.example.ecommerce.common.utils.SystemUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,8 +41,7 @@ public class VendorServiceImpl implements IVendorService {
                 .numberOfProduct(vendor.getProducts().size())
                 .numberOfUserFavorite(
                         vendor.getVendorFavorite() != null ?
-                                vendor.getVendorFavorite().getUsers().size() :
-                                0
+                                vendor.getVendorFavorite().getUsers().size() : null
                 )
                 .build();
         return vendorResponse;
@@ -59,29 +55,12 @@ public class VendorServiceImpl implements IVendorService {
 
     @Override
     public VendorDto findById(Long id) {
-        return mapToDto(vendorRepository.findById(id)
-                .orElseThrow(
-                        () -> new NotFoundException(
-                                "VendorId",
-                                id + ""
-                        )
-                ));
+        return null;
     }
 
     @Override
     public VendorDto saveOrUpdate(VendorRequest request) {
-        User user = userRepository.findByUsername(request.getUsername())
-                        .orElseThrow(() -> new NotFoundException(
-                                "Username",
-                                request.getUsername()
-                        ));
-        user.setRole(Role.VENDOR);
-        Vendor vendor = Vendor.builder()
-                .user(user)
-                .shopName(request.getShopName())
-                .perMoneyDelivery(request.getPerMoneyDelivery())
-                .build();
-        return mapToDto(vendorRepository.save(vendor));
+        return null;
     }
 
     @Override
@@ -119,7 +98,6 @@ public class VendorServiceImpl implements IVendorService {
                                     .active(UserTrack.getInstance().getMap().get(
                                             vendor.getUser().getUsername() != null
                                     ))
-                                    .image(vendor.getUser().defaultImage())
                                     .build()
                     )
                     .shopName(vendor.getShopName())
@@ -132,18 +110,6 @@ public class VendorServiceImpl implements IVendorService {
     @Override
     @Transactional
     public void followUser(Long vendorId) {
-        User user = userRepository.findByUsername(
-                SecurityUtils.username()
-        ).orElseThrow();
-        Vendor vendor = vendorRepository.findById(vendorId)
-                .orElseThrow(() -> new NotFoundException(
-                        "VendorId",
-                        vendorId.toString()
-                ));
-        if(vendor.getVendorFavorite() == null) {
-            vendor.setVendorFavorite(new VendorFavorite());
-        }
-        vendor.getVendorFavorite().addUser(user);
-        vendorRepository.save(vendor);
+
     }
 }

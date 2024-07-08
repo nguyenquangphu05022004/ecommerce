@@ -3,11 +3,8 @@ package com.example.ecommerce.service.mapper;
 import java.util.List;
 
 public interface IMapper <Entity, Request, Dto>{
-    Entity toEntity(Request request);
+    default Entity toEntity(Request request) {return null;}
     Dto toDto(Entity entity);
-    List<Dto> toDtoList(List<Entity> entities);
-
-    default Entity toEntity(Request request, Entity entity) {
-        return null;
-    }
+    default List<Dto> toDtoList(List<Entity> entities) {return null;}
+    default Entity toEntity(Request request, Entity entity) {return null;}
 }

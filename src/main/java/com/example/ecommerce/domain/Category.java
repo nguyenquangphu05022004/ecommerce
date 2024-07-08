@@ -30,14 +30,3 @@ public class Category extends BaseEntity {
 
 }
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Entity
-@Table(name = "categories_images")
-class CategoryImage extends FileEntity{
-    @OneToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-}

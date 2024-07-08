@@ -1,12 +1,11 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.common.utils.ValidationUtils;
+import com.example.ecommerce.domain.EntityType;
 import com.example.ecommerce.domain.Stock;
 import com.example.ecommerce.handler.exception.GeneralException;
-import com.example.ecommerce.repository.NotificationRepository;
-import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.StockRepository;
-import com.example.ecommerce.service.IImageService;
+import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IStockService;
 import com.example.ecommerce.service.dto.StockDto;
 import com.example.ecommerce.service.mapper.IMapper;
@@ -23,9 +22,7 @@ import java.util.Optional;
 public class StockServiceImpl implements IStockService {
 
     private final StockRepository stockRepository;
-    private final IImageService imageService;
-    private final ProductRepository productRepository;
-    private final NotificationRepository notificationRepository;
+    private final IFilesStorageService filesStorageService;
     @Qualifier("stockMapper")
     private final IMapper<Stock, StockRequest, StockDto> mapper;
 
@@ -49,14 +46,24 @@ public class StockServiceImpl implements IStockService {
         ValidationUtils.fieldCheckNullOrEmpty(stockRequest.getProductId(), "productId");
         ValidationUtils.fieldCheckNullOrEmpty(stockRequest.getPrice(), "price");
         ValidationUtils.fieldCheckNullOrEmpty(stockRequest.getCode(), "code");
-        var stock = mapper.toEntity(stockRequest);
+        Stock stock = mapper.toEntity(stockRequest);
         if(stock.getId() != null) {
-            Stock old = stockRepository.findById(stock.getId()).get();
+            filesStorageService.deleteImage(stock.getImages());
+            Stock old = stockRepository
+                    .findById(stock.getId())
+                    .orElseThrow(() -> new GeneralException("Stock not found id " + stockRequest.getId()));
+            filesStorageService.deleteImage(old.getImages());
             if(old.getColor() != null)
                 ValidationUtils.fieldCheckNullOrEmpty(stockRequest.getColorId(), "colorId");
             stock = mapper.toEntity(stockRequest, stock);
         }
-        stockRepository.save(stock);
+        Stock saved = stockRepository.save(stock);
+        stockRequest.getFileImages()
+                .forEach(file -> filesStorageService.saveFile(
+                        file,
+                        saved.getId(),
+                        EntityType.PRODUCT
+                ));
     }
 
 }

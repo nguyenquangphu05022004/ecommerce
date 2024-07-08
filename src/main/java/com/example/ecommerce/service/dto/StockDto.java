@@ -12,7 +12,7 @@ public class StockDto extends BaseDto {
     private Integer price;
     private String code;
     private String color;
-    private Long productId;
+    private ProductDtoBase product;
     private List<StockClassificationDto> stockClassifications;
     private List<String> imageUrls;
 

@@ -4,8 +4,6 @@ import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.Coupon;
 import com.example.ecommerce.domain.Vendor;
 import com.example.ecommerce.domain.dto.CouponDto;
-import com.example.ecommerce.exception.ExpireCodeException;
-import com.example.ecommerce.exception.NotFoundException;
 import com.example.ecommerce.repository.CouponRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.ICouponService;
@@ -53,16 +51,7 @@ public class CouponServiceImpl implements ICouponService {
 
     @Override
     public CouponDto findByCodeAndProductId(String code, Long productId) {
-        Coupon coupon = couponRepository.findByCodeAndProductId(
-                        code.trim(),
-                        productId
-                )
-                .orElseThrow(() -> new NotFoundException("CouponCode", code));
-        if (coupon.couponIsExpired()) {
-            throw new ExpireCodeException("CouponCode", code);
-        } else {
-            return mapper.map(coupon, CouponDto.class);
-        }
+        return null;
     }
 
 

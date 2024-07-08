@@ -1,6 +1,7 @@
 package com.example.ecommerce.domain;
 
 import jakarta.persistence.MappedSuperclass;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

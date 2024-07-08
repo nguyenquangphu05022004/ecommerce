@@ -29,6 +29,7 @@ public class EvaluationMapper extends ImageMapper
 
     @Override
     public EvaluationDto toDto(Evaluation evaluation) {
+        if(evaluation == null) return null;
         EvaluationDto response = EvaluationDto.builder()
                 .rating(evaluation.getRating())
                 .content(evaluation.getContent())

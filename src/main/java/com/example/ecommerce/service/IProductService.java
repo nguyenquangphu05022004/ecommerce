@@ -13,7 +13,7 @@ public interface IProductService {
     List<ProductDto> findProductByCategoryId(Long categoryId, int page);
     List<ProductDto> findAllByVendor();
     List<ProductDto> findAll(int page, int numberOfItem);
-
+    List<ProductDto> findAllByVendorId(Long id);
     boolean productWasBoughtByUser(Long productId, String username);
     List<ProductDto> searchProduct(
             Long categoryId,

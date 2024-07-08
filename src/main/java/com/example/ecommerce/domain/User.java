@@ -67,15 +67,3 @@ public class User extends BaseEntity {
     }
 }
 
-@Getter
-@Setter
-@SuperBuilder(toBuilder = true)
-@Entity
-@Table(name = "user_images")
-@NoArgsConstructor
-@AllArgsConstructor
-class UserImage extends FileEntity{
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-}

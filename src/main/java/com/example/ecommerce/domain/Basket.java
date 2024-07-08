@@ -25,11 +25,4 @@ public class Basket extends BaseEntity {
     private StockClassification stockClassification;
 
     private Integer quantity;
-    @Transient
-    public Integer getTotalPrice() {
-        if(quantity != null && stock != null && stock.getPrice() != null) {
-            return quantity * stock.getPrice();
-        }
-        return 0;
-    }
 }
