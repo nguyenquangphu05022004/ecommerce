@@ -1,17 +1,19 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.domain.Status;
-import com.example.ecommerce.domain.dto.OrderDto;
-import com.example.ecommerce.domain.dto.OrderRequest;
+
+import com.example.ecommerce.domain.OrderStatus;
 import com.example.ecommerce.domain.dto.SelectFilterOrder;
+import com.example.ecommerce.service.dto.OrderDto;
+import com.example.ecommerce.service.request.OrderRequest;
 
 import java.util.List;
 
-public interface IOrderService extends IGenericService<OrderDto>{
-    OrderDto saveOrUpdate(OrderRequest orderRequest);
-    List<OrderDto> getAllOrderOfCustomer(Status status);
-    void approval(Long orderId);
+public interface IOrderService {
+    void createOrder(OrderRequest request);
+    List<OrderDto> getAllOrderByCustomer(OrderStatus status);
+    List<OrderDto> getAllOrderOfVendor(SelectFilterOrder selectFilerOrder);
+    void approval(Long orderId, Boolean approval);
     void updatePayment(Long orderId);
-    List<OrderDto> getAllOrderOfVendor(SelectFilterOrder status);
 
+    void deleteById(Long orderId);
 }

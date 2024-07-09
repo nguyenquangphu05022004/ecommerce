@@ -53,7 +53,7 @@ public class BasketServiceImpl implements IBasketService {
         ValidationUtils.fieldCheckNullOrEmpty(basketRequest.getStockId(), "StockId");
         ValidationUtils.fieldCheckNullOrEmpty(basketRequest.getStockClassificationId(), "StockClassificationId");
 
-        var user = userRepository.findByUsername(SecurityUtils.username())
+        var user = userRepository.findByUsernameIgnoreCase(SecurityUtils.username())
                 .orElseThrow(() -> new GeneralException("You are not login"));
 
         Optional<Basket> optionBasket = basketRepository

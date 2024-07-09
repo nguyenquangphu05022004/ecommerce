@@ -1,9 +1,12 @@
 package com.example.ecommerce.common.utils;
 
 
+import com.example.ecommerce.domain.Payment;
 import com.example.ecommerce.domain.dto.BaseDto;
 import com.example.ecommerce.handler.exception.GeneralException;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Collection;
 
 public class ValidationUtils {
     private static final String CAN_NOT_BE_EMPTY = "%s can not be empty or null";
@@ -27,4 +30,16 @@ public class ValidationUtils {
             throw new GeneralException(String.format(CAN_NOT_BE_EMPTY, "file upload not null"));
         }
     }
+    public static void fieldCheckNullOrEmpty(Payment payment) {
+        if(payment == null) {
+            throw new GeneralException(String.format(CAN_NOT_BE_EMPTY, "payment not null"));
+        }
+    }
+    public static int fieldCheckNullOrEmpty(Collection<?> list) {
+        if(list == null) {
+            return 0;
+        }
+        return list.size();
+    }
+
 }

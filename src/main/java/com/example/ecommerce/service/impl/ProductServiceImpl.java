@@ -54,8 +54,8 @@ public class ProductServiceImpl implements IProductService {
     public void save(ProductRequest request) {
         ValidationUtils.fieldCheckNullOrEmpty(request.getCategoryId(), "ProductRequest CategoryId");
         ValidationUtils.fieldCheckNullOrEmpty(request.getDescription(), "ProductRequest Description");
-        ValidationUtils.fieldCheckNullOrEmpty(request.getNameEn(), "ProductRequest NameVn");
-        ValidationUtils.fieldCheckNullOrEmpty(request.getNameVn(), "ProductRequest NameEn");
+        ValidationUtils.fieldCheckNullOrEmpty(request.getName(), "ProductRequest NameVn");
+        ValidationUtils.fieldCheckNullOrEmpty(request.getNameEn(), "ProductRequest NameEn");
 
         Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username());
         Product product = mapper.toEntity(request)

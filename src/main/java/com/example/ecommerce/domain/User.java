@@ -2,7 +2,6 @@ package com.example.ecommerce.domain;
 
 import com.example.ecommerce.common.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,17 +35,11 @@ public class User extends BaseEntity {
     @Embedded
     private UserContactDetails userContactDetails;
 
-    @OneToOne(mappedBy = "user")
-    private Vendor vendor;
-
     @OneToMany(mappedBy = "user")
     private List<Evaluation> evaluations = new ArrayList<>();
 
     @OneToOne(mappedBy = "user")
     private Verify verify;
-
-    @OneToMany(mappedBy = "user")
-    private List<Order> orders = new ArrayList<>();
 
     @ManyToMany(mappedBy = "users")
     private List<Conversation> conversations = new ArrayList<>();

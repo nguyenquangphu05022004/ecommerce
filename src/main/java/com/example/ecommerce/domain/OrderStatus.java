@@ -1,16 +1,14 @@
 package com.example.ecommerce.domain;
 
-public enum Status {
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public enum OrderStatus {
     ALL("Tất cả"),
     SUCCESS("Thành công"),
     PROCESSING("Đang tiến hành"),
     NOT_APPROVAL("Chưa nhận đơn");
-    private String value;
-    Status(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
+    @Getter
+    private final String value;
 }

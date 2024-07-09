@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,9 +16,8 @@ import java.util.Set;
 @SuperBuilder(toBuilder = true)
 public class Order extends BaseEntity {
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Embedded
+    private UserContactDetails userContactDetails;
 
     @OneToMany(cascade = CascadeType.ALL)
     private Set<LineItem> lineItems;
@@ -32,7 +30,7 @@ public class Order extends BaseEntity {
     private Coupon coupon;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private OrderStatus orderStatus;
 
     private boolean approval;
     private boolean purchased;

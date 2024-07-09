@@ -34,10 +34,6 @@ public class CategoryServiceImpl implements ICategoryService {
         return mapper.toDtoList(categories);
     }
 
-    @Override
-    public void delete(Long id) {
-        categoryRepository.deleteById(id);
-    }
 
     @Override
     public CategoryDto findById(Long id) {

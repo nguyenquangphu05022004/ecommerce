@@ -1,6 +1,5 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.domain.Image;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;

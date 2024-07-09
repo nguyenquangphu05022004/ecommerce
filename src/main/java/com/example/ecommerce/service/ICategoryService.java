@@ -9,6 +9,5 @@ import java.util.List;
 public interface ICategoryService {
     void save(CategoryRequest request);
     CategoryDto findById(Long id);
-    void delete(Long id);
     List<CategoryDto> findAll();
 }

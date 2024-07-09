@@ -39,7 +39,7 @@ public class UserServiceImpl implements IUserService {
     @Transactional
     public void uploadImage(MultipartFile multipartFile) {
         ValidationUtils.fieldCheckNullOrEmpty(multipartFile);
-        User user = userRepository.findByUsername(SecurityUtils.username()).get();
+        User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.username()).get();
         filesStorageService.deleteImage(user.getUserImage());
         filesStorageService.saveFile(multipartFile, user.getId(), EntityType.USER);
     }

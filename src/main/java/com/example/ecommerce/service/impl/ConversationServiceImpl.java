@@ -23,7 +23,7 @@ public class ConversationServiceImpl implements IConversationService {
     public ConversationResponse createConversation(List<String> usernames) {
         List<User> users = usernames
                 .stream()
-                .map(username -> userRepository.findByUsername(username).get())
+                .map(username -> userRepository.findByUsernameIgnoreCase(username).get())
                 .collect(Collectors.toList());
         Conversation conversation = Conversation.builder()
                 .users(users)

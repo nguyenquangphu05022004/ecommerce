@@ -1,7 +1,7 @@
 package com.example.ecommerce.domain.dto;
 
 import com.example.ecommerce.domain.Payment;
-import com.example.ecommerce.domain.Status;
+import com.example.ecommerce.domain.OrderStatus;
 import com.example.ecommerce.common.utils.SystemUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class OrderDto extends BaseDto {
     private StockResponse stock;
     private Integer quantity;
     private Payment payment;
-    private Status status;
+    private OrderStatus status;
     private int couponPercent;
     private boolean approval;
     private boolean purchased;

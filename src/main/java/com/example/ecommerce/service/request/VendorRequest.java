@@ -1,4 +1,4 @@
-package com.example.ecommerce.domain.dto;
+package com.example.ecommerce.service.request;
 
 import lombok.Data;
 
@@ -7,5 +7,4 @@ public class VendorRequest {
     private String username;
     private String shopName;
     private Integer perMoneyDelivery;
-
 }
