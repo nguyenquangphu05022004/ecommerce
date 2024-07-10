@@ -1,6 +1,5 @@
 package com.example.ecommerce.service.dto;
 
-import com.example.ecommerce.domain.dto.BaseDto;
 import lombok.Data;
 
 @Data

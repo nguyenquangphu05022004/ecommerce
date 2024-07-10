@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class Color extends BaseEntity{
     @Column(unique = true)
     private String name;

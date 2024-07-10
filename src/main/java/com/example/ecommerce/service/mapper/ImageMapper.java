@@ -24,7 +24,7 @@ public abstract class ImageMapper {
     ) {
         String url = "";
         if(image != null) {
-            url = fileDownLoadUrl + "/" + image.getName();
+            url = "/images/" + fileDownLoadUrl + "/" + image.getName();
         }
         return url;
     }

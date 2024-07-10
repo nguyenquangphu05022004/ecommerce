@@ -11,6 +11,7 @@ import com.example.ecommerce.service.dto.UserDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    @Qualifier("userMapper")
     private final IMapper<User, RegisterRequest, UserDto> mapper;
     private final IFilesStorageService filesStorageService;
 
@@ -38,7 +40,6 @@ public class UserServiceImpl implements IUserService {
     @Override
     @Transactional
     public void uploadImage(MultipartFile multipartFile) {
-        ValidationUtils.fieldCheckNullOrEmpty(multipartFile);
         User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.username()).get();
         filesStorageService.deleteImage(user.getUserImage());
         filesStorageService.saveFile(multipartFile, user.getId(), EntityType.USER);

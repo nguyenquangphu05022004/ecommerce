@@ -1,4 +1,4 @@
-package com.example.ecommerce.domain.dto;
+package com.example.ecommerce.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

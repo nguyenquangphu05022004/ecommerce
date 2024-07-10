@@ -3,7 +3,6 @@ package com.example.ecommerce.service.dto;
 import com.example.ecommerce.domain.Payment;
 import com.example.ecommerce.domain.OrderStatus;
 import com.example.ecommerce.domain.UserContactDetails;
-import com.example.ecommerce.domain.dto.BaseDto;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 

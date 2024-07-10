@@ -1,4 +1,4 @@
-package com.example.ecommerce.domain.dto;
+package com.example.ecommerce.service.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

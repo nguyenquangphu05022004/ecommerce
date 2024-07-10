@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/categories")
@@ -16,9 +17,11 @@ public class CategoryController {
     private final ICategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<?> createVendor(
-            @RequestBody CategoryRequest request
+    public ResponseEntity<?> createCategory(
+            @RequestPart("request") CategoryRequest request,
+            @RequestPart("file") MultipartFile file
     ) {
+        request.setFile(file);
         categoryService.save(request);
         return new ResponseEntity<>(
                 OperationResponse.builder()

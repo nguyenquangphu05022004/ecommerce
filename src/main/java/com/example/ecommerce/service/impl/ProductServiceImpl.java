@@ -5,7 +5,7 @@ import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.Product;
 import com.example.ecommerce.domain.Vendor;
-import com.example.ecommerce.domain.dto.SortProductType;
+import com.example.ecommerce.service.dto.SortProductType;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.NotificationRepository;
 import com.example.ecommerce.repository.ProductRepository;
@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +58,8 @@ public class ProductServiceImpl implements IProductService {
         ValidationUtils.fieldCheckNullOrEmpty(request.getName(), "ProductRequest NameVn");
         ValidationUtils.fieldCheckNullOrEmpty(request.getNameEn(), "ProductRequest NameEn");
 
-        Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username());
+        Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username())
+                .orElseThrow(() -> new UsernameNotFoundException("You not login. Please login before create product"));
         Product product = mapper.toEntity(request)
                 .toBuilder()
                 .vendor(vendor)

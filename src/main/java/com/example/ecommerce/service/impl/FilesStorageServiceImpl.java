@@ -26,7 +26,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class FilesStorageServiceImpl implements IFilesStorageService {
-    private final String UPLOAD_DIRS = "./uploads/";
+    private final String UPLOAD_DIRS = "uploads/";
     private final String FILE_NOT_FOUND = "File not found";
     private final UserImageRepository userImageRepository;
     private final StockImageRepository stockImageRepository;
@@ -35,56 +35,63 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
 
     @Override
     public void saveFile(MultipartFile file, Long entityId, EntityType entityType) {
-        if (file.isEmpty()) {
+        if (file == null || file.isEmpty()) {
             throw new GeneralException(FILE_NOT_FOUND);
         }
         String extension = getFilePathExtension(file.getOriginalFilename());
         String uploadDir = UPLOAD_DIRS + entityType.getType() + "/";
         try {
-            if (new File(uploadDir).exists() || (new File(uploadDir).mkdir())) {
-                uploadDir += entityId + "/";
-                if (new File(uploadDir).exists() || (new File(uploadDir).mkdir())) {
-                    String fullFileName = String.format("%s.%s", UUID.randomUUID(), extension);
-                    String path = uploadDir + fullFileName;
-                    Files.copy(file.getInputStream(), getPath(path), StandardCopyOption.REPLACE_EXISTING);
-
-                    switch (entityType) {
-                        case USER:
-                            UserImage userImage =
-                                    getInstance(fullFileName, path, entityType.getType(), UserImage.class)
-                                            .toBuilder()
-                                            .user(User.builder().id(entityId).build())
-                                            .build();
-                            userImageRepository.save(userImage);
-                            break;
-                        case PRODUCT:
-                            StockImage stockImage =
-                                    getInstance(fullFileName, path, entityType.getType(), StockImage.class)
-                                    .toBuilder()
-                                            .stock(Stock.builder().id(entityId).build())
-                                            .build();
-                            stockImageRepository.save(stockImage);
-                            break;
-                        case CATEGORY:
-                            CategoryImage categoryImage =
-                                    getInstance(fullFileName, path, entityType.getType(), CategoryImage.class)
-                                            .toBuilder()
-                                            .category(Category.builder().id(entityId).build())
-                                            .build();
-                            categoryImageRepository.save(categoryImage);
-                            break;
-                        case EVALUATION:
-                            EvaluationImage evaluationImage =
-                                    getInstance(fullFileName, path, entityType.getType(), EvaluationImage.class)
-                                            .toBuilder()
-                                            .evaluation(Evaluation.builder().id(entityId).build())
-                                            .build();
-                            evaluationImageRepository.save(evaluationImage);
-                            break;
-                    }
-                }
+            if (!Files.exists(getPath(uploadDir))) {
+                Files.createDirectories(getPath(uploadDir));
             }
-        } catch (IOException e) {
+            uploadDir += entityId + "/";
+            if (!Files.exists(getPath(uploadDir))) {
+                Files.createDirectories(getPath(uploadDir));
+            }
+            String fullFileName = String.format("%s.%s", UUID.randomUUID(), extension);
+            String path = uploadDir + fullFileName;
+            Files.copy(file.getInputStream(), getPath(path), StandardCopyOption.REPLACE_EXISTING);
+            switch (entityType) {
+                case USER:
+                    UserImage userImage = UserImage.builder()
+                            .name(fullFileName)
+                            .type(entityType.getType())
+                            .path(path)
+                            .user(User.builder().id(entityId).build())
+                            .build();
+                    userImageRepository.save(userImage);
+                    break;
+                case PRODUCT:
+                    StockImage stockImage = StockImage.builder()
+                            .name(fullFileName)
+                            .type(entityType.getType())
+                            .path(path)
+                            .stock(Stock.builder().id(entityId).build())
+                            .build();
+                    stockImageRepository.save(stockImage);
+                    break;
+                case CATEGORY:
+                    CategoryImage categoryImage = CategoryImage.builder()
+                            .name(fullFileName)
+                            .type(entityType.getType())
+                            .path(path)
+                            .category(Category.builder().id(entityId).build())
+                            .build();
+                    categoryImageRepository.save(categoryImage);
+                    break;
+                case EVALUATION:
+                    EvaluationImage evaluationImage = EvaluationImage.builder()
+                            .name(fullFileName)
+                            .type(entityType.getType())
+                            .path(path)
+                            .evaluation(Evaluation.builder().id(entityId).build())
+                            .build();
+                    evaluationImageRepository.save(evaluationImage);
+                    break;
+            }
+
+
+        } catch (Exception e) {
             throw new GeneralException(e.getMessage());
         }
     }
@@ -94,7 +101,7 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
         try {
             String filePath = getPathFile(entityType, fileName);
             Resource resource = new UrlResource(getPath(filePath).toUri());
-            if(resource.exists()) {
+            if (resource.exists()) {
                 return resource;
             } else {
                 throw new GeneralException("File not found: " + fileName);
@@ -107,7 +114,7 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
 
     @Override
     public void deleteImage(FileEntity file) {
-        if(file == null) return;
+        if (file == null) return;
         try {
             Path path = getPath(file.getPath());
             if (!Files.exists(path)) {
@@ -130,25 +137,11 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
 
     @Override
     public void deleteImage(Collection<? extends FileEntity> list) {
-        if(list != null) {
+        if (list != null) {
             list.forEach(this::deleteImage);
         }
     }
 
-
-    private <T extends FileEntity> T getInstance(
-            String fullFileName,
-            String path,
-            String type,
-            Class<T> t
-    ) {
-        FileEntity e = new FileEntity() {
-        };
-        e.setName(fullFileName);
-        e.setType(type);
-        e.setPath(path);
-        return (T) e;
-    }
 
     private Path getPath(String path) {
         return Paths.get(path);
@@ -160,23 +153,24 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
                 .map(f -> f.substring(f.lastIndexOf(".") + 1))
                 .orElseThrow();
     }
+
     private String getPathFile(EntityType entityType, String fileName) {
-        if(entityType == EntityType.CATEGORY) {
+        if (entityType == EntityType.CATEGORY) {
             return categoryImageRepository
                     .findByName(fileName)
                     .orElseThrow(() -> new GeneralException(FILE_NOT_FOUND))
                     .getPath();
-        } else if(entityType == EntityType.EVALUATION) {
+        } else if (entityType == EntityType.EVALUATION) {
             return evaluationImageRepository
                     .findByName(fileName)
                     .orElseThrow(() -> new GeneralException(FILE_NOT_FOUND))
                     .getPath();
-        } else if(entityType == EntityType.PRODUCT){
+        } else if (entityType == EntityType.PRODUCT) {
             return stockImageRepository
                     .findByName(fileName)
                     .orElseThrow(() -> new GeneralException(FILE_NOT_FOUND))
                     .getPath();
-        } else if(entityType == EntityType.USER) {
+        } else if (entityType == EntityType.USER) {
             return userImageRepository
                     .findByName(fileName)
                     .orElseThrow(() -> new GeneralException(FILE_NOT_FOUND))

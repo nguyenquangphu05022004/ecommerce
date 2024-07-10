@@ -49,7 +49,6 @@ public class CategoryServiceImpl implements ICategoryService {
     public void save(CategoryRequest request) {
         ValidationUtils.fieldCheckNullOrEmpty(request.getName(), "Category Name");
         ValidationUtils.fieldCheckNullOrEmpty(request.getSlug(), "Category Slug");
-        ValidationUtils.fieldCheckNullOrEmpty(request.getFile());
         Category category = mapper.toEntity(request);
         if(category.getId() != null) {
             Category oldCate = categoryRepository

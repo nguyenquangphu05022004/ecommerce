@@ -1,7 +1,6 @@
 package com.example.ecommerce.service.dto;
 
 import com.example.ecommerce.common.utils.SystemUtils;
-import com.example.ecommerce.domain.dto.BaseDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

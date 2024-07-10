@@ -14,6 +14,12 @@ public class ProductDto extends ProductDtoBase {
     private List<EvaluationDto> evaluations;
     private List<StockDto> stocks;
 
+    public Integer getAverageRate() {
+        if(evaluations == null) return 0;
+        int sumRate = evaluations.stream().mapToInt(ev -> ev.getRating())
+                .sum();
+        return sumRate / evaluations.size();
+    }
     public String getImageUrlRepresentation() {
         if(stocks != null) {
             return stocks.get(0).getImageUrlRepresentation();

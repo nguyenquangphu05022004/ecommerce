@@ -1,17 +1,21 @@
-package com.example.ecommerce.domain.dto.utilize;
+package com.example.ecommerce.service.dto;
 
-import com.example.ecommerce.domain.dto.EmailDetails;
+import com.example.ecommerce.service.dto.EmailDetails;
 import com.example.ecommerce.common.utils.EmailUtils;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@Service
+@NoArgsConstructor
 public class SendEmailTask implements Runnable{
     private EmailDetails emailDetails;
     private JavaMailSender javaMailSender;

@@ -2,6 +2,7 @@ package com.example.ecommerce.service.mapper.impl;
 
 import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.domain.Category;
+import com.example.ecommerce.domain.EntityType;
 import com.example.ecommerce.service.dto.CategoryDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.mapper.ImageMapper;
@@ -19,6 +20,7 @@ public class CategoryMapper extends ImageMapper implements
         Category category = Category.builder()
                 .slug(categoryRequest.getSlug())
                 .name(categoryRequest.getName())
+                .id(categoryRequest.getId())
                 .build();
         return category;
     }
@@ -28,7 +30,7 @@ public class CategoryMapper extends ImageMapper implements
         CategoryDto response = CategoryDto.builder()
                 .slug(category.getSlug())
                 .name(category.getName())
-                .imageUrl(getImageUrl(SystemUtils.TAG, category.getImage()))
+                .imageUrl(getImageUrl(EntityType.CATEGORY.name(), category.getImage()))
                 .id(category.getId())
                 .build();
         return response;

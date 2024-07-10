@@ -1,7 +1,7 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.domain.dto.ProductDto;
 import com.example.ecommerce.service.ProductSortService;
+import com.example.ecommerce.service.dto.ProductDto;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +16,7 @@ public class ProductSortServiceImpl implements ProductSortService {
 
     @Override
     public List<ProductDto> sortByRateAverage(List<ProductDto> products) {
-        Collections.sort(products, (p1, p2) -> p2.getAverageEvaluation() - p1.getAverageEvaluation());
+        Collections.sort(products, (p1, p2) -> p2.getAverageRate() - p1.getAverageRate());
         return products;
     }
 

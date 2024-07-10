@@ -21,30 +21,29 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> {
-                    request
-                            .requestMatchers(HttpMethod.GET, SecurityUrlConstants.COMMON_URL)
-                            .permitAll()
-                            .requestMatchers(HttpMethod.GET, SecurityUrlConstants.USER_URL)
-                            .hasAnyRole(
-                                    Role.ADMIN.name(),
-                                    Role.VENDOR.name()
-                            )
-                            .requestMatchers(HttpMethod.POST, SecurityUrlConstants.USER_URL)
-                            .hasAnyAuthority(
-                                    Permission.ADMIN_CREATE.name(),
-                                    Permission.VENDOR_CREATE.name()
-                            )
-                            .requestMatchers(HttpMethod.PUT, SecurityUrlConstants.USER_URL)
-                            .hasAnyAuthority(
-                                    Permission.ADMIN_UPDATE.name(),
-                                    Permission.VENDOR_UPDATE.name()
-                            )
-                            .requestMatchers(HttpMethod.DELETE, SecurityUrlConstants.USER_URL)
-                            .hasAnyAuthority(
-                                    Permission.ADMIN_DELETE.name(),
-                                    Permission.VENDOR_DELETE.name()
-                            )
-                            .anyRequest().authenticated();
+                    request.requestMatchers("/**")
+                            .permitAll();
+//                            .requestMatchers(HttpMethod.GET, SecurityUrlConstants.USER_URL)
+//                            .hasAnyRole(
+//                                    Role.ADMIN.name(),
+//                                    Role.VENDOR.name()
+//                            )
+//                            .requestMatchers(HttpMethod.POST, SecurityUrlConstants.USER_URL)
+//                            .hasAnyAuthority(
+//                                    Permission.ADMIN_CREATE.name(),
+//                                    Permission.VENDOR_CREATE.name()
+//                            )
+//                            .requestMatchers(HttpMethod.PUT, SecurityUrlConstants.USER_URL)
+//                            .hasAnyAuthority(
+//                                    Permission.ADMIN_UPDATE.name(),
+//                                    Permission.VENDOR_UPDATE.name()
+//                            )
+//                            .requestMatchers(HttpMethod.DELETE, SecurityUrlConstants.USER_URL)
+//                            .hasAnyAuthority(
+//                                    Permission.ADMIN_DELETE.name(),
+//                                    Permission.VENDOR_DELETE.name()
+//                            )
+//                            .anyRequest().authenticated();
 
                 })
                 .logout(logout -> {
@@ -66,7 +65,16 @@ class SecurityUrlConstants {
             "/api/v1/vendors/**",
             "/api/v1/coupons/**",
             "/api/v1/stocks/**",
-            "/api/v1/files/**"
+            "/api/v1/files/**",
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
     };
     public static final String USER_URL = "/api/v1/users/**";
 }

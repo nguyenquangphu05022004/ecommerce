@@ -1,6 +1,6 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.domain.dto.SortProductType;
+import com.example.ecommerce.service.dto.SortProductType;
 import com.example.ecommerce.service.dto.ProductDto;
 import com.example.ecommerce.service.request.ProductRequest;
 

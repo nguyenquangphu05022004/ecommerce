@@ -28,7 +28,6 @@ public class ApplicationConfig {
         return username -> (UserDetails) userRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
-    @Bean
     public void config(AuthenticationManagerBuilder authenticationManager) {
         authenticationManager.authenticationProvider(authenticationProvider());
     }

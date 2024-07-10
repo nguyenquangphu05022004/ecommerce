@@ -2,7 +2,7 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.OrderStatus;
-import com.example.ecommerce.domain.dto.SelectFilterOrder;
+import com.example.ecommerce.service.dto.SelectFilterOrder;
 import com.example.ecommerce.service.IOrderService;
 import com.example.ecommerce.service.dto.OrderDto;
 import com.example.ecommerce.service.request.OrderRequest;
@@ -29,14 +29,6 @@ public class OrderController {
             @RequestParam("orderStatus") OrderStatus status
     ) {
         List<OrderDto> orders = orderService.getAllOrderByCustomer(status);
-        return ResponseEntity.ok(orders);
-    }
-
-    @GetMapping("/vendor")
-    public ResponseEntity<?> getAllOrderOfVendor(
-            @RequestParam("selectFilter") SelectFilterOrder filterOrder
-    ) {
-        List<OrderDto> orders = orderService.getAllOrderOfVendor(filterOrder);
         return ResponseEntity.ok(orders);
     }
 

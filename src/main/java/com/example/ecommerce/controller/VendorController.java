@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/vendors")
+@RequestMapping("/api/v1/users/vendors")
 public class VendorController {
     private final IVendorService vendorService;
 
