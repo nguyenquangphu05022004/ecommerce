@@ -59,7 +59,7 @@ public class ProductServiceImpl implements IProductService {
         ValidationUtils.fieldCheckNullOrEmpty(request.getNameEn(), "ProductRequest NameEn");
 
         Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username())
-                .orElseThrow(() -> new UsernameNotFoundException("You not login. Please login before create product"));
+                .orElseThrow(() -> new UsernameNotFoundException("You are not role VENDOR, so you can't create product"));
         Product product = mapper.toEntity(request)
                 .toBuilder()
                 .vendor(vendor)

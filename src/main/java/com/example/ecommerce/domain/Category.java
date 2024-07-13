@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "categories")
@@ -27,6 +28,14 @@ public class Category extends BaseEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private CategoryImage image;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Category parent;
+
+    @OneToMany(mappedBy = "parent")
+    private Set<Category> childes;
+
 
 }
 

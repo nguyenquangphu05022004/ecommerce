@@ -1,13 +1,14 @@
 package com.example.ecommerce.domain;
 
 import jakarta.persistence.Embeddable;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Embeddable
 @Setter
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserContactDetails {
     private String fullName;
     private String phoneNumber;

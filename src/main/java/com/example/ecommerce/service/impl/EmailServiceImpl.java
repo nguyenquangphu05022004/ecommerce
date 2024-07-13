@@ -1,12 +1,10 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.domain.User;
-import com.example.ecommerce.domain.Verify;
+import com.example.ecommerce.repository.UserRepository;
+import com.example.ecommerce.service.EmailService;
 import com.example.ecommerce.service.dto.EmailDetails;
 import com.example.ecommerce.service.dto.SendEmailTask;
-import com.example.ecommerce.repository.UserRepository;
-import com.example.ecommerce.repository.VerifyRepository;
-import com.example.ecommerce.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,7 +18,7 @@ public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender javaMailSender;
     private final UserRepository userRepository;
-    private final VerifyRepository verifyRepository;
+//    private final VerifyRepository verifyRepository;
     @Value("${spring.mail.username}")
     private String sender;
 
@@ -41,17 +39,17 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private void saveDataVerify(EmailDetails details, User user) {
-        Verify verify = user.getVerify();
-        if(verify == null) {
-            verify = Verify.builder()
-                    .code(details.getCode())
-                    .user(user)
-                    .build();
-        } else {
-            verify = verify.toBuilder()
-                    .code(details.getCode())
-                    .build();
-        }
-        verifyRepository.save(verify);
+//        Verify verify = user.getVerify();
+//        if(verify == null) {
+//            verify = Verify.builder()
+//                    .code(details.getCode())
+//                    .user(user)
+//                    .build();
+//        } else {
+//            verify = verify.toBuilder()
+//                    .code(details.getCode())
+//                    .build();
+//        }
+//        verifyRepository.save(verify);
     }
 }

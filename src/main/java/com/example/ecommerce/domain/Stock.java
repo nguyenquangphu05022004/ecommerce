@@ -17,11 +17,7 @@ import java.util.List;
 public class Stock extends BaseEntity {
     private Integer price;
     private String code;
-
-    @ManyToOne
-    @JoinColumn(name = "color_id")
-    private Color color;
-
+    private String color;
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StockClassification> stockClassifications = new ArrayList<>();
 

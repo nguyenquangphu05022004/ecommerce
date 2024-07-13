@@ -32,7 +32,6 @@ public class Product extends BaseEntity implements Observer<Notification> {
     private List<Evaluation> evaluations = new ArrayList<>();
     @OneToMany(mappedBy = "product")
     private List<Stock> stocks = new ArrayList<>();
-
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;

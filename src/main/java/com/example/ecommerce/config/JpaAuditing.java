@@ -21,7 +21,7 @@ public class JpaAuditing {
             if((authentication instanceof AnonymousAuthenticationToken)) {
                 return null;
             }
-            return Optional.of("ADMIN");
+            return Optional.of(authentication.getName());
         };
     }
 

@@ -13,9 +13,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class StockClassification extends BaseEntity {
     private Integer quantityOfProduct;
-    @ManyToOne
-    @JoinColumn(name = "size_id")
-    private Size size;
+    private String size;
     private int seller;
     @ManyToOne
     @JoinColumn(name = "stock_id")

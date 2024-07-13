@@ -11,4 +11,5 @@ import org.springframework.web.multipart.MultipartFile;
 @SuperBuilder(toBuilder = true)
 public class CategoryRequest extends CategoryDto {
     private MultipartFile file;
+    private Long parentId;
 }

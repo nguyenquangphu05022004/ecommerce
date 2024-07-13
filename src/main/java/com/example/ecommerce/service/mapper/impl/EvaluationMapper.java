@@ -11,6 +11,7 @@ import com.example.ecommerce.service.request.EvaluationRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service("evaluationMapper")
@@ -44,7 +45,7 @@ public class EvaluationMapper extends ImageMapper
     }
 
     @Override
-    public List<EvaluationDto> toDtoList(List<Evaluation> evaluations) {
+    public List<EvaluationDto> toDtoList(Collection<? extends Evaluation> evaluations) {
         List<EvaluationDto> responses = new ArrayList<>();
         if(evaluations != null) {
             evaluations.forEach(eval -> responses.add(toDto(eval)));

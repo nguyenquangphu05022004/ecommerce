@@ -9,10 +9,10 @@ import java.util.List;
 public interface IProductService {
     void save(ProductRequest request);
     ProductDto findById(Long id);
-    public void delete(Long id);
+     void delete(Long id);
     List<ProductDto> findProductByCategoryId(Long categoryId, int page);
     List<ProductDto> findAllByVendor();
-    List<ProductDto> findAll(int page, int numberOfItem);
+    List<ProductDto> findAll(int page, int limit);
     List<ProductDto> findAllByVendorId(Long id);
     boolean productWasBoughtByUser(Long productId, String username);
     List<ProductDto> searchProduct(

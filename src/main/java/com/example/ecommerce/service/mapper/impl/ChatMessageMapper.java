@@ -1,6 +1,7 @@
 package com.example.ecommerce.service.mapper.impl;
 
 import com.example.ecommerce.common.utils.SystemUtils;
+import com.example.ecommerce.domain.Basket;
 import com.example.ecommerce.domain.ChatMessage;
 import com.example.ecommerce.domain.Conversation;
 import com.example.ecommerce.domain.User;
@@ -8,9 +9,11 @@ import com.example.ecommerce.service.dto.ChatMessageDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.mapper.ImageMapper;
 import com.example.ecommerce.service.request.ChatMessageRequest;
+import jakarta.mail.Message;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 @Service("chatMessageMapper")
 public class ChatMessageMapper extends ImageMapper implements
@@ -38,8 +41,9 @@ public class ChatMessageMapper extends ImageMapper implements
         return message;
     }
 
+
     @Override
-    public List<ChatMessageDto> toDtoList(List<ChatMessage> chatMessages) {
+    public List<ChatMessageDto> toDtoList(Collection<? extends ChatMessage> chatMessages) {
         List<ChatMessageDto> messages = new ArrayList<>();
         if(chatMessages != null) {
             chatMessages.forEach(message -> messages.add(toDto(message)));

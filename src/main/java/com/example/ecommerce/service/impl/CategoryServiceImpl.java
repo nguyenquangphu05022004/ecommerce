@@ -1,9 +1,7 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.domain.Category;
-import com.example.ecommerce.domain.CategoryImage;
 import com.example.ecommerce.domain.EntityType;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.CategoryRepository;
@@ -30,7 +28,7 @@ public class CategoryServiceImpl implements ICategoryService {
     private final IFilesStorageService filesStorageService;
     @Override
     public List<CategoryDto> findAll() {
-        var categories =  categoryRepository.findAll();
+        var categories =  categoryRepository.findAllByParentIsNull();
         return mapper.toDtoList(categories);
     }
 

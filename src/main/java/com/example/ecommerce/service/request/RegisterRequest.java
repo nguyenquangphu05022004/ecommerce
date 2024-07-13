@@ -9,7 +9,7 @@ import lombok.Data;
 public class RegisterRequest {
     private String username;
     private String password;
-    private Role role;
     private String email;
     private String fullName;
+    private Role role;
 }

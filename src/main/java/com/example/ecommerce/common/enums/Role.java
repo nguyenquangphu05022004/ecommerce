@@ -38,10 +38,10 @@ public enum Role implements GrantedAuthoritiesContainer {
     public Collection<? extends GrantedAuthority> getGrantedAuthorities() {
         var authorities = permissions.stream()
                 .map(permission -> new SimpleGrantedAuthority(
-                        permission.getPermission()
+                        permission.name()
                 ))
-                .collect(Collectors.toList());
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+                .collect(Collectors.toSet());
+        authorities.add(new SimpleGrantedAuthority(this.name()));
         return authorities;
     }
 }

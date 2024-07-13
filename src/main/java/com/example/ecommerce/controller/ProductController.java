@@ -6,10 +6,7 @@ import com.example.ecommerce.service.response.OperationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,5 +21,13 @@ public class ProductController {
                 new OperationResponse(true, "Product is created"),
                 HttpStatus.CREATED
         );
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllProduct(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "16") int limit
+    ) {
+        return ResponseEntity.ok(productService.findAll(page - 1, limit));
     }
 }

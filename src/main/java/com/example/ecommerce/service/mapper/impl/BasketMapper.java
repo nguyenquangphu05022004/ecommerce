@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 @RequiredArgsConstructor
 @Service("basketMapper")
@@ -36,7 +37,7 @@ public class BasketMapper implements IMapper<Basket, BasketRequest, BasketDto> {
     }
 
     @Override
-    public List<BasketDto> toDtoList(List<Basket> baskets) {
+    public List<BasketDto> toDtoList(Collection<? extends Basket> baskets) {
         List<BasketDto> list = new ArrayList<>();
         if(baskets != null) {
             baskets.stream().forEach(b -> list.add(toDto(b)));

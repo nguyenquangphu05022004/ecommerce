@@ -13,7 +13,6 @@ import java.util.List;
 @Table(name = "vendors")
 @Setter
 @Getter
-@NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class Vendor extends BaseEntity {
     @Column(columnDefinition = "nvarchar(100)",nullable = false)
@@ -34,4 +33,9 @@ public class Vendor extends BaseEntity {
 
     @OneToMany(mappedBy = "vendor")
     private List<Coupon> coupons;
+
+    public Vendor() {
+        products = new ArrayList<>();
+    }
+
 }

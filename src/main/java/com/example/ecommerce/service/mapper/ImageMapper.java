@@ -14,7 +14,7 @@ public abstract class ImageMapper {
     ) {
         List<String> urls = new ArrayList<>();
         if(images != null) {
-            images.forEach(image -> urls.add(fileDownLoadUrl + "/" + image.getName()));
+            images.forEach(image -> urls.add("/images/" + fileDownLoadUrl + "/" + image.getName()));
         }
         return urls;
     }

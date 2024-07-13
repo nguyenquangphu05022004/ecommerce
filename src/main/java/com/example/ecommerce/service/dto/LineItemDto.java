@@ -12,10 +12,10 @@ public class LineItemDto extends BaseDto {
     private StockClassificationDto stockClassification;
     private Integer quantity;
 
-    public String getImageUrlRepresentation() {
-        if(stock != null) {
-            return stock.getImageUrlRepresentation();
-        }
-        return null;
-    }
+//    public String getImageUrlRepresentation() {
+//        if(stock != null) {
+//            return stock.getImageUrlRepresentation();
+//        }
+//        return null;
+//    }
 }

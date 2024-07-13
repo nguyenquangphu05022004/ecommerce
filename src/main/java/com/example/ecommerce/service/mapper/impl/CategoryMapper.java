@@ -10,6 +10,7 @@ import com.example.ecommerce.service.request.CategoryRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service(value = "categoryMapper")
@@ -21,23 +22,26 @@ public class CategoryMapper extends ImageMapper implements
                 .slug(categoryRequest.getSlug())
                 .name(categoryRequest.getName())
                 .id(categoryRequest.getId())
+                .parent(categoryRequest.getParentId() != null ? Category.builder().id(categoryRequest.getParentId()).build() : null)
                 .build();
         return category;
     }
 
     @Override
     public CategoryDto toDto(Category category) {
+        if(category == null) return null;
         CategoryDto response = CategoryDto.builder()
                 .slug(category.getSlug())
                 .name(category.getName())
                 .imageUrl(getImageUrl(EntityType.CATEGORY.name(), category.getImage()))
+                .childes(toDtoList(category.getChildes()))
                 .id(category.getId())
                 .build();
         return response;
     }
 
     @Override
-    public List<CategoryDto> toDtoList(List<Category> categories) {
+    public List<CategoryDto> toDtoList(Collection<? extends Category> categories) {
         List<CategoryDto> responses = new ArrayList<>();
         if(categories != null) {
             categories.forEach(cate -> responses.add(toDto(cate)));
