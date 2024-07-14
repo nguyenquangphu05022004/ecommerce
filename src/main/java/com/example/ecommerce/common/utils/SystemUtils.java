@@ -1,16 +1,12 @@
 package com.example.ecommerce.common.utils;
 
-import org.modelmapper.ModelMapper;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 public class SystemUtils {
-    public static final ModelMapper mapper = new ModelMapper();
-    public static int totalPage = 1;
+    public static final Integer EVENT_TIME_HOUR_EXPIRE = 8;
     public static final Integer NUMBER_OF_ITEM = 9;
-    public static final String VN_DATE = "dd/MM/yyyy HH:mm:ss";
     public static final String TAG = "files/image";
     public static String code() {
         StringBuilder builder = new StringBuilder();

@@ -13,6 +13,7 @@ import com.example.ecommerce.service.request.OrderRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +22,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements IOrderService {
     private final OrderRepository orderRepository;
+    private final NotificationRepository notificationRepository;
+    private final EventRepository eventRepository;
     @Qualifier("orderMapper")
     private final IMapper<Order, OrderRequest, OrderDto> mapper;
 
     @Override
+    @Transactional
     public void createOrder(OrderRequest request) {
         ValidationUtils.fieldCheckNullOrEmpty(request.getUserContactDetails().getFullName(), "fullName");
         ValidationUtils.fieldCheckNullOrEmpty(request.getUserContactDetails().getDistrict(), "district");
@@ -33,8 +37,14 @@ public class OrderServiceImpl implements IOrderService {
         ValidationUtils.fieldCheckNullOrEmpty(request.getUserContactDetails().getPhoneNumber(), "phoneNumber");
         ValidationUtils.fieldCheckNullOrEmpty(request.getUserContactDetails().getProvince(), "province");
         ValidationUtils.fieldCheckNullOrEmpty(request.getPayment());
+        // convert to order entity
         Order order = mapper.toEntity(request);
-        orderRepository.save(order);
+        //save order of user to database
+        Order saved = orderRepository.save(order);
+        //notify to user when a order was created by current user;
+        saved.notify(notificationRepository);
+        //event auto approval order after 8 hours
+        eventRepository.createEvent(saved.getId());
     }
 
     @Override

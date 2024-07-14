@@ -1,5 +1,7 @@
 package com.example.ecommerce.domain;
 
-public interface Observer<Notification>{
-    void notification(Notification notification);
+import com.example.ecommerce.repository.NotificationRepository;
+
+public interface Observer {
+    void notify(NotificationRepository notificationRepository);
 }

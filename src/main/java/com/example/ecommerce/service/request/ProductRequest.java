@@ -13,4 +13,5 @@ import lombok.experimental.SuperBuilder;
 public class ProductRequest extends ProductDto {
     private Long categoryId;
     private String nameEn;
+    private Long brandId;
 }

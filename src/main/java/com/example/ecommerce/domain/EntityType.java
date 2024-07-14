@@ -8,7 +8,9 @@ public enum EntityType {
     PRODUCT("product"),
     EVALUATION("evaluation"),
     CATEGORY("category"),
-    USER("avatar");
+    USER("avatar"),
+    ORDER("order"),
+    CHAT_MESSAGE("chat message");
     @Getter
     private final String type;
 

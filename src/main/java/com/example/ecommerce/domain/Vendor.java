@@ -1,5 +1,6 @@
 package com.example.ecommerce.domain;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "vendors")
@@ -15,6 +17,8 @@ import java.util.List;
 @Getter
 @SuperBuilder(toBuilder = true)
 public class Vendor extends BaseEntity {
+
+
     @Column(columnDefinition = "nvarchar(100)",nullable = false)
     private String shopName;
 
@@ -24,15 +28,14 @@ public class Vendor extends BaseEntity {
 
     private Integer perMoneyDelivery;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "vendor_favorite_id")
-    private VendorFavorite vendorFavorite;
-
     @OneToMany(mappedBy = "vendor")
     private List<Product> products;
 
-    @OneToMany(mappedBy = "vendor")
-    private List<Coupon> coupons;
+
+    @ManyToMany
+    @JoinTable(name = "favorite_vendor", joinColumns = @JoinColumn(name = "vendor_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users;
 
     public Vendor() {
         products = new ArrayList<>();

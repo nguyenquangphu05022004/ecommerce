@@ -10,7 +10,4 @@ import java.util.Optional;
 public interface VendorRepository extends JpaRepository<Vendor, Long> {
     Optional<Vendor> findByUserUsername(String username);
 
-    @Query("select v from Vendor v inner join User u on v.user.id = u.id " +
-            "where u.username != :username and v.shopName like %:vendorName%")
-    List<Vendor> findAllByVendorNameAndNotMySelf(String vendorName, String username);
 }

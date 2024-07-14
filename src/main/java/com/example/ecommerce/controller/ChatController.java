@@ -1,10 +1,15 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.service.IChatMessageService;
+import com.example.ecommerce.service.dto.ChatMessageDto;
 import com.example.ecommerce.service.request.ChatMessageRequest;
+import com.example.ecommerce.service.response.OperationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/chat")
@@ -14,17 +19,27 @@ public class ChatController {
 
     @PostMapping("/messages")
     public ResponseEntity<?> createMessage(
-            @RequestBody ChatMessageRequest request
+            @RequestPart("request") ChatMessageRequest request,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files
     ) {
-        chatMessageService.createMessage(request);
-        return ResponseEntity.ok("a message was created");
+        request.setFileImages(files);
+        ChatMessageDto response = chatMessageService.createMessage(request);
+        if (response == null) {
+            return ResponseEntity.ok(
+                    OperationResponse.builder()
+                            .success(true)
+                            .message(String.format("A message is sent into group with id %s", response.getDestinationId()))
+                            .build()
+            );
+        }
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/messages/conversation/{conversationId}")
+    @GetMapping("/messages")
     public ResponseEntity<?> getAllByConversationId(
-            @PathVariable("conversationId") Long id
+            @RequestBody ChatMessageRequest request
     ) {
-        return ResponseEntity.ok(chatMessageService.getListMessageByConversationId(id));
+        return ResponseEntity.ok(chatMessageService.getListMessageByDestination(request));
     }
 
 }

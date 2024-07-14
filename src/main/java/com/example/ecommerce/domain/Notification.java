@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 public class Notification extends BaseEntity {
     private String message;
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    private Long entityId;
+    @Enumerated(EnumType.STRING)
+    private EntityType type;
 }

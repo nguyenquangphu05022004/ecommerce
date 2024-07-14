@@ -1,15 +1,12 @@
 package com.example.ecommerce.service.mapper.impl;
 
 import com.example.ecommerce.common.utils.SystemUtils;
-import com.example.ecommerce.domain.Basket;
 import com.example.ecommerce.domain.ChatMessage;
-import com.example.ecommerce.domain.Conversation;
 import com.example.ecommerce.domain.User;
 import com.example.ecommerce.service.dto.ChatMessageDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.mapper.ImageMapper;
 import com.example.ecommerce.service.request.ChatMessageRequest;
-import jakarta.mail.Message;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,7 +20,8 @@ public class ChatMessageMapper extends ImageMapper implements
         ChatMessage chatMessage = ChatMessage.builder()
                 .user(User.builder().id(chatMessageRequest.getId()).build())
                 .content(chatMessageRequest.getContent())
-                .conversation(Conversation.builder().id(chatMessageRequest.getConversationId()).build())
+                .destinationId(chatMessageRequest.getDestinationId())
+                .chatMessageDestination(chatMessageRequest.getChatMessageDestination())
                 .build();
         return chatMessage;
     }
@@ -31,7 +29,8 @@ public class ChatMessageMapper extends ImageMapper implements
     @Override
     public ChatMessageDto toDto(ChatMessage chatMessage) {
         ChatMessageDto message = ChatMessageDto.builder()
-                .conversationId(chatMessage.getConversation().getId())
+                .destinationId(chatMessage.getDestinationId())
+                .chatMessageDestination(chatMessage.getChatMessageDestination())
                 .content(chatMessage.getContent())
                 .createdBy(chatMessage.getCreatedBy())
                 .modifiedDate(chatMessage.getModifiedDate())

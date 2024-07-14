@@ -5,7 +5,6 @@ import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.User;
 import com.example.ecommerce.domain.Vendor;
-import com.example.ecommerce.domain.VendorFavorite;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VendorRepository;
@@ -43,7 +42,6 @@ public class VendorServiceImpl implements IVendorService {
 
         Vendor vendor =  mapper.toEntity(request).toBuilder()
                 .user(user)
-                .vendorFavorite(new VendorFavorite())
                 .build();
 
         vendorRepository.save(vendor);
@@ -112,8 +110,7 @@ public class VendorServiceImpl implements IVendorService {
             );
         }
 
-        vendor.getVendorFavorite().addUser(user);
-
+        vendor.getUsers().add(user);
         vendorRepository.save(vendor);
 
     }

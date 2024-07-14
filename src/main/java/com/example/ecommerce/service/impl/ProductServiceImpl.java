@@ -58,14 +58,20 @@ public class ProductServiceImpl implements IProductService {
         ValidationUtils.fieldCheckNullOrEmpty(request.getName(), "ProductRequest NameVn");
         ValidationUtils.fieldCheckNullOrEmpty(request.getNameEn(), "ProductRequest NameEn");
 
+        if(request.getBrandId() == null && (request.getName().isEmpty() || request.getName().isBlank()))
+            throw new GeneralException(String.format("CAN_NOT_BE_EMPTY", "Brand"));
+
         Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username())
                 .orElseThrow(() -> new UsernameNotFoundException("You are not role VENDOR, so you can't create product"));
+
         Product product = mapper.toEntity(request)
                 .toBuilder()
                 .vendor(vendor)
                 .build();
 
-        productRepository.save(product);
+        Product saved = productRepository.save(product);
+        saved.notify(notificationRepository);
+
     }
 
     @Override

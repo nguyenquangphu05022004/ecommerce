@@ -1,5 +1,6 @@
 package com.example.ecommerce.domain;
 
+import com.example.ecommerce.repository.NotificationRepository;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @SuperBuilder(toBuilder = true)
-public class Product extends BaseEntity implements Observer<Notification> {
+public class Product extends BaseEntity implements Observer{
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "language_id")
     private Language language;
@@ -35,16 +36,16 @@ public class Product extends BaseEntity implements Observer<Notification> {
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;
+
     @Override
-    public void notification(Notification notification) {
-        System.out.println(String.format(
-                "NotifcationId %s has a message: %s",
-                notification.getId(),
-                notification.getMessage()));
-        vendor.getVendorFavorite()
-                .getUsers()
-                .stream()
-                .forEach(user -> user.getNotifications().add(notification));
+    @Transient
+    public void notify(NotificationRepository notificationRepository) {
+        Notification notification = Notification.builder()
+                .message(String.format("A product was created by shop %s, maybe you like that", this.vendor.getShopName()))
+                .entityId(getId())
+                .type(EntityType.PRODUCT)
+                .build();
+        notificationRepository.save(notification);
     }
 }
 

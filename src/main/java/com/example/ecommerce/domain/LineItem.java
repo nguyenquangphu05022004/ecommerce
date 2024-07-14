@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LineItem extends BaseEntity{
     @ManyToOne
-    @JoinTable(name = "stock_id")
+    @JoinColumn(name = "stock_id")
     private Stock stock;
 
     @ManyToOne
