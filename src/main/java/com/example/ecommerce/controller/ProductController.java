@@ -1,6 +1,7 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.service.IProductService;
+import com.example.ecommerce.service.request.FilterInputRequestProduct;
 import com.example.ecommerce.service.request.ProductRequest;
 import com.example.ecommerce.service.response.OperationResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +24,10 @@ public class ProductController {
         );
     }
 
-    @GetMapping
+    @GetMapping("/search")
     public ResponseEntity<?> getAllProduct(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "limit", defaultValue = "16") int limit
+            @RequestBody FilterInputRequestProduct filter
     ) {
-        return ResponseEntity.ok(productService.findAll(page - 1, limit));
+        return ResponseEntity.ok(productService.searchProduct(filter));
     }
 }

@@ -2,6 +2,7 @@ package com.example.ecommerce.service;
 
 import com.example.ecommerce.service.dto.SortProductType;
 import com.example.ecommerce.service.dto.ProductDto;
+import com.example.ecommerce.service.request.FilterInputRequestProduct;
 import com.example.ecommerce.service.request.ProductRequest;
 
 import java.util.List;
@@ -15,14 +16,6 @@ public interface IProductService {
     List<ProductDto> findAll(int page, int limit);
     List<ProductDto> findAllByVendorId(Long id);
     boolean productWasBoughtByUser(Long productId, String username);
-    List<ProductDto> searchProduct(
-            Long categoryId,
-            Long vendorId,
-            String query,
-            Integer startPrice,
-            Integer endPrice,
-            SortProductType sortProductType,
-            int page
-    );
+    List<ProductDto> searchProduct(FilterInputRequestProduct filterInputProduct);
 
 }

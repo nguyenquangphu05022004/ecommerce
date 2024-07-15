@@ -1,11 +1,13 @@
 package com.example.ecommerce.service.impl;
 
+import com.example.ecommerce.common.utils.SortUtils;
 import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.domain.Language_;
 import com.example.ecommerce.domain.Product;
+import com.example.ecommerce.domain.Product_;
 import com.example.ecommerce.domain.Vendor;
-import com.example.ecommerce.service.dto.SortProductType;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.NotificationRepository;
 import com.example.ecommerce.repository.ProductRepository;
@@ -13,15 +15,19 @@ import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.dto.ProductDto;
 import com.example.ecommerce.service.mapper.IMapper;
+import com.example.ecommerce.service.request.FilterInputRequestProduct;
 import com.example.ecommerce.service.request.ProductRequest;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +64,7 @@ public class ProductServiceImpl implements IProductService {
         ValidationUtils.fieldCheckNullOrEmpty(request.getName(), "ProductRequest NameVn");
         ValidationUtils.fieldCheckNullOrEmpty(request.getNameEn(), "ProductRequest NameEn");
 
-        if(request.getBrandId() == null && (request.getName().isEmpty() || request.getName().isBlank()))
+        if (request.getBrandId() == null && (request.getName().isEmpty() || request.getName().isBlank()))
             throw new GeneralException(String.format("CAN_NOT_BE_EMPTY", "Brand"));
 
         Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username())
@@ -94,6 +100,7 @@ public class ProductServiceImpl implements IProductService {
         List<Product> products = productRepository.findAllByVendorId(id);
         return mapper.toDtoList(products);
     }
+
     @Override
     public List<ProductDto> findAll(int page, int numberOfItem) {
         Page<Product> result = productRepository
@@ -101,52 +108,53 @@ public class ProductServiceImpl implements IProductService {
         return mapper.toDtoList(result.getContent());
     }
 
-
     @Override
     public boolean productWasBoughtByUser(Long productId, String username) {
         return false;
     }
 
     @Override
-    public List<ProductDto> searchProduct(Long categoryId,
-                                          Long vendorId,
-                                          String query,
-                                          Integer startPrice,
-                                          Integer endPrice,
-                                          SortProductType sortProductType,
-                                          int page) {
-
-//        List<Product> listProducts = productRepository.findAll();
-//        List<ProductDto> products = listProducts.stream()
-//                .filter(product -> {
-//                    if (categoryId <= 0) return true;
-//                    return product.getCategory().getId() == categoryId;
-//                })
-//                .filter(product -> {
-//                    if (vendorId <= 0) return true;
-//                    return product.getVendor().getId() == vendorId;
-//                })
-//                .filter(product -> {
-//                    String regex = ".*" + query + ".*";
-//                    if (query.isBlank() || query.isEmpty()) return true;
-//                    return (product.getLanguage().getNameEn().matches(regex) ||
-//                            product.getLanguage().getNameVn().matches(regex));
-//                })
-//                .filter(product -> {
-//                    if (startPrice == 0 && endPrice == 0) return true;
-//                    return product.getStocks()
-//                            .stream()
-//                            .anyMatch(stock -> stock.getPrice() >= startPrice
-//                                    && stock.getPrice() <= endPrice);
-//                })
-//                .map(product -> mapToDto(product))
-//                .collect(Collectors.toList());
-//        SystemUtils.totalPage = (int) Math.ceil((double) products.size() / (double) SystemUtils.NUMBER_OF_ITEM);
-//        products = products.stream()
-//                .skip(page * SystemUtils.NUMBER_OF_ITEM)
-//                .limit(Math.min(page * SystemUtils.NUMBER_OF_ITEM + SystemUtils.NUMBER_OF_ITEM, products.size()))
-//                .collect(Collectors.toList());
-//        SortUtils.sortProduct(sortProductType, products);
-        return null;
+    public List<ProductDto> searchProduct(FilterInputRequestProduct filterInputProduct) {
+        Specification<Product> specification = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            filterInputProduct.getPairs().forEach(pair -> {
+                switch (pair.getKey()) {
+                    case PRODUCT_NAME:
+                        predicates.add(criteriaBuilder.like(root.join(Product_.language).get(Language_.nameEn), "%" + pair.getValue().toLowerCase() + "%"));
+                        predicates.add(criteriaBuilder.like(root.join(Product_.language).get(Language_.nameVn), "%" + pair.getValue().toLowerCase() + "%"));
+                        break;
+                    case CATEGORY_ID:
+                        predicates.add(criteriaBuilder.equal(root.join("category").get("id"),pair.getValue()));
+                        break;
+                    case BRAND_ID:
+                        predicates.add(criteriaBuilder.equal(root.join("brand").get("id"),pair.getValue()));
+                        break;
+                    case PRICE:
+                        String words[] = pair.getValue().split(";");
+                        int x1 = Integer.parseInt(words[0]);
+                        int x2 = Integer.parseInt(words[1]);
+                        predicates.add(criteriaBuilder.between(root.joinList("stocks").get("price"), x1, x2));
+                        break;
+                }
+            });
+            Predicate predicate = null;
+            for(Predicate element : predicates) {
+                Predicate tmp = criteriaBuilder.and(element);
+                if(predicate == null) predicate = tmp;
+                predicate = criteriaBuilder.and(predicate, tmp);
+            }
+            return predicate;
+        };
+        Page<Product> pageProducts = productRepository.findAll(
+                specification,
+                PageRequest.of(
+                        filterInputProduct.getPage() - 1,
+                        filterInputProduct.getLimit()
+                ));
+        List<ProductDto> products = mapper.toDtoList(pageProducts.getContent());
+        SortUtils.sortProduct(filterInputProduct.getSortProductType(), products);
+        return products;
     }
+
+
 }

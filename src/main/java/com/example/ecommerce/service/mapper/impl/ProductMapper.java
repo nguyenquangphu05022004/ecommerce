@@ -26,7 +26,6 @@ public class ProductMapper implements IMapper<Product, ProductRequest, ProductDt
     private final IMapper<Evaluation, EvaluationRequest, EvaluationDto> evaluationMapper;
     @Qualifier("vendorMapper")
     private final IMapper<Vendor, VendorRequest, VendorDto> vendorMapper;
-
     @Override
     public Product toEntity(ProductRequest request) {
         Product product = Product.builder()
@@ -48,7 +47,7 @@ public class ProductMapper implements IMapper<Product, ProductRequest, ProductDt
                 .stocks(stockMapper.toDtoList(product.getStocks()))
                 .evaluations(evaluationMapper.toDtoList(product.getEvaluations()))
                 .vendor(vendorMapper.toDto(product.getVendor()))
-                .brandName(product.getBrand().getName())
+                .brandName(product.getBrand() != null ? product.getBrand().getName() : null)
                 .build();
     }
 

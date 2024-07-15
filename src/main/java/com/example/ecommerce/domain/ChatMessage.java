@@ -26,5 +26,8 @@ public class ChatMessage extends BaseEntity {
 
     @OneToMany(mappedBy = "chatMessage",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessageImage> images;
+    @ManyToOne
+    @JoinColumn(name = "conversation_id")
+    private Conversation conversation;
 }
 

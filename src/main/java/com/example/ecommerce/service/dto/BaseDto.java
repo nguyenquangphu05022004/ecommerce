@@ -20,12 +20,6 @@ public abstract class BaseDto {
     private Long id;
     private String createdBy;
     private String modifiedBy;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime createdDate;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime modifiedDate;
 }

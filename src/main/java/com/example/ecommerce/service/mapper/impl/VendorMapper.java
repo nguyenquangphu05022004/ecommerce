@@ -13,7 +13,6 @@ public class VendorMapper implements IMapper<Vendor, VendorRequest, VendorDto> {
     public VendorDto toDto(Vendor vendor) {
         VendorDto vendorDto = VendorDto.builder()
                 .numberOfProduct(ValidationUtils.fieldCheckNullOrEmpty(vendor.getProducts()))
-                .numberOfUserFavorite(ValidationUtils.fieldCheckNullOrEmpty(vendor.getVendorFavorite().getUsers()))
                 .perMoneyDelivery(vendor.getPerMoneyDelivery())
                 .shopName(vendor.getShopName())
                 .id(vendor.getId())
