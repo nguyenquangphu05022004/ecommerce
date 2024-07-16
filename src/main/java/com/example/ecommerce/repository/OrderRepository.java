@@ -16,4 +16,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("update Order o set o.approval = :approval where o.id = :id")
     void updateApprovalById(@Param("id") Long id,
                             @Param("approval") Boolean approval);
+
+    List<Order> findAllByCreatedBy(String username);
 }

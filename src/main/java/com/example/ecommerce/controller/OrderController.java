@@ -2,10 +2,8 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.OrderStatus;
-import com.example.ecommerce.service.dto.SelectFilterOrder;
 import com.example.ecommerce.service.IOrderService;
 import com.example.ecommerce.service.dto.OrderDto;
-import com.example.ecommerce.service.request.OrderRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +17,8 @@ public class OrderController {
     private final IOrderService orderService;
 
     @PostMapping
-    public ResponseEntity<?> createOrder(@RequestBody OrderRequest request) {
-        orderService.createOrder(request);
+    public ResponseEntity<?> createOrder(@RequestBody OrderDto orderRequest) {
+        orderService.createOrder(orderRequest);
         return ResponseEntity.ok(String.format("%s you created order", SecurityUtils.username()));
     }
 

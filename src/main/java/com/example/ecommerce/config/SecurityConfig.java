@@ -107,6 +107,7 @@ class SecurityUrlConstants {
     public static final String USER_URL = "/api/v1/users/**";
     public static final String[] LIST_URL_ACCESS_ALL_METHOD = {
             "/api/v1/shopping-cart",
-            "/api/v1/auth/**"
+            "/api/v1/auth/**",
+            "/api/v1/orders/**"
     };
 }

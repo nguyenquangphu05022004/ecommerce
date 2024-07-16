@@ -28,9 +28,11 @@ public class ShoppingCartController {
     public ResponseEntity<?> getShoppingCart() {
         return ResponseEntity.ok(cartService.getShoppingCart());
     }
-    @DeleteMapping("/products/stocks/{stockId}")
-    public ResponseEntity<?> deleteProduct(@PathVariable("stockId") Long stockId) {
-        cartService.delete(stockId);
+    @DeleteMapping("/products/stocks")
+    public ResponseEntity<?> deleteProduct(
+            @RequestParam("stockId") Long stockId,
+            @RequestParam("vendorId") Long vendorId) {
+        cartService.delete(stockId, vendorId);
         return ResponseEntity.ok(
                 OperationResponse.builder()
                         .success(true)

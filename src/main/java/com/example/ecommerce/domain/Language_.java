@@ -1,6 +1,5 @@
 package com.example.ecommerce.domain;
 
-import com.example.ecommerce.domain.Language;
 import jakarta.persistence.metamodel.SingularAttribute;
 import jakarta.persistence.metamodel.StaticMetamodel;
 

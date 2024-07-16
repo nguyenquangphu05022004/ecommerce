@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/categories")
 @RestController
-@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class CategoryController {
 
     private final ICategoryService categoryService;

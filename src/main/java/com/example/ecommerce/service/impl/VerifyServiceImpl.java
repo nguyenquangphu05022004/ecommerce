@@ -1,11 +1,15 @@
 package com.example.ecommerce.service.impl;
 
+import com.example.ecommerce.domain.Token;
+import com.example.ecommerce.domain.User;
 import com.example.ecommerce.repository.TokenRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.VerifyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,26 +20,26 @@ public class VerifyServiceImpl implements VerifyService {
 
     @Override
     public boolean update(String code, String password) {
-//        Optional<Verify> optional = verifyRepository.findByCode(code);
-//        if(optional.isEmpty() || !optional.get().isExpired()) {
-//            return false;
-//        }
-//        Verify verify = optional.get();
-//        User user = verify.getUser().toBuilder()
-//                .password(passwordEncoder.encode(password)).build();
-//        verify = verify.toBuilder()
-//                .user(user).build();
-//        verifyRepository.save(verify);
+        Optional<Token> optional = tokenRepository.findByValue(code);
+        if(optional.isEmpty() || !optional.get().isExpired()) {
+            return false;
+        }
+        Token verify = optional.get();
+        User user = verify.getUser().toBuilder()
+                .password(passwordEncoder.encode(password)).build();
+        verify = verify.toBuilder()
+                .user(user).build();
+        tokenRepository.save(verify);
         return true;
     }
 
 
     @Override
     public boolean isCodeExpire(String code) {
-//        Optional<Verify> byCode = verifyRepository.findByCode(code);
-//        if(byCode.isPresent()) {
-//            return byCode.get().isExpired();
-//        }
+        Optional<Token> optionalToken = tokenRepository.findByValue(code);
+        if(optionalToken.isPresent()) {
+            return optionalToken.get().isExpired();
+        }
         return false;
     }
 }

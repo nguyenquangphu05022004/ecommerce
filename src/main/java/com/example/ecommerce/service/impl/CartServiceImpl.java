@@ -40,8 +40,8 @@ public class CartServiceImpl implements ICartService {
     @Qualifier("stockMapper")
     private final IMapper<Stock, StockRequest, StockDto> stockMapper;
     private final String USER_KEY = "USER_%s_CART";
-    private final String VENDOR_ITEM_PRODUCT = "VENDOR_ITEM_PRODUCT_%s";
-    private final String VENDOR_KEY = "VENDOR_%s";
+    private final String VENDOR_ITEM_PRODUCT = "USER_%s_VENDOR_ITEM_PRODUCT_%s";
+    private final String VENDOR_KEY = "USER_%s_VENDOR_%s";
     private final String STOCK_KEY = "STOCK_%s";
 
     @Override
@@ -56,8 +56,8 @@ public class CartServiceImpl implements ICartService {
             Vendor vendor = stock.getProduct().getVendor();
 
             RedisKey redisKey = new RedisKey(
-                    String.format(VENDOR_KEY, vendor.getId()),
-                    String.format(VENDOR_ITEM_PRODUCT, vendor.getId()),
+                    String.format(VENDOR_KEY, SecurityUtils.username(), vendor.getId()),
+                    String.format(VENDOR_ITEM_PRODUCT,SecurityUtils.username(), vendor.getId()),
                     String.format(STOCK_KEY, cartRequest.getStockId())
             );
             redisTemplate.opsForSet().add(
@@ -128,8 +128,16 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
-    public void delete(Long stockId) {
-
+    public void delete(Long stockId, Long vendorId) {
+        if(redisTemplate.opsForHash().hasKey(
+                String.format(VENDOR_ITEM_PRODUCT, SecurityUtils.username(), vendorId),
+                String.format(STOCK_KEY, stockId)
+        )) {
+            redisTemplate.opsForHash().delete(
+                    String.format(VENDOR_ITEM_PRODUCT, SecurityUtils.username(), vendorId),
+                    String.format(STOCK_KEY, stockId)
+            );
+        }
     }
 
     private String getUserKey() {
