@@ -1,5 +1,6 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.request.FilterInputRequestProduct;
 import com.example.ecommerce.service.request.ProductRequest;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/products")
+@CrossOrigin("*")
+
 public class ProductController {
     private final IProductService productService;
 
@@ -22,6 +25,14 @@ public class ProductController {
                 new OperationResponse(true, "Product is created"),
                 HttpStatus.CREATED
         );
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllProduct(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "9") int limit
+    ) {
+        return ResponseEntity.ok(productService.findAll(page - 1, limit));
     }
 
     @GetMapping("/search")

@@ -1,6 +1,9 @@
 package com.example.ecommerce.service.impl;
 
+import com.example.ecommerce.common.enums.TokenType;
+import com.example.ecommerce.domain.Token;
 import com.example.ecommerce.domain.User;
+import com.example.ecommerce.repository.TokenRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.EmailService;
 import com.example.ecommerce.service.dto.EmailDetails;
@@ -18,7 +21,7 @@ public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender javaMailSender;
     private final UserRepository userRepository;
-//    private final VerifyRepository verifyRepository;
+    private final TokenRepository tokenRepository;
     @Value("${spring.mail.username}")
     private String sender;
 
@@ -39,17 +42,22 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private void saveDataVerify(EmailDetails details, User user) {
-//        Verify verify = user.getVerify();
-//        if(verify == null) {
-//            verify = Verify.builder()
-//                    .code(details.getCode())
-//                    .user(user)
-//                    .build();
-//        } else {
-//            verify = verify.toBuilder()
-//                    .code(details.getCode())
-//                    .build();
-//        }
-//        verifyRepository.save(verify);
+        var optionalToken = tokenRepository.findByUserIdAndTokenType(
+                user.getId(),
+                TokenType.RESET_PASSWORD
+        );
+        Token token = null;
+        if(optionalToken.isPresent()) {
+            token = optionalToken.get()
+                    .toBuilder()
+                    .value(details.getCode())
+                    .build();
+        } else {
+            token = Token.builder()
+                    .value(details.getCode())
+                    .user(user)
+                    .build();
+        }
+        tokenRepository.save(token);
     }
 }

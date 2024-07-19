@@ -14,6 +14,7 @@ public class ItemResponse {
     private StockDto stock;
     private Integer quantity;
     private LocalDateTime createdAt;
+    private Long stockClassificationId;
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof ItemResponse) {

@@ -1,5 +1,6 @@
 package com.example.ecommerce.service.request;
 
+import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.service.dto.SortProductType;
 import lombok.*;
 import java.util.List;
@@ -13,12 +14,12 @@ public class FilterInputRequestProduct {
     private Integer page;
     private SortProductType sortProductType;
     public int getLimit() {
-        if(limit == null) limit = 15;
+        if(limit == null) limit = SystemUtils.LIMIT_ITEM;
         return limit;
     }
 
     public Integer getPage() {
-        if(page == null) page = 1;
+        if(page == null) page = SystemUtils.DEFAULT_PAGE;
         return page;
     }
 

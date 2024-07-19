@@ -34,7 +34,7 @@ public class Category extends BaseEntity {
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
-    private Set<Category> childes;
+    private Set<Category> children;
 
 
 }

@@ -32,7 +32,7 @@ public class ProductMapper implements IMapper<Product, ProductRequest, ProductDt
                 .description(request.getDescription())
                 .language(new Language(request.getName(), request.getNameEn()))
                 .category(Category.builder().id(request.getCategoryId()).build())
-                .brand(Brand.builder().id(request.getBrandId()).name(request.getBrandName()).build())
+                .brand(request.getBrandId() != null ? Brand.builder().id(request.getBrandId()).build() : null)
                 .build();
         return product;
     }

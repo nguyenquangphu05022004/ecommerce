@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/chat")
 @RestController
+@CrossOrigin("*")
 public class ChatController {
     private final IChatMessageService chatMessageService;
 

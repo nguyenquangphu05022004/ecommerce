@@ -19,5 +19,5 @@ public class CategoryDto extends BaseDto {
     private String name;
     private String slug;
     private String imageUrl;
-    private List<CategoryDto> childes;
+    private List<CategoryDto> children;
 }

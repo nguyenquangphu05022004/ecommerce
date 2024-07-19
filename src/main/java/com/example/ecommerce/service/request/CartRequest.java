@@ -10,4 +10,5 @@ import lombok.Setter;
 public class CartRequest {
     private Long stockId;
     private String operation;
+    private Long stockClassificationId;
 }

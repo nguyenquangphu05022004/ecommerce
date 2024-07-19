@@ -1,12 +1,13 @@
 package com.example.ecommerce.service;
 
+import com.example.ecommerce.domain.Product;
 import com.example.ecommerce.service.dto.ProductDto;
 
 import java.util.List;
 
 public interface ProductSortService {
-    List<ProductDto> sortByPrice(List<ProductDto> products);
-    List<ProductDto> sortByRateAverage(List<ProductDto> products);
-    List<ProductDto> sortByNumberOfSeller(List<ProductDto> products);
-    List<ProductDto> sortByDefault(List<ProductDto> products);
+    void sortByPrice(List<Product> products);
+    void sortByRateAverage(List<Product> products);
+    void sortByNumberOfSeller(List<Product> products);
+    void sortByDefault(List<Product> products);
 }

@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/categories")
 @RestController
+@CrossOrigin("*")
 public class CategoryController {
 
     private final ICategoryService categoryService;

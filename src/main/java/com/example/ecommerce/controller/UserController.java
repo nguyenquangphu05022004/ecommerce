@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
+@CrossOrigin("*")
+
 public class UserController {
 
     private final IUserService userService;

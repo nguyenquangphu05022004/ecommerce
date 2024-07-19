@@ -4,9 +4,7 @@ import com.example.ecommerce.common.utils.SortUtils;
 import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.Language_;
 import com.example.ecommerce.domain.Product;
-import com.example.ecommerce.domain.Product_;
 import com.example.ecommerce.domain.Vendor;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.NotificationRepository;
@@ -17,12 +15,14 @@ import com.example.ecommerce.service.dto.ProductDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.request.FilterInputRequestProduct;
 import com.example.ecommerce.service.request.ProductRequest;
+import com.example.ecommerce.service.response.APIListResponse;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,9 +64,6 @@ public class ProductServiceImpl implements IProductService {
         ValidationUtils.fieldCheckNullOrEmpty(request.getName(), "ProductRequest NameVn");
         ValidationUtils.fieldCheckNullOrEmpty(request.getNameEn(), "ProductRequest NameEn");
 
-        if (request.getBrandId() == null && (request.getName().isEmpty() || request.getName().isBlank()))
-            throw new GeneralException(String.format("CAN_NOT_BE_EMPTY", "Brand"));
-
         Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username())
                 .orElseThrow(() -> new UsernameNotFoundException("You are not role VENDOR, so you can't create product"));
 
@@ -81,31 +78,37 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductDto> findProductByCategoryId(Long categoryId, int page) {
+    public APIListResponse<ProductDto> findProductByCategoryId(
+            Long categoryId,
+            int page,
+            int limit
+    ) {
         Page<Product> result = productRepository.findAllByCategoryId(
                 categoryId,
-                PageRequest.of(page, SystemUtils.NUMBER_OF_ITEM));
-        return mapper.toDtoList(result.getContent());
+                PageRequest.of(page, limit));
+        return responseListProduct(page, limit, result.getTotalPages(), result.getContent());
     }
 
     @Override
-    public List<ProductDto> findAllByVendor() {
+    public APIListResponse<ProductDto> findAllByVendor(int page, int limit) {
         String username = SecurityUtils.username();
-        List<Product> products = productRepository.findAllByVendorUserUsername(username);
-        return mapper.toDtoList(products);
+        Page<Product> productsPage = productRepository
+                .findAllByVendorUserUsername(username, PageRequest.of(page, limit));
+        return responseListProduct(page, limit, productsPage.getTotalPages(), productsPage.getContent());
     }
 
     @Override
-    public List<ProductDto> findAllByVendorId(Long id) {
-        List<Product> products = productRepository.findAllByVendorId(id);
-        return mapper.toDtoList(products);
+    public APIListResponse<ProductDto> findAllByVendorId(Long id, int page, int limit) {
+        Page<Product> result = productRepository
+                .findAllByVendorId(id, PageRequest.of(page, limit));
+        return responseListProduct(page, limit, result.getTotalPages(), result.getContent());
     }
 
     @Override
-    public List<ProductDto> findAll(int page, int numberOfItem) {
+    public APIListResponse<ProductDto> findAll(int page, int numberOfItem) {
         Page<Product> result = productRepository
                 .findAll(PageRequest.of(page, numberOfItem));
-        return mapper.toDtoList(result.getContent());
+        return responseListProduct(page, numberOfItem, result.getTotalPages(), result.getContent());
     }
 
     @Override
@@ -114,20 +117,20 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductDto> searchProduct(FilterInputRequestProduct filterInputProduct) {
+    public APIListResponse<ProductDto> searchProduct(FilterInputRequestProduct filterInputProduct) {
         Specification<Product> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             filterInputProduct.getPairs().forEach(pair -> {
                 switch (pair.getKey()) {
                     case PRODUCT_NAME:
-                        predicates.add(criteriaBuilder.like(root.join(Product_.language).get(Language_.nameEn), "%" + pair.getValue().toLowerCase() + "%"));
-                        predicates.add(criteriaBuilder.like(root.join(Product_.language).get(Language_.nameVn), "%" + pair.getValue().toLowerCase() + "%"));
+                        predicates.add(criteriaBuilder.like(root.join("language").get("nameEn"), "%" + pair.getValue().toLowerCase() + "%"));
+                        predicates.add(criteriaBuilder.like(root.join("language").get("nameVn"), "%" + pair.getValue().toLowerCase() + "%"));
                         break;
                     case CATEGORY_ID:
-                        predicates.add(criteriaBuilder.equal(root.join("category").get("id"),pair.getValue()));
+                        predicates.add(criteriaBuilder.equal(root.join("category").get("id"), pair.getValue()));
                         break;
                     case BRAND_ID:
-                        predicates.add(criteriaBuilder.equal(root.join("brand").get("id"),pair.getValue()));
+                        predicates.add(criteriaBuilder.equal(root.join("brand").get("id"), pair.getValue()));
                         break;
                     case PRICE:
                         String words[] = pair.getValue().split(";");
@@ -138,9 +141,9 @@ public class ProductServiceImpl implements IProductService {
                 }
             });
             Predicate predicate = null;
-            for(Predicate element : predicates) {
+            for (Predicate element : predicates) {
                 Predicate tmp = criteriaBuilder.and(element);
-                if(predicate == null) predicate = tmp;
+                if (predicate == null) predicate = tmp;
                 predicate = criteriaBuilder.and(predicate, tmp);
             }
             return predicate;
@@ -151,10 +154,27 @@ public class ProductServiceImpl implements IProductService {
                         filterInputProduct.getPage() - 1,
                         filterInputProduct.getLimit()
                 ));
-        List<ProductDto> products = mapper.toDtoList(pageProducts.getContent());
+        List<Product> products = pageProducts.getContent();
         SortUtils.sortProduct(filterInputProduct.getSortProductType(), products);
-        return products;
+
+        return responseListProduct(
+                filterInputProduct.getPage(),
+                filterInputProduct.getLimit(),
+                pageProducts.getTotalPages(),
+                products
+        );
     }
 
-
+    private APIListResponse<ProductDto> responseListProduct(int page, int limit, int totalPage, List<Product> products) {
+        APIListResponse<ProductDto> response = new APIListResponse<>(
+                "ok",
+                "",
+                1,
+                HttpStatus.OK.name(),
+                page,
+                limit,
+                totalPage,
+                mapper.toDtoList(products));
+        return response;
+    }
 }

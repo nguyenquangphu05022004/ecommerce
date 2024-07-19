@@ -16,6 +16,7 @@ import com.example.ecommerce.service.response.ShoppingCartResponse;
 import com.example.ecommerce.service.response.VendorCartResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,7 +46,7 @@ public class CartServiceImpl implements ICartService {
     private final String STOCK_KEY = "STOCK_%s";
 
     @Override
-    public void add(CartRequest cartRequest) {
+    public void add(CartRequest cartRequest, HttpServletRequest servletRequest) {
         try {
             ValidationUtils.fieldCheckNullOrEmpty(cartRequest.getStockId(), "stockId");
 
@@ -55,13 +56,15 @@ public class CartServiceImpl implements ICartService {
                     ));
             Vendor vendor = stock.getProduct().getVendor();
 
+            String keyUser = SecurityUtils.username() == null ? servletRequest.getRemoteAddr() : SecurityUtils.username();
+
             RedisKey redisKey = new RedisKey(
-                    String.format(VENDOR_KEY, SecurityUtils.username(), vendor.getId()),
-                    String.format(VENDOR_ITEM_PRODUCT,SecurityUtils.username(), vendor.getId()),
+                    String.format(VENDOR_KEY, keyUser, vendor.getId()),
+                    String.format(VENDOR_ITEM_PRODUCT,keyUser, vendor.getId()),
                     String.format(STOCK_KEY, cartRequest.getStockId())
             );
             redisTemplate.opsForSet().add(
-                    getUserKey(),
+                    getUserKey(servletRequest),
                     objectMapper.writeValueAsString(redisKey));
 
             Boolean isKeyExists = redisTemplate.opsForHash().hasKey(
@@ -74,6 +77,7 @@ public class CartServiceImpl implements ICartService {
                         .quantity(1)
                         .stock(stockMapper.toDto(stock))
                         .createdAt(LocalDateTime.now())
+                        .stockClassificationId(cartRequest.getStockClassificationId())
                         .build();
             } else {
                 String json = (String) redisTemplate.opsForHash().get(
@@ -83,6 +87,7 @@ public class CartServiceImpl implements ICartService {
                 response = objectMapper.readValue(json, ItemResponse.class);
                 if (cartRequest.getOperation().equals("+")) {
                     response.setQuantity(response.getQuantity() + 1);
+                    response.setStockClassificationId(cartRequest.getStockClassificationId());
                 } else {
                     if (response.getQuantity() == 1)
                         throw new GeneralException("You can't decrease quantity of product to 0");
@@ -114,8 +119,8 @@ public class CartServiceImpl implements ICartService {
 
 
     @Override
-    public ShoppingCartResponse getShoppingCart() {
-        List<RedisKey> redisKeys = getValueKeyUser();
+    public ShoppingCartResponse getShoppingCart(HttpServletRequest servletRequest) {
+        List<RedisKey> redisKeys = getValueKeyUser(servletRequest);
         ShoppingCartResponse res = new ShoppingCartResponse();
         if (redisKeys == null) return res;
         redisKeys.forEach(redisKey -> {
@@ -128,20 +133,22 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
-    public void delete(Long stockId, Long vendorId) {
+    public void delete(Long stockId, Long vendorId, HttpServletRequest servletRequest) {
+        String keyUser = SecurityUtils.username() == null ? servletRequest.getRemoteAddr() : SecurityUtils.username();
         if(redisTemplate.opsForHash().hasKey(
-                String.format(VENDOR_ITEM_PRODUCT, SecurityUtils.username(), vendorId),
+                String.format(VENDOR_ITEM_PRODUCT,keyUser, vendorId),
                 String.format(STOCK_KEY, stockId)
         )) {
             redisTemplate.opsForHash().delete(
-                    String.format(VENDOR_ITEM_PRODUCT, SecurityUtils.username(), vendorId),
+                    String.format(VENDOR_ITEM_PRODUCT, keyUser, vendorId),
                     String.format(STOCK_KEY, stockId)
             );
         }
     }
 
-    private String getUserKey() {
-        return String.format(USER_KEY, SecurityUtils.username());
+    private String getUserKey(HttpServletRequest servletRequest) {
+        String keyUser = SecurityUtils.username() == null ? servletRequest.getRemoteAddr() : SecurityUtils.username();
+        return String.format(USER_KEY, keyUser);
     }
 
     private void setInfoVendor(VendorCartResponse valueOfKeyVendor, Stock stock) {
@@ -151,8 +158,8 @@ public class CartServiceImpl implements ICartService {
         valueOfKeyVendor.setShopName(vendor.getShopName());
     }
 
-    private List<RedisKey> getValueKeyUser() {
-        Set<String> members = redisTemplate.opsForSet().members(getUserKey());
+    private List<RedisKey> getValueKeyUser(HttpServletRequest servletRequest) {
+        Set<String> members = redisTemplate.opsForSet().members(getUserKey(servletRequest));
         if (members == null) {
             return null;
         }

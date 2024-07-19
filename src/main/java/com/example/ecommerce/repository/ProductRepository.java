@@ -23,8 +23,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     Optional<Product> findById(Long id);
 
-    List<Product> findAllByVendorUserUsername(String username);
-    List<Product> findAllByVendorId(Long id);
+    Page<Product> findAllByVendorUserUsername(String username, Pageable pageable);
+    Page<Product> findAllByVendorId(Long id, Pageable pageable);
 
 
 }

@@ -34,7 +34,7 @@ public class CategoryMapper extends ImageMapper implements
                 .slug(category.getSlug())
                 .name(category.getName())
                 .imageUrl(getImageUrl(EntityType.CATEGORY.name(), category.getImage()))
-                .childes(toDtoList(category.getChildes()))
+                .children(toDtoList(category.getChildren()))
                 .id(category.getId())
                 .build();
         return response;
