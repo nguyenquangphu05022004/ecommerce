@@ -6,8 +6,8 @@ import com.example.ecommerce.service.dto.ProductDto;
 import java.util.List;
 
 public interface ProductSortService {
-    void sortByPrice(List<Product> products);
-    void sortByRateAverage(List<Product> products);
-    void sortByNumberOfSeller(List<Product> products);
-    void sortByDefault(List<Product> products);
+    List<Product> sortByPrice(List<Product> products);
+    List<Product> sortByRateAverage(List<Product> products);
+    List<Product> sortByNumberOfSeller(List<Product> products);
+    List<Product> sortByDefault(List<Product> products);
 }

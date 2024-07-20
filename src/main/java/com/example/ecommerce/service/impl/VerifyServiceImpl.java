@@ -15,7 +15,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class VerifyServiceImpl implements VerifyService {
     private final TokenRepository tokenRepository;
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override

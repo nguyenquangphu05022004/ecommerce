@@ -1,7 +1,5 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.common.utils.SortUtils;
-import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.Product;
@@ -12,10 +10,13 @@ import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.dto.ProductDto;
+import com.example.ecommerce.service.dto.SortProductType;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.request.FilterInputRequestProduct;
+import com.example.ecommerce.service.request.KeySearchRequest;
 import com.example.ecommerce.service.request.ProductRequest;
 import com.example.ecommerce.service.response.APIListResponse;
+import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -86,7 +87,7 @@ public class ProductServiceImpl implements IProductService {
         Page<Product> result = productRepository.findAllByCategoryId(
                 categoryId,
                 PageRequest.of(page, limit));
-        return responseListProduct(page, limit, result.getTotalPages(), result.getContent());
+        return responseListProduct(page + 1, limit, result.getTotalPages(), result.getContent());
     }
 
     @Override
@@ -94,21 +95,21 @@ public class ProductServiceImpl implements IProductService {
         String username = SecurityUtils.username();
         Page<Product> productsPage = productRepository
                 .findAllByVendorUserUsername(username, PageRequest.of(page, limit));
-        return responseListProduct(page, limit, productsPage.getTotalPages(), productsPage.getContent());
+        return responseListProduct(page + 1, limit, productsPage.getTotalPages(), productsPage.getContent());
     }
 
     @Override
     public APIListResponse<ProductDto> findAllByVendorId(Long id, int page, int limit) {
         Page<Product> result = productRepository
                 .findAllByVendorId(id, PageRequest.of(page, limit));
-        return responseListProduct(page, limit, result.getTotalPages(), result.getContent());
+        return responseListProduct(page + 1, limit, result.getTotalPages(), result.getContent());
     }
 
     @Override
     public APIListResponse<ProductDto> findAll(int page, int numberOfItem) {
         Page<Product> result = productRepository
                 .findAll(PageRequest.of(page, numberOfItem));
-        return responseListProduct(page, numberOfItem, result.getTotalPages(), result.getContent());
+        return responseListProduct(page + 1, numberOfItem, result.getTotalPages(), result.getContent());
     }
 
     @Override
@@ -118,54 +119,68 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public APIListResponse<ProductDto> searchProduct(FilterInputRequestProduct filterInputProduct) {
-        Specification<Product> specification = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            filterInputProduct.getPairs().forEach(pair -> {
-                switch (pair.getKey()) {
-                    case PRODUCT_NAME:
+        Specification<Product> specification;
+
+        if (filterInputProduct.getMapKey() == null || filterInputProduct.getMapKey().size() == 0) {
+            specification = null;
+        } else {
+            specification = (root, query, criteriaBuilder) -> {
+                List<Predicate> predicates = new ArrayList<>();
+                List<Predicate> predicatesOfChildrenCategory = new ArrayList<>();
+                filterInputProduct.getMapKey().entrySet().forEach(pair -> {
+                    if (pair.getKey().startsWith(KeySearchRequest.PRODUCT_NAME.name())) {
                         predicates.add(criteriaBuilder.like(root.join("language").get("nameEn"), "%" + pair.getValue().toLowerCase() + "%"));
                         predicates.add(criteriaBuilder.like(root.join("language").get("nameVn"), "%" + pair.getValue().toLowerCase() + "%"));
-                        break;
-                    case CATEGORY_ID:
-                        predicates.add(criteriaBuilder.equal(root.join("category").get("id"), pair.getValue()));
-                        break;
-                    case BRAND_ID:
+                    } else if (pair.getKey().startsWith(KeySearchRequest.CATEGORY_PARENT_ID.name())) {
+                        predicates.add(criteriaBuilder.equal(root.join("category").get("parent").get("id"), pair.getValue()));
+                    } else if (pair.getKey().startsWith(KeySearchRequest.CATEGORY_CHILDREN_ID.name())) {
+                        predicatesOfChildrenCategory.add(criteriaBuilder.equal(root.join("category").get("id"), pair.getValue()));
+                    } else if (pair.getKey().startsWith(KeySearchRequest.BRAND_ID.name())) {
                         predicates.add(criteriaBuilder.equal(root.join("brand").get("id"), pair.getValue()));
-                        break;
-                    case PRICE:
+                    } else if (pair.getKey().startsWith(KeySearchRequest.PRICE.name())) {
                         String words[] = pair.getValue().split(";");
                         int x1 = Integer.parseInt(words[0]);
                         int x2 = Integer.parseInt(words[1]);
                         predicates.add(criteriaBuilder.between(root.joinList("stocks").get("price"), x1, x2));
-                        break;
+                    }
+                });
+                Predicate p1 = null;
+                for (Predicate element : predicates) {
+                    Predicate tmp = criteriaBuilder.and(element);
+                    if (p1 == null) p1 = tmp;
+                    p1 = criteriaBuilder.and(p1, tmp);
                 }
-            });
-            Predicate predicate = null;
-            for (Predicate element : predicates) {
-                Predicate tmp = criteriaBuilder.and(element);
-                if (predicate == null) predicate = tmp;
-                predicate = criteriaBuilder.and(predicate, tmp);
-            }
-            return predicate;
-        };
-        Page<Product> pageProducts = productRepository.findAll(
-                specification,
-                PageRequest.of(
+                Predicate p2 = null;
+                for (Predicate element: predicatesOfChildrenCategory) {
+                    Predicate tmp = criteriaBuilder.or(element);
+                    if (p2 == null) p2 = tmp;
+                    p2 = criteriaBuilder.or(p2, tmp);
+                }
+                if(p2 == null) return p1;
+                return criteriaBuilder.and(p1, p2);
+            };
+        }
+        Page<Product> pageProducts = specification != null ?
+                productRepository.findAll(specification, PageRequest.of(
+                        filterInputProduct.getPage() - 1,
+                        filterInputProduct.getLimit()
+                ))
+                :
+                productRepository.findAll(PageRequest.of(
                         filterInputProduct.getPage() - 1,
                         filterInputProduct.getLimit()
                 ));
         List<Product> products = pageProducts.getContent();
-        SortUtils.sortProduct(filterInputProduct.getSortProductType(), products);
-
         return responseListProduct(
                 filterInputProduct.getPage(),
                 filterInputProduct.getLimit(),
                 pageProducts.getTotalPages(),
-                products
+                sort(filterInputProduct.getSortProductType(), products)
         );
     }
 
-    private APIListResponse<ProductDto> responseListProduct(int page, int limit, int totalPage, List<Product> products) {
+    private APIListResponse<ProductDto> responseListProduct(int page, int limit, int totalPage, List<
+            Product> products) {
         APIListResponse<ProductDto> response = new APIListResponse<>(
                 "ok",
                 "",
@@ -176,5 +191,19 @@ public class ProductServiceImpl implements IProductService {
                 totalPage,
                 mapper.toDtoList(products));
         return response;
+    }
+
+    private List<Product> sort(SortProductType type, List<Product> list) {
+        var sortObj = new ProductSortServiceImpl();
+        if(type == SortProductType.DEFAULT) {
+            return sortObj.sortByDefault(list);
+        } else if(type == SortProductType.PRICE) {
+            return sortObj.sortByPrice(list);
+        } else if(type == SortProductType.NUMBER_OF_SELLER) {
+            return sortObj.sortByNumberOfSeller(list);
+        } else if(type == SortProductType.RATE_AVERAGE) {
+            return sortObj.sortByRateAverage(list);
+        }
+        return list;
     }
 }

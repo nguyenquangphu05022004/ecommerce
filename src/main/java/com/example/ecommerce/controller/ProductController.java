@@ -1,6 +1,5 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.request.FilterInputRequestProduct;
 import com.example.ecommerce.service.request.ProductRequest;
@@ -35,7 +34,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAll(page - 1, limit));
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<?> getAllProduct(
             @RequestBody FilterInputRequestProduct filter
     ) {
