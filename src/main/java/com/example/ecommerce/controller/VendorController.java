@@ -2,6 +2,7 @@ package com.example.ecommerce.controller;
 
 
 import com.example.ecommerce.service.IVendorService;
+import com.example.ecommerce.service.request.CouponRequest;
 import com.example.ecommerce.service.request.VendorRequest;
 import com.example.ecommerce.service.response.OperationResponse;
 import lombok.RequiredArgsConstructor;
@@ -36,4 +37,24 @@ public class VendorController {
                 HttpStatus.OK
         );
     }
+
+    @PostMapping("/coupons")
+    public ResponseEntity<?> createCoupon(@RequestBody CouponRequest couponRequest) {
+        vendorService.createCoupon(couponRequest);
+        return new ResponseEntity<>(
+                new OperationResponse(
+                        true,
+                        "You created a code"),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/coupons/{vendorId}")
+    public ResponseEntity<?> getCouponByVendorIdAndCouponCode(
+            @PathVariable("vendorId") Long vendorId,
+            @RequestParam("couponCode") String code
+    ) {
+        return ResponseEntity.ok(vendorService.checkCouponExpire(vendorId, code));
+    }
+
 }

@@ -1,28 +1,39 @@
 package com.example.ecommerce.service.impl;
 
+import com.example.ecommerce.common.enums.CustomStatusCode;
 import com.example.ecommerce.common.enums.Role;
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.domain.Coupon;
 import com.example.ecommerce.domain.User;
 import com.example.ecommerce.domain.Vendor;
+import com.example.ecommerce.handler.exception.CodeExpiredException;
 import com.example.ecommerce.handler.exception.GeneralException;
+import com.example.ecommerce.handler.exception.NotFoundException;
+import com.example.ecommerce.repository.CouponRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IVendorService;
 import com.example.ecommerce.service.dto.VendorDto;
 import com.example.ecommerce.service.mapper.IMapper;
+import com.example.ecommerce.service.request.CouponRequest;
 import com.example.ecommerce.service.request.VendorRequest;
+import com.example.ecommerce.service.response.APIResponse;
+import com.example.ecommerce.service.response.CouponResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class VendorServiceImpl implements IVendorService {
     private final VendorRepository vendorRepository;
     private final UserRepository userRepository;
+    private final CouponRepository couponRepository;
     @Qualifier("vendorMapper")
     private final IMapper<Vendor, VendorRequest, VendorDto> mapper;
 
@@ -113,5 +124,39 @@ public class VendorServiceImpl implements IVendorService {
         vendor.getUsers().add(user);
         vendorRepository.save(vendor);
 
+    }
+
+    @Override
+    public void createCoupon(CouponRequest request) {
+        Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username())
+                .orElseThrow(() -> new UsernameNotFoundException("You are not login"));
+        Coupon coupon = Coupon.builder()
+                .vendor(vendor)
+                .start(request.getStart())
+                .end(request.getEnd())
+                .code(UUID.randomUUID().toString())
+                .build();
+        couponRepository.save(coupon);
+    }
+
+    @Override
+    public APIResponse<CouponResponse> checkCouponExpire(Long vendorId, String couponCode) {
+        Coupon coupon = couponRepository.findByVendorIdAndAndCode(vendorId, couponCode)
+                .orElseThrow(() -> new NotFoundException("Coupon code that you enter not found"));
+        if(coupon.isExpired()) {
+            throw new CodeExpiredException(String.format("Your code that you enter: %s was expired", couponCode));
+        }
+        CouponResponse couponResponse = CouponResponse.builder()
+                .id(coupon.getId())
+                .decreaseMoney(coupon.getMoneyDecrease())
+                .code(couponCode)
+                .build();
+        return new APIResponse<>(
+                "OK",
+                "NULL",
+                1,
+                CustomStatusCode.SUCCESS.getNumber(),
+                couponResponse
+        );
     }
 }

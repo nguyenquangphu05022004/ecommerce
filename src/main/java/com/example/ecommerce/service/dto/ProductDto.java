@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @SuperBuilder
 @NoArgsConstructor
-public class ProductDto extends ProductDtoBase {
+public class ProductDto extends ProductBaseDto {
     private List<EvaluationDto> evaluations;
     private List<StockDto> stocks;
     private VendorDto vendor;
@@ -23,12 +23,6 @@ public class ProductDto extends ProductDtoBase {
         int sumRate = evaluations.stream().mapToInt(ev -> ev.getRating())
                 .sum();
         return sumRate / evaluations.size();
-    }
-    public String getImageUrlRepresentation() {
-//        if(stocks != null) {
-//            return stocks.get(0).getImageUrlRepresentation();
-//        }
-        return null;
     }
     public String getPriceRange() {
         if(stocks != null) {

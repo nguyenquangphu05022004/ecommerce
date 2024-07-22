@@ -4,6 +4,8 @@ import com.example.ecommerce.domain.EntityType;
 import com.example.ecommerce.domain.Product;
 import com.example.ecommerce.domain.Stock;
 import com.example.ecommerce.domain.StockClassification;
+import com.example.ecommerce.service.dto.ProductBaseDto;
+import com.example.ecommerce.service.dto.ProductDto;
 import com.example.ecommerce.service.dto.StockClassificationDto;
 import com.example.ecommerce.service.dto.StockDto;
 import com.example.ecommerce.service.mapper.IMapper;
@@ -39,6 +41,13 @@ public class StockMapper extends ImageMapper implements IMapper<Stock, StockRequ
                 .code(stock.getCode())
                 .color(stock.getColor())
                 .imageUrls(getImageUrl(EntityType.PRODUCT.name(), stock.getImages()))
+                .product(ProductBaseDto.builder()
+                        .categoryName(stock.getProduct().getCategory().getName())
+                        .brandName(stock.getProduct().getBrand() != null ? stock.getProduct().getBrand().getName() : null)
+                        .id(stock.getProduct().getId())
+                        .name(stock.getProduct().getLanguage().getNameVn())
+                        .description(stock.getProduct().getDescription())
+                        .build())
                 .id(stock.getId())
                 .stockClassifications(stockClassificationMapper.toDtoList(stock.getStockClassifications()))
                 .build();

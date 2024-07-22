@@ -1,7 +1,11 @@
 package com.example.ecommerce.handler;
 
+import com.example.ecommerce.common.enums.CustomStatusCode;
 import com.example.ecommerce.handler.exception.AuthenticationFailureException;
+import com.example.ecommerce.handler.exception.CodeExpiredException;
 import com.example.ecommerce.handler.exception.GeneralException;
+import com.example.ecommerce.handler.exception.NotFoundException;
+import com.example.ecommerce.service.response.APIResponse;
 import com.example.ecommerce.service.response.OperationResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,11 +30,37 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST
         );
     }
+
+    @ExceptionHandler(value = NotFoundException.class)
+    public APIResponse<?> handleAuthenticationException(NotFoundException ex) {
+        return new APIResponse<>(
+                "Not found object that you are finding",
+                ex.getMessage(),
+                0,
+               CustomStatusCode.NOT_FOUND.getNumber(),
+                null
+        );
+    }
+
     @ExceptionHandler(value = AuthenticationFailureException.class)
-    public ResponseEntity<OperationResponse> handleAuthenticationException(AuthenticationFailureException ex) {
-        return new ResponseEntity<>(
-                new OperationResponse(false, ex.getMessage()),
-                HttpStatus.BAD_REQUEST
+    public APIResponse<?> handleAuthenticationException(AuthenticationFailureException ex) {
+        return new APIResponse<>(
+                "Authentication failure",
+                ex.getMessage(),
+                0,
+                HttpStatus.BAD_REQUEST.value(),
+                null
+        );
+    }
+
+    @ExceptionHandler(value = CodeExpiredException.class)
+    public APIResponse<?> handleAuthenticationException(CodeExpiredException ex) {
+        return new APIResponse<>(
+                "Code expired",
+                ex.getMessage(),
+                0,
+                CustomStatusCode.CODE_EXPIRED.getNumber(),
+                null
         );
     }
 
@@ -47,7 +77,7 @@ public class GlobalExceptionHandler {
             UsernameNotFoundException ex
     ) {
         return new ResponseEntity<>(
-               getErrorsMap(Collections.singletonList(ex.getMessage())),
+                getErrorsMap(Collections.singletonList(ex.getMessage())),
                 new HttpHeaders(),
                 HttpStatus.NOT_FOUND
         );

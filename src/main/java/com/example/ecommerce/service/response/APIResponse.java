@@ -12,6 +12,6 @@ public class APIResponse <T>{
     private String message;
     private String error;
     private int ok;
-    private String status;
+    private int status;
     private T data;
 }
