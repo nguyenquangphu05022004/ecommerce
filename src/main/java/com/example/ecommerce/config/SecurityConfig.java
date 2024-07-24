@@ -90,9 +90,7 @@ class SecurityUrlConstants {
     public static final String[] WHILE_LIST = {
             "/api/v1/products/**",
             "/api/v1/categories/**",
-            "/api/v1/vendors/**",
-            "/api/v1/coupons/**",
-            "/api/v1/stocks/**",
+            "/api/v1/users/vendors/**",
             "/api/v1/files/**",
             "/v2/api-docs",
             "/swagger-resources",

@@ -2,6 +2,7 @@ package com.example.ecommerce.domain;
 
 import com.example.ecommerce.common.enums.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -84,5 +85,19 @@ public class User extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
+    @Getter
+    @Setter
+    @SuperBuilder(toBuilder = true)
+    @Entity
+    @Table(name = "user_images")
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UserImage extends FileEntity {
+        @OneToOne
+        @JoinColumn(name = "user_id")
+        private User user;
+    }
+
 }
 

@@ -1,11 +1,11 @@
 package com.example.ecommerce.repository;
 
-import com.example.ecommerce.domain.EvaluationImage;
+import com.example.ecommerce.domain.Evaluation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface EvaluationImageRepository extends JpaRepository<EvaluationImage, Long> {
-    Optional<EvaluationImage> findByName(String name);
+public interface EvaluationImageRepository extends JpaRepository<Evaluation.EvaluationImage, Long> {
+    Optional<Evaluation.EvaluationImage> findByName(String name);
 
 }

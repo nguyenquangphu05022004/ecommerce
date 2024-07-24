@@ -1,5 +1,6 @@
 package com.example.ecommerce.service.impl;
 
+import com.example.ecommerce.common.enums.CustomStatusCode;
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.Product;
@@ -16,7 +17,7 @@ import com.example.ecommerce.service.request.FilterInputRequestProduct;
 import com.example.ecommerce.service.request.KeySearchRequest;
 import com.example.ecommerce.service.request.ProductRequest;
 import com.example.ecommerce.service.response.APIListResponse;
-import jakarta.persistence.criteria.CriteriaQuery;
+import com.example.ecommerce.service.response.APIResponse;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -49,13 +50,14 @@ public class ProductServiceImpl implements IProductService {
 
 
     @Override
-    public ProductDto findById(Long id) {
+    public APIResponse<ProductDto> findById(Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
-            return mapper.toDto(optionalProduct.get());
+            return responseAPI(optionalProduct);
         }
         throw new GeneralException(String.format("Product id %s not found", id));
     }
+
 
     @Override
     @Transactional
@@ -87,7 +89,7 @@ public class ProductServiceImpl implements IProductService {
         Page<Product> result = productRepository.findAllByCategoryId(
                 categoryId,
                 PageRequest.of(page, limit));
-        return responseListProduct(page + 1, limit, result.getTotalPages(), result.getContent());
+        return responseAPI(page + 1, limit, result.getTotalPages(), result.getContent());
     }
 
     @Override
@@ -95,21 +97,21 @@ public class ProductServiceImpl implements IProductService {
         String username = SecurityUtils.username();
         Page<Product> productsPage = productRepository
                 .findAllByVendorUserUsername(username, PageRequest.of(page, limit));
-        return responseListProduct(page + 1, limit, productsPage.getTotalPages(), productsPage.getContent());
+        return responseAPI(page + 1, limit, productsPage.getTotalPages(), productsPage.getContent());
     }
 
     @Override
     public APIListResponse<ProductDto> findAllByVendorId(Long id, int page, int limit) {
         Page<Product> result = productRepository
                 .findAllByVendorId(id, PageRequest.of(page, limit));
-        return responseListProduct(page + 1, limit, result.getTotalPages(), result.getContent());
+        return responseAPI(page + 1, limit, result.getTotalPages(), result.getContent());
     }
 
     @Override
     public APIListResponse<ProductDto> findAll(int page, int numberOfItem) {
         Page<Product> result = productRepository
                 .findAll(PageRequest.of(page, numberOfItem));
-        return responseListProduct(page + 1, numberOfItem, result.getTotalPages(), result.getContent());
+        return responseAPI(page + 1, numberOfItem, result.getTotalPages(), result.getContent());
     }
 
     @Override
@@ -171,7 +173,7 @@ public class ProductServiceImpl implements IProductService {
                         filterInputProduct.getLimit()
                 ));
         List<Product> products = pageProducts.getContent();
-        return responseListProduct(
+        return responseAPI(
                 filterInputProduct.getPage(),
                 filterInputProduct.getLimit(),
                 pageProducts.getTotalPages(),
@@ -179,7 +181,13 @@ public class ProductServiceImpl implements IProductService {
         );
     }
 
-    private APIListResponse<ProductDto> responseListProduct(int page, int limit, int totalPage, List<
+    @Override
+    public APIListResponse<?> findAllByCategoryId(Long id, int page, int limit) {
+        Page<Product> pageProducts = productRepository.findAllByCategoryId(id, PageRequest.of(page, limit));
+        return responseAPI(page, limit, pageProducts.getTotalPages(), pageProducts.getContent());
+    }
+
+    private APIListResponse<ProductDto> responseAPI(int page, int limit, int totalPage, List<
             Product> products) {
         APIListResponse<ProductDto> response = new APIListResponse<>(
                 "ok",
@@ -191,6 +199,15 @@ public class ProductServiceImpl implements IProductService {
                 totalPage,
                 mapper.toDtoList(products));
         return response;
+    }
+    private APIResponse<ProductDto> responseAPI(Optional<Product> optionalProduct) {
+        return new APIResponse<>(
+                "OK",
+                null,
+                1,
+                CustomStatusCode.SUCCESS.getNumber(),
+                mapper.toDto(optionalProduct.get())
+        );
     }
 
     private List<Product> sort(SortProductType type, List<Product> list) {

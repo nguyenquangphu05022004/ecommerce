@@ -47,6 +47,16 @@ public class Product extends BaseEntity implements Observer{
                 .build();
         notificationRepository.save(notification);
     }
+    @Entity
+    @Table(name = "languages")
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Language extends BaseEntity {
+        private String nameVn;
+        private String nameEn;
+    }
+
 }
 
 

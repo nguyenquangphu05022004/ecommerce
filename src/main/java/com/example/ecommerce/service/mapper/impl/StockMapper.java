@@ -1,15 +1,10 @@
 package com.example.ecommerce.service.mapper.impl;
 
-import com.example.ecommerce.domain.EntityType;
-import com.example.ecommerce.domain.Product;
-import com.example.ecommerce.domain.Stock;
-import com.example.ecommerce.domain.StockClassification;
-import com.example.ecommerce.service.dto.ProductBaseDto;
-import com.example.ecommerce.service.dto.ProductDto;
-import com.example.ecommerce.service.dto.StockClassificationDto;
-import com.example.ecommerce.service.dto.StockDto;
+import com.example.ecommerce.domain.*;
+import com.example.ecommerce.service.dto.*;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.mapper.ImageMapper;
+import com.example.ecommerce.service.request.CategoryRequest;
 import com.example.ecommerce.service.request.StockRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,6 +18,8 @@ import java.util.List;
 public class StockMapper extends ImageMapper implements IMapper<Stock, StockRequest, StockDto> {
     @Qualifier("stockClassificationMapper")
     private final IMapper<StockClassification, Object, StockClassificationDto> stockClassificationMapper;
+    @Qualifier("categoryMapper")
+    private final IMapper<Category, CategoryRequest, CategoryDto> cateMapper;
     @Override
     public Stock toEntity(StockRequest stockRequest) {
         Stock stock = Stock.builder()
@@ -42,8 +39,8 @@ public class StockMapper extends ImageMapper implements IMapper<Stock, StockRequ
                 .color(stock.getColor())
                 .imageUrls(getImageUrl(EntityType.PRODUCT.name(), stock.getImages()))
                 .product(ProductBaseDto.builder()
-                        .categoryName(stock.getProduct().getCategory().getName())
-                        .brandName(stock.getProduct().getBrand() != null ? stock.getProduct().getBrand().getName() : null)
+                        .category(cateMapper.toDto(stock.getProduct().getCategory()))
+                        .brand(ProductMapper.brandMapper(stock.getProduct().getBrand()))
                         .id(stock.getProduct().getId())
                         .name(stock.getProduct().getLanguage().getNameVn())
                         .description(stock.getProduct().getDescription())

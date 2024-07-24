@@ -10,8 +10,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 public class ProductBaseDto extends BaseDto{
-    private String categoryName;
-    private String brandName;
+    private CategoryDto category;
+    private BrandDto brand;
     private String name;
     private String description;
 }

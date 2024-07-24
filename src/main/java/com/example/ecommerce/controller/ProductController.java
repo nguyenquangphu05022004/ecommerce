@@ -26,6 +26,11 @@ public class ProductController {
         );
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getProductById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(productService.findById(id));
+    }
+
     @GetMapping
     public ResponseEntity<?> getAllProduct(
             @RequestParam(value = "page", defaultValue = "1") int page,
@@ -39,5 +44,14 @@ public class ProductController {
             @RequestBody FilterInputRequestProduct filter
     ) {
         return ResponseEntity.ok(productService.searchProduct(filter));
+    }
+
+    @GetMapping("/category/{id}")
+    public ResponseEntity<?> getAllByCategoryId(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "20") int limit
+    ) {
+        return ResponseEntity.ok(productService.findAllByCategoryId(id, page - 1, limit));
     }
 }

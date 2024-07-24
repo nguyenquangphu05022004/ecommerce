@@ -15,4 +15,13 @@ public class VendorDto extends BaseDto {
     private Integer perMoneyDelivery;
     private int numberOfProduct;
     private int numberOfUserFavorite;
+    private String dateParticipate;
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @SuperBuilder(toBuilder = true)
+    public static class CouponDto extends BaseDto{
+        private String code;
+        private Integer decreaseMoney;
+    }
 }

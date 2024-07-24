@@ -1,5 +1,6 @@
 package com.example.ecommerce.service.mapper.impl;
 
+import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.domain.Vendor;
 import com.example.ecommerce.service.dto.VendorDto;
@@ -16,7 +17,7 @@ public class VendorMapper implements IMapper<Vendor, VendorRequest, VendorDto> {
                 .perMoneyDelivery(vendor.getPerMoneyDelivery())
                 .shopName(vendor.getShopName())
                 .id(vendor.getId())
-                .createdDate(vendor.getCreatedDate())
+                .dateParticipate(SystemUtils.getFormatDate(vendor.getCreatedDate(), "dd/MM/yyyy"))
                 .build();
         return vendorDto;
     }

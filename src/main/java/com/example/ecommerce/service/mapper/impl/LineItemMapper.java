@@ -26,11 +26,10 @@ public class LineItemMapper implements IMapper<LineItem, Object, LineItemDto> {
     @Override
     public LineItemDto toDto(LineItem lineItem) {
         LineItemDto line = LineItemDto.builder()
-                .quantity(lineItem.getQuantity())
-                .stockClassification(stockClassMapper.toDto(lineItem.getStockClassification()))
-                .createdBy(lineItem.getCreatedBy())
-                .id(lineItem.getId())
-                .stock(stockMapper.toDto(lineItem.getStock()))
+//                .items()
+//                .id(lineItem.getId())
+//                .createdBy(lineItem.getCreatedBy())
+//                .id(lineItem.getId())
                 .build();
         return line;
     }
@@ -41,9 +40,9 @@ public class LineItemMapper implements IMapper<LineItem, Object, LineItemDto> {
         if(o instanceof LineItemDto) {
             LineItemDto line = (LineItemDto) o;
             lineItem = LineItem.builder()
-                    .stock(Stock.builder().id(line.getStock().getId()).build())
-                    .stockClassification(StockClassification.builder().id(line.getStockClassification().getId()).build())
-                    .quantity(line.getQuantity())
+//                    .stock(Stock.builder().id(line.getStock().getId()).build())
+//                    .stockClassification(StockClassification.builder().id(line.getStockClassification().getId()).build())
+//                    .quantity(line.getQuantity())
                     .build();
         }
         return lineItem;

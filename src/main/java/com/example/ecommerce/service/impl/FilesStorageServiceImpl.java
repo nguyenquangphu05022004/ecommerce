@@ -53,7 +53,7 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
             Files.copy(file.getInputStream(), getPath(path), StandardCopyOption.REPLACE_EXISTING);
             switch (entityType) {
                 case USER:
-                    UserImage userImage = UserImage.builder()
+                    User.UserImage userImage = User.UserImage.builder()
                             .name(fullFileName)
                             .type(entityType.getType())
                             .path(path)
@@ -62,7 +62,7 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
                     userImageRepository.save(userImage);
                     break;
                 case PRODUCT:
-                    StockImage stockImage = StockImage.builder()
+                    Stock.StockImage stockImage = Stock.StockImage.builder()
                             .name(fullFileName)
                             .type(entityType.getType())
                             .path(path)
@@ -71,7 +71,7 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
                     stockImageRepository.save(stockImage);
                     break;
                 case CATEGORY:
-                    CategoryImage categoryImage = CategoryImage.builder()
+                    Category.CategoryImage categoryImage = Category.CategoryImage.builder()
                             .name(fullFileName)
                             .type(entityType.getType())
                             .path(path)
@@ -80,7 +80,7 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
                     categoryImageRepository.save(categoryImage);
                     break;
                 case EVALUATION:
-                    EvaluationImage evaluationImage = EvaluationImage.builder()
+                    Evaluation.EvaluationImage evaluationImage = Evaluation.EvaluationImage.builder()
                             .name(fullFileName)
                             .type(entityType.getType())
                             .path(path)
@@ -121,13 +121,13 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
                 throw new GeneralException("File not found: " + file.getName());
             }
             if (file.getType().equals(EntityType.PRODUCT.getType())) {
-                stockImageRepository.delete((StockImage) file);
+                stockImageRepository.delete((Stock.StockImage) file);
             } else if (file.getType().equals(EntityType.CATEGORY.getType())) {
-                categoryImageRepository.delete((CategoryImage) file);
+                categoryImageRepository.delete((Category.CategoryImage) file);
             } else if (file.getType().equals(EntityType.EVALUATION.getType())) {
-                evaluationImageRepository.delete((EvaluationImage) file);
+                evaluationImageRepository.delete((Evaluation.EvaluationImage) file);
             } else if (file.getType().equals(EntityType.USER.getType())) {
-                userImageRepository.delete((UserImage) file);
+                userImageRepository.delete((User.UserImage) file);
             }
             Files.delete(path);
         } catch (Exception ex) {

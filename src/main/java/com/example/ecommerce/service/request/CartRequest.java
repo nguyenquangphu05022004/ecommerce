@@ -11,4 +11,5 @@ public class CartRequest {
     private Long stockId;
     private String operation;
     private Long stockClassificationId;
+    private int quantity;
 }

@@ -85,14 +85,21 @@ public class CartServiceImpl implements ICartService {
                         redisKey.getStockKey()
                 );
                 response = objectMapper.readValue(json, ItemResponse.class);
-                if (cartRequest.getOperation().equals("+")) {
-                    response.setQuantity(response.getQuantity() + 1);
-                    response.setStockClassificationId(cartRequest.getStockClassificationId());
+                if(cartRequest.getQuantity() != 0) {
+                    if(cartRequest.getQuantity() > 0) {
+                        response.setQuantity(response.getQuantity() + cartRequest.getQuantity());
+                    }
                 } else {
-                    if (response.getQuantity() == 1)
-                        throw new GeneralException("You can't decrease quantity of product to 0");
-                    response.setQuantity(response.getQuantity() - 1);
+                    if (cartRequest.getOperation().equals("+")) {
+                        response.setQuantity(response.getQuantity() + 1);
+                    } else {
+                        if (response.getQuantity() == 1)
+                            throw new GeneralException("You can't decrease quantity of product to 0");
+                        response.setQuantity(response.getQuantity() - 1);
+                    }
+                    response.setStockClassificationId(cartRequest.getStockClassificationId());
                 }
+
             }
             redisTemplate.opsForHash().put(
                     redisKey.getVendorItemProductKey(),

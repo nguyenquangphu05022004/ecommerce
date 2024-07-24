@@ -27,5 +27,17 @@ public class Stock extends BaseEntity {
 
     @OneToMany(mappedBy = "stock",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StockImage> images = new ArrayList<>();
+
+    @Entity
+    @Table(name = "stock_images")
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder(toBuilder = true)
+    @Getter
+    public static class StockImage extends FileEntity {
+        @ManyToOne
+        @JoinColumn(name = "stock_id")
+        private Stock stock;
+    }
 }
 

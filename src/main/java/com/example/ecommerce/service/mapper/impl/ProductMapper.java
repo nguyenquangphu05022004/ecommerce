@@ -1,15 +1,9 @@
 package com.example.ecommerce.service.mapper.impl;
 
 import com.example.ecommerce.domain.*;
-import com.example.ecommerce.service.dto.EvaluationDto;
-import com.example.ecommerce.service.dto.ProductDto;
-import com.example.ecommerce.service.dto.StockDto;
-import com.example.ecommerce.service.dto.VendorDto;
+import com.example.ecommerce.service.dto.*;
 import com.example.ecommerce.service.mapper.IMapper;
-import com.example.ecommerce.service.request.EvaluationRequest;
-import com.example.ecommerce.service.request.ProductRequest;
-import com.example.ecommerce.service.request.StockRequest;
-import com.example.ecommerce.service.request.VendorRequest;
+import com.example.ecommerce.service.request.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,11 +20,14 @@ public class ProductMapper implements IMapper<Product, ProductRequest, ProductDt
     private final IMapper<Evaluation, EvaluationRequest, EvaluationDto> evaluationMapper;
     @Qualifier("vendorMapper")
     private final IMapper<Vendor, VendorRequest, VendorDto> vendorMapper;
+    @Qualifier("categoryMapper")
+    private final IMapper<Category, CategoryRequest, CategoryDto> categoryMapper;
+
     @Override
     public Product toEntity(ProductRequest request) {
         Product product = Product.builder()
                 .description(request.getDescription())
-                .language(new Language(request.getName(), request.getNameEn()))
+                .language(new Product.Language(request.getName(), request.getNameEn()))
                 .category(Category.builder().id(request.getCategoryId()).build())
                 .brand(request.getBrandId() != null ? Brand.builder().id(request.getBrandId()).build() : null)
                 .build();
@@ -42,12 +39,12 @@ public class ProductMapper implements IMapper<Product, ProductRequest, ProductDt
         return ProductDto.builder()
                 .description(product.getDescription())
                 .name(product.getLanguage().getNameVn())
-                .categoryName(product.getCategory().getName())
+                .category(categoryMapper.toDto(product.getCategory()))
                 .id(product.getId())
                 .stocks(stockMapper.toDtoList(product.getStocks()))
                 .evaluations(evaluationMapper.toDtoList(product.getEvaluations()))
                 .vendor(vendorMapper.toDto(product.getVendor()))
-                .brandName(product.getBrand() != null ? product.getBrand().getName() : null)
+                .brand(brandMapper(product.getBrand()))
                 .build();
     }
 
@@ -58,5 +55,13 @@ public class ProductMapper implements IMapper<Product, ProductRequest, ProductDt
             products.forEach(product -> results.add(toDto(product)));
         }
         return results;
+    }
+
+    public static BrandDto brandMapper(Brand brand) {
+        if(brand == null) return null;
+        return BrandDto.builder()
+                .name(brand.getName())
+                .id(brand.getId())
+                .build();
     }
 }

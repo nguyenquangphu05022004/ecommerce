@@ -36,6 +36,18 @@ public class Category extends BaseEntity {
     @OneToMany(mappedBy = "parent")
     private Set<Category> children;
 
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    @Entity
+    @SuperBuilder(toBuilder = true)
+    @Table(name = "categories_images")
+    public static class CategoryImage extends FileEntity {
+        @OneToOne
+        @JoinColumn(name = "category_id")
+        private Category category;
+    }
 
 }
 

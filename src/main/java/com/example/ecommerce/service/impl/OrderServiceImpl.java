@@ -7,6 +7,7 @@ import com.example.ecommerce.domain.Order;
 import com.example.ecommerce.domain.OrderStatus;
 import com.example.ecommerce.domain.StockClassification;
 import com.example.ecommerce.handler.exception.GeneralException;
+import com.example.ecommerce.handler.exception.NotFoundException;
 import com.example.ecommerce.service.dto.LineItemDto;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IOrderService;
@@ -46,14 +47,15 @@ public class OrderServiceImpl implements IOrderService {
         Set<LineItem> lineItems = new HashSet<>();
         if (request.getLineItems() != null) {
             request.getLineItems().forEach(line -> {
-                        if (checkStockExists(line)) {
-                            lineItems.add(lineItemMapper.toEntity(line));
-                        }
+                       line.getItems().forEach(item -> {
+                           if (checkStockExists(item)) {
+                               lineItems.add(lineItemMapper.toEntity(line));
+                           }
+                       });
                     });
         }
 
         if(lineItems.size() == 0) throw new GeneralException("You can't order because you haven't choose product yet");
-
         // convert to order entity
         Order order = mapper.toEntity(request).toBuilder()
                 .lineItems(lineItems)
@@ -94,16 +96,16 @@ public class OrderServiceImpl implements IOrderService {
         orderRepository.deleteById(orderId);
     }
 
-    private boolean checkStockExists(LineItemDto line) {
+    private boolean checkStockExists(LineItemDto.ItemDto itemDto) {
         StockClassification stockClassification = classificationRepository
                 .findByIdAndStockId(
-                        line.getStockClassification().getId(),
-                        line.getStock().getId())
+                        itemDto.getStockClassification().getId(),
+                        itemDto.getStock().getId())
                 .orElseThrow(() -> new GeneralException("Product not found"));
         int remainQuantity = stockClassification.getQuantityOfProduct() - stockClassification.getSeller();
-        if(line.getQuantity() < remainQuantity) {
+        if(itemDto.getQuantity() < remainQuantity) {
             return true;
         }
-        return false;
+        throw new NotFoundException(String.format("Item with name %s not found at inventory"));
     }
 }
