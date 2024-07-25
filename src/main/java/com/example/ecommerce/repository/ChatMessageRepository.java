@@ -1,15 +1,17 @@
 package com.example.ecommerce.repository;
 
 import com.example.ecommerce.domain.ChatMessage;
-import com.example.ecommerce.domain.ChatMessageDestination;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
-    List<ChatMessage> findAllByUserUsernameAndDestinationIdAndChatMessageDestination(
+    Page<ChatMessage> findAllByUserUsernameAndDestinationIdAndChatMessageDestination(
             String username,
             Long destinationId,
-            ChatMessageDestination chatMessageDestination
+            ChatMessage.ChatMessageDestination chatMessageDestination,
+            Pageable pageable
     );
 }

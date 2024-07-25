@@ -1,6 +1,5 @@
 package com.example.ecommerce.service.mapper.impl;
 
-import com.example.ecommerce.domain.LineItem;
 import com.example.ecommerce.domain.Order;
 import com.example.ecommerce.domain.OrderStatus;
 import com.example.ecommerce.service.dto.LineItemDto;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 public class OrderMapper implements IMapper<Order, OrderDto, OrderDto> {
 
     @Qualifier("lineItemMapper")
-    private final IMapper<LineItem, Object, LineItemDto> lineItemMapper;
+    private final IMapper<Order.LineItem, Object, LineItemDto> lineItemMapper;
 
     @Override
     public OrderDto toDto(Order order) {

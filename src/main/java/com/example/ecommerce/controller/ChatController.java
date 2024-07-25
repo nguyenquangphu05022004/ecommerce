@@ -38,9 +38,11 @@ public class ChatController {
 
     @GetMapping("/messages")
     public ResponseEntity<?> getAllByConversationId(
-            @RequestBody ChatMessageRequest request
+            @RequestBody ChatMessageRequest request,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "30") int limit
     ) {
-        return ResponseEntity.ok(chatMessageService.getListMessageByDestination(request));
+        return ResponseEntity.ok(chatMessageService.getListMessageByDestination(request, page, limit));
     }
 
 }

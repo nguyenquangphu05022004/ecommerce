@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class AuthenResponse {
-    private String message;
     private String token;
     private String refreshToken;
+    private long expiredAt;
 }

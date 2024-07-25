@@ -2,8 +2,8 @@ package com.example.ecommerce.config;
 
 import com.example.ecommerce.common.enums.Permission;
 import com.example.ecommerce.common.enums.Role;
-import com.example.ecommerce.jwt.JwtAuthentication;
-import com.example.ecommerce.jwt.JwtAuthenticationEntryPoint;
+import com.example.ecommerce.config.jwt.JwtAuthentication;
+import com.example.ecommerce.config.jwt.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

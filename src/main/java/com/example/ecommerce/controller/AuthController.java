@@ -3,6 +3,7 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.service.IAuthenService;
 import com.example.ecommerce.service.request.AuthenRequest;
 import com.example.ecommerce.service.request.RegisterRequest;
+import com.example.ecommerce.service.response.APIResponse;
 import com.example.ecommerce.service.response.AuthenResponse;
 import com.example.ecommerce.service.response.OperationResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,8 @@ public class AuthController {
     public ResponseEntity<?> authenticate(
             @RequestBody AuthenRequest authenRequest
     ) {
-        AuthenResponse authenResponse = authenService.authenticate(authenRequest);
-        return ResponseEntity.ok(authenResponse);
+        APIResponse<?> apiResponse = authenService.authenticate(authenRequest);
+        return ResponseEntity.ok( apiResponse);
     }
 
     @PostMapping({"/register", "/sign-up"})

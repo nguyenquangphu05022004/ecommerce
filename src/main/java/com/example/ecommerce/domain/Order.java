@@ -2,6 +2,7 @@ package com.example.ecommerce.domain;
 
 import com.example.ecommerce.repository.NotificationRepository;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,4 +43,47 @@ public class Order extends BaseEntity implements Observer{
                 .build();
         notificationRepository.save(notification);
     }
+
+    @AllArgsConstructor
+    public enum Payment {
+        PAY_AT_HOME("Thanh toán tại nhà"),
+        PAY_BY_BANK("Thanh toán qua ngân hàng");
+        @Getter
+        private final String name;
+    }
+
+
+    @Getter
+    @Entity
+    @Table(name = "line_items")
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder(toBuilder = true)
+    public static class LineItem extends BaseEntity{
+        @ManyToOne
+        @JoinColumn(name = "vendor_id", nullable = false)
+        private Vendor vendor;
+        @OneToMany(cascade = CascadeType.ALL)
+        private Set<Item> items;
+        @ManyToOne
+        @JoinColumn(name = "coupon_id")
+        private Coupon coupon;
+    }
+    @Entity
+    @Table(name = "items")
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @SuperBuilder(toBuilder = true)
+    public static class Item extends BaseEntity{
+        @ManyToOne
+        @JoinColumn(name = "stock_id")
+        private Stock stock;
+        @ManyToOne
+        @JoinColumn(name = "stock_classificationId")
+        private Stock.StockClassification stockClassification;
+        @Column(nullable = false)
+        private Integer quantity;
+    }
+
 }

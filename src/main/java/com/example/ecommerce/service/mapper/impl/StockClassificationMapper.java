@@ -1,8 +1,7 @@
 package com.example.ecommerce.service.mapper.impl;
 
-import com.example.ecommerce.domain.StockClassification;
+import com.example.ecommerce.domain.Stock;
 import com.example.ecommerce.service.dto.StockClassificationDto;
-import com.example.ecommerce.service.dto.StockDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +11,11 @@ import java.util.List;
 
 @Service("stockClassificationMapper")
 public class StockClassificationMapper implements
-        IMapper<StockClassification, Object, StockClassificationDto> {
+        IMapper<Stock.StockClassification, Object, StockClassificationDto> {
     @Override
-    public StockClassification toEntity(Object o) {
+    public Stock.StockClassification toEntity(Object o) {
         StockClassificationDto dto = (StockClassificationDto)o;
-        StockClassification entity = StockClassification.builder()
+        Stock.StockClassification entity = Stock.StockClassification.builder()
                 .size(dto.getSizeName())
                 .quantityOfProduct(dto.getQuantityOfProduct())
                 .seller(0)
@@ -26,7 +25,7 @@ public class StockClassificationMapper implements
     }
 
     @Override
-    public StockClassificationDto toDto(StockClassification stockClassification) {
+    public StockClassificationDto toDto(Stock.StockClassification stockClassification) {
         if(stockClassification == null) return null;
         StockClassificationDto res = StockClassificationDto.builder()
                 .id(stockClassification.getId())
@@ -38,7 +37,7 @@ public class StockClassificationMapper implements
     }
 
     @Override
-    public List<StockClassificationDto> toDtoList(Collection<? extends StockClassification> stockClassifications) {
+    public List<StockClassificationDto> toDtoList(Collection<? extends Stock.StockClassification> stockClassifications) {
         List<StockClassificationDto> res = new ArrayList<>();
         if(stockClassifications != null || stockClassifications.size() > 0) {
             stockClassifications.forEach(st -> res.add(toDto(st)));

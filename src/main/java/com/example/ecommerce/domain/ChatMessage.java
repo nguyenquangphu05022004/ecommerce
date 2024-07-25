@@ -29,5 +29,25 @@ public class ChatMessage extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "conversation_id")
     private Conversation conversation;
+
+    @Entity
+    @Table(name = "chat_message_images")
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder(toBuilder = true)
+    @Getter
+    @Setter
+    public static class ChatMessageImage extends FileEntity {
+        @ManyToOne
+        @JoinColumn(name = "chat_message_id")
+        private ChatMessage chatMessage;
+    }
+
+    public static enum ChatMessageDestination {
+        USER,
+        GROUP
+    }
+
+
 }
 

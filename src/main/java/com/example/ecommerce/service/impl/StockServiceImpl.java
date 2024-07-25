@@ -1,7 +1,8 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.common.utils.ValidationUtils;
-import com.example.ecommerce.domain.*;
+import com.example.ecommerce.domain.EntityType;
+import com.example.ecommerce.domain.Stock;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.StockClassificationRepository;
 import com.example.ecommerce.repository.StockRepository;
@@ -28,7 +29,7 @@ public class StockServiceImpl implements IStockService {
     @Qualifier("stockMapper")
     private final IMapper<Stock, StockRequest, StockDto> stockMapper;
     @Qualifier("stockClassificationMapper")
-    private final IMapper<StockClassification, Object, StockClassificationDto> stockClassificationMapper;
+    private final IMapper<Stock.StockClassification, Object, StockClassificationDto> stockClassificationMapper;
     @Override
     public void delete(Long id) {
         stockRepository.deleteById(id);
@@ -54,7 +55,7 @@ public class StockServiceImpl implements IStockService {
         Stock saved = stockRepository.save(stock);
 
         stockRequest.getStockClassifications().forEach(stockClassificationDto -> {
-            StockClassification st = stockClassificationMapper
+            Stock.StockClassification st = stockClassificationMapper
                     .toEntity(stockClassificationDto)
                     .toBuilder()
                     .stock(saved)

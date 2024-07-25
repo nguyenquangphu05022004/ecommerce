@@ -39,5 +39,22 @@ public class Stock extends BaseEntity {
         @JoinColumn(name = "stock_id")
         private Stock stock;
     }
+
+    @Entity
+    @Table(name = "stock_classifications")
+    @Setter
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @SuperBuilder(toBuilder = true)
+    public static class StockClassification extends BaseEntity {
+        private Integer quantityOfProduct;
+        private String size;
+        private int seller;
+        @ManyToOne
+        @JoinColumn(name = "stock_id")
+        private Stock stock;
+    }
+
 }
 

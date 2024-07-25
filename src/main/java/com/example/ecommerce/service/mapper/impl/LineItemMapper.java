@@ -1,8 +1,7 @@
 package com.example.ecommerce.service.mapper.impl;
 
-import com.example.ecommerce.domain.LineItem;
+import com.example.ecommerce.domain.Order;
 import com.example.ecommerce.domain.Stock;
-import com.example.ecommerce.domain.StockClassification;
 import com.example.ecommerce.service.dto.LineItemDto;
 import com.example.ecommerce.service.dto.StockClassificationDto;
 import com.example.ecommerce.service.dto.StockDto;
@@ -18,13 +17,13 @@ import java.util.List;
 
 @Service("lineItemMapper")
 @AllArgsConstructor
-public class LineItemMapper implements IMapper<LineItem, Object, LineItemDto> {
+public class LineItemMapper implements IMapper<Order.LineItem, Object, LineItemDto> {
     @Qualifier("stockMapper")
     private final IMapper<Stock, StockRequest, StockDto> stockMapper;
     @Qualifier("stockClassificationMapper")
-    private final IMapper<StockClassification, Object, StockClassificationDto> stockClassMapper;
+    private final IMapper<Stock.StockClassification, Object, StockClassificationDto> stockClassMapper;
     @Override
-    public LineItemDto toDto(LineItem lineItem) {
+    public LineItemDto toDto(Order.LineItem lineItem) {
         LineItemDto line = LineItemDto.builder()
 //                .items()
 //                .id(lineItem.getId())
@@ -35,11 +34,11 @@ public class LineItemMapper implements IMapper<LineItem, Object, LineItemDto> {
     }
 
     @Override
-    public LineItem toEntity(Object o) {
-        LineItem lineItem = null;
+    public Order.LineItem toEntity(Object o) {
+        Order.LineItem lineItem = null;
         if(o instanceof LineItemDto) {
             LineItemDto line = (LineItemDto) o;
-            lineItem = LineItem.builder()
+            lineItem = Order.LineItem.builder()
 //                    .stock(Stock.builder().id(line.getStock().getId()).build())
 //                    .stockClassification(StockClassification.builder().id(line.getStockClassification().getId()).build())
 //                    .quantity(line.getQuantity())
@@ -49,7 +48,7 @@ public class LineItemMapper implements IMapper<LineItem, Object, LineItemDto> {
     }
 
     @Override
-    public List<LineItemDto> toDtoList(Collection<? extends LineItem> lineItems) {
+    public List<LineItemDto> toDtoList(Collection<? extends Order.LineItem> lineItems) {
         List<LineItemDto> res = new ArrayList<>();
         if(lineItems != null) {
             lineItems.forEach(item -> res.add(toDto(item)));

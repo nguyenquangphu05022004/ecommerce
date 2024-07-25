@@ -1,4 +1,4 @@
-package com.example.ecommerce.jwt;
+package com.example.ecommerce.config.jwt;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

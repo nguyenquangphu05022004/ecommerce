@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.dto;
 
-import com.example.ecommerce.domain.Payment;
+import com.example.ecommerce.domain.Order;
 import com.example.ecommerce.domain.OrderStatus;
 import com.example.ecommerce.domain.UserContactDetails;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,7 +18,7 @@ import java.util.Set;
 public class OrderDto extends BaseDto {
     private UserContactDetails userContactDetails;
     private Set<LineItemDto> lineItems;
-    private Payment payment;
+    private Order.Payment payment;
     private Integer priceCoupon;
     private OrderStatus orderStatus;
     private boolean approval;

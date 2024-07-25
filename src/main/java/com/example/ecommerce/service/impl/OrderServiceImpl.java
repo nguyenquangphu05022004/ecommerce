@@ -2,10 +2,9 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.LineItem;
 import com.example.ecommerce.domain.Order;
 import com.example.ecommerce.domain.OrderStatus;
-import com.example.ecommerce.domain.StockClassification;
+import com.example.ecommerce.domain.Stock;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.handler.exception.NotFoundException;
 import com.example.ecommerce.service.dto.LineItemDto;
@@ -30,7 +29,7 @@ public class OrderServiceImpl implements IOrderService {
     @Qualifier("orderMapper")
     private final IMapper<Order, OrderDto, OrderDto> mapper;
     @Qualifier("lineItemMapper")
-    private final IMapper<LineItem, Object, LineItemDto> lineItemMapper;
+    private final IMapper<Order.LineItem, Object, LineItemDto> lineItemMapper;
     @Override
     @Transactional
     public void createOrder(OrderDto request) {
@@ -44,7 +43,7 @@ public class OrderServiceImpl implements IOrderService {
 
 
         // check stock whether product exists
-        Set<LineItem> lineItems = new HashSet<>();
+        Set<Order.LineItem> lineItems = new HashSet<>();
         if (request.getLineItems() != null) {
             request.getLineItems().forEach(line -> {
                        line.getItems().forEach(item -> {
@@ -97,7 +96,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     private boolean checkStockExists(LineItemDto.ItemDto itemDto) {
-        StockClassification stockClassification = classificationRepository
+        Stock.StockClassification stockClassification = classificationRepository
                 .findByIdAndStockId(
                         itemDto.getStockClassification().getId(),
                         itemDto.getStock().getId())

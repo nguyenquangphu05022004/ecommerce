@@ -3,16 +3,21 @@ package com.example.ecommerce.service.impl;
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.ChatMessage;
-import com.example.ecommerce.domain.ChatMessageDestination;
 import com.example.ecommerce.domain.EntityType;
+import com.example.ecommerce.domain.Product;
 import com.example.ecommerce.repository.ChatMessageRepository;
 import com.example.ecommerce.service.IChatMessageService;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.dto.ChatMessageDto;
+import com.example.ecommerce.service.dto.ProductDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.request.ChatMessageRequest;
+import com.example.ecommerce.service.response.APIListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,34 +42,44 @@ public class ChatMessageServiceImpl implements IChatMessageService {
         ValidationUtils.fieldCheckNullOrEmpty(String.valueOf(request.getChatMessageDestination()), "chatMessageDestination");
         ChatMessage chatMessage = mapper.toEntity(request);
         ChatMessage saved = chatMessageRepository.save(chatMessage);
-
-        if(request.getFileImages() != null) {
+        ChatMessage chat = saved;
+        if (request.getFileImages() != null) {
             request.getFileImages().forEach(file -> filesStorageService.saveFile(file, saved.getId(), EntityType.CHAT_MESSAGE));
+            chat = chatMessageRepository.findById(saved.getId()).get();
         }
-        ChatMessageDto response = mapper.toDto(saved);
-
-        if (chatMessage.getChatMessageDestination() == ChatMessageDestination.USER) {
+        ChatMessageDto response = mapper.toDto(chat);
+        if (chatMessage.getChatMessageDestination() == ChatMessage.ChatMessageDestination.USER) {
             messageTemplate.convertAndSendToUser(String.valueOf(request.getDestinationId()), "/topic/private-message", response);
             return response;
-        } else {
-            messageTemplate.convertAndSendToUser(String.valueOf(request.getDestinationId()), "/topic/group-message/" + request.getDestinationId(), response);
-            return null;
         }
+        messageTemplate.convertAndSend("/topic/group-message/" + request.getDestinationId(), response);
+        return null;
     }
 
     @Override
-    public List<ChatMessageDto> getListMessageByDestination(
-            ChatMessageRequest request
+    public APIListResponse<?> getListMessageByDestination(
+            ChatMessageRequest request,
+            int page,
+            int limit
     ) {
         ValidationUtils.fieldCheckNullOrEmpty(request.getDestinationId(), "DestinationId");
         ValidationUtils.fieldCheckNullOrEmpty(String.valueOf(request.getChatMessageDestination()), "chatMessageDestination");
-        List<ChatMessage> messages = chatMessageRepository
+        Page<ChatMessage> pageMessages = chatMessageRepository
                 .findAllByUserUsernameAndDestinationIdAndChatMessageDestination(
                         SecurityUtils.username(),
                         request.getDestinationId(),
-                        request.getChatMessageDestination()
+                        request.getChatMessageDestination(),
+                        PageRequest.of(page, limit)
                 );
-        List<ChatMessageDto> messageResponse = mapper.toDtoList(messages);
-        return messageResponse;
+        return new APIListResponse<>(
+                "ok",
+                "",
+                1,
+                HttpStatus.OK.name(),
+                page,
+                limit,
+                pageMessages.getTotalPages(),
+                mapper.toDtoList(pageMessages.getContent()));
     }
 }
+

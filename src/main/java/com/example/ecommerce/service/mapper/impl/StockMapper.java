@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class StockMapper extends ImageMapper implements IMapper<Stock, StockRequest, StockDto> {
     @Qualifier("stockClassificationMapper")
-    private final IMapper<StockClassification, Object, StockClassificationDto> stockClassificationMapper;
+    private final IMapper<Stock.StockClassification, Object, StockClassificationDto> stockClassificationMapper;
     @Qualifier("categoryMapper")
     private final IMapper<Category, CategoryRequest, CategoryDto> cateMapper;
     @Override

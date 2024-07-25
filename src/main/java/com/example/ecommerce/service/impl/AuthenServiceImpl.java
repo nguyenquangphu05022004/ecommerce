@@ -1,24 +1,22 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.common.enums.Role;
+import com.example.ecommerce.common.enums.CustomStatusCode;
 import com.example.ecommerce.common.enums.TokenType;
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.domain.Token;
 import com.example.ecommerce.domain.User;
 import com.example.ecommerce.domain.UserContactDetails;
 import com.example.ecommerce.handler.exception.AuthenticationFailureException;
-import com.example.ecommerce.jwt.JwtService;
+import com.example.ecommerce.config.jwt.JwtService;
 import com.example.ecommerce.repository.TokenRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IAuthenService;
 import com.example.ecommerce.service.request.AuthenRequest;
 import com.example.ecommerce.service.request.RegisterRequest;
+import com.example.ecommerce.service.response.APIResponse;
 import com.example.ecommerce.service.response.AuthenResponse;
 import com.example.ecommerce.service.response.OperationResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,9 +31,8 @@ public class AuthenServiceImpl implements IAuthenService {
     private final PasswordEncoder encoder;
     private final UserRepository userRepository;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
     @Override
-    public AuthenResponse authenticate(AuthenRequest request) {
+    public APIResponse<?> authenticate(AuthenRequest request) {
         User user = userRepository.findByUsernameIgnoreCase(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
         if(!encoder.matches(request.getPassword(), user.getPassword())) {
@@ -52,11 +49,17 @@ public class AuthenServiceImpl implements IAuthenService {
                 .build();
         revokeAllToken(user.getId());
         tokenRepository.save(token);
-        return AuthenResponse.builder()
-                .token(jwtToken)
-                .message("Login success")
-                .refreshToken(refreshToken)
-                .build();
+        return new APIResponse<>(
+                "OK",
+                null,
+                1,
+                CustomStatusCode.SUCCESS.getNumber(),
+                AuthenResponse.builder()
+                        .token(jwtToken)
+                        .refreshToken(refreshToken)
+                        .expiredAt(jwtService.extractExpiration(jwtToken).getTime())
+                        .build()
+        );
     }
 
 
@@ -76,7 +79,6 @@ public class AuthenServiceImpl implements IAuthenService {
                 .build();
 
         if(request.getRole() == null) user.setRole(request.getRole());
-
         userRepository.save(user);
         return OperationResponse.builder()
                 .message("You created account successfully")

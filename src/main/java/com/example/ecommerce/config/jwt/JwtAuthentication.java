@@ -1,4 +1,4 @@
-package com.example.ecommerce.jwt;
+package com.example.ecommerce.config.jwt;
 
 import com.example.ecommerce.repository.TokenRepository;
 import jakarta.servlet.FilterChain;
