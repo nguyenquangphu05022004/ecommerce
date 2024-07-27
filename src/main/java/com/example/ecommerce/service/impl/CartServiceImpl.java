@@ -97,9 +97,8 @@ public class CartServiceImpl implements ICartService {
                             throw new GeneralException("You can't decrease quantity of product to 0");
                         response.setQuantity(response.getQuantity() - 1);
                     }
-                    response.setStockClassificationId(cartRequest.getStockClassificationId());
                 }
-
+                response.setStockClassificationId(cartRequest.getStockClassificationId());
             }
             redisTemplate.opsForHash().put(
                     redisKey.getVendorItemProductKey(),

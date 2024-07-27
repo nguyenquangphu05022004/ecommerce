@@ -21,7 +21,7 @@ public class Order extends BaseEntity implements Observer{
     @Embedded
     private UserContactDetails userContactDetails;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order")
     private Set<LineItem> lineItems;
 
     @Enumerated(EnumType.STRING)
@@ -59,15 +59,19 @@ public class Order extends BaseEntity implements Observer{
     @NoArgsConstructor
     @AllArgsConstructor
     @SuperBuilder(toBuilder = true)
+    @Setter
     public static class LineItem extends BaseEntity{
         @ManyToOne
         @JoinColumn(name = "vendor_id", nullable = false)
         private Vendor vendor;
-        @OneToMany(cascade = CascadeType.ALL)
+        @OneToMany(mappedBy = "lineItem")
         private Set<Item> items;
         @ManyToOne
         @JoinColumn(name = "coupon_id")
         private Coupon coupon;
+        @ManyToOne
+        @JoinColumn(name = "order_id", nullable = false)
+        private Order order;
     }
     @Entity
     @Table(name = "items")
@@ -75,6 +79,7 @@ public class Order extends BaseEntity implements Observer{
     @AllArgsConstructor
     @Getter
     @SuperBuilder(toBuilder = true)
+    @Setter
     public static class Item extends BaseEntity{
         @ManyToOne
         @JoinColumn(name = "stock_id")
@@ -84,6 +89,9 @@ public class Order extends BaseEntity implements Observer{
         private Stock.StockClassification stockClassification;
         @Column(nullable = false)
         private Integer quantity;
+        @ManyToOne
+        @JoinColumn(name = "line_item_id")
+        private LineItem lineItem;
     }
 
 }

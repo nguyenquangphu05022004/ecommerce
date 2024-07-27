@@ -12,6 +12,7 @@ import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IOrderService;
 import com.example.ecommerce.service.dto.OrderDto;
 import com.example.ecommerce.service.mapper.IMapper;
+import com.example.ecommerce.service.request.OrderRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,41 +27,35 @@ public class OrderServiceImpl implements IOrderService {
     private final NotificationRepository notificationRepository;
     private final EventRepository eventRepository;
     private final StockClassificationRepository classificationRepository;
+    private final LineItemRepository lineItemRepository;
+    private final ItemRepository itemRepository;
     @Qualifier("orderMapper")
-    private final IMapper<Order, OrderDto, OrderDto> mapper;
-    @Qualifier("lineItemMapper")
-    private final IMapper<Order.LineItem, Object, LineItemDto> lineItemMapper;
+    private final IMapper<Order, OrderRequest, OrderDto> mapper;
     @Override
     @Transactional
-    public void createOrder(OrderDto request) {
-        ValidationUtils.fieldCheckNullOrEmpty(request.getUserContactDetails().getFullName(), "fullName");
-        ValidationUtils.fieldCheckNullOrEmpty(request.getUserContactDetails().getDistrict(), "district");
-        ValidationUtils.fieldCheckNullOrEmpty(request.getUserContactDetails().getAddress(), "address");
-        ValidationUtils.fieldCheckNullOrEmpty(request.getUserContactDetails().getWard(), "ward");
-        ValidationUtils.fieldCheckNullOrEmpty(request.getUserContactDetails().getPhoneNumber(), "phoneNumber");
-        ValidationUtils.fieldCheckNullOrEmpty(request.getUserContactDetails().getProvince(), "province");
-        ValidationUtils.fieldCheckNullOrEmpty(request.getPayment().toString(), "payment");
-
-
+    public void createOrder(OrderRequest request) {
         // check stock whether product exists
-        Set<Order.LineItem> lineItems = new HashSet<>();
-        if (request.getLineItems() != null) {
-            request.getLineItems().forEach(line -> {
-                       line.getItems().forEach(item -> {
-                           if (checkStockExists(item)) {
-                               lineItems.add(lineItemMapper.toEntity(line));
+        if (request.getLineItemRequests() != null) {
+            request.getLineItemRequests().forEach(line -> {
+                       line.getItemRequests().forEach(item -> {
+                           if (!checkStockExists(item)) {
+                               throw new GeneralException(String.format("Stock with id: %s and StockClassification with id: %s is empty", item.getStockId(), item.getClassificationId()));
                            }
                        });
                     });
         }
-
-        if(lineItems.size() == 0) throw new GeneralException("You can't order because you haven't choose product yet");
-        // convert to order entity
-        Order order = mapper.toEntity(request).toBuilder()
-                .lineItems(lineItems)
-                .build();
+        // convert to order entit
+        Order order = mapper.toEntity(request);
         //save order of user to database
         Order saved = orderRepository.save(order);
+        order.getLineItems().forEach(line -> {
+            line.setOrder(saved);
+            Order.LineItem lineItem = lineItemRepository.save(line);
+            line.getItems().forEach(item -> {
+                item.setLineItem(lineItem);
+                itemRepository.save(item);
+            });
+        });
         //notify to user when a order was created by current user;
         saved.notify(notificationRepository);
         //event auto approval order after 8 hours
@@ -95,14 +90,14 @@ public class OrderServiceImpl implements IOrderService {
         orderRepository.deleteById(orderId);
     }
 
-    private boolean checkStockExists(LineItemDto.ItemDto itemDto) {
+    private boolean checkStockExists(OrderRequest.ItemRequest request) {
         Stock.StockClassification stockClassification = classificationRepository
                 .findByIdAndStockId(
-                        itemDto.getStockClassification().getId(),
-                        itemDto.getStock().getId())
+                        request.getClassificationId(),
+                        request.getStockId())
                 .orElseThrow(() -> new GeneralException("Product not found"));
         int remainQuantity = stockClassification.getQuantityOfProduct() - stockClassification.getSeller();
-        if(itemDto.getQuantity() < remainQuantity) {
+        if(request.getQuantity() < remainQuantity) {
             return true;
         }
         throw new NotFoundException(String.format("Item with name %s not found at inventory"));

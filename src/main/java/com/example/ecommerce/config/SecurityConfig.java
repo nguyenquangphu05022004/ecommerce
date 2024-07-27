@@ -35,8 +35,17 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> {
                     request
-                            .requestMatchers(SecurityUrlConstants.LIST_URL_ACCESS_ALL_METHOD)
+                            .requestMatchers(
+                                    "/api/v1/shopping-cart/**",
+                                    "/api/v1/auth/**",
+                                    "/api/v1/products/search")
                             .permitAll()
+                            .requestMatchers("/api/v1/orders/**")
+                            .hasAnyAuthority(
+                                    Role.ADMIN.name(),
+                                    Role.VENDOR.name(),
+                                    Role.USER.name()
+                            )
                             .requestMatchers(HttpMethod.GET, SecurityUrlConstants.WHILE_LIST)
                             .permitAll()
                             .requestMatchers(HttpMethod.POST, SecurityUrlConstants.WHILE_LIST)
@@ -103,10 +112,4 @@ class SecurityUrlConstants {
             "/swagger-ui/**"
     };
     public static final String USER_URL = "/api/v1/users/**";
-    public static final String[] LIST_URL_ACCESS_ALL_METHOD = {
-            "/api/v1/shopping-cart/**",
-            "/api/v1/auth/**",
-            "/api/v1/orders/**",
-            "/api/v1/products/search"
-    };
 }

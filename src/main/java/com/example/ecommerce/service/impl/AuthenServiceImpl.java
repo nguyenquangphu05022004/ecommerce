@@ -58,6 +58,7 @@ public class AuthenServiceImpl implements IAuthenService {
                         .token(jwtToken)
                         .refreshToken(refreshToken)
                         .expiredAt(jwtService.extractExpiration(jwtToken).getTime())
+                        .fullName(user.getUserContactDetails().getFullName())
                         .build()
         );
     }

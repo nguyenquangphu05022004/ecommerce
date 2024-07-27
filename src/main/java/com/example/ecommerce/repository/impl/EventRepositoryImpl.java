@@ -15,7 +15,7 @@ public class EventRepositoryImpl implements EventRepository {
     private final EntityManager entityManager;
     @Override
     public void createEvent(Long entityId) {
-        entityManager.createNativeQuery(String.format(
+        String sql = String.format(
                 "create event %s\n" +
                         "ON SCHEDULE AT timestamp('%s') + interval %s hour\n" +
                         "do\n" +
@@ -27,8 +27,7 @@ public class EventRepositoryImpl implements EventRepository {
                 "test_" + entityId,
                 SystemUtils.getFormatDate(LocalDateTime.now(), "yyyy-MM-dd HH:mm:ss"),
                 SystemUtils.EVENT_TIME_HOUR_EXPIRE,
-                entityId
-
-        )).executeUpdate();
+                entityId);
+        entityManager.createNativeQuery(sql).executeUpdate();
     }
 }

@@ -11,4 +11,5 @@ public class AuthenResponse {
     private String token;
     private String refreshToken;
     private long expiredAt;
+    private String fullName;
 }
