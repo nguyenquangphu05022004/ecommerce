@@ -159,4 +159,12 @@ public class VendorServiceImpl implements IVendorService {
                 couponResponse
         );
     }
+
+    @Override
+    public void cancelFollowVendor(Long userId, Long vendorId) {
+        Vendor vendor = vendorRepository.findById(vendorId)
+                .orElseThrow(() -> new GeneralException(String.format("Vendor with id: %s not found", vendorId)));
+        vendor.getUsers().remove(User.builder().id(userId).build());
+        vendorRepository.save(vendor);
+    }
 }

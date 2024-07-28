@@ -37,6 +37,17 @@ public class VendorController {
                 HttpStatus.OK
         );
     }
+    @DeleteMapping("/follow")
+    public ResponseEntity<?> cancelFollowVendor(
+            @RequestParam("userId") Long userId,
+            @RequestParam("vendorId") Long vendorId
+    ) {
+        vendorService.cancelFollowVendor(userId, vendorId);
+        return new ResponseEntity<>(
+                new OperationResponse(true, String.format("You canceled vendor with id: %s", vendorId)),
+                HttpStatus.OK
+        );
+    }
 
     @PostMapping("/coupons")
     public ResponseEntity<?> createCoupon(@RequestBody CouponRequest couponRequest) {

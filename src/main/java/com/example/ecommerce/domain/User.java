@@ -48,18 +48,8 @@ public class User extends BaseEntity implements UserDetails {
     @ManyToMany(mappedBy = "users")
     private Set<Vendor> vendors;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User user)) return false;
-        if (!super.equals(o)) return false;
-        return Objects.equals(username, user.username);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), username);
-    }
+    @OneToMany(mappedBy = "user")
+    private Set<Order> orders;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -99,5 +89,13 @@ public class User extends BaseEntity implements UserDetails {
         private User user;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof User) {
+            User u = (User) obj;
+            if(u.getId() == this.getId() || this.getUsername().equals(u.getUsername())) return true;
+        }
+        return false;
+    }
 }
 

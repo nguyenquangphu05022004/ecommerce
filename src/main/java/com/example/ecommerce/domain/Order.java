@@ -18,6 +18,9 @@ import java.util.Set;
 @SuperBuilder(toBuilder = true)
 public class Order extends BaseEntity implements Observer{
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     @Embedded
     private UserContactDetails userContactDetails;
 

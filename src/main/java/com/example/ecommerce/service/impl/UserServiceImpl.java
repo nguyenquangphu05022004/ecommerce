@@ -1,17 +1,21 @@
 package com.example.ecommerce.service.impl;
 
+import com.example.ecommerce.common.enums.CustomStatusCode;
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.EntityType;
 import com.example.ecommerce.domain.User;
+import com.example.ecommerce.domain.model.modelviews.UserModelView;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IUserService;
 import com.example.ecommerce.service.dto.UserDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.request.RegisterRequest;
+import com.example.ecommerce.service.response.APIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +47,20 @@ public class UserServiceImpl implements IUserService {
         User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.username()).get();
         filesStorageService.deleteImage(user.getUserImage());
         filesStorageService.saveFile(multipartFile, user.getId(), EntityType.USER);
+    }
+
+    @Override
+    public APIResponse<?> getInfoUser() {
+        User user = userRepository
+                .findByUsernameIgnoreCase(SecurityUtils.username())
+                .orElseThrow(() -> new UsernameNotFoundException("username not found"));
+        return new APIResponse<>(
+                "ok",
+                null,
+                1,
+                CustomStatusCode.SUCCESS.getNumber(),
+                new UserModelView(user)
+        );
     }
 
 

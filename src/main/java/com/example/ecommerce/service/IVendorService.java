@@ -10,4 +10,6 @@ public interface IVendorService{
     void userFollow(Long vendorId);
     void createCoupon(CouponRequest request);
     APIResponse<CouponResponse> checkCouponExpire(Long vendorId, String couponCode);
+
+    void cancelFollowVendor(Long userId, Long vendorId);
 }

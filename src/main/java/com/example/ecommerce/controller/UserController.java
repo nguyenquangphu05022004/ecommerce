@@ -27,4 +27,9 @@ public class UserController {
         userService.uploadImage(file);
         return ResponseEntity.ok("Avatar of User was uploaded");
     }
+
+    @GetMapping("/info")
+    public ResponseEntity<?> getInfoUser() {
+        return ResponseEntity.ok(userService.getInfoUser());
+    }
 }
