@@ -1,4 +1,4 @@
-package com.example.ecommerce.domain.model.modelviews;
+package com.example.ecommerce.domain.model.modelviews.profile;
 
 
 import com.example.ecommerce.domain.*;
@@ -15,6 +15,7 @@ public class UserModelView extends ImageMapper {
     private List<OrderViewModel> orders;
     private List<VendorModelView> vendors;
     private UserContactDetails userContactDetails;
+
     public UserModelView(User user) {
         this.id = user.getId();
         this.avatar = getImageUrl(EntityType.USER.name(), user.getUserImage());
@@ -23,36 +24,4 @@ public class UserModelView extends ImageMapper {
         this.vendors = user.getVendors() != null ? user.getVendors().stream().map(e -> new VendorModelView(e)).toList() : null;
         this.orders = user.getOrders() != null ? user.getOrders().stream().map(e -> new OrderViewModel(e)).toList() : null;
     }
-    @Getter
-    public static class EvaluationModelView{
-        private String content;
-        private int rating;
-        private long id;
-        private ProductModelView product;
-        protected EvaluationModelView(Evaluation e) {
-            this.content = e.getContent();
-            this.rating = e.getRating();
-            this.id = e.getId();
-            this.product = new ProductModelView(e.getProduct());
-        }
-    }
-    @Getter
-    public static class ProductModelView {
-        private Long id;
-        private String name;
-        protected ProductModelView(Product p) {
-            this.id = p.getId();
-            this.name = p.getLanguage().getNameVn();
-        }
-    }
-    @Getter
-    public static class VendorModelView {
-        private Long id;
-        private String shopName;
-        public VendorModelView(Vendor v) {
-            this.id = v.getId();
-            this.shopName = v.getShopName();
-        }
-    }
-
 }

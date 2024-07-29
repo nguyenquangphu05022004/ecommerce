@@ -5,7 +5,7 @@ import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.EntityType;
 import com.example.ecommerce.domain.User;
-import com.example.ecommerce.domain.model.modelviews.UserModelView;
+import com.example.ecommerce.domain.model.modelviews.profile.UserModelView;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IUserService;
