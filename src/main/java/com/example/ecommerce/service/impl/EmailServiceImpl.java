@@ -1,8 +1,8 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.common.enums.TokenType;
-import com.example.ecommerce.domain.Token;
-import com.example.ecommerce.domain.User;
+import com.example.ecommerce.domain.entities.auth.TokenType;
+import com.example.ecommerce.domain.entities.auth.Token;
+import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.repository.TokenRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.EmailService;

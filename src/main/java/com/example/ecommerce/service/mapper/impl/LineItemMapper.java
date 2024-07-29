@@ -1,15 +1,11 @@
 package com.example.ecommerce.service.mapper.impl;
 
-import com.example.ecommerce.domain.Coupon;
-import com.example.ecommerce.domain.Order;
-import com.example.ecommerce.domain.Stock;
-import com.example.ecommerce.domain.Vendor;
+import com.example.ecommerce.domain.entities.product.Coupon;
+import com.example.ecommerce.domain.entities.order.Order;
+import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.service.dto.LineItemDto;
-import com.example.ecommerce.service.dto.StockClassificationDto;
-import com.example.ecommerce.service.dto.StockDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.request.OrderRequest;
-import com.example.ecommerce.service.request.StockRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

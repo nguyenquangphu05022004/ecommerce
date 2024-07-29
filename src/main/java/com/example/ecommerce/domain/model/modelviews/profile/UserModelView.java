@@ -2,6 +2,8 @@ package com.example.ecommerce.domain.model.modelviews.profile;
 
 
 import com.example.ecommerce.domain.*;
+import com.example.ecommerce.domain.entities.auth.User;
+import com.example.ecommerce.domain.entities.file.EntityType;
 import com.example.ecommerce.service.mapper.ImageMapper;
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.dto;
 
-import com.example.ecommerce.domain.ChatMessage;
+import com.example.ecommerce.domain.entities.chat.ChatMessage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

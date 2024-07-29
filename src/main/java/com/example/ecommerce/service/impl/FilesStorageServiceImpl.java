@@ -1,6 +1,10 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.domain.*;
+import com.example.ecommerce.domain.entities.auth.User;
+import com.example.ecommerce.domain.entities.file.EntityType;
+import com.example.ecommerce.domain.entities.file.FileEntity;
+import com.example.ecommerce.domain.entities.product.Category;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.CategoryImageRepository;
 import com.example.ecommerce.repository.EvaluationImageRepository;
@@ -13,8 +17,6 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;

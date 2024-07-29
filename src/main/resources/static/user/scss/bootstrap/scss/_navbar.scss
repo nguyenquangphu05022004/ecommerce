@@ -1,7 +1,7 @@
 // Contents
 //
 // Navbar
-// Navbar brand
+// Navbar productBrand
 // Navbar nav
 // Navbar text
 // Responsive navbar
@@ -19,7 +19,7 @@
   display: flex;
   flex-wrap: wrap; // allow us to do the line break for collapsing content
   align-items: center;
-  justify-content: space-between; // space out brand from logo
+  justify-content: space-between; // space out productBrand from logo
   padding-top: $navbar-padding-y;
   padding-right: $navbar-padding-x; // default: null
   padding-bottom: $navbar-padding-y;
@@ -49,9 +49,9 @@
 }
 
 
-// Navbar brand
+// Navbar productBrand
 //
-// Used for brand, project, or site names.
+// Used for productBrand, project, or site names.
 
 .navbar-brand {
   padding-top: $navbar-brand-padding-y;

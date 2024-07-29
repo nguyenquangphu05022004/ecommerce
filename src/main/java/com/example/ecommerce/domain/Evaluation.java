@@ -1,5 +1,9 @@
 package com.example.ecommerce.domain;
 
+import com.example.ecommerce.domain.entities.BaseEntity;
+import com.example.ecommerce.domain.entities.auth.User;
+import com.example.ecommerce.domain.entities.file.FileEntity;
+import com.example.ecommerce.domain.entities.product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

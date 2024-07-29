@@ -1,12 +1,8 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.domain.Product;
+import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.service.ProductSortService;
-import com.example.ecommerce.service.dto.ProductDto;
-import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 public class ProductSortServiceImpl implements ProductSortService {
 

@@ -2,14 +2,12 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.ChatMessage;
-import com.example.ecommerce.domain.EntityType;
-import com.example.ecommerce.domain.Product;
+import com.example.ecommerce.domain.entities.chat.ChatMessage;
+import com.example.ecommerce.domain.entities.file.EntityType;
 import com.example.ecommerce.repository.ChatMessageRepository;
 import com.example.ecommerce.service.IChatMessageService;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.dto.ChatMessageDto;
-import com.example.ecommerce.service.dto.ProductDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.request.ChatMessageRequest;
 import com.example.ecommerce.service.response.APIListResponse;
@@ -21,8 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

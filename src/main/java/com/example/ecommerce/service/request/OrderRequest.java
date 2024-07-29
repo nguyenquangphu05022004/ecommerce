@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.request;
 
-import com.example.ecommerce.domain.Order;
+import com.example.ecommerce.domain.entities.order.Order;
 import com.example.ecommerce.domain.UserContactDetails;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

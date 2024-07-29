@@ -1,6 +1,8 @@
 package com.example.ecommerce.service.mapper.impl;
 
-import com.example.ecommerce.domain.*;
+import com.example.ecommerce.domain.entities.file.EntityType;
+import com.example.ecommerce.domain.entities.product.Category;
+import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.service.dto.*;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.mapper.ImageMapper;
@@ -15,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 @Service("stockMapper")
 @AllArgsConstructor
-public class StockMapper extends ImageMapper implements IMapper<Stock, StockRequest, StockDto> {
+public class StockMapper implements ImageMapper , IMapper<Stock, StockRequest, StockDto> {
     @Qualifier("stockClassificationMapper")
     private final IMapper<Stock.StockClassification, Object, StockClassificationDto> stockClassificationMapper;
     @Qualifier("categoryMapper")
@@ -40,7 +42,7 @@ public class StockMapper extends ImageMapper implements IMapper<Stock, StockRequ
                 .imageUrls(getImageUrl(EntityType.PRODUCT.name(), stock.getImages()))
                 .product(ProductBaseDto.builder()
                         .category(cateMapper.toDto(stock.getProduct().getCategory()))
-                        .brand(ProductMapper.brandMapper(stock.getProduct().getBrand()))
+                        .brand(ProductMapper.brandMapper(stock.getProduct().getProductBrand()))
                         .id(stock.getProduct().getId())
                         .name(stock.getProduct().getLanguage().getNameVn())
                         .description(stock.getProduct().getDescription())

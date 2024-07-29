@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.dto;
 
-import com.example.ecommerce.common.enums.Role;
+import com.example.ecommerce.domain.entities.auth.Role;
 import com.example.ecommerce.domain.UserContactDetails;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

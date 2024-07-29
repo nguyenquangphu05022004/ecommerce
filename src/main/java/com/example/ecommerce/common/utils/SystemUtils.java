@@ -9,6 +9,7 @@ public class SystemUtils {
     public static final Integer DEFAULT_PAGE = 1;
     public static final Integer LIMIT_ITEM = 9;
     public static final String TAG = "files/image";
+    public static final String SEPARATE = "@#$";
     public static String code() {
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i < 12; i++) {

@@ -1,5 +1,7 @@
-package com.example.ecommerce.domain;
+package com.example.ecommerce.domain.entities.product;
 
+import com.example.ecommerce.domain.entities.BaseEntity;
+import com.example.ecommerce.domain.entities.auth.Vendor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +18,7 @@ import java.time.LocalDateTime;
 @SuperBuilder(toBuilder = true)
 @Getter
 @Setter
-public class Coupon extends BaseEntity{
+public class Coupon extends BaseEntity {
     private int moneyDecrease;
     private LocalDateTime start;
     private LocalDateTime end;

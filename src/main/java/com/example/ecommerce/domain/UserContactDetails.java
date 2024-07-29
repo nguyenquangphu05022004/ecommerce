@@ -12,16 +12,8 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserContactDetails {
-    @Length(min = 10)
-    private String fullName;
-    @Length(min = 10)
-    private String phoneNumber;
-    @NotEmpty
     private String address;
-    @NotEmpty
     private String province;
-    @NotEmpty
     private String district;
-    @NotEmpty
     private String ward;
 }

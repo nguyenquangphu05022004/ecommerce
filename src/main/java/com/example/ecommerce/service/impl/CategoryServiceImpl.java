@@ -1,8 +1,8 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.common.utils.ValidationUtils;
-import com.example.ecommerce.domain.Category;
-import com.example.ecommerce.domain.EntityType;
+import com.example.ecommerce.domain.entities.product.Category;
+import com.example.ecommerce.domain.entities.file.EntityType;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.CategoryRepository;
 import com.example.ecommerce.service.ICategoryService;

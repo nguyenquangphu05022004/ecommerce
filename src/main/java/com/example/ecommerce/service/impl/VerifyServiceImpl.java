@@ -1,9 +1,8 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.domain.Token;
-import com.example.ecommerce.domain.User;
+import com.example.ecommerce.domain.entities.auth.Token;
+import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.repository.TokenRepository;
-import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.VerifyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

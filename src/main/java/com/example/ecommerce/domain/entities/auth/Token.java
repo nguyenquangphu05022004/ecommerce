@@ -1,6 +1,6 @@
-package com.example.ecommerce.domain;
+package com.example.ecommerce.domain.entities.auth;
 
-import com.example.ecommerce.common.enums.TokenType;
+import com.example.ecommerce.domain.entities.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

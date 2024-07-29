@@ -1,5 +1,7 @@
-package com.example.ecommerce.domain;
+package com.example.ecommerce.domain.entities.chat;
 
+import com.example.ecommerce.domain.entities.BaseEntity;
+import com.example.ecommerce.domain.entities.auth.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

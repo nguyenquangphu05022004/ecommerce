@@ -1,13 +1,10 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.Order;
+import com.example.ecommerce.domain.entities.order.Order;
 import com.example.ecommerce.domain.OrderStatus;
-import com.example.ecommerce.domain.Stock;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.handler.exception.NotFoundException;
-import com.example.ecommerce.service.dto.LineItemDto;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IOrderService;
 import com.example.ecommerce.service.dto.OrderDto;

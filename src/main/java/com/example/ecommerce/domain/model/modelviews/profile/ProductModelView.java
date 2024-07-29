@@ -1,6 +1,6 @@
 package com.example.ecommerce.domain.model.modelviews.profile;
 
-import com.example.ecommerce.domain.Product;
+import com.example.ecommerce.domain.entities.product.Product;
 import lombok.Getter;
 
 @Getter

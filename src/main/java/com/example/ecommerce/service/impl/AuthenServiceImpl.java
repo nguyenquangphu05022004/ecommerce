@@ -1,10 +1,10 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.common.enums.CustomStatusCode;
-import com.example.ecommerce.common.enums.TokenType;
+import com.example.ecommerce.domain.entities.auth.TokenType;
 import com.example.ecommerce.common.utils.ValidationUtils;
-import com.example.ecommerce.domain.Token;
-import com.example.ecommerce.domain.User;
+import com.example.ecommerce.domain.entities.auth.Token;
+import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.UserContactDetails;
 import com.example.ecommerce.handler.exception.AuthenticationFailureException;
 import com.example.ecommerce.config.jwt.JwtService;

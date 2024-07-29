@@ -1,8 +1,8 @@
 package com.example.ecommerce.service.mapper.impl;
 
 import com.example.ecommerce.common.utils.SystemUtils;
-import com.example.ecommerce.domain.ChatMessage;
-import com.example.ecommerce.domain.User;
+import com.example.ecommerce.domain.entities.chat.ChatMessage;
+import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.service.dto.ChatMessageDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.mapper.ImageMapper;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 @Service("chatMessageMapper")
-public class ChatMessageMapper extends ImageMapper implements
+public class ChatMessageMapper implements ImageMapper ,
         IMapper<ChatMessage, ChatMessageRequest, ChatMessageDto> {
     @Override
     public ChatMessage toEntity(ChatMessageRequest chatMessageRequest) {

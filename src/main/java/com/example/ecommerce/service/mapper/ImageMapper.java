@@ -1,16 +1,17 @@
 package com.example.ecommerce.service.mapper;
 
 import com.example.ecommerce.controller.FileController;
-import com.example.ecommerce.domain.FileEntity;
+import com.example.ecommerce.domain.entities.file.FileEntity;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class ImageMapper {
+public interface  ImageMapper {
 
-    public List<String> getImageUrl(
+
+    default  List<String> getImageUrl(
             String fileDownLoadUrl,
             Collection<? extends FileEntity> images
     ) {
@@ -29,7 +30,7 @@ public abstract class ImageMapper {
         }
         return urls;
     }
-    public <T extends FileEntity> String getImageUrl(
+    default  <T extends FileEntity> String getImageUrl(
             String fileDownLoadUrl,
             T image
     ) {

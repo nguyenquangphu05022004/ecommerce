@@ -1,4 +1,4 @@
-package com.example.ecommerce.domain;
+package com.example.ecommerce.domain.entities.file;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

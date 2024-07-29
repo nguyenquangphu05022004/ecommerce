@@ -1,6 +1,10 @@
 package com.example.ecommerce.service.mapper.impl;
 
 import com.example.ecommerce.domain.*;
+import com.example.ecommerce.domain.entities.auth.Vendor;
+import com.example.ecommerce.domain.entities.product.ProductBrand;
+import com.example.ecommerce.domain.entities.product.Category;
+import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.service.dto.*;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.request.*;
@@ -29,7 +33,7 @@ public class ProductMapper implements IMapper<Product, ProductRequest, ProductDt
                 .description(request.getDescription())
                 .language(new Product.Language(request.getName(), request.getNameEn()))
                 .category(Category.builder().id(request.getCategoryId()).build())
-                .brand(request.getBrandId() != null ? Brand.builder().id(request.getBrandId()).build() : null)
+                .productBrand(request.getBrandId() != null ? ProductBrand.builder().id(request.getBrandId()).build() : null)
                 .build();
         return product;
     }
@@ -44,7 +48,7 @@ public class ProductMapper implements IMapper<Product, ProductRequest, ProductDt
                 .stocks(stockMapper.toDtoList(product.getStocks()))
                 .evaluations(evaluationMapper.toDtoList(product.getEvaluations()))
                 .vendor(vendorMapper.toDto(product.getVendor()))
-                .brand(brandMapper(product.getBrand()))
+                .brand(brandMapper(product.getProductBrand()))
                 .build();
     }
 
@@ -57,11 +61,11 @@ public class ProductMapper implements IMapper<Product, ProductRequest, ProductDt
         return results;
     }
 
-    public static BrandDto brandMapper(Brand brand) {
-        if(brand == null) return null;
+    public static BrandDto brandMapper(ProductBrand productBrand) {
+        if(productBrand == null) return null;
         return BrandDto.builder()
-                .name(brand.getName())
-                .id(brand.getId())
+                .name(productBrand.getName())
+                .id(productBrand.getId())
                 .build();
     }
 }

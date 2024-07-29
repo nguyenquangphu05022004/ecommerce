@@ -1,8 +1,7 @@
 package com.example.ecommerce;
 
-import com.example.ecommerce.domain.Product;
+import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.repository.ProductRepository;
-import com.example.ecommerce.service.impl.ProductServiceImpl;
 import com.example.ecommerce.service.impl.ProductSortServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

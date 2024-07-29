@@ -1,8 +1,7 @@
 package com.example.ecommerce.service.mapper.impl;
 
-import com.example.ecommerce.common.utils.SystemUtils;
-import com.example.ecommerce.domain.Category;
-import com.example.ecommerce.domain.EntityType;
+import com.example.ecommerce.domain.entities.product.Category;
+import com.example.ecommerce.domain.entities.file.EntityType;
 import com.example.ecommerce.service.dto.CategoryDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.mapper.ImageMapper;
@@ -14,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Service(value = "categoryMapper")
-public class CategoryMapper extends ImageMapper implements
+public class CategoryMapper implements ImageMapper ,
         IMapper<Category, CategoryRequest, CategoryDto> {
     @Override
     public Category toEntity(CategoryRequest categoryRequest) {

@@ -2,8 +2,8 @@ package com.example.ecommerce.service.mapper.impl;
 
 import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.domain.Evaluation;
-import com.example.ecommerce.domain.Product;
-import com.example.ecommerce.domain.User;
+import com.example.ecommerce.domain.entities.product.Product;
+import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.service.dto.EvaluationDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.mapper.ImageMapper;
@@ -15,8 +15,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Service("evaluationMapper")
-public class EvaluationMapper extends ImageMapper
-        implements IMapper<Evaluation, EvaluationRequest, EvaluationDto> {
+public class EvaluationMapper implements ImageMapper , IMapper<Evaluation, EvaluationRequest, EvaluationDto> {
     @Override
     public Evaluation toEntity(EvaluationRequest request) {
         var evaluation = Evaluation.builder()

@@ -2,7 +2,7 @@ package com.example.ecommerce.service.mapper.impl;
 
 import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.common.utils.ValidationUtils;
-import com.example.ecommerce.domain.Vendor;
+import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.service.dto.VendorDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.request.VendorRequest;

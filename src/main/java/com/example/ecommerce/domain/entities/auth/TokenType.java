@@ -1,4 +1,4 @@
-package com.example.ecommerce.common.enums;
+package com.example.ecommerce.domain.entities.auth;
 
 public enum TokenType {
     BEARER,

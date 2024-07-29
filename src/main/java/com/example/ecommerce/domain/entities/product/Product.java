@@ -1,6 +1,9 @@
-package com.example.ecommerce.domain;
+package com.example.ecommerce.domain.entities.product;
 
-import com.example.ecommerce.repository.NotificationRepository;
+import com.example.ecommerce.domain.entities.BaseEntity;
+import com.example.ecommerce.domain.Evaluation;
+import com.example.ecommerce.domain.entities.auth.Vendor;
+import com.example.ecommerce.domain.entities.file.ProductImage;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "products")
@@ -17,36 +21,40 @@ import java.util.List;
 @Getter
 @Setter
 @SuperBuilder(toBuilder = true)
-public class Product extends BaseEntity implements Observer{
+public class Product extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "language_id")
     private Language language;
+
+    private int price;
+
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
     @ManyToOne(cascade = CascadeType.ALL)
+
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
+
     @Column(columnDefinition = "text")
     private String description;
+
     @OneToMany(mappedBy = "product")
     private List<Evaluation> evaluations = new ArrayList<>();
-    @OneToMany(mappedBy = "product")
-    private List<Stock> stocks = new ArrayList<>();
+
     @ManyToOne
     @JoinColumn(name = "brand_id")
-    private Brand brand;
+    private ProductBrand productBrand;
 
-    @Override
-    @Transient
-    public void notify(NotificationRepository notificationRepository) {
-        Notification notification = Notification.builder()
-                .message(String.format("A product was created by shop %s, maybe you like that", this.vendor.getShopName()))
-                .entityId(getId())
-                .type(EntityType.PRODUCT)
-                .build();
-        notificationRepository.save(notification);
-    }
+    private boolean combination;
+
+    @OneToMany
+    @JoinColumn(name = "product_inventory_id")
+    private Set<ProductInventory> productInventory;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductImage> images;
+
     @Entity
     @Table(name = "languages")
     @Getter

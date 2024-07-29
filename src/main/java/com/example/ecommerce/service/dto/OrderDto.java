@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.dto;
 
-import com.example.ecommerce.domain.Order;
+import com.example.ecommerce.domain.entities.order.Order;
 import com.example.ecommerce.domain.OrderStatus;
 import com.example.ecommerce.domain.UserContactDetails;
 import com.fasterxml.jackson.annotation.JsonInclude;

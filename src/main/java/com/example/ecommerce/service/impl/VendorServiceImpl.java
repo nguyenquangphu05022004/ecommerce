@@ -1,12 +1,12 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.common.enums.CustomStatusCode;
-import com.example.ecommerce.common.enums.Role;
+import com.example.ecommerce.domain.entities.auth.Role;
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.Coupon;
-import com.example.ecommerce.domain.User;
-import com.example.ecommerce.domain.Vendor;
+import com.example.ecommerce.domain.entities.product.Coupon;
+import com.example.ecommerce.domain.entities.auth.User;
+import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.handler.exception.CodeExpiredException;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.handler.exception.NotFoundException;

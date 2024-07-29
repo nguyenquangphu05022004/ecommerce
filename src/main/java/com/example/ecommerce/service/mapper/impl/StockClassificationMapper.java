@@ -1,6 +1,5 @@
 package com.example.ecommerce.service.mapper.impl;
 
-import com.example.ecommerce.domain.Stock;
 import com.example.ecommerce.service.dto.StockClassificationDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import org.springframework.stereotype.Service;

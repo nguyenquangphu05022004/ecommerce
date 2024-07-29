@@ -1,8 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.common.utils.ValidationUtils;
-import com.example.ecommerce.domain.EntityType;
-import com.example.ecommerce.domain.Stock;
+import com.example.ecommerce.domain.entities.file.EntityType;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.StockClassificationRepository;
 import com.example.ecommerce.repository.StockRepository;

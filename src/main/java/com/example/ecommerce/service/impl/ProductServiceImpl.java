@@ -3,8 +3,8 @@ package com.example.ecommerce.service.impl;
 import com.example.ecommerce.common.enums.CustomStatusCode;
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.Product;
-import com.example.ecommerce.domain.Vendor;
+import com.example.ecommerce.domain.entities.product.Product;
+import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.NotificationRepository;
 import com.example.ecommerce.repository.ProductRepository;
@@ -138,7 +138,7 @@ public class ProductServiceImpl implements IProductService {
                     } else if (pair.getKey().startsWith(KeySearchRequest.CATEGORY_CHILDREN_ID.name())) {
                         predicatesOfChildrenCategory.add(criteriaBuilder.equal(root.join("category").get("id"), pair.getValue()));
                     } else if (pair.getKey().startsWith(KeySearchRequest.BRAND_ID.name())) {
-                        predicates.add(criteriaBuilder.equal(root.join("brand").get("id"), pair.getValue()));
+                        predicates.add(criteriaBuilder.equal(root.join("productBrand").get("id"), pair.getValue()));
                     } else if (pair.getKey().startsWith(KeySearchRequest.PRICE.name())) {
                         String words[] = pair.getValue().split(";");
                         int x1 = Integer.parseInt(words[0]);

@@ -1,7 +1,7 @@
 package com.example.ecommerce.config;
 
-import com.example.ecommerce.common.enums.Permission;
-import com.example.ecommerce.common.enums.Role;
+import com.example.ecommerce.domain.entities.auth.Permission;
+import com.example.ecommerce.domain.entities.auth.Role;
 import com.example.ecommerce.config.jwt.JwtAuthentication;
 import com.example.ecommerce.config.jwt.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;

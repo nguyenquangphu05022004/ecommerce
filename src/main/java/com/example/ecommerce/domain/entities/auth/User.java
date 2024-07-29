@@ -1,6 +1,10 @@
-package com.example.ecommerce.domain;
+package com.example.ecommerce.domain.entities.auth;
 
-import com.example.ecommerce.common.enums.Role;
+import com.example.ecommerce.domain.*;
+import com.example.ecommerce.domain.entities.BaseEntity;
+import com.example.ecommerce.domain.entities.chat.Conversation;
+import com.example.ecommerce.domain.entities.file.FileEntity;
+import com.example.ecommerce.domain.entities.order.Order;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,13 +23,15 @@ import java.util.*;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class User extends BaseEntity implements UserDetails {
-    @Column(length = 30, unique = true)
+
+    private String fullName;
+
     private String username;
 
     private String password;
 
-    @Column(length = 50, unique = true)
-    private String email;
+    private UserType userType;
+    private Long userTypeId;
 
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
     private UserImage userImage;

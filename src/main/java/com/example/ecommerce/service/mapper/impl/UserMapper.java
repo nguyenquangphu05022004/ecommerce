@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.mapper.impl;
 
-import com.example.ecommerce.domain.User;
+import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.service.dto.UserDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.request.RegisterRequest;
