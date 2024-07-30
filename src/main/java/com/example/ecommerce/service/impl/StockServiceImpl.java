@@ -6,7 +6,6 @@ import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.StockClassificationRepository;
 import com.example.ecommerce.repository.StockRepository;
 import com.example.ecommerce.service.IFilesStorageService;
-import com.example.ecommerce.service.IStockService;
 import com.example.ecommerce.service.dto.StockClassificationDto;
 import com.example.ecommerce.service.dto.StockDto;
 import com.example.ecommerce.service.mapper.IMapper;

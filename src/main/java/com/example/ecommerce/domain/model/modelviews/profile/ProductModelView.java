@@ -8,7 +8,7 @@ public class ProductModelView {
     private Long id;
     private String name;
 
-    protected ProductModelView(Product p) {
+    public ProductModelView(Product p) {
         this.id = p.getId();
         this.name = p.getLanguage().getNameVn();
     }

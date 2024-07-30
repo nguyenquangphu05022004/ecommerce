@@ -1,7 +1,6 @@
 package com.example.ecommerce.domain.entities.product;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
-import com.example.ecommerce.domain.entities.SlugLink;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -15,6 +14,6 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "products_attribute")
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class ProductAttribute extends BaseEntity implements SlugLink {
+public class ProductAttribute extends BaseEntity{
     private String name;
 }

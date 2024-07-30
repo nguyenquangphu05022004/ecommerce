@@ -1,10 +1,10 @@
 package com.example.ecommerce.domain.entities.auth;
 
-import com.example.ecommerce.domain.*;
 import com.example.ecommerce.domain.entities.BaseEntity;
+import com.example.ecommerce.domain.entities.Evaluation;
+import com.example.ecommerce.domain.entities.Notification;
 import com.example.ecommerce.domain.entities.chat.Conversation;
 import com.example.ecommerce.domain.entities.file.FileEntity;
-import com.example.ecommerce.domain.entities.order.Order;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +26,7 @@ public class User extends BaseEntity implements UserDetails {
 
     private String fullName;
 
-    private String username;
+    private String username; //email
 
     private String password;
 
@@ -39,9 +39,6 @@ public class User extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Embedded
-    private UserContactDetails userContactDetails;
-
     @OneToMany(mappedBy = "user")
     private List<Evaluation> evaluations = new ArrayList<>();
 
@@ -53,9 +50,6 @@ public class User extends BaseEntity implements UserDetails {
 
     @ManyToMany(mappedBy = "users")
     private Set<Vendor> vendors;
-
-    @OneToMany(mappedBy = "user")
-    private Set<Order> orders;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,15 +1,18 @@
 package com.example.ecommerce.domain.entities.product;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
-import com.example.ecommerce.domain.Evaluation;
+import com.example.ecommerce.domain.entities.Evaluation;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.file.ProductImage;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +64,13 @@ public class Product extends BaseEntity {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Language extends BaseEntity {
+        @NotNull
+        @NotEmpty
+        @Length(min = 6)
         private String nameVn;
+        @NotNull
+        @NotEmpty
+        @Length(min = 6)
         private String nameEn;
     }
 

@@ -4,7 +4,7 @@ import com.example.ecommerce.common.enums.CustomStatusCode;
 import com.example.ecommerce.domain.entities.auth.Role;
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.entities.product.Coupon;
+import com.example.ecommerce.domain.entities.order.Coupon;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.handler.exception.CodeExpiredException;

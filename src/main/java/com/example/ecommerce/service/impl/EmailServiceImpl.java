@@ -27,7 +27,7 @@ public class EmailServiceImpl implements EmailService {
 
     public String sendSimpleMail(EmailDetails details) {
         try {
-            Optional<User> userOptional = userRepository.findByEmail(details.getRecipient());
+            Optional<User> userOptional = userRepository.findByUsernameIgnoreCase(details.getRecipient());
             if(userOptional.isEmpty()) return String.format("Email: %s.\n Không tồn tại trong hệ thống.", details.getRecipient());
             saveDataVerify(details, userOptional.get());
             details.setUsername(userOptional.get().getUsername());

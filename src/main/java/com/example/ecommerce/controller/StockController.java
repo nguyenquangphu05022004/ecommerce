@@ -1,7 +1,6 @@
 package com.example.ecommerce.controller;
 
 
-import com.example.ecommerce.service.IStockService;
 import com.example.ecommerce.service.dto.StockDto;
 import com.example.ecommerce.service.request.StockRequest;
 import com.example.ecommerce.service.response.OperationResponse;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor

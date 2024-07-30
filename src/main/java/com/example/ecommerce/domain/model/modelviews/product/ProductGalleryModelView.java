@@ -1,19 +1,17 @@
 package com.example.ecommerce.domain.model.modelviews.product;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
-import com.example.ecommerce.domain.entities.SlugLink;
 import com.example.ecommerce.domain.entities.file.EntityType;
 import com.example.ecommerce.domain.entities.product.Category;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductBrand;
 import com.example.ecommerce.service.mapper.ImageMapper;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductGalleryModelView extends BaseEntity implements SlugLink , ImageMapper {
+public class ProductGalleryModelView extends BaseEntity  implements ImageMapper {
     private String name;
     private int price;
     private String description;

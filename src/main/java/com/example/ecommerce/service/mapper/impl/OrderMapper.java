@@ -1,7 +1,7 @@
 package com.example.ecommerce.service.mapper.impl;
 
 import com.example.ecommerce.domain.entities.order.Order;
-import com.example.ecommerce.domain.OrderStatus;
+import com.example.ecommerce.domain.entities.order.OrderStatus;
 import com.example.ecommerce.service.dto.LineItemDto;
 import com.example.ecommerce.service.dto.OrderDto;
 import com.example.ecommerce.service.mapper.IMapper;

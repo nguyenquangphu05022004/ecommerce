@@ -1,7 +1,6 @@
 package com.example.ecommerce.domain.entities.product;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
-import com.example.ecommerce.domain.entities.SlugLink;
 import com.example.ecommerce.domain.entities.file.CategoryImage;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,9 +16,10 @@ import java.util.Set;
 @Getter
 @Setter
 @SuperBuilder(toBuilder = true)
-public class Category extends BaseEntity implements SlugLink {
+public class Category extends BaseEntity  {
     @Column(nullable = false, length = 100)
     private String name;
+    private String slug;
     @OneToOne(mappedBy = "category",
             cascade = CascadeType.ALL,
             orphanRemoval = true)

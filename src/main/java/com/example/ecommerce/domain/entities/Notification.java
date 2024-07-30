@@ -1,4 +1,4 @@
-package com.example.ecommerce.domain;
+package com.example.ecommerce.domain.entities;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
 import com.example.ecommerce.domain.entities.file.EntityType;

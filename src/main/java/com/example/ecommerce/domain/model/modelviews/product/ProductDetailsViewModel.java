@@ -1,7 +1,7 @@
 package com.example.ecommerce.domain.model.modelviews.product;
 
 import com.example.ecommerce.common.utils.SystemUtils;
-import com.example.ecommerce.domain.Evaluation;
+import com.example.ecommerce.domain.entities.Evaluation;
 import com.example.ecommerce.domain.entities.file.EntityType;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductInventory;

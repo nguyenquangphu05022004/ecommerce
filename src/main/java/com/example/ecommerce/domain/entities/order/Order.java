@@ -1,9 +1,7 @@
 package com.example.ecommerce.domain.entities.order;
 
-import com.example.ecommerce.domain.OrderStatus;
-import com.example.ecommerce.domain.UserContactDetails;
 import com.example.ecommerce.domain.entities.BaseEntity;
-import com.example.ecommerce.domain.entities.auth.User;
+import com.example.ecommerce.domain.entities.auth.Customer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,10 +19,8 @@ import java.util.Set;
 public class Order extends BaseEntity{
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-    @Embedded
-    private UserContactDetails userContactDetails;
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     @OneToMany(mappedBy = "order")
     private Set<LineItem> lineItems;

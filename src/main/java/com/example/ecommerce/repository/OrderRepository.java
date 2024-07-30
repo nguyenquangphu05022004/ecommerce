@@ -1,7 +1,7 @@
 package com.example.ecommerce.repository;
 
 import com.example.ecommerce.domain.entities.order.Order;
-import com.example.ecommerce.domain.OrderStatus;
+import com.example.ecommerce.domain.entities.order.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

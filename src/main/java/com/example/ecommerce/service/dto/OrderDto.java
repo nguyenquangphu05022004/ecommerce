@@ -1,8 +1,8 @@
 package com.example.ecommerce.service.dto;
 
 import com.example.ecommerce.domain.entities.order.Order;
-import com.example.ecommerce.domain.OrderStatus;
-import com.example.ecommerce.domain.UserContactDetails;
+import com.example.ecommerce.domain.entities.order.OrderStatus;
+import com.example.ecommerce.domain.entities.auth.UserContactDetails;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

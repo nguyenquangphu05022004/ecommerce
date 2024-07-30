@@ -1,7 +1,7 @@
 package com.example.ecommerce.service.dto;
 
 import com.example.ecommerce.domain.entities.auth.Role;
-import com.example.ecommerce.domain.UserContactDetails;
+import com.example.ecommerce.domain.entities.auth.UserContactDetails;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;

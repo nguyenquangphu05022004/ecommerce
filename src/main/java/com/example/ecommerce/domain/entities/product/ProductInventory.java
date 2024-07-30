@@ -21,5 +21,4 @@ public class ProductInventory extends BaseEntity {
     @JoinColumn(name = "product_id")
     private Product product;
     private String skuCode;
-
 }

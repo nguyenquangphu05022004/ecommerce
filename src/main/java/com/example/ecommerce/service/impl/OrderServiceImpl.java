@@ -2,7 +2,7 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.order.Order;
-import com.example.ecommerce.domain.OrderStatus;
+import com.example.ecommerce.domain.entities.order.OrderStatus;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.handler.exception.NotFoundException;
 import com.example.ecommerce.repository.*;

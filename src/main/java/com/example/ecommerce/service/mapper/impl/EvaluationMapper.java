@@ -1,7 +1,7 @@
 package com.example.ecommerce.service.mapper.impl;
 
 import com.example.ecommerce.common.utils.SystemUtils;
-import com.example.ecommerce.domain.Evaluation;
+import com.example.ecommerce.domain.entities.Evaluation;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.service.dto.EvaluationDto;

@@ -1,6 +1,5 @@
-package com.example.ecommerce.domain;
+package com.example.ecommerce.domain.entities;
 
-import com.example.ecommerce.domain.entities.BaseEntity;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.file.FileEntity;
 import com.example.ecommerce.domain.entities.product.Product;

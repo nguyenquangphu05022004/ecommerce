@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.mapper.impl;
 
-import com.example.ecommerce.domain.*;
+import com.example.ecommerce.domain.entities.Evaluation;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.product.ProductBrand;
 import com.example.ecommerce.domain.entities.product.Category;

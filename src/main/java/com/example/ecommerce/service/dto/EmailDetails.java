@@ -11,10 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 // Class
 public class EmailDetails {
-    private String username;
     private String recipient;
-    private String linkVerify;
     private String subject;
-    private String attachment;
     private String code;
 }

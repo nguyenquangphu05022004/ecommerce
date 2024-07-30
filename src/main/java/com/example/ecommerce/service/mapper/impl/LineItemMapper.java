@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.mapper.impl;
 
-import com.example.ecommerce.domain.entities.product.Coupon;
+import com.example.ecommerce.domain.entities.order.Coupon;
 import com.example.ecommerce.domain.entities.order.Order;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.service.dto.LineItemDto;

@@ -1,7 +1,6 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.OrderStatus;
+import com.example.ecommerce.domain.entities.order.OrderStatus;
 import com.example.ecommerce.service.IOrderService;
 import com.example.ecommerce.service.dto.OrderDto;
 import com.example.ecommerce.service.request.OrderRequest;

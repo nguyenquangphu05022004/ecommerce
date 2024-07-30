@@ -5,5 +5,6 @@ public enum KeySearchRequest {
     CATEGORY_PARENT_ID,
     CATEGORY_CHILDREN_ID,
     BRAND_ID,
-    PRICE
+    PRICE,
+    VENDOR_ID
 }

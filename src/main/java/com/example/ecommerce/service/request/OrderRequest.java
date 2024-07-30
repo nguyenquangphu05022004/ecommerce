@@ -1,7 +1,7 @@
 package com.example.ecommerce.service.request;
 
 import com.example.ecommerce.domain.entities.order.Order;
-import com.example.ecommerce.domain.UserContactDetails;
+import com.example.ecommerce.domain.entities.auth.UserContactDetails;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

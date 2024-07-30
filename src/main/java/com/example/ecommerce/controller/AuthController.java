@@ -2,9 +2,9 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.service.IAuthenService;
 import com.example.ecommerce.service.request.AuthenRequest;
+import com.example.ecommerce.service.request.ForgetPasswordRequest;
+import com.example.ecommerce.service.request.PasswordChangeRequest;
 import com.example.ecommerce.service.request.RegisterRequest;
-import com.example.ecommerce.service.response.APIResponse;
-import com.example.ecommerce.service.response.AuthenResponse;
 import com.example.ecommerce.service.response.OperationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +22,7 @@ public class AuthController {
     public ResponseEntity<?> authenticate(
             @RequestBody AuthenRequest authenRequest
     ) {
-        APIResponse<?> apiResponse = authenService.authenticate(authenRequest);
-        return ResponseEntity.ok( apiResponse);
+        return ResponseEntity.ok(authenService.authenticate(authenRequest));
     }
 
     @PostMapping({"/register", "/sign-up"})
@@ -34,6 +33,29 @@ public class AuthController {
         return ResponseEntity.ok(operationResponse);
     }
 
+    @PostMapping("/forget-password")
+    public OperationResponse forgetPassword(@RequestParam("username") String username) {
+        return authenService.forgetPassword(username);
+    }
+
+    @PostMapping("/forget-password-verify-code")
+    public OperationResponse forgetPasswordVerifyCode(@RequestParam("code") String code) {
+        return authenService.forgetPasswordVerifyCode(code);
+    }
+
+    @PostMapping("/forget-password/generation")
+    public OperationResponse forgetPasswordGeneration(
+            @RequestBody ForgetPasswordRequest request
+            ) {
+        return authenService.forgetPasswordGeneration(request);
+    }
+
+    @PostMapping("/password")
+    public OperationResponse changePassword(
+            @RequestBody PasswordChangeRequest request
+    ) {
+        return authenService.changePassword(request);
+    }
 
 
 }

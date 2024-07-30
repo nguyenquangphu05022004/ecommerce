@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.domain.*;
+import com.example.ecommerce.domain.entities.Evaluation;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.file.EntityType;
 import com.example.ecommerce.domain.entities.file.FileEntity;

@@ -1,4 +1,4 @@
-package com.example.ecommerce.domain.entities.product;
+package com.example.ecommerce.domain.entities.order;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
 import com.example.ecommerce.domain.entities.auth.Vendor;
