@@ -22,6 +22,7 @@ public class UserController {
         return ResponseEntity.ok("A user was created");
     }
 
+
     @PostMapping("/avatar")
     public ResponseEntity<?> uploadUserAvatar(@RequestParam("file")MultipartFile file) {
         userService.uploadImage(file);

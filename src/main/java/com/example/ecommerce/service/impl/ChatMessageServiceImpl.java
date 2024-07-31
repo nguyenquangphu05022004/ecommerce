@@ -3,79 +3,92 @@ package com.example.ecommerce.service.impl;
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.chat.ChatMessage;
+import com.example.ecommerce.domain.entities.chat.ChatMessageImage;
+import com.example.ecommerce.domain.entities.chat.ChatMessageType;
 import com.example.ecommerce.domain.entities.file.EntityType;
+import com.example.ecommerce.domain.entities.file.FileEntity;
+import com.example.ecommerce.domain.model.binding.ChatMessageRequest;
+import com.example.ecommerce.domain.model.modelviews.messages.ChatMessageViewModel;
 import com.example.ecommerce.repository.ChatMessageRepository;
 import com.example.ecommerce.service.IChatMessageService;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.dto.ChatMessageDto;
 import com.example.ecommerce.service.mapper.IMapper;
-import com.example.ecommerce.service.request.ChatMessageRequest;
 import com.example.ecommerce.service.response.APIListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.example.ecommerce.domain.entities.chat.ChatMessageType.GROUP;
+import static com.example.ecommerce.domain.entities.file.EntityType.CHAT_MESSAGE;
 
 @Service
 @RequiredArgsConstructor
 public class ChatMessageServiceImpl implements IChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
-    private final SimpMessagingTemplate messageTemplate;
+    private final SimpMessagingTemplate template;
     private final IFilesStorageService filesStorageService;
-    @Qualifier("chatMessageMapper")
-    private final IMapper<ChatMessage, ChatMessageRequest, ChatMessageDto> mapper;
 
     @Override
-    @Transactional
-    public ChatMessageDto createMessage(ChatMessageRequest request) {
-        ValidationUtils.fieldCheckNullOrEmpty(request.getContent(), "Content");
-        ValidationUtils.fieldCheckNullOrEmpty(request.getDestinationId(), "DestinationId");
-        ValidationUtils.fieldCheckNullOrEmpty(String.valueOf(request.getChatMessageDestination()), "chatMessageDestination");
-        ChatMessage chatMessage = mapper.toEntity(request);
+    public ChatMessageViewModel createMessage(ChatMessageRequest request) {
+        ChatMessage chatMessage = ChatMessage.builder()
+                .chatMessageType(request.getChatMessageType())
+                .content(request.getContent())
+                .toDestinationId(request.getToDestinationId())
+                .fromUserId(request.getFromUserId())
+                .build();
         ChatMessage saved = chatMessageRepository.save(chatMessage);
-        ChatMessage chat = saved;
-        if (request.getFileImages() != null) {
-            request.getFileImages().forEach(file -> filesStorageService.saveFile(file, saved.getId(), EntityType.CHAT_MESSAGE));
-            chat = chatMessageRepository.findById(saved.getId()).get();
+        List<ChatMessageImage> images = request.getFiles().stream()
+                .map((file) -> {
+                    FileEntity fileEntity = filesStorageService.saveFile(file, saved.getId(), CHAT_MESSAGE);
+                    if (fileEntity != null) {
+                        return (ChatMessageImage) fileEntity;
+                    }
+                    return null;
+                })
+                .filter((messageImage) -> messageImage != null)
+                .collect(Collectors.toList());
+        saved.setImages(images);
+        ChatMessageViewModel chatMessageViewModel = new ChatMessageViewModel(saved);
+        if(saved.getChatMessageType().equals(GROUP)) {
+            template.convertAndSend(String.format("/topic/public/group/%s/message", saved.getToDestinationId()), chatMessageViewModel);
+            return null;
+        } else {
+            template.convertAndSendToUser(saved.getToDestinationId() + "", "/user/private/message", chatMessageViewModel);
+            return chatMessageViewModel;
         }
-        ChatMessageDto response = mapper.toDto(chat);
-        if (chatMessage.getChatMessageDestination() == ChatMessage.ChatMessageDestination.USER) {
-            messageTemplate.convertAndSendToUser(String.valueOf(request.getDestinationId()), "/topic/private-message", response);
-            return response;
-        }
-        messageTemplate.convertAndSend("/topic/group-message/" + request.getDestinationId(), response);
-        return null;
     }
 
     @Override
-    public APIListResponse<?> getListMessageByDestination(
-            ChatMessageRequest request,
-            int page,
-            int limit
-    ) {
-        ValidationUtils.fieldCheckNullOrEmpty(request.getDestinationId(), "DestinationId");
-        ValidationUtils.fieldCheckNullOrEmpty(String.valueOf(request.getChatMessageDestination()), "chatMessageDestination");
-        Page<ChatMessage> pageMessages = chatMessageRepository
-                .findAllByUserUsernameAndDestinationIdAndChatMessageDestination(
-                        SecurityUtils.username(),
-                        request.getDestinationId(),
-                        request.getChatMessageDestination(),
-                        PageRequest.of(page, limit)
-                );
+    public APIListResponse<ChatMessageViewModel> getMessages(ChatMessageRequest request,
+                                                             int page, int limit) {
+        Page<ChatMessage> pages = chatMessageRepository.findAllByFromUserIdAndToDestinationIdAndChatMessageType(
+                request.getFromUserId(),
+                request.getToDestinationId(),
+                request.getChatMessageType(),
+                PageRequest.of(page - 1, limit, Sort.by("modifiedDate").descending())
+        );
         return new APIListResponse<>(
                 "ok",
                 "",
                 1,
-                HttpStatus.OK.name(),
+                HttpStatus.OK.value(),
                 page,
                 limit,
-                pageMessages.getTotalPages(),
-                mapper.toDtoList(pageMessages.getContent()));
+                pages.getTotalPages(),
+                pages.getContent().stream().map(ChatMessageViewModel::new).toList()
+        );
     }
 }
 

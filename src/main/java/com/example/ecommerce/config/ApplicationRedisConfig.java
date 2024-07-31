@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 
 @Configuration
 @EnableRedisRepositories
-public class RedisConfig {
+public class ApplicationRedisConfig {
     @Value("${spring.data.redis.port}")
     private int port;
     @Value("${spring.data.redis.host}")

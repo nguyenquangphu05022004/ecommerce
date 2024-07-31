@@ -1,8 +1,9 @@
 package com.example.ecommerce.controller;
 
+
+import com.example.ecommerce.domain.model.binding.ChatMessageRequest;
+import com.example.ecommerce.domain.model.modelviews.messages.ChatMessageViewModel;
 import com.example.ecommerce.service.IChatMessageService;
-import com.example.ecommerce.service.dto.ChatMessageDto;
-import com.example.ecommerce.service.request.ChatMessageRequest;
 import com.example.ecommerce.service.response.OperationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,17 +24,15 @@ public class ChatController {
             @RequestPart("request") ChatMessageRequest request,
             @RequestPart(value = "files", required = false) List<MultipartFile> files
     ) {
-        request.setFileImages(files);
-        ChatMessageDto response = chatMessageService.createMessage(request);
-        if (response == null) {
-            return ResponseEntity.ok(
-                    OperationResponse.builder()
-                            .success(true)
-                            .message(String.format("A message is sent into group with id %s", response.getDestinationId()))
-                            .build()
-            );
+        request.setFiles(files);
+        ChatMessageViewModel message = chatMessageService.createMessage(request);
+        if(message == null) {
+            return ResponseEntity.ok(new OperationResponse(
+                    true,
+                    "send message to group"
+            ));
         }
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(message);
     }
 
     @GetMapping("/messages")
@@ -42,7 +41,7 @@ public class ChatController {
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "limit", defaultValue = "30") int limit
     ) {
-        return ResponseEntity.ok(chatMessageService.getListMessageByDestination(request, page, limit));
+        return ResponseEntity.ok(chatMessageService.getMessages(request, page, limit));
     }
 
 }

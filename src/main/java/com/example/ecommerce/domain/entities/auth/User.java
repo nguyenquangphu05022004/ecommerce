@@ -51,6 +51,8 @@ public class User extends BaseEntity implements UserDetails {
     @ManyToMany(mappedBy = "users")
     private Set<Vendor> vendors;
 
+    private boolean isOnline;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getGrantedAuthorities();

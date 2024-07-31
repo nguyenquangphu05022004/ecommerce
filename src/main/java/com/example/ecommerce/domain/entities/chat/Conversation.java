@@ -24,6 +24,4 @@ public class Conversation extends BaseEntity {
     @JoinTable(name = "conversation_user", joinColumns = @JoinColumn(name = "conversation_id"),
     inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users = new ArrayList<>();
-    @OneToMany(mappedBy = "conversation")
-    private List<ChatMessage> chatMessages = new ArrayList<>();
 }

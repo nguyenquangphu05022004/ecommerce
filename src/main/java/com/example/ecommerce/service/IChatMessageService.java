@@ -1,15 +1,16 @@
 package com.example.ecommerce.service;
 
 
-import com.example.ecommerce.service.dto.ChatMessageDto;
-import com.example.ecommerce.service.request.ChatMessageRequest;
+import com.example.ecommerce.domain.model.binding.ChatMessageRequest;
+import com.example.ecommerce.domain.model.modelviews.messages.ChatMessageViewModel;
 import com.example.ecommerce.service.response.APIListResponse;
 
 import java.util.List;
 
 public interface IChatMessageService {
 
-    ChatMessageDto createMessage(ChatMessageRequest request);
+    ChatMessageViewModel createMessage(ChatMessageRequest request);
 
-    APIListResponse<?> getListMessageByDestination(ChatMessageRequest request, int page, int limit);
+    APIListResponse<ChatMessageViewModel> getMessages(ChatMessageRequest request,
+                                                      int page, int limit);
 }

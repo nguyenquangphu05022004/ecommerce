@@ -12,7 +12,7 @@ public class APIListResponse <T>{
     private String message;
     private String error;
     private int ok;
-    private String status;
+    private int status;
     private int page;
     private int limit;
     private int totalPage;
