@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum EntityType {
+public enum FileEntityType {
     PRODUCT("product"),
     EVALUATION("evaluation"),
     CATEGORY("category"),

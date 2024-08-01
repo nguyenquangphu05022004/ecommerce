@@ -2,7 +2,7 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.domain.entities.product.Category;
-import com.example.ecommerce.domain.entities.file.EntityType;
+import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.CategoryRepository;
 import com.example.ecommerce.service.ICategoryService;
@@ -56,6 +56,6 @@ public class CategoryServiceImpl implements ICategoryService {
             category = mapper.toEntity(request, oldCate);
         }
         categoryRepository.save(category);
-        filesStorageService.saveFile(request.getFile(), category.getId(), EntityType.CATEGORY);
+        filesStorageService.saveFile(request.getFile(), category.getId(), FileEntityType.CATEGORY);
     }
 }

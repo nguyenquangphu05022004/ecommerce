@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.mapper.impl;
 
-import com.example.ecommerce.domain.entities.file.EntityType;
+import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.domain.entities.product.Category;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.service.dto.*;
@@ -39,7 +39,7 @@ public class StockMapper implements ImageMapper , IMapper<Stock, StockRequest, S
                 .price(stock.getPrice())
                 .code(stock.getCode())
                 .color(stock.getColor())
-                .imageUrls(getImageUrl(EntityType.PRODUCT.name(), stock.getImages()))
+                .imageUrls(getImageUrl(FileEntityType.PRODUCT.name(), stock.getImages()))
                 .product(ProductBaseDto.builder()
                         .category(cateMapper.toDto(stock.getProduct().getCategory()))
                         .brand(ProductMapper.brandMapper(stock.getProduct().getProductBrand()))

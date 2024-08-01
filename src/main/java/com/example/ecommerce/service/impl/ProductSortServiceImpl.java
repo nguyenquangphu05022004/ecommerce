@@ -8,7 +8,7 @@ public class ProductSortServiceImpl implements ProductSortService {
 
     @Override
     public List<Product> sortByPrice(List<Product> products) {
-        return products.stream().sorted((p1, p2) -> p2.getStocks().get(0).getPrice() - p1.getStocks().get(0).getPrice())
+        return products.stream().sorted((p1, p2) -> p2.getPrice() - p1.getPrice())
                 .toList();
     }
 

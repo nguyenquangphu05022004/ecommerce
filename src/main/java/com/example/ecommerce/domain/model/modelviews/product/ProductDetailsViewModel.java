@@ -2,7 +2,7 @@ package com.example.ecommerce.domain.model.modelviews.product;
 
 import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.domain.entities.Evaluation;
-import com.example.ecommerce.domain.entities.file.EntityType;
+import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class ProductDetailsViewModel extends ProductGalleryModelView {
         super(product);
         this.evaluations = product.getEvaluations();
         this.attributeMaps = extractAttributeKey(product.getProductInventory());
-        this.imageUrls = getImageUrl(EntityType.PRODUCT.name(), product.getImages());
+        this.imageUrls = getImageUrl(FileEntityType.PRODUCT.name(), product.getImages());
     }
 
     private Map<String, List<String>> extractAttributeKey(

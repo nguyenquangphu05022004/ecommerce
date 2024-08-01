@@ -1,30 +1,27 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.common.enums.CustomStatusCode;
-import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.product.Category;
 import com.example.ecommerce.domain.entities.product.Product;
-import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.product.ProductBrand;
+import com.example.ecommerce.domain.entities.product.ProductInventory;
+import com.example.ecommerce.domain.model.binding.InventoryRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductGalleryModelView;
+import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
 import com.example.ecommerce.handler.exception.GeneralException;
+import com.example.ecommerce.repository.InventoryRepository;
 import com.example.ecommerce.repository.NotificationRepository;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IProductService;
-import com.example.ecommerce.service.dto.ProductDto;
-import com.example.ecommerce.service.dto.SortProductType;
-import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.request.FilterInputRequestProduct;
 import com.example.ecommerce.service.request.KeySearchRequest;
 import com.example.ecommerce.service.response.APIListResponse;
-import com.example.ecommerce.service.response.APIResponse;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -35,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +39,7 @@ import java.util.Optional;
 public class ProductServiceImpl implements IProductService {
 
     private final ProductRepository productRepository;
+    private final InventoryRepository inventoryRepository;
     private final VendorRepository vendorRepository;
     private final NotificationRepository notificationRepository;
 
@@ -132,6 +129,20 @@ public class ProductServiceImpl implements IProductService {
         return responseAPI(pageProducts, products);
     }
 
+    @Override
+    public ProductInventoryModelView getInventory(InventoryRequest request) {
+        ProductInventory inventory = inventoryRepository
+                .findByProductIdAndAttributeCombinationKey(
+                        request.getProductId(),
+                        request.getAttributeCombinationKey())
+                .orElseThrow(() -> new GeneralException(
+                        String.format("Key %s of product %s not found",
+                                request.getAttributeCombinationKey(),
+                                request.getProductId())
+                ));
+        return new ProductInventoryModelView(inventory);
+    }
+
     private APIListResponse<ProductGalleryModelView> responseAPI(
             Page<Product> page,
             List<Product> products
@@ -140,7 +151,7 @@ public class ProductServiceImpl implements IProductService {
                 "ok",
                 "",
                 1,
-                HttpStatus.OK.name(),
+                HttpStatus.OK.value(),
                 page.getNumber(),
                 page.getSize(),
                 page.getTotalPages(),

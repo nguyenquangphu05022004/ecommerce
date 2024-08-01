@@ -32,5 +32,6 @@ public class Vendor extends BaseEntity {
     @JoinTable(name = "favorite_vendor", joinColumns = @JoinColumn(name = "vendor_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users;
+    public Vendor(Long id) {super(id);}
 
 }

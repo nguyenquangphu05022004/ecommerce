@@ -1,7 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.common.utils.ValidationUtils;
-import com.example.ecommerce.domain.entities.file.EntityType;
+import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.domain.entities.Evaluation;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.EvaluationRepository;
@@ -42,7 +42,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
                 .forEach(file -> filesStorageService.saveFile(
                         file,
                         saved.getId(),
-                        EntityType.EVALUATION
+                        FileEntityType.EVALUATION
                 ));
     }
 

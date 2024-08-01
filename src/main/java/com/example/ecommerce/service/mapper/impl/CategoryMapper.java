@@ -1,7 +1,7 @@
 package com.example.ecommerce.service.mapper.impl;
 
 import com.example.ecommerce.domain.entities.product.Category;
-import com.example.ecommerce.domain.entities.file.EntityType;
+import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.service.dto.CategoryDto;
 import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.mapper.ImageMapper;
@@ -32,7 +32,7 @@ public class CategoryMapper implements ImageMapper ,
         CategoryDto response = CategoryDto.builder()
                 .slug(category.getSlug())
                 .name(category.getName())
-                .imageUrl(getImageUrl(EntityType.CATEGORY.name(), category.getImage()))
+                .imageUrl(getImageUrl(FileEntityType.CATEGORY.name(), category.getImage()))
                 .children(toDtoList(category.getChildren()))
                 .id(category.getId())
                 .build();

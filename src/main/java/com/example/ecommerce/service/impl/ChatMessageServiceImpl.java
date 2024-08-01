@@ -1,36 +1,27 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.common.utils.ValidationUtils;
-import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.chat.ChatMessage;
 import com.example.ecommerce.domain.entities.chat.ChatMessageImage;
-import com.example.ecommerce.domain.entities.chat.ChatMessageType;
-import com.example.ecommerce.domain.entities.file.EntityType;
 import com.example.ecommerce.domain.entities.file.FileEntity;
 import com.example.ecommerce.domain.model.binding.ChatMessageRequest;
 import com.example.ecommerce.domain.model.modelviews.messages.ChatMessageViewModel;
 import com.example.ecommerce.repository.ChatMessageRepository;
 import com.example.ecommerce.service.IChatMessageService;
 import com.example.ecommerce.service.IFilesStorageService;
-import com.example.ecommerce.service.dto.ChatMessageDto;
-import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.response.APIListResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.ecommerce.domain.entities.chat.ChatMessageType.GROUP;
-import static com.example.ecommerce.domain.entities.file.EntityType.CHAT_MESSAGE;
+import static com.example.ecommerce.domain.entities.file.FileEntityType.CHAT_MESSAGE;
 
 @Service
 @RequiredArgsConstructor

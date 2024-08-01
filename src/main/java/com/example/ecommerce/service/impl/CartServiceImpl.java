@@ -1,18 +1,14 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.auth.Vendor;
+import com.example.ecommerce.domain.entities.product.ProductInventory;
+import com.example.ecommerce.domain.model.binding.CartRequest;
+import com.example.ecommerce.domain.model.modelviews.cart.ItemCartModelView;
+import com.example.ecommerce.domain.model.modelviews.cart.VendorCartModelView;
 import com.example.ecommerce.handler.exception.GeneralException;
-import com.example.ecommerce.repository.StockRepository;
+import com.example.ecommerce.repository.InventoryRepository;
 import com.example.ecommerce.service.ICartService;
-import com.example.ecommerce.service.dto.StockDto;
-import com.example.ecommerce.service.mapper.IMapper;
-import com.example.ecommerce.service.request.CartRequest;
-import com.example.ecommerce.service.request.StockRequest;
-import com.example.ecommerce.service.response.ItemResponse;
-import com.example.ecommerce.service.response.ShoppingCartResponse;
-import com.example.ecommerce.service.response.VendorCartResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,11 +16,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,87 +29,73 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CartServiceImpl implements ICartService {
 
-    private final StockRepository stockRepository;
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
-    @Qualifier("stockMapper")
-    private final IMapper<Stock, StockRequest, StockDto> stockMapper;
+    private final InventoryRepository inventoryRepository;
     private final String USER_KEY = "USER_%s_CART";
     private final String VENDOR_ITEM_PRODUCT = "USER_%s_VENDOR_ITEM_PRODUCT_%s";
     private final String VENDOR_KEY = "USER_%s_VENDOR_%s";
-    private final String STOCK_KEY = "STOCK_%s";
+    private final String INVENTORY_KEY = "INVENTORY_%s";
 
     @Override
     public void add(CartRequest cartRequest, HttpServletRequest servletRequest) {
         try {
-            ValidationUtils.fieldCheckNullOrEmpty(cartRequest.getStockId(), "stockId");
-
-            Stock stock = stockRepository.findById(cartRequest.getStockId())
-                    .orElseThrow(() -> new GeneralException(
-                            String.format("Stock with id %s not found", cartRequest.getStockId())
-                    ));
-            Vendor vendor = stock.getProduct().getVendor();
-
+            ProductInventory inventory = inventoryRepository
+                    .findByProductIdAndAttributeCombinationKey(
+                            cartRequest.getInventoryRequest().getProductId(),
+                            cartRequest.getInventoryRequest().getAttributeCombinationKey())
+                    .orElseThrow(() -> new GeneralException("Key invalid"));
+            Vendor vendor = inventory.getProduct().getVendor();
             String keyUser = SecurityUtils.username() == null ? servletRequest.getRemoteAddr() : SecurityUtils.username();
 
             RedisKey redisKey = new RedisKey(
                     String.format(VENDOR_KEY, keyUser, vendor.getId()),
                     String.format(VENDOR_ITEM_PRODUCT,keyUser, vendor.getId()),
-                    String.format(STOCK_KEY, cartRequest.getStockId())
+                    String.format(INVENTORY_KEY, cartRequest.getInventoryRequest().getProductId() + "_" + cartRequest.getInventoryRequest().getAttributeCombinationKey())
             );
+            /**
+             * store all key
+             */
             redisTemplate.opsForSet().add(
                     getUserKey(servletRequest),
                     objectMapper.writeValueAsString(redisKey));
 
             Boolean isKeyExists = redisTemplate.opsForHash().hasKey(
                     redisKey.getVendorItemProductKey(),
-                    redisKey.getStockKey()
+                    redisKey.getInventoryKey()
             );
-            ItemResponse response;
+            /**
+             * store item
+             */
+            ItemCartModelView itemCartModelView;
             if (!isKeyExists) {
-                response = ItemResponse.builder()
-                        .quantity(1)
-                        .stock(stockMapper.toDto(stock))
-                        .createdAt(LocalDateTime.now())
-                        .stockClassificationId(cartRequest.getStockClassificationId())
-                        .build();
+                itemCartModelView = new ItemCartModelView(inventory, cartRequest.getQuantity());
             } else {
                 String json = (String) redisTemplate.opsForHash().get(
                         redisKey.getVendorItemProductKey(),
-                        redisKey.getStockKey()
+                        redisKey.getInventoryKey()
                 );
-                response = objectMapper.readValue(json, ItemResponse.class);
-                if(cartRequest.getQuantity() != 0) {
-                    if(cartRequest.getQuantity() > 0) {
-                        response.setQuantity(response.getQuantity() + cartRequest.getQuantity());
-                    }
-                } else {
-                    if (cartRequest.getOperation().equals("+")) {
-                        response.setQuantity(response.getQuantity() + 1);
-                    } else {
-                        if (response.getQuantity() == 1)
-                            throw new GeneralException("You can't decrease quantity of product to 0");
-                        response.setQuantity(response.getQuantity() - 1);
-                    }
-                }
-                response.setStockClassificationId(cartRequest.getStockClassificationId());
+                itemCartModelView = objectMapper.readValue(json, ItemCartModelView.class);
+                itemCartModelView.setQuantity(cartRequest.getQuantity());
             }
             redisTemplate.opsForHash().put(
                     redisKey.getVendorItemProductKey(),
-                    redisKey.getStockKey(),
-                    objectMapper.writeValueAsString(response)
+                    redisKey.getInventoryKey(),
+                    objectMapper.writeValueAsString(itemCartModelView)
             );
 
-            VendorCartResponse vendorResponse = new VendorCartResponse();
-            setInfoVendor(vendorResponse, stock);
 
+            /**
+             * Store vendor
+             */
+            VendorCartModelView vendorCartModelView = new VendorCartModelView(vendor);
             if (!redisTemplate.opsForHash().hasKey(
                     "VENDOR",
                     redisKey.getVendorKey())) {
                 redisTemplate.opsForHash().put(
                         "VENDOR",
                         redisKey.getVendorKey(),
-                        objectMapper.writeValueAsString(vendorResponse)
+                        objectMapper.writeValueAsString(vendorCartModelView)
                 );
             }
         } catch (JsonProcessingException ex) {
@@ -124,15 +105,15 @@ public class CartServiceImpl implements ICartService {
 
 
     @Override
-    public ShoppingCartResponse getShoppingCart(HttpServletRequest servletRequest) {
+    public List<VendorCartModelView> getShoppingCart(HttpServletRequest servletRequest) {
         List<RedisKey> redisKeys = getValueKeyUser(servletRequest);
-        ShoppingCartResponse res = new ShoppingCartResponse();
+        List<VendorCartModelView> res = new ArrayList<>();
         if (redisKeys == null) return res;
         redisKeys.forEach(redisKey -> {
-            List<ItemResponse> itemResponses = getListItemResponseWithVendorItemProductKey(redisKey.getVendorItemProductKey());
-            VendorCartResponse vendorResponse = getVendorResponseWithKetVendorKey(redisKey.getVendorKey());
-            vendorResponse.setItemResponses(itemResponses);
-            res.getVendors().add(vendorResponse);
+            List<ItemCartModelView> itemResponses = getListItemResponseWithVendorItemProductKey(redisKey.getVendorItemProductKey());
+            VendorCartModelView vendorResponse = getVendorResponseWithKetVendorKey(redisKey.getVendorKey());
+            vendorResponse.setItems(itemResponses);
+            res.add(vendorResponse);
         });
         return res;
     }
@@ -142,11 +123,11 @@ public class CartServiceImpl implements ICartService {
         String keyUser = SecurityUtils.username() == null ? servletRequest.getRemoteAddr() : SecurityUtils.username();
         if(redisTemplate.opsForHash().hasKey(
                 String.format(VENDOR_ITEM_PRODUCT,keyUser, vendorId),
-                String.format(STOCK_KEY, stockId)
+                String.format(INVENTORY_KEY, stockId)
         )) {
             redisTemplate.opsForHash().delete(
                     String.format(VENDOR_ITEM_PRODUCT, keyUser, vendorId),
-                    String.format(STOCK_KEY, stockId)
+                    String.format(INVENTORY_KEY, stockId)
             );
         }
     }
@@ -156,12 +137,6 @@ public class CartServiceImpl implements ICartService {
         return String.format(USER_KEY, keyUser);
     }
 
-    private void setInfoVendor(VendorCartResponse valueOfKeyVendor, Stock stock) {
-        var vendor = stock.getProduct().getVendor();
-        valueOfKeyVendor.setId(vendor.getId());
-        valueOfKeyVendor.setPerMoneyDelivery(vendor.getPerMoneyDelivery());
-        valueOfKeyVendor.setShopName(vendor.getShopName());
-    }
 
     private List<RedisKey> getValueKeyUser(HttpServletRequest servletRequest) {
         Set<String> members = redisTemplate.opsForSet().members(getUserKey(servletRequest));
@@ -178,21 +153,21 @@ public class CartServiceImpl implements ICartService {
         }).collect(Collectors.toList());
     }
 
-    private VendorCartResponse getVendorResponseWithKetVendorKey(String vendorKey) {
+    private VendorCartModelView getVendorResponseWithKetVendorKey(String vendorKey) {
         String json = (String) redisTemplate.opsForHash().get("VENDOR", vendorKey);
         try {
-            return objectMapper.readValue(json, VendorCartResponse.class);
+            return objectMapper.readValue(json, VendorCartModelView.class);
         } catch (JsonProcessingException e) {
             throw new GeneralException(e.getMessage());
         }
     }
 
-    private List<ItemResponse> getListItemResponseWithVendorItemProductKey(String vendorItemProductKey) {
+    private List<ItemCartModelView> getListItemResponseWithVendorItemProductKey(String vendorItemProductKey) {
         Map<Object, Object> entries = redisTemplate.opsForHash().entries(vendorItemProductKey);
         return entries.values().stream().map(object -> {
                     String json = (String) object;
                     try {
-                        ItemResponse itemResponse = objectMapper.readValue(json, ItemResponse.class);
+                        ItemCartModelView itemResponse = objectMapper.readValue(json, ItemCartModelView.class);
                         return itemResponse;
                     } catch (JsonProcessingException e) {
                         throw new GeneralException(e.getMessage());
@@ -208,14 +183,14 @@ public class CartServiceImpl implements ICartService {
 class RedisKey {
     private String vendorKey;
     private String vendorItemProductKey;
-    private String stockKey;
+    private String inventoryKey;
 
     public RedisKey(String vendorKey,
                     String vendorItemProductKey,
-                    String stockKey) {
+                    String inventoryKey) {
         this.vendorKey = vendorKey;
         this.vendorItemProductKey = vendorItemProductKey;
-        this.stockKey = stockKey;
+        this.inventoryKey = inventoryKey;
     }
 
 }

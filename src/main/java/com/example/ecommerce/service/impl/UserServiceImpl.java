@@ -4,7 +4,7 @@ import com.example.ecommerce.common.enums.CustomStatusCode;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.UserType;
-import com.example.ecommerce.domain.entities.file.EntityType;
+import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.domain.model.dto.UserDto;
 import com.example.ecommerce.domain.model.modelviews.profile.UserModelView;
 import com.example.ecommerce.repository.UserRepository;
@@ -52,7 +52,7 @@ public class UserServiceImpl implements IUserService {
     public void uploadImage(MultipartFile multipartFile) {
         User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.username()).get();
         filesStorageService.deleteImage(user.getUserImage());
-        filesStorageService.saveFile(multipartFile, user.getId(), EntityType.USER);
+        filesStorageService.saveFile(multipartFile, user.getId(), FileEntityType.USER);
     }
 
     @Override

@@ -33,4 +33,8 @@ public abstract class BaseEntity {
     private LocalDateTime createdDate;
     @LastModifiedDate
     private LocalDateTime modifiedDate;
+
+    public BaseEntity(Long id) {
+        this.id = id;
+    }
 }

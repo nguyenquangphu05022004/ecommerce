@@ -30,7 +30,6 @@ public class EmailServiceImpl implements EmailService {
             Optional<User> userOptional = userRepository.findByUsernameIgnoreCase(details.getRecipient());
             if(userOptional.isEmpty()) return String.format("Email: %s.\n Không tồn tại trong hệ thống.", details.getRecipient());
             saveDataVerify(details, userOptional.get());
-            details.setUsername(userOptional.get().getUsername());
             Thread emailTask = new Thread(new SendEmailTask(details, javaMailSender, sender));
             emailTask.start();
             return String.format("Chúng tôi đã gửi mã xác nhận vào email: %s.\n Vui lòng kiểm tra.\n Mã sẽ hết hạn trong 5 phút.", details.getRecipient());

@@ -33,4 +33,8 @@ public class Coupon extends BaseEntity {
         }
         return true;
     }
+
+    public Coupon(Long id) {
+        super(id);
+    }
 }

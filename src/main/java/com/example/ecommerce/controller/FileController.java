@@ -1,6 +1,6 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.entities.file.EntityType;
+import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.service.IFilesStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -20,7 +20,7 @@ public class FileController {
     @GetMapping(value = "/images/{fileType}/{fileName}",
             produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> loadFile(
-            @PathVariable("fileType") EntityType fileType,
+            @PathVariable("fileType") FileEntityType fileType,
             @PathVariable("fileName") String fileName
     ) {
         return ResponseEntity.ok(filesStorageService.loadFileAsResource(fileName, fileType));

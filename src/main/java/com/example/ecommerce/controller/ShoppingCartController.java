@@ -1,11 +1,10 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.domain.model.binding.CartRequest;
 import com.example.ecommerce.service.ICartService;
-import com.example.ecommerce.service.request.CartRequest;
 import com.example.ecommerce.service.response.OperationResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

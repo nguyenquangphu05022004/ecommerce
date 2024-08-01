@@ -1,6 +1,8 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.domain.model.binding.InventoryRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
+import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.request.FilterInputRequestProduct;
 import com.example.ecommerce.service.response.OperationResponse;
@@ -39,5 +41,12 @@ public class ProductController {
             @RequestBody FilterInputRequestProduct filter
     ) {
         return ResponseEntity.ok(productService.searchProduct(filter));
+    }
+
+    @GetMapping("/inventories")
+    public ProductInventoryModelView getInventoryAttributeKey(
+            @RequestBody InventoryRequest request
+            ) {
+        return productService.getInventory(request);
     }
 }
