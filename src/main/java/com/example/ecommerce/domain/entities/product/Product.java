@@ -34,8 +34,8 @@ public class Product extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-    @ManyToOne(cascade = CascadeType.ALL)
 
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
 

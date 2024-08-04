@@ -3,15 +3,11 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.domain.entities.order.OrderStatus;
 import com.example.ecommerce.domain.model.binding.OrderRequest;
 import com.example.ecommerce.service.IOrderService;
-import com.example.ecommerce.service.dto.OrderDto;
-import com.example.ecommerce.service.response.APIResponse;
 import com.example.ecommerce.service.response.OperationResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +20,7 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody @Valid OrderRequest orderRequest) {
         orderService.createOrder(orderRequest);
-        return ResponseEntity.ok(new OperationResponse(true, "cretead order"));
+        return ResponseEntity.ok(new OperationResponse(true, "cretead order", 200));
     }
 
     @GetMapping("/customer")

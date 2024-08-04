@@ -14,8 +14,8 @@ import lombok.experimental.SuperBuilder;
 @Embeddable
 public class EntityType {
     @Enumerated(EnumType.STRING)
-    private Type type;
-    private Long id;
+    private Type entityType;
+    private Long entityId;
 
     public  enum Type {
         CUSTOMER, VENDOR, ORDER,

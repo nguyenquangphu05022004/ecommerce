@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class FileController {
 
     private final IFilesStorageService filesStorageService;
-
     @GetMapping(value = "/images/{fileType}/{fileName}",
             produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> loadFile(

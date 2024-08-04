@@ -50,7 +50,7 @@ public class AuthController {
         return authenService.forgetPasswordGeneration(request);
     }
 
-    @PostMapping("/password")
+    @PostMapping("/password-change")
     public OperationResponse changePassword(
             @RequestBody PasswordChangeRequest request
     ) {

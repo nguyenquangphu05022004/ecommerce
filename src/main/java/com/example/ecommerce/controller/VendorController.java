@@ -21,9 +21,11 @@ public class VendorController {
     @PostMapping
     public ResponseEntity<?> createVendor(@RequestBody VendorRequest request) {
         vendorService.saveOrUpdate(request);
-        return new ResponseEntity<>(
-                new OperationResponse(true, String.format("You created vendor for user: %s", request.getUsername())),
-                HttpStatus.CREATED
+        return ResponseEntity.ok(
+                new OperationResponse(
+                        true,
+                        "you created successfull",
+                        HttpStatus.OK.value())
         );
     }
 
@@ -32,9 +34,11 @@ public class VendorController {
             @PathVariable("vendorId") Long vendorId
     ) {
         vendorService.userFollow(vendorId);
-        return new ResponseEntity<>(
-                new OperationResponse(true, String.format("You followed vendor with id: %s", vendorId)),
-                HttpStatus.OK
+        return ResponseEntity.ok(
+                new OperationResponse(
+                        true,
+                        "you created successfull",
+                        HttpStatus.OK.value())
         );
     }
     @DeleteMapping("/follow")
@@ -43,20 +47,22 @@ public class VendorController {
             @RequestParam("vendorId") Long vendorId
     ) {
         vendorService.cancelFollowVendor(userId, vendorId);
-        return new ResponseEntity<>(
-                new OperationResponse(true, String.format("You canceled vendor with id: %s", vendorId)),
-                HttpStatus.OK
+        return ResponseEntity.ok(
+                new OperationResponse(
+                        true,
+                        "you created successfull",
+                        HttpStatus.OK.value())
         );
     }
 
     @PostMapping("/coupons")
     public ResponseEntity<?> createCoupon(@RequestBody CouponRequest couponRequest) {
         vendorService.createCoupon(couponRequest);
-        return new ResponseEntity<>(
+        return ResponseEntity.ok(
                 new OperationResponse(
                         true,
-                        "You created a code"),
-                HttpStatus.OK
+                        "you created successfull",
+                        HttpStatus.OK.value())
         );
     }
 

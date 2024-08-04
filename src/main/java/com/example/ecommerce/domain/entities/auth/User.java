@@ -30,6 +30,7 @@ public class User extends BaseEntity implements UserDetails {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
     private UserType userType;
     private Long userTypeId;
 
@@ -52,6 +53,7 @@ public class User extends BaseEntity implements UserDetails {
     private Set<Vendor> vendors;
 
     private boolean isOnline;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -19,11 +19,13 @@ import java.util.Set;
 public class Category extends BaseEntity  {
     @Column(nullable = false, length = 100)
     private String name;
+
+    @Column(nullable = false, length = 100)
     private String slug;
-    @OneToOne(mappedBy = "category",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+
+    @OneToOne(mappedBy = "category")
     private CategoryImage image;
+
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Category parent;
@@ -31,7 +33,10 @@ public class Category extends BaseEntity  {
     @OneToMany(mappedBy = "parent")
     private Set<Category> children;
 
-    private Boolean displayAtHomePage;
+    private boolean displayAtHomePage;
+
+    @OneToMany(mappedBy = "category")
+    private Set<Product> products;
 
 }
 

@@ -13,5 +13,9 @@ import lombok.NoArgsConstructor;
 public class EmailDetails {
     private String recipient;
     private String subject;
-    private String code;
+    private String content;
+
+    public String getFormatContent() {
+        return String.format("<h3>Code verify: %s</h3>", content);
+    }
 }

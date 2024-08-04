@@ -18,7 +18,7 @@ public class JpaAuditing {
     public AuditorAware<String> auditorProvider() {
         return () -> {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if((authentication instanceof AnonymousAuthenticationToken)) {
+            if(authentication == null || (authentication instanceof AnonymousAuthenticationToken)) {
                 return null;
             }
             return Optional.of(authentication.getName());

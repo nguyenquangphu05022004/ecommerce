@@ -13,22 +13,12 @@ import java.util.List;
 
 @SpringBootApplication
 @AllArgsConstructor
-public class EcommerceApplication implements CommandLineRunner {
+public class EcommerceApplication  {
 
 	public static void main(String[] args){
 		SpringApplication.run(EcommerceApplication.class, args);
 	}
 
-	@Autowired
-	private ProductRepository productRepository;
-
-	@Override
-	public void run(String... args) throws Exception {
-		List<Product> products =
-				productRepository.findAll();
-		new ProductSortServiceImpl().sortByDefault(products);
-		System.out.println(products);
-	}
 
 
 }

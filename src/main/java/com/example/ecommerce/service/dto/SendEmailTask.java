@@ -26,10 +26,7 @@ public class SendEmailTask implements Runnable{
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mailMessage, "utf-8");
             mimeMessageHelper.setFrom(emailSender);
             mimeMessageHelper.setTo(emailDetails.getRecipient());
-            mimeMessageHelper.setText(EmailUtils.bodyMessageForgotPassword(
-                    emailDetails.getUsername(),
-                    emailDetails.getLinkVerify()
-            ), true);
+            mimeMessageHelper.setText(emailDetails.getContent(), true);
             mimeMessageHelper.setSubject(emailDetails.getSubject());
             javaMailSender.send(mailMessage);
         } catch (Exception e) {

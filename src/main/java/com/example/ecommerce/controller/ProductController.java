@@ -2,13 +2,13 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.domain.model.binding.InventoryRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
+import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.request.FilterInputRequestProduct;
 import com.example.ecommerce.service.response.OperationResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,11 +23,8 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<?> createProduct(@RequestBody @Valid ProductRequest request) {
-        productService.save(request);
-        return new ResponseEntity<>(
-                new OperationResponse(true, "Product is created"),
-                HttpStatus.CREATED
-        );
+        ProductDetailsViewModel response = productService.save(request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}/{slug}")
@@ -35,6 +32,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.findById(id));
     }
 
+    @GetMapping("/{id}/recommendation")
+    public ResponseEntity<?> getAllProductRecommendation(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(productService.productRecommendation(id));
+    }
 
     @PostMapping("/search")
     public ResponseEntity<?> getAllProduct(

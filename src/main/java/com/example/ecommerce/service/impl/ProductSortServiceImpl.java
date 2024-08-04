@@ -2,8 +2,10 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.service.ProductSortService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+@Service
 public class ProductSortServiceImpl implements ProductSortService {
 
     @Override
@@ -22,21 +24,16 @@ public class ProductSortServiceImpl implements ProductSortService {
     public List<Product> sortByNumberOfSeller(List<Product> products) {
         return products.stream().sorted((p1, p2) ->
         {
-            int sellerP1 = getTotalSeller(p1);
-            int sellerP2 = getTotalSeller(p2);
+            int sellerP1 = getTotalProductSold(p1);
+            int sellerP2 = getTotalProductSold(p2);
             return sellerP2 - sellerP1;
         }).toList();
     }
 
-    public static int getTotalSeller(Product p1) {
-        return p1.getStocks()
+    public static int getTotalProductSold(Product p1) {
+        return p1.getProductInventory()
                 .stream()
-                .mapToInt(stock -> {
-                    return stock.getStockClassifications()
-                            .stream()
-                            .mapToInt(stockClassification -> stockClassification.getSeller())
-                            .sum();
-                }).sum();
+                .mapToInt(inventory -> inventory.getNumberOfProductSold()).sum();
     }
 
     @Override

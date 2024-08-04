@@ -1,5 +1,6 @@
 package com.example.ecommerce.domain.model.binding;
 
+import com.example.ecommerce.common.InvalidMessage;
 import com.example.ecommerce.domain.entities.BaseEntity;
 import com.example.ecommerce.domain.entities.chat.ChatMessage;
 import com.example.ecommerce.domain.entities.chat.ChatMessageType;
@@ -15,13 +16,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class ChatMessageRequest extends BaseEntity {
-    @NotNull
+    @NotNull(message = InvalidMessage.NOT_NULL)
     private Long fromUserId;
-    @NotNull
+    @NotNull(message = InvalidMessage.NOT_NULL)
     private Long toDestinationId;
-    @NotNull
+    @NotNull(message = InvalidMessage.NOT_NULL)
     private ChatMessageType chatMessageType;
-    @NotEmpty
+    @NotEmpty(message = InvalidMessage.NOT_EMPTY)
     private String content;
     private List<MultipartFile> files;
 

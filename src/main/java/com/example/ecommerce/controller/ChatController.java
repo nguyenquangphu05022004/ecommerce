@@ -6,6 +6,7 @@ import com.example.ecommerce.domain.model.modelviews.messages.ChatMessageViewMod
 import com.example.ecommerce.service.IChatMessageService;
 import com.example.ecommerce.service.response.OperationResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,10 +28,12 @@ public class ChatController {
         request.setFiles(files);
         ChatMessageViewModel message = chatMessageService.createMessage(request);
         if(message == null) {
-            return ResponseEntity.ok(new OperationResponse(
-                    true,
-                    "send message to group"
-            ));
+            return ResponseEntity.ok(
+                    new OperationResponse(
+                            true,
+                            "you created message to group",
+                            HttpStatus.OK.value())
+            );
         }
         return ResponseEntity.ok(message);
     }

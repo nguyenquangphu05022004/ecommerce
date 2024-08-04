@@ -12,11 +12,13 @@ public class ProductInventoryModelView {
     private String attributeProduct;
     private Integer quantity;
     private String skuCode;
+    private Integer numberOfProductSold;
     public ProductInventoryModelView(ProductInventory p) {
         this.productModelView = new ProductModelView(p.getProduct());
         this.attributeProduct = extractAttribute(p.getAttributeCombinationKey());
         this.quantity = p.getQuantity();
         this.skuCode = p.getSkuCode();
+        this.numberOfProductSold = p.getNumberOfProductSold();
     }
 
     private String extractAttribute(String attributeCombinationKey) {

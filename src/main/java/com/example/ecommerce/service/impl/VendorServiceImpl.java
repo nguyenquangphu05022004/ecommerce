@@ -15,7 +15,6 @@ import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IVendorService;
 import com.example.ecommerce.service.dto.VendorDto;
-import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.request.CouponRequest;
 import com.example.ecommerce.service.request.VendorRequest;
 import com.example.ecommerce.service.response.APIResponse;
@@ -34,28 +33,16 @@ public class VendorServiceImpl implements IVendorService {
     private final VendorRepository vendorRepository;
     private final UserRepository userRepository;
     private final CouponRepository couponRepository;
-    @Qualifier("vendorMapper")
-    private final IMapper<Vendor, VendorRequest, VendorDto> mapper;
 
 
 
     @Override
     public void saveOrUpdate(VendorRequest request) {
-        ValidationUtils.fieldCheckNullOrEmpty(request.getUsername(), "username");
-        ValidationUtils.fieldCheckNullOrEmpty(request.getShopName(), "shopName");
-        ValidationUtils.fieldCheckNullOrEmpty(request.getPerMoneyDelivery(), "perMoneyDelivery");
-
         User user = userRepository.findByUsernameIgnoreCase(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(
                         String.format("Username: %s not found", request.getUsername())
                 ));
         user.setRole(Role.VENDOR);
-
-        Vendor vendor =  mapper.toEntity(request).toBuilder()
-                .user(user)
-                .build();
-
-        vendorRepository.save(vendor);
     }
 
 //    @Override
@@ -115,11 +102,6 @@ public class VendorServiceImpl implements IVendorService {
                         String.format("Vendor with id %s not found", vendorId)
                 ));
 
-        if(vendor.getUser().equals(user)) {
-            throw new GeneralException(
-                    String.format("You can't follow myself")
-            );
-        }
 
         vendor.getUsers().add(user);
         vendorRepository.save(vendor);
@@ -128,15 +110,7 @@ public class VendorServiceImpl implements IVendorService {
 
     @Override
     public void createCoupon(CouponRequest request) {
-        Vendor vendor = vendorRepository.findByUserUsername(SecurityUtils.username())
-                .orElseThrow(() -> new UsernameNotFoundException("You are not login"));
-        Coupon coupon = Coupon.builder()
-                .vendor(vendor)
-                .start(request.getStart())
-                .end(request.getEnd())
-                .code(UUID.randomUUID().toString())
-                .build();
-        couponRepository.save(coupon);
+
     }
 
     @Override

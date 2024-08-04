@@ -2,40 +2,38 @@ package com.example.ecommerce.service.mapper;
 
 import com.example.ecommerce.controller.FileController;
 import com.example.ecommerce.domain.entities.file.FileEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
-public interface  ImageMapper {
+public interface ImageMapper {
 
 
-    default  List<String> getImageUrl(
+    default List<String> getImageUrl(
             String fileDownLoadUrl,
             Collection<? extends FileEntity> images
     ) {
-        List<String> urls = new ArrayList<>();
-        if(images != null) {
-
-            images.forEach(image -> {
-                String url = MvcUriComponentsBuilder.fromMethodName(
-                        FileController.class,
-                        "loadFile",
-                        fileDownLoadUrl,
-                        image.getName()
-                ).toUriString();
-                urls.add(url);
-            });
+        if(CollectionUtils.isEmpty(images)) {
+            return Collections.emptyList();
         }
-        return urls;
+        return images.stream()
+                .map(image -> {
+                    return MvcUriComponentsBuilder.fromMethodName(
+                            FileController.class,
+                            "loadFile",
+                            fileDownLoadUrl,
+                            image.getName()
+                    ).toUriString();
+                }).toList();
     }
-    default  <T extends FileEntity> String getImageUrl(
+
+    default <T extends FileEntity> String getImageUrl(
             String fileDownLoadUrl,
             T image
     ) {
         String url = "";
-        if(image != null) {
+        if (image != null) {
             url = MvcUriComponentsBuilder.fromMethodName(
                     FileController.class,
                     "loadFile",

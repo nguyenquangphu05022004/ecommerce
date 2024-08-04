@@ -7,6 +7,7 @@ import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -25,8 +26,10 @@ public class ProductDetailsViewModel extends ProductGalleryModelView {
 
     private Map<String, List<String>> extractAttributeKey(
             Set<ProductInventory> productInventory) {
+        if(CollectionUtils.isEmpty(productInventory)) {
+            return Collections.emptyMap();
+        }
         Map<String, List<String>> entries = new HashMap<>();
-
         productInventory.stream().forEach(proInventory -> {
             String attributeCombinationKey = proInventory.getAttributeCombinationKey();
             var pairKeys = attributeCombinationKey.split(SystemUtils.SEPARATE);

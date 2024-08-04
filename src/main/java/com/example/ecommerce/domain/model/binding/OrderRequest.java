@@ -1,5 +1,6 @@
 package com.example.ecommerce.domain.model.binding;
 
+import com.example.ecommerce.common.InvalidMessage;
 import com.example.ecommerce.domain.entities.order.Payment;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -10,25 +11,25 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 public class OrderRequest {
-    @NotNull
+    @NotNull(message = InvalidMessage.NOT_NULL)
     private Payment payment;
-    @NotNull
+    @NotNull(message = InvalidMessage.NOT_NULL)
     private Set<LineItemRequest> lineItems;
     @Data
     @NoArgsConstructor
     public static class LineItemRequest {
-        @NotNull
+        @NotNull(message = InvalidMessage.NOT_NULL)
         private Long vendorId;
         private Long couponId;
-        @NotNull
+        @NotNull(message = InvalidMessage.NOT_NULL)
         private List<ItemRequest> items;
     }
     @Data
     @NoArgsConstructor
     public static class ItemRequest {
-        @NotNull
+        @NotNull(message = InvalidMessage.NOT_NULL)
         private Integer quantity;
-        @NotNull
+        @NotNull(message = InvalidMessage.NOT_NULL)
         private Long inventoryId;
     }
 }

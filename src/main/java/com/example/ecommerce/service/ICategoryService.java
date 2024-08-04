@@ -1,13 +1,15 @@
 package com.example.ecommerce.service;
 
 
-import com.example.ecommerce.service.dto.CategoryDto;
-import com.example.ecommerce.service.request.CategoryRequest;
+
+
+import com.example.ecommerce.domain.entities.product.Category;
+import com.example.ecommerce.domain.model.binding.CategoryRequest;
 
 import java.util.List;
 
 public interface ICategoryService {
     void save(CategoryRequest request);
-    CategoryDto findById(Long id);
-    List<CategoryDto> findAll();
+
+    List<Category> getAllCategory();
 }

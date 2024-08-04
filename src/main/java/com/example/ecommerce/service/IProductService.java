@@ -8,11 +8,13 @@ import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryMod
 import com.example.ecommerce.service.request.FilterInputRequestProduct;
 import com.example.ecommerce.service.response.APIListResponse;
 
+import java.util.List;
+
 public interface IProductService {
-    void save(ProductRequest request);
+    ProductDetailsViewModel save(ProductRequest request);
     ProductDetailsViewModel findById(Long id);
     void delete(Long id);
     APIListResponse<ProductGalleryModelView> searchProduct(FilterInputRequestProduct filterInputProduct);
     ProductInventoryModelView getInventory(InventoryRequest request);
-
+    List<ProductGalleryModelView>  productRecommendation(Long id);
 }

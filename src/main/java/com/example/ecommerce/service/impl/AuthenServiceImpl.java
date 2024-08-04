@@ -9,6 +9,7 @@ import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.handler.exception.AuthenticationFailureException;
 import com.example.ecommerce.handler.exception.CodeExpiredException;
 import com.example.ecommerce.handler.exception.GeneralException;
+import com.example.ecommerce.handler.exception.UserNameAlreadyExistsException;
 import com.example.ecommerce.repository.TokenRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.EmailService;
@@ -21,6 +22,7 @@ import com.example.ecommerce.service.request.RegisterRequest;
 import com.example.ecommerce.service.response.AuthenResponse;
 import com.example.ecommerce.service.response.OperationResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +46,7 @@ public class AuthenServiceImpl implements IAuthenService {
     public AuthenResponse authenticate(AuthenRequest request) {
         User user = userRepository.findByUsernameIgnoreCase(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
+
         if(!encoder.matches(request.getPassword(), user.getPassword())) {
             throw new AuthenticationFailureException("Your account has username or password not matches");
         }
@@ -68,19 +72,25 @@ public class AuthenServiceImpl implements IAuthenService {
 
     @Override
     public OperationResponse registerAccount(RegisterRequest request) {
-        User user = User.builder()
-                .username(request.getUsername())
-                .password(encoder.encode(request.getPassword()))
-                .role(request.getRole())
-                .fullName(request.getFullName())
-                .build();
+        Optional<User> optionalUser = userRepository.findByUsernameIgnoreCase(request.getUsername());
 
-        if(request.getRole() == null) user.setRole(request.getRole());
-        userRepository.save(user);
-        return OperationResponse.builder()
-                .message("You created account successfully")
-                .success(true)
-                .build();
+        if(optionalUser.isEmpty()) {
+            User user = User.builder()
+                    .username(request.getUsername())
+                    .password(encoder.encode(request.getPassword()))
+                    .role(request.getRole())
+                    .fullName(request.getFullName())
+                    .build();
+
+            if(request.getRole() == null) user.setRole(request.getRole());
+            userRepository.save(user);
+            return OperationResponse.builder()
+                    .message("You created account successfully")
+                    .success(true)
+                    .statusValue(HttpStatus.OK.value())
+                    .build();
+        }
+        throw new UserNameAlreadyExistsException("Username exists");
     }
 
     @Override
@@ -99,12 +109,13 @@ public class AuthenServiceImpl implements IAuthenService {
                 EmailDetails.builder()
                         .recipient(username)
                         .subject("Forget Password")
-                        .code(token.getValue())
+                        .content(token.getValue())
                         .build()
         );
         return OperationResponse.builder()
                 .success(true)
                 .message("We were sending code verify for you. Please check your email and enter here")
+                .statusValue(HttpStatus.OK.value())
                 .build();
     }
 
@@ -114,6 +125,7 @@ public class AuthenServiceImpl implements IAuthenService {
         return OperationResponse.builder()
                 .message("Token was checked")
                 .success(true)
+                .statusValue(HttpStatus.OK.value())
                 .build();
     }
 
@@ -127,6 +139,7 @@ public class AuthenServiceImpl implements IAuthenService {
         return OperationResponse.builder()
                 .success(true)
                 .message("You updated for your password")
+                .statusValue(HttpStatus.OK.value())
                 .build();
     }
 
@@ -142,6 +155,7 @@ public class AuthenServiceImpl implements IAuthenService {
             return OperationResponse.builder()
                     .success(true)
                     .message("You changed your password")
+                    .statusValue(200)
                     .build();
         }
         throw new GeneralException("Password not match, You are not change password");
@@ -160,9 +174,11 @@ public class AuthenServiceImpl implements IAuthenService {
     private Token verifyToken(String code) {
         Token token = tokenRepository.findByValue(code)
                 .orElseThrow(() -> new GeneralException(String.format("Forget password verify code: %s not found", code)));
-        if(token.getCreatedDate().plusMinutes(5l).isBefore(LocalDateTime.now())) {
-            throw new CodeExpiredException(String.format("Code: %s expired", code));
+        if(token.isExpired() || token.isRevoked() || token.getCreatedDate().plusMinutes(5l).isBefore(LocalDateTime.now())) {
+            throw new CodeExpiredException(String.format("Code: %s expired or is revoked", code));
         }
+        token.setExpired(true);
+        token.setRevoked(true);
         return token;
     }
 }

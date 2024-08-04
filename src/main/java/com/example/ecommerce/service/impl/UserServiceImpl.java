@@ -5,17 +5,14 @@ import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.UserType;
 import com.example.ecommerce.domain.entities.file.FileEntityType;
-import com.example.ecommerce.domain.model.dto.UserDto;
 import com.example.ecommerce.domain.model.modelviews.profile.UserModelView;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IUserService;
-import com.example.ecommerce.service.mapper.IMapper;
 import com.example.ecommerce.service.request.RegisterRequest;
 import com.example.ecommerce.service.request.VendorRequest;
 import com.example.ecommerce.service.response.APIResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,10 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    @Qualifier("userMapper")
-    private final IMapper<User, RegisterRequest, UserDto> mapper;
     private final IFilesStorageService filesStorageService;
-
     @Override
     public void saveOrUpdate(RegisterRequest request) {
         User user = User.builder()

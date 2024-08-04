@@ -20,16 +20,11 @@ import java.util.Optional;
 public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender javaMailSender;
-    private final UserRepository userRepository;
-    private final TokenRepository tokenRepository;
     @Value("${spring.mail.username}")
     private String sender;
 
     public String sendSimpleMail(EmailDetails details) {
         try {
-            Optional<User> userOptional = userRepository.findByUsernameIgnoreCase(details.getRecipient());
-            if(userOptional.isEmpty()) return String.format("Email: %s.\n Không tồn tại trong hệ thống.", details.getRecipient());
-            saveDataVerify(details, userOptional.get());
             Thread emailTask = new Thread(new SendEmailTask(details, javaMailSender, sender));
             emailTask.start();
             return String.format("Chúng tôi đã gửi mã xác nhận vào email: %s.\n Vui lòng kiểm tra.\n Mã sẽ hết hạn trong 5 phút.", details.getRecipient());
@@ -38,25 +33,5 @@ public class EmailServiceImpl implements EmailService {
             e.printStackTrace();
             return "Đã xảy ra lỗi trong quá trình gửi Email";
         }
-    }
-
-    private void saveDataVerify(EmailDetails details, User user) {
-        var optionalToken = tokenRepository.findByUserIdAndTokenType(
-                user.getId(),
-                TokenType.RESET_PASSWORD
-        );
-        Token token = null;
-        if(optionalToken.isPresent()) {
-            token = optionalToken.get()
-                    .toBuilder()
-                    .value(details.getCode())
-                    .build();
-        } else {
-            token = Token.builder()
-                    .value(details.getCode())
-                    .user(user)
-                    .build();
-        }
-        tokenRepository.save(token);
     }
 }

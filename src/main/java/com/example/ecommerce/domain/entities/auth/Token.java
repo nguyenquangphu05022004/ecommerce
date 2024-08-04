@@ -23,7 +23,7 @@ public class Token extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private TokenType tokenType;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 }
