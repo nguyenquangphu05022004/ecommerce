@@ -19,9 +19,11 @@ import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.algorithm.Similarity;
+import com.example.ecommerce.service.algorithm.sort.ProductSortFactory;
 import com.example.ecommerce.service.request.FilterInputRequestProduct;
 import com.example.ecommerce.service.request.KeySearchRequest;
 import com.example.ecommerce.service.response.APIListResponse;
+import com.example.ecommerce.service.algorithm.search.ProductFilterFactory;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,8 +36,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.ecommerce.domain.entities.product.recommendation.TypeAction.CLICK_PRODUCT;
+import static com.example.ecommerce.event.Event.*;
+import static com.example.ecommerce.event.Event.EventType.*;
 
 @Service
 @RequiredArgsConstructor
@@ -44,10 +49,9 @@ public class ProductServiceImpl implements IProductService {
 
     private final ProductRepository productRepository;
     private final InventoryRepository inventoryRepository;
-    private final VendorRepository vendorRepository;
-    private final NotificationRepository notificationRepository;
     private final ProductCacheRepository productCacheRepository;
     private final UserRepository userRepository;
+    private final ProductSimilarityRepository productSimilarityRepository;
     @Override
     public void delete(Long id) {
         productRepository.deleteById(id);
@@ -55,18 +59,19 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductDetailsViewModel findById(Long id) {
-
+        User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("You aren't login"));
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(String.format("Product with id %s not found", id)));
-        saveProductSimilarity(product);
+        saveProductSimilarity(product, user);
         return new ProductDetailsViewModel(product);
     }
 
     @Override
     public ProductDetailsViewModel save(ProductRequest request) {
-        User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.username())
+        User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("You aren't login"));
-        if(user.getRole() != Role.VENDOR) {
+        if (user.getRole() != Role.VENDOR) {
             throw new GeneralException("Your role can't create product");
         }
         Product product = Product.builder()
@@ -78,6 +83,8 @@ public class ProductServiceImpl implements IProductService {
                 .category(Category.builder().id(request.getCategoryId()).build())
                 .vendor(Vendor.builder().id(user.getUserTypeId()).build())
                 .build();
+        productRepository.save(product);
+        new Thread(() -> getInstance().postEvent(PRODUCT_CREATE, product)).start();
         return new ProductDetailsViewModel(productRepository.save(product));
     }
 
@@ -104,8 +111,8 @@ public class ProductServiceImpl implements IProductService {
                         String words[] = pair.getValue().split(";");
                         int x1 = Integer.parseInt(words[0]);
                         int x2 = Integer.parseInt(words[1]);
-                        predicates.add(criteriaBuilder.between(root.joinList("stocks").get("price"), x1, x2));
-                    } else if(pair.getKey().startsWith(KeySearchRequest.VENDOR_ID.name())) {
+                        predicates.add(criteriaBuilder.between(root.get("price"), x1, x2));
+                    } else if (pair.getKey().startsWith(KeySearchRequest.VENDOR_ID.name())) {
                         predicates.add(criteriaBuilder.equal(root.join("vendor").get("id"), pair.getValue()));
                     }
                 });
@@ -154,13 +161,41 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductGalleryModelView> productRecommendation(Long id) {
+    public APIListResponse<ProductGalleryModelView> productRecommendation(Long productId) {
         ProductActionCache productActionCache = productCacheRepository
-                .findByUserUsernameAndProductId(SecurityUtils.username(), id);
-        return productActionCache.getProductSimilarities()
-                .stream()
-                .map(p -> new ProductGalleryModelView(p.getProduct()))
-                .toList();
+                .findByProductIdAndUserUsername(productId, SecurityUtils.getUsername())
+                .orElseThrow(() -> new GeneralException("Not found cache product id: " + productId));
+        APIListResponse<ProductGalleryModelView> response = responseAPI(
+                null,
+                productActionCache.getProductSimilarities()
+                        .stream()
+                        .sorted((s1, s2) -> s2.getSimilarity().compareTo(s1.getSimilarity()))
+                        .map(pa -> pa.getProduct())
+                        .toList()
+        );
+        response.setMessage(response.getData().get(0).getName());
+        return response;
+    }
+
+    @Override
+    public APIListResponse<ProductGalleryModelView> filterProduct(Map<String, String> filter) {
+        Specification<Product> specification = (root, query, criteriaBuilder) -> {
+            final List<Predicate> predicates = new ArrayList<>();
+            filter.entrySet().stream()
+                    .forEach(entry -> {
+                        Predicate condition = ProductFilterFactory.getInstance(entry.getKey()).filter(entry.getValue());
+                        predicates.add(condition);
+                    });
+            Predicate predicate = null;
+            for(var pre : predicates) {
+                if(predicate == null) predicate = pre;
+                else predicate = criteriaBuilder.and(predicate, pre);
+            }
+            return predicate;
+        };
+        List<Product> products = productRepository.findAll(specification);
+        ProductSortFactory.getInstance("rageAverage").sort(products);
+        return null;
     }
 
     private APIListResponse<ProductGalleryModelView> responseAPI(
@@ -172,9 +207,9 @@ public class ProductServiceImpl implements IProductService {
                 "",
                 1,
                 HttpStatus.OK.value(),
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalPages(),
+                page != null ? page.getNumber() : -1,
+                page != null ? page.getSize() : -1,
+                page != null ? page.getTotalPages() : -1,
                 products.stream().map(ProductGalleryModelView::new).toList());
         return response;
     }
@@ -183,38 +218,35 @@ public class ProductServiceImpl implements IProductService {
     /**
      * thread for saveProductActionCache
      */
-    private void saveProductSimilarity(final Product product) {
-        Thread thread = new Thread(() -> {
-            if(SecurityUtils.username() == null) {
-                throw new UsernameNotFoundException("You aren't login");
-            }
+    private void saveProductSimilarity(final Product product, final User user) {
+//        new Thread(() -> {
             ProductActionCache productActionCache = productCacheRepository.save(
                     ProductActionCache.builder()
                             .product(product)
                             .typeAction(CLICK_PRODUCT)
-                            .user(userRepository.findByUsernameIgnoreCase(SecurityUtils.username()).get())
+                            .user(user)
                             .build()
             );
             List<Product> products = productRepository.findAllDifferentId(productActionCache.getProduct().getId());
 
-            List<?> listSimilarity = products.stream()
-                    .map((p) -> {
-                        double similarity = Similarity.similarity(
-                                productActionCache.getProduct().getLanguage().getNameEn(),
-                                p.getLanguage().getNameEn()
-                        );
-                        return ProductSimilarity.builder()
-                                .similarity(similarity)
-                                .productActionCache(productActionCache)
-                                .product(p)
-                                .build();
-                    })
-                    .toList();
-            productActionCache.setProductSimilarities((List<ProductSimilarity>) listSimilarity);
-        });
-        thread.start();
+            products.stream().forEach((p) -> {
+                double similarity1 = Similarity.similarity(
+                        productActionCache.getProduct().getLanguage().getNameEn(),
+                        p.getLanguage().getNameEn()
+                );
+                double similarity2 = Similarity.similarity(
+                        productActionCache.getProduct().getLanguage().getNameVn(),
+                        p.getLanguage().getNameVn()
+                );
+                ProductSimilarity productSimilarity = ProductSimilarity.builder()
+                        .similarity((similarity2 + similarity1) / 2)
+                        .productActionCache(productActionCache)
+                        .product(p)
+                        .build();
+                productSimilarityRepository.save(productSimilarity);
+            });
+//        }).start();
     }
-
 }
 
 

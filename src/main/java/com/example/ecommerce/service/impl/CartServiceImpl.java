@@ -46,7 +46,7 @@ public class CartServiceImpl implements ICartService {
                             cartRequest.getInventoryRequest().getAttributeCombinationKey())
                     .orElseThrow(() -> new GeneralException("Key invalid"));
             Vendor vendor = inventory.getProduct().getVendor();
-            String keyUser = SecurityUtils.username() == null ? servletRequest.getRemoteAddr() : SecurityUtils.username();
+            String keyUser = SecurityUtils.getUsername() == null ? servletRequest.getRemoteAddr() : SecurityUtils.getUsername();
 
             RedisKey redisKey = new RedisKey(
                     String.format(VENDOR_KEY, keyUser, vendor.getId()),
@@ -120,7 +120,7 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public void delete(Long stockId, Long vendorId, HttpServletRequest servletRequest) {
-        String keyUser = SecurityUtils.username() == null ? servletRequest.getRemoteAddr() : SecurityUtils.username();
+        String keyUser = SecurityUtils.getUsername() == null ? servletRequest.getRemoteAddr() : SecurityUtils.getUsername();
         if(redisTemplate.opsForHash().hasKey(
                 String.format(VENDOR_ITEM_PRODUCT,keyUser, vendorId),
                 String.format(INVENTORY_KEY, stockId)
@@ -133,7 +133,7 @@ public class CartServiceImpl implements ICartService {
     }
 
     private String getUserKey(HttpServletRequest servletRequest) {
-        String keyUser = SecurityUtils.username() == null ? servletRequest.getRemoteAddr() : SecurityUtils.username();
+        String keyUser = SecurityUtils.getUsername() == null ? servletRequest.getRemoteAddr() : SecurityUtils.getUsername();
         return String.format(USER_KEY, keyUser);
     }
 

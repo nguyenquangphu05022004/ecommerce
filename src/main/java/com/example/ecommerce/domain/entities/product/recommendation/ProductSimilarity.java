@@ -24,5 +24,5 @@ public class ProductSimilarity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-    private double similarity;
+    private Double similarity;
 }

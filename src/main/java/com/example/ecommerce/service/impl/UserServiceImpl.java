@@ -44,7 +44,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     @Transactional
     public void uploadImage(MultipartFile multipartFile) {
-        User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.username()).get();
+        User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.getUsername()).get();
         filesStorageService.deleteImage(user.getUserImage());
         filesStorageService.saveFile(multipartFile, user.getId(), FileEntityType.USER);
     }
@@ -52,7 +52,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public APIResponse<?> getInfoUser() {
         User user = userRepository
-                .findByUsernameIgnoreCase(SecurityUtils.username())
+                .findByUsernameIgnoreCase(SecurityUtils.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("username not found"));
         return new APIResponse<>(
                 "ok",

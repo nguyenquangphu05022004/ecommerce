@@ -30,12 +30,13 @@ public class Product extends BaseEntity {
     private Language language;
 
     private int price;
+    private String slug;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
 

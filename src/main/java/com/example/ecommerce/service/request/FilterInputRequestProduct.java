@@ -11,6 +11,8 @@ import java.util.Map;
 @NoArgsConstructor
 @Setter
 @Getter
+@Builder
+@AllArgsConstructor
 public class FilterInputRequestProduct {
     private Map<String, String> mapKey = new HashMap<>();
     private Integer limit;

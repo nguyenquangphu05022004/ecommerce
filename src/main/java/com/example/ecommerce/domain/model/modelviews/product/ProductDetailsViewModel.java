@@ -6,6 +6,7 @@ import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 
@@ -13,6 +14,7 @@ import java.util.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class ProductDetailsViewModel extends ProductGalleryModelView {
     private List<Evaluation> evaluations;
     private Map<String, List<String>> attributeMaps;

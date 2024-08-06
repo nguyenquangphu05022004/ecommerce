@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @Entity
-@Table(name = "products_attribute")
+@Table(name = "products_attribute_mapping_value")
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 public class ProductAttributeMappingValue extends BaseEntity  {

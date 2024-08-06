@@ -2,7 +2,6 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.common.enums.CustomStatusCode;
 import com.example.ecommerce.domain.entities.auth.Role;
-import com.example.ecommerce.common.utils.ValidationUtils;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.order.Coupon;
 import com.example.ecommerce.domain.entities.auth.User;
@@ -14,18 +13,14 @@ import com.example.ecommerce.repository.CouponRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IVendorService;
-import com.example.ecommerce.service.dto.VendorDto;
 import com.example.ecommerce.service.request.CouponRequest;
 import com.example.ecommerce.service.request.VendorRequest;
 import com.example.ecommerce.service.response.APIResponse;
 import com.example.ecommerce.service.response.CouponResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -92,9 +87,9 @@ public class VendorServiceImpl implements IVendorService {
     @Override
     @Transactional
     public void userFollow(Long vendorId) {
-        User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.username())
+        User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(
-                        String.format("Username: %s not found", SecurityUtils.username())
+                        String.format("Username: %s not found", SecurityUtils.getUsername())
                 ));
 
         Vendor vendor = vendorRepository.findById(vendorId)

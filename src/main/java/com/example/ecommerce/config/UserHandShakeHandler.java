@@ -24,13 +24,13 @@ public class UserHandShakeHandler extends DefaultHandshakeHandler {
     private final RedisTemplate<String, String> redisTemplate;
     @Override
     protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
-        if(redisTemplate.opsForHash().hasKey("WS", SecurityUtils.username())) {
-            return new UserPrincipal(String.valueOf(redisTemplate.opsForHash().get("WS", SecurityUtils.username())));
+        if(redisTemplate.opsForHash().hasKey("WS", SecurityUtils.getUsername())) {
+            return new UserPrincipal(String.valueOf(redisTemplate.opsForHash().get("WS", SecurityUtils.getUsername())));
         }
-        User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.username())
+        User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "You aren't login, please login before using the resources"));
-        redisTemplate.opsForHash().put("WS", SecurityUtils.username(), user.getId());
+        redisTemplate.opsForHash().put("WS", SecurityUtils.getUsername(), user.getId());
         log.info("User opened the page {}",user.getId());
         return new UserPrincipal(String.valueOf(user.getId()));
     }

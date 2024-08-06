@@ -145,10 +145,10 @@ public class AuthenServiceImpl implements IAuthenService {
 
     @Override
     public OperationResponse changePassword(PasswordChangeRequest request) {
-        if(SecurityUtils.username() == null) {
+        if(SecurityUtils.getUsername() == null) {
             throw new GeneralException("You will not login");
         }
-        User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.username()).get();
+        User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.getUsername()).get();
         if(this.encoder.matches(request.getOldPassword(), user.getPassword())) {
             user.setPassword(this.encoder.encode(request.getNewPassword()));
             userRepository.save(user);

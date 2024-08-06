@@ -1,10 +1,11 @@
 package com.example.ecommerce.service.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @SuperBuilder(toBuilder = true)
 public class BrandDto extends BaseDto {
     private String name;

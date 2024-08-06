@@ -8,12 +8,14 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "product_inventories")
 @NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder(toBuilder = true)
 public class ProductInventory extends BaseEntity {
     private String attributeCombinationKey;
     private int quantity;

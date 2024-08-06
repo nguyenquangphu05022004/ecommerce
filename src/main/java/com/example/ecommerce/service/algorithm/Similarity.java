@@ -16,12 +16,13 @@ public class Similarity {
         int len2 = s2.length();
         int maxLen = Math.max(len1, len2);
         if(maxLen == 0) return 1.0;
-        int[][] dp = new int[len1 + 1][len2 + 2];
-        for(int i = 0; i <= s1.length(); i++) {
-            dp[0][i] = i;
-        }
-        for(int i = 0; i <= s2.length(); i++) {
+        int[][] dp = new int[len1 + 1][len2 + 1];
+
+        for (int i = 0; i <= len1; i++) {
             dp[i][0] = i;
+        }
+        for (int j = 0; j <= len2; j++) {
+            dp[0][j] = j;
         }
         for (int i = 1; i <= len1; i++) {
             for (int j = 1; j <= len2; j++) {
@@ -32,7 +33,8 @@ public class Similarity {
                 );
             }
         }
-        return (1 - (double)(dp[len1][len2]/maxLen));
+
+        return (1 - (double)dp[len1][len2]/maxLen);
     }
 
 }
