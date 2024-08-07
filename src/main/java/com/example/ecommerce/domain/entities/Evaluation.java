@@ -29,7 +29,7 @@ public class Evaluation extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @OneToMany(mappedBy = "evaluation",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EvaluationImage> images;
 
     @ManyToOne

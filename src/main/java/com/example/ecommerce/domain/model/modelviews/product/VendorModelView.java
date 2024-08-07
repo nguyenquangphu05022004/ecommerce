@@ -3,10 +3,12 @@ package com.example.ecommerce.domain.model.modelviews.product;
 import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class VendorModelView extends com.example.ecommerce.domain.model.modelviews.profile.VendorModelView {
     private String createdAt;
     private int numberOfFollowers;

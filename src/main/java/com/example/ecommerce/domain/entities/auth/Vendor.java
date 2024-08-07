@@ -25,7 +25,7 @@ public class Vendor extends BaseEntity {
 
     private Integer perMoneyDelivery;
 
-    @OneToMany(mappedBy = "vendor")
+    @OneToMany(mappedBy = "vendor", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Product> products;
 
     @ManyToMany

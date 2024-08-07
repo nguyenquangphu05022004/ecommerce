@@ -20,7 +20,7 @@ public class Event {
         return event;
     }
 
-    public void postEvent(EventType eventType, Object object) {
+    public void postEvent(EventType eventType, final Object object) {
         if(event == null) return;
         if(subscribes.containsKey(eventType)) {
             subscribes.get(eventType).notify(object);

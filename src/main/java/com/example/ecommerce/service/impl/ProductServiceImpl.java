@@ -83,9 +83,10 @@ public class ProductServiceImpl implements IProductService {
                 .category(Category.builder().id(request.getCategoryId()).build())
                 .vendor(Vendor.builder().id(user.getUserTypeId()).build())
                 .build();
-        productRepository.save(product);
-        new Thread(() -> getInstance().postEvent(PRODUCT_CREATE, product)).start();
-        return new ProductDetailsViewModel(productRepository.save(product));
+        Product saved = productRepository.save(product);
+        new Thread(() -> getInstance().postEvent(PRODUCT_CREATE, saved)).start();
+        final ProductDetailsViewModel response = new ProductDetailsViewModel(saved);
+        return response;
     }
 
     @Override

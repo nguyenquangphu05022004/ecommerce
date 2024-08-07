@@ -1,11 +1,13 @@
 package com.example.ecommerce.service;
 
 
-import com.example.ecommerce.service.request.EvaluationRequest;
+import com.example.ecommerce.domain.model.binding.EvaluationRequest;
+import com.example.ecommerce.domain.model.modelviews.evaluation.EvaluationDetailsModelView;
 
 public interface IEvaluationService {
-    void save(EvaluationRequest evaluationRequest);
-    long count();
+    EvaluationDetailsModelView save(EvaluationRequest evaluationRequest);
+    long countByProductId(Long productId);
+    long countByVendorId(Long vendorId);
     void delete(Long id);
 }
 

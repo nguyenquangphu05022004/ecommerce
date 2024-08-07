@@ -19,7 +19,7 @@ public class ProductDetailsViewModel extends ProductGalleryModelView {
     private List<Evaluation> evaluations;
     private Map<String, List<String>> attributeMaps;
     private List<String> imageUrls;
-    public ProductDetailsViewModel(Product product) {
+    public ProductDetailsViewModel(final Product product) {
         super(product);
         this.evaluations = product.getEvaluations();
         this.attributeMaps = extractAttributeKey(product.getProductInventory());
