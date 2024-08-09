@@ -4,13 +4,17 @@ import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.domain.model.modelviews.product.ProductModelView;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
+@NoArgsConstructor
+@Setter
 public class ItemCartModelView {
     private ProductModelView product;
     private String attribute;

@@ -193,12 +193,11 @@ class ProductControllerTest {
         String slug = Arrays.stream(products.get(3).getLanguage().getNameEn().split("\\s+"))
                 .collect(Collectors.joining("_"));
 
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get(
-                        String.format("/api/v1/products/%s/%s", productId, slug)
-                ).contentType("application/json")
-                .header("Authorization", "Bearer " + this.authenResponse.getToken());
+        MockHttpServletRequestBuilder builder = findProductByIdRequest(String.format("/api/v1/products/%s/%s", productId, slug));
 
-        mockMvc.perform(builder).andDo(MockMvcResultHandlers.print());
+        String productJson = mockMvc.perform(builder).andDo(MockMvcResultHandlers.print()).andReturn()
+                .getResponse().getContentAsString();
+        ProductDetailsViewModel productDetailsViewModel = objectMapper.readValue(productJson, ProductDetailsViewModel.class);
 
         Thread.sleep(2000);
 
@@ -221,6 +220,14 @@ class ProductControllerTest {
                 .isEqualTo(-1);
         assertThat(apiResponses.getMessage())
                 .isEqualTo("ao the thao barca jean");
+    }
+
+    private MockHttpServletRequestBuilder findProductByIdRequest(String url) {
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get(
+                        url
+                ).contentType("application/json")
+                .header("Authorization", "Bearer " + this.authenResponse.getToken());
+        return builder;
     }
 
 
@@ -267,7 +274,7 @@ class ProductControllerTest {
         ProductInventory inventory = inventoryRepository.save(
                 ProductInventory.builder()
                         .attributeCombinationKey(String.format(
-                                "Color:Red%sSize:45", SystemUtils.SEPARATE
+                                "Color:Red%sSize:45%sRam:8GB", SystemUtils.SEPARATE, SystemUtils.SEPARATE
                         ))
                         .numberOfProductSold(0)
                         .skuCode("red_pro")
@@ -281,9 +288,8 @@ class ProductControllerTest {
         InventoryRequest inventoryRequest = new InventoryRequest();
         inventoryRequest.setProductId(product.getId());
         inventoryRequest.setAttributeCombinationKey(String.format(
-                "Color:Red%sSize:45", SystemUtils.SEPARATE
+                "Color:Red%sSize:45%sRam:8GB", SystemUtils.SEPARATE, SystemUtils.SEPARATE
         ));
-
         MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.get(
                         "/api/v1/products/inventories"
                 ).header("Authorization", "Bearer " + this.authenResponse.getToken())
@@ -295,8 +301,16 @@ class ProductControllerTest {
                         .value(inventory.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.attributeCombinationProduct")
                         .value(String.format(
-                                "Color:Red%sSize:45", ", "
+                                "Color:Red%sSize:45%sRam:8GB", ", ", ", "
                         )));
+
+        //test findById
+        MockHttpServletRequestBuilder test = findProductByIdRequest(String.format("/api/v1/products/%s/%s", product.getId(), "test"));
+        String testData = mockMvc.perform(test).andReturn().getResponse().getContentAsString();
+        ProductDetailsViewModel productDetailsViewModel = objectMapper.readValue(testData, ProductDetailsViewModel.class);
+
+        assertThat(productDetailsViewModel.getName()).isEqualTo(product.getName());
+
 
     }
 

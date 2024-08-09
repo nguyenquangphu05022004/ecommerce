@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class ShoppingCartController {
     private final ICartService cartService;
 
-    @PostMapping("/products/stocks")
+    @PostMapping("/products/inventories")
     public ResponseEntity<?> addProduct(@RequestBody CartRequest request, HttpServletRequest servletRequest) {
         cartService.add(request, servletRequest);
         return ResponseEntity.ok(
@@ -27,20 +27,20 @@ public class ShoppingCartController {
         );
     }
 
-    @GetMapping("/products/stocks")
+    @GetMapping("/products/inventories")
     public ResponseEntity<?> getShoppingCart(HttpServletRequest servletRequest) {
         return ResponseEntity.ok(cartService.getShoppingCart(servletRequest));
     }
-    @DeleteMapping("/products/stocks")
+    @DeleteMapping("/products/inventories")
     public ResponseEntity<?> deleteProduct(
-            @RequestParam("stockId") Long stockId,
+            @RequestParam("inventoryId") Long inventoryId,
             @RequestParam("vendorId") Long vendorId,
             HttpServletRequest servletRequest) {
-        cartService.delete(stockId, vendorId, servletRequest);
+        cartService.delete(inventoryId, vendorId, servletRequest);
         return ResponseEntity.ok(
                 OperationResponse.builder()
                         .success(true)
-                        .message(String.format("Stock with id %s is deleted", stockId))
+                        .message(String.format("Stock with id %s is deleted", inventoryId))
                         .build()
         );
     }

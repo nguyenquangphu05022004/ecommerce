@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class CartRequest {
     @NotNull
-    private InventoryRequest inventoryRequest;
+    private Long inventoryId;
     @NotNull
     private Integer quantity;
 }

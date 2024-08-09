@@ -5,11 +5,17 @@ import com.example.ecommerce.domain.entities.order.LineItem;
 import com.example.ecommerce.domain.entities.order.Order;
 import com.example.ecommerce.domain.entities.order.Payment;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
+@Setter
+@NoArgsConstructor
 public class OrderViewModel {
     private Payment payment;
     private OrderStatus orderStatus;
@@ -28,6 +34,7 @@ public class OrderViewModel {
     }
 
     private Set<LineItemModelView> mapToOrderViewModel(Set<LineItem> lineItems) {
+        if(CollectionUtils.isEmpty(lineItems)) return Collections.emptySet();
         return lineItems.stream()
                 .map(lineItem -> new LineItemModelView(lineItem))
                 .collect(Collectors.toSet());

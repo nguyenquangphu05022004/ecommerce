@@ -41,11 +41,7 @@ public class SecurityConfig {
                                     "/api/v1/products/search")
                             .permitAll()
                             .requestMatchers("/api/v1/orders/**")
-                            .hasAnyAuthority(
-                                    Role.ADMIN.name(),
-                                    Role.VENDOR.name(),
-                                    Role.USER.name()
-                            )
+                            .authenticated()
                             .requestMatchers(HttpMethod.GET, SecurityUrlConstants.WHILE_LIST)
                             .permitAll()
                             .requestMatchers(HttpMethod.POST, SecurityUrlConstants.WHILE_LIST)

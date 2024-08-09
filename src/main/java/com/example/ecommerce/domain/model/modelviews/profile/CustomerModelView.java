@@ -6,6 +6,8 @@ import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.order.Order;
 import com.example.ecommerce.domain.model.modelviews.order.OrderViewModel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -13,6 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 @Getter
+@NoArgsConstructor
+@Setter
 public class CustomerModelView extends UserModelView {
     private List<OrderViewModel> orderViewModels;
     private Address address;

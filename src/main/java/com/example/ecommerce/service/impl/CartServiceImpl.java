@@ -41,24 +41,24 @@ public class CartServiceImpl implements ICartService {
     public void add(CartRequest cartRequest, HttpServletRequest servletRequest) {
         try {
             ProductInventory inventory = inventoryRepository
-                    .findByProductIdAndAttributeCombinationKey(
-                            cartRequest.getInventoryRequest().getProductId(),
-                            cartRequest.getInventoryRequest().getAttributeCombinationKey())
-                    .orElseThrow(() -> new GeneralException("Key invalid"));
+                    .findById(cartRequest.getInventoryId())
+                    .orElseThrow(() -> new GeneralException("Id not found"));
             Vendor vendor = inventory.getProduct().getVendor();
-            String keyUser = SecurityUtils.getUsername() == null ? servletRequest.getRemoteAddr() : SecurityUtils.getUsername();
+
+            String username =  SecurityUtils.getUsername();
 
             RedisKey redisKey = new RedisKey(
-                    String.format(VENDOR_KEY, keyUser, vendor.getId()),
-                    String.format(VENDOR_ITEM_PRODUCT,keyUser, vendor.getId()),
-                    String.format(INVENTORY_KEY, cartRequest.getInventoryRequest().getProductId() + "_" + cartRequest.getInventoryRequest().getAttributeCombinationKey())
+                    String.format(VENDOR_KEY, username, vendor.getId()),
+                    String.format(VENDOR_ITEM_PRODUCT,username, vendor.getId()),
+                    String.format(INVENTORY_KEY, inventory.getId())
             );
             /**
              * store all key
              */
             redisTemplate.opsForSet().add(
                     getUserKey(servletRequest),
-                    objectMapper.writeValueAsString(redisKey));
+                    objectMapper.writeValueAsString(redisKey)
+            );
 
             Boolean isKeyExists = redisTemplate.opsForHash().hasKey(
                     redisKey.getVendorItemProductKey(),
@@ -119,16 +119,18 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
-    public void delete(Long stockId, Long vendorId, HttpServletRequest servletRequest) {
-        String keyUser = SecurityUtils.getUsername() == null ? servletRequest.getRemoteAddr() : SecurityUtils.getUsername();
+    public void delete(Long inventory, Long vendorId, HttpServletRequest servletRequest) {
+        String keyUser =  SecurityUtils.getUsername();
         if(redisTemplate.opsForHash().hasKey(
                 String.format(VENDOR_ITEM_PRODUCT,keyUser, vendorId),
-                String.format(INVENTORY_KEY, stockId)
+                String.format(INVENTORY_KEY, inventory)
         )) {
             redisTemplate.opsForHash().delete(
                     String.format(VENDOR_ITEM_PRODUCT, keyUser, vendorId),
-                    String.format(INVENTORY_KEY, stockId)
+                    String.format(INVENTORY_KEY, inventory)
             );
+        } else {
+            throw new GeneralException("You haven't item in cart");
         }
     }
 
@@ -136,6 +138,8 @@ public class CartServiceImpl implements ICartService {
         String keyUser = SecurityUtils.getUsername() == null ? servletRequest.getRemoteAddr() : SecurityUtils.getUsername();
         return String.format(USER_KEY, keyUser);
     }
+
+
 
 
     private List<RedisKey> getValueKeyUser(HttpServletRequest servletRequest) {

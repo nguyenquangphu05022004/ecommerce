@@ -2,7 +2,7 @@ package com.example.ecommerce.service;
 
 
 import com.example.ecommerce.domain.entities.order.OrderStatus;
-import com.example.ecommerce.domain.model.binding.OrderRequest;
+import com.example.ecommerce.domain.model.binding.order.OrderRequest;
 import com.example.ecommerce.domain.model.modelviews.order.OrderViewModel;
 
 import java.util.List;

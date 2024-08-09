@@ -3,12 +3,17 @@ package com.example.ecommerce.domain.model.modelviews.order;
 import com.example.ecommerce.domain.entities.order.Item;
 import com.example.ecommerce.domain.entities.order.LineItem;
 import com.example.ecommerce.domain.model.modelviews.profile.VendorModelView;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
+@Getter
+@Setter
+@NoArgsConstructor
 public class LineItemModelView {
     private VendorModelView vendor;
     private List<ItemViewModel> items;

@@ -15,36 +15,41 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = GeneralException.class)
     public ResponseEntity<OperationResponse> handleGeneralException(GeneralException ex) {
-        return ResponseEntity.ok(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value())
+        return new ResponseEntity<>(
+                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST
         );
     }
 
     @ExceptionHandler(value = NotFoundException.class)
     public ResponseEntity<OperationResponse> handleAuthenticationException(NotFoundException ex) {
-        return ResponseEntity.ok(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value())
+        return new ResponseEntity<>(
+                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST
         );
     }
 
     @ExceptionHandler(value = AuthenticationFailureException.class)
     public ResponseEntity<?> handleAuthenticationException(AuthenticationFailureException ex) {
-        return ResponseEntity.ok(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value())
+        return new ResponseEntity<>(
+                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST
         );
     }
 
     @ExceptionHandler(value = CodeExpiredException.class)
     public ResponseEntity<?> handleAuthenticationException(CodeExpiredException ex) {
-        return ResponseEntity.ok(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value())
+        return new ResponseEntity<>(
+                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST
         );
     }
 
     @ExceptionHandler(value = MultipartException.class)
     public ResponseEntity<OperationResponse> handleParamFileException(MultipartException ex) {
-        return ResponseEntity.ok(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value())
+        return new ResponseEntity<>(
+                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST
         );
     }
 
@@ -52,16 +57,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleUsernameNotFoundException(
             UsernameNotFoundException ex
     ) {
-        return ResponseEntity.ok(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value())
+        return new ResponseEntity<>(
+                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST
         );
     }
     @ExceptionHandler(value = UserNameAlreadyExistsException.class)
     public ResponseEntity<?> handleUsernameNotFoundException(
             UserNameAlreadyExistsException ex
     ) {
-        return ResponseEntity.ok(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value())
+        return new ResponseEntity<>(
+                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST
         );
     }
 
@@ -69,8 +76,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleValidationErrors(
             MethodArgumentNotValidException ex
     ) {
-        return ResponseEntity.ok(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value())
+        return new ResponseEntity<>(
+                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST
         );
     }
 }

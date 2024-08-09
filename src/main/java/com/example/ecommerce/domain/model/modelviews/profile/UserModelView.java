@@ -6,10 +6,14 @@ import com.example.ecommerce.domain.model.modelviews.evaluation.EvaluationProfil
 import com.example.ecommerce.domain.model.modelviews.order.OrderViewModel;
 import com.example.ecommerce.service.mapper.ImageMapper;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
+@Setter
 public class UserModelView extends UserSimpleModelView implements ImageMapper { ;
     private List<EvaluationProfileModelView> evaluations;
     private List<OrderViewModel> orders;

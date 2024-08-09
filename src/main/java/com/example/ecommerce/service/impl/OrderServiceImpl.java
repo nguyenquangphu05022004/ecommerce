@@ -6,7 +6,8 @@ import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.order.*;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
-import com.example.ecommerce.domain.model.binding.OrderRequest;
+import com.example.ecommerce.domain.model.binding.order.ItemRequest;
+import com.example.ecommerce.domain.model.binding.order.OrderRequest;
 import com.example.ecommerce.domain.model.modelviews.order.OrderViewModel;
 import com.example.ecommerce.event.Event;
 import com.example.ecommerce.handler.exception.GeneralException;
@@ -58,7 +59,7 @@ public class OrderServiceImpl implements IOrderService {
                                                         .quantity(item.getQuantity())
                                                         .build();
                                             }
-                                            throw new NotFoundException("quantity out of bound in inventory");
+                                            throw new NotFoundException("Item out of bound inventory");
                                         })
                                         .collect(Collectors.toSet()))
                                 .build())
@@ -66,6 +67,15 @@ public class OrderServiceImpl implements IOrderService {
                 .customer(Customer.builder().id(user.getUserTypeId()).build())
                 .build();
         orderRepository.save(order);
+
+        order.getLineItems().stream().forEach(l -> {
+            l.setOrder(order);
+            lineItemRepository.save(l);
+            l.getItems().stream().forEach(i -> {
+                i.setLineItem(l);
+                itemRepository.save(i);
+            });
+        });
         postNotificationEvent(ORDER_CREATE, order);
     }
 
@@ -73,7 +83,7 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public List<OrderViewModel> getAllOrderByCustomer(OrderStatus status) {
         List<Order> listOrder;
-        if (status != OrderStatus.ALL) {
+        if (status != null && status != OrderStatus.ALL) {
             listOrder = orderRepository
                     .findAllByCreatedByAndOrderStatus(SecurityUtils.getUsername(), status);
         } else {
@@ -93,15 +103,19 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public void deleteById(Long orderId) {
-        Order order = orderRepository
-                .findById(orderId)
-                .orElseThrow(() -> new GeneralException("Not found order"));
+        System.out.println("-----------------------delete order------------------");
+        List<LineItem> lineItems = lineItemRepository.findAllByOrderId(orderId);
+        lineItems.stream().forEach(lineItem -> {
+            itemRepository.deleteByLineItem_Id(lineItem.getId());
+        });
+        lineItemRepository.deleteAll(lineItems);
+        Order order = lineItems.get(0).getOrder();
         orderRepository.delete(order);
         postNotificationEvent(ORDER_DELETE, order);
     }
 
 
-    private boolean checkStockExists(OrderRequest.ItemRequest itemRequest) {
+    private boolean checkStockExists(ItemRequest itemRequest) {
         ProductInventory inventory = inventoryRepository.findById(itemRequest.getInventoryId())
                 .orElseThrow(() -> new GeneralException("Inventory not found"));
         if (inventory.getQuantity() >= itemRequest.getQuantity()) {
@@ -109,7 +123,7 @@ public class OrderServiceImpl implements IOrderService {
             inventoryRepository.save(inventory);
             return true;
         }
-        throw new NotFoundException(String.format("Item with name %s not found at inventory"));
+        return false;
     }
 
     private void postNotificationEvent(Event.EventType eventType, Order order) {

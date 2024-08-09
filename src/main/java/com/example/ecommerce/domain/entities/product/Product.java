@@ -52,9 +52,8 @@ public class Product extends BaseEntity {
 
     private boolean combination;
 
-    @OneToMany
-    @JoinColumn(name = "product_inventory_id")
-    private Set<ProductInventory> productInventory;
+    @OneToMany(mappedBy = "product")
+    private List<ProductInventory> productInventory;
 
     @OneToMany(mappedBy = "product")
     private List<ProductImage> images;

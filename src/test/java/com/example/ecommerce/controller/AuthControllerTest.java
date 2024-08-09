@@ -132,7 +132,7 @@ class AuthControllerTest {
                 .content(json);
         mockMvc.perform(builder)
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.statusValue")
                         .value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.success")

@@ -10,5 +10,5 @@ import java.util.List;
 public interface ICartService {
     void add(CartRequest cartRequest, HttpServletRequest servletRequest) ;
     List<VendorCartModelView> getShoppingCart(HttpServletRequest servletRequest) ;
-    void delete(Long stockId, Long vendorId, HttpServletRequest servletRequest);
+    void delete(Long inventory, Long vendorId, HttpServletRequest servletRequest);
 }

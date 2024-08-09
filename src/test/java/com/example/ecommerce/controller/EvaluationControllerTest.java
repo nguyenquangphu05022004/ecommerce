@@ -37,8 +37,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 @AutoConfigureMockMvc
 class EvaluationControllerTest {
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+
     private AuthenResponse authenResponse;
     @Autowired
     private IAuthenService authenService;

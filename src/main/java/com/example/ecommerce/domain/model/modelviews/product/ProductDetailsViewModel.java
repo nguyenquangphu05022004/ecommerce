@@ -27,7 +27,7 @@ public class ProductDetailsViewModel extends ProductGalleryModelView {
     }
 
     private Map<String, List<String>> extractAttributeKey(
-            Set<ProductInventory> productInventory) {
+            List<ProductInventory> productInventory) {
         if(CollectionUtils.isEmpty(productInventory)) {
             return Collections.emptyMap();
         }
