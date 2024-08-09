@@ -10,6 +10,7 @@ import com.example.ecommerce.domain.entities.product.ProductBrand;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.domain.entities.product.recommendation.ProductActionCache;
 import com.example.ecommerce.domain.entities.product.recommendation.ProductSimilarity;
+import com.example.ecommerce.domain.model.binding.FilterRequest;
 import com.example.ecommerce.domain.model.binding.InventoryRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
@@ -19,6 +20,7 @@ import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.algorithm.Similarity;
+import com.example.ecommerce.service.algorithm.search.FilterData;
 import com.example.ecommerce.service.algorithm.sort.ProductSortFactory;
 import com.example.ecommerce.service.request.FilterInputRequestProduct;
 import com.example.ecommerce.service.request.KeySearchRequest;
@@ -52,6 +54,7 @@ public class ProductServiceImpl implements IProductService {
     private final ProductCacheRepository productCacheRepository;
     private final UserRepository userRepository;
     private final ProductSimilarityRepository productSimilarityRepository;
+
     @Override
     public void delete(Long id) {
         productRepository.deleteById(id);
@@ -179,24 +182,25 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public APIListResponse<ProductGalleryModelView> filterProduct(Map<String, String> filter) {
+    public APIListResponse<ProductGalleryModelView> filterProduct(FilterRequest filterRequest) {
         Specification<Product> specification = (root, query, criteriaBuilder) -> {
             final List<Predicate> predicates = new ArrayList<>();
-            filter.entrySet().stream()
-                    .forEach(entry -> {
-                        Predicate condition = ProductFilterFactory.getInstance(entry.getKey()).filter(entry.getValue());
-                        predicates.add(condition);
-                    });
+            filterRequest.getData().entrySet().stream().forEach(entry -> {
+                FilterData filterData = new FilterData(criteriaBuilder, root, entry.getValue());
+                Predicate condition = ProductFilterFactory.getInstance(entry.getKey(), filterData).filter();
+                predicates.add(condition);
+            });
             Predicate predicate = null;
-            for(var pre : predicates) {
-                if(predicate == null) predicate = pre;
+            for (var pre : predicates) {
+                if (predicate == null) predicate = pre;
                 else predicate = criteriaBuilder.and(predicate, pre);
             }
             return predicate;
         };
-        List<Product> products = productRepository.findAll(specification);
-        ProductSortFactory.getInstance("rageAverage").sort(products);
-        return null;
+        PageRequest pageRequest = PageRequest.of(filterRequest.getPage() - 1, filterRequest.getLimit());
+        Page<Product> pageProducts = productRepository.findAll(specification, pageRequest);
+        ProductSortFactory.getInstance(filterRequest.getSortType()).sort(pageProducts.getContent());
+        return responseAPI(pageProducts);
     }
 
     private APIListResponse<ProductGalleryModelView> responseAPI(
@@ -214,6 +218,20 @@ public class ProductServiceImpl implements IProductService {
                 products.stream().map(ProductGalleryModelView::new).toList());
         return response;
     }
+    private APIListResponse<ProductGalleryModelView> responseAPI(
+            Page<Product> page
+    ) {
+        APIListResponse<ProductGalleryModelView> response = new APIListResponse<>(
+                "ok",
+                "",
+                1,
+                HttpStatus.OK.value(),
+                page != null ? page.getNumber() : -1,
+                page != null ? page.getSize() : -1,
+                page != null ? page.getTotalPages() : -1,
+                page.getContent().stream().map(ProductGalleryModelView::new).toList());
+        return response;
+    }
 
 
     /**
@@ -221,31 +239,31 @@ public class ProductServiceImpl implements IProductService {
      */
     private void saveProductSimilarity(final Product product, final User user) {
 //        new Thread(() -> {
-            ProductActionCache productActionCache = productCacheRepository.save(
-                    ProductActionCache.builder()
-                            .product(product)
-                            .typeAction(CLICK_PRODUCT)
-                            .user(user)
-                            .build()
-            );
-            List<Product> products = productRepository.findAllDifferentId(productActionCache.getProduct().getId());
+        ProductActionCache productActionCache = productCacheRepository.save(
+                ProductActionCache.builder()
+                        .product(product)
+                        .typeAction(CLICK_PRODUCT)
+                        .user(user)
+                        .build()
+        );
+        List<Product> products = productRepository.findAllDifferentId(productActionCache.getProduct().getId());
 
-            products.stream().forEach((p) -> {
-                double similarity1 = Similarity.similarity(
-                        productActionCache.getProduct().getLanguage().getNameEn(),
-                        p.getLanguage().getNameEn()
-                );
-                double similarity2 = Similarity.similarity(
-                        productActionCache.getProduct().getLanguage().getNameVn(),
-                        p.getLanguage().getNameVn()
-                );
-                ProductSimilarity productSimilarity = ProductSimilarity.builder()
-                        .similarity((similarity2 + similarity1) / 2)
-                        .productActionCache(productActionCache)
-                        .product(p)
-                        .build();
-                productSimilarityRepository.save(productSimilarity);
-            });
+        products.stream().forEach((p) -> {
+            double similarity1 = Similarity.similarity(
+                    productActionCache.getProduct().getLanguage().getNameEn(),
+                    p.getLanguage().getNameEn()
+            );
+            double similarity2 = Similarity.similarity(
+                    productActionCache.getProduct().getLanguage().getNameVn(),
+                    p.getLanguage().getNameVn()
+            );
+            ProductSimilarity productSimilarity = ProductSimilarity.builder()
+                    .similarity((similarity2 + similarity1) / 2)
+                    .productActionCache(productActionCache)
+                    .product(p)
+                    .build();
+            productSimilarityRepository.save(productSimilarity);
+        });
 //        }).start();
     }
 }
