@@ -1,16 +1,15 @@
 package com.example.ecommerce.service;
 
 
-import com.example.ecommerce.domain.entities.order.OrderStatus;
-import com.example.ecommerce.domain.model.binding.order.OrderRequest;
-import com.example.ecommerce.domain.model.modelviews.order.OrderViewModel;
-
-import java.util.List;
+import com.example.ecommerce.domain.model.binding.FilterOrderRequest;
+import com.example.ecommerce.domain.model.binding.OrderRequest;
+import com.example.ecommerce.domain.response.APIListResponse;
+import com.example.ecommerce.domain.response.APIResponse;
 
 public interface IOrderService {
-    void createOrder(OrderRequest request);
-    List<OrderViewModel> getAllOrderByCustomer(OrderStatus status);
-    void updatePayment(Long orderId);
+    APIResponse<?> createOrder(OrderRequest request);
+    APIListResponse<?> getAllOrderByCustomer(FilterOrderRequest status);
+    APIResponse<?> updatePayment(Long orderId);
 
-    void deleteById(Long orderId);
+    APIResponse<?> deleteById(Long orderId);
 }

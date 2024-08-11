@@ -27,6 +27,17 @@ public class ProductFilterCommon {
                 filterData.getData()
         );
     }
+    protected static Predicate hasJoinEqual(
+            String joinAttr,
+            String targetOne,
+            String targetTwo,
+            FilterData filterData
+    ) {
+        return filterData.getCriteriaBuilder().equal(
+                filterData.getProductRoot().join(joinAttr).get(targetOne).get(targetTwo),
+                filterData.getData()
+        );
+    }
     protected static Predicate between(
             String targetCompare,
             FilterData filterData,

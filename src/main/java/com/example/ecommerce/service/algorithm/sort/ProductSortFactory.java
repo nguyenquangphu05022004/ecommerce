@@ -5,6 +5,10 @@ public class ProductSortFactory {
         return switch (type) {
             case PRICE -> new ProductSortPrice();
             case RATE_AVERAGE -> new ProductSortSold();
+            case DEFAULT -> new ProductSortDefault(
+
+
+            );
             case PRODUCT_SOLD -> new ProductSortRateAverage();
         };
     }

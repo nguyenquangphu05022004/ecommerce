@@ -5,6 +5,7 @@ import com.example.ecommerce.domain.entities.Evaluation;
 import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
+import com.example.ecommerce.domain.model.modelviews.evaluation.EvaluationDetailsModelView;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,14 +17,23 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 public class ProductDetailsViewModel extends ProductGalleryModelView {
-    private List<Evaluation> evaluations;
+    private List<EvaluationDetailsModelView> evaluations;
     private Map<String, List<String>> attributeMaps;
     private List<String> imageUrls;
+    private VendorModelView vendor;
     public ProductDetailsViewModel(final Product product) {
         super(product);
-        this.evaluations = product.getEvaluations();
+        this.evaluations = mapToEvalDetails(product.getEvaluations());
         this.attributeMaps = extractAttributeKey(product.getProductInventory());
         this.imageUrls = getImageUrl(FileEntityType.PRODUCT.name(), product.getImages());
+        vendor = new VendorModelView(product.getVendor());
+    }
+
+    private List<EvaluationDetailsModelView> mapToEvalDetails(List<Evaluation> evaluations) {
+        if(CollectionUtils.isEmpty(evaluations)) return Collections.emptyList();
+        return evaluations.stream()
+                .map(EvaluationDetailsModelView::new)
+                .toList();
     }
 
     private Map<String, List<String>> extractAttributeKey(

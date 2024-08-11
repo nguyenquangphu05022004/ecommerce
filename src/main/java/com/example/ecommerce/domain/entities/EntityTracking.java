@@ -1,7 +1,5 @@
 package com.example.ecommerce.domain.entities;
 
-import com.example.ecommerce.domain.entities.BaseEntity;
-import com.example.ecommerce.domain.entities.EntityType;
 import com.example.ecommerce.domain.entities.product.EntityAction;
 import jakarta.persistence.*;
 import lombok.Getter;

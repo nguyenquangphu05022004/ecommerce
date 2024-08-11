@@ -2,16 +2,20 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.common.enums.CustomStatusCode;
 import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.domain.entities.auth.Customer;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.UserType;
+import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.file.FileEntityType;
+import com.example.ecommerce.domain.model.binding.RegisterRequest;
+import com.example.ecommerce.domain.model.binding.VendorRequest;
 import com.example.ecommerce.domain.model.modelviews.profile.UserModelView;
+import com.example.ecommerce.repository.CustomerRepository;
 import com.example.ecommerce.repository.UserRepository;
+import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IUserService;
-import com.example.ecommerce.service.request.RegisterRequest;
-import com.example.ecommerce.service.request.VendorRequest;
-import com.example.ecommerce.service.response.APIResponse;
+import com.example.ecommerce.domain.response.APIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +29,8 @@ public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final IFilesStorageService filesStorageService;
+    private final VendorRepository vendorRepository;
+    private final CustomerRepository customerRepository;
     @Override
     public void saveOrUpdate(RegisterRequest request) {
         User user = User.builder()
@@ -33,10 +39,18 @@ public class UserServiceImpl implements IUserService {
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
-                .userType(request.getUserType())
                 .build();
         if(request instanceof VendorRequest) {
-
+            VendorRequest vendorRequest = (VendorRequest)request;
+            Vendor vendor = Vendor.builder()
+                    .shopName(vendorRequest.getShopName())
+                    .perMoneyDelivery(vendorRequest.getPerMoneyDelivery())
+                    .build();
+            vendorRepository.save(vendor);
+            user.setUserType(UserType.VENDOR);
+            user.setUserTypeId(vendor.getId());
+        } else {
+            user.setUserTypeId(customerRepository.save(new Customer()).getId());
         }
         userRepository.save(user);
     }

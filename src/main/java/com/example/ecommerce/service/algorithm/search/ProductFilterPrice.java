@@ -1,7 +1,9 @@
 package com.example.ecommerce.service.algorithm.search;
 
 import jakarta.persistence.criteria.Predicate;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class ProductFilterPrice extends ProductFilterStrategy {
     public ProductFilterPrice(FilterData filterData) {
         super(filterData);

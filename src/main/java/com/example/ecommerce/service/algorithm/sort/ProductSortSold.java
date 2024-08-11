@@ -2,11 +2,22 @@ package com.example.ecommerce.service.algorithm.sort;
 
 import com.example.ecommerce.domain.entities.product.Product;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class ProductSortSold implements ProductSortStrategy{
     @Override
-    public void sort(List<Product> products) {
+    public List<Product> sort(List<Product> products) {
+        products = new ArrayList<>(products);
+        Collections.sort(products, (p1, p2) -> getWholeSold(p2) - getWholeSold(p1));
+        return products;
+    }
 
+    private int getWholeSold(Product p1) {
+        return p1.getProductInventory().stream()
+                .flatMapToInt(i -> IntStream.of(i.getNumberOfProductSold()))
+                .sum();
     }
 }

@@ -7,16 +7,17 @@ import com.example.ecommerce.domain.entities.auth.UserType;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
+import com.example.ecommerce.domain.model.binding.AuthenRequest;
+import com.example.ecommerce.domain.model.binding.FilterProductRequest;
 import com.example.ecommerce.domain.model.binding.InventoryRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductGalleryModelView;
 import com.example.ecommerce.repository.*;
-import com.example.ecommerce.service.request.AuthenRequest;
-import com.example.ecommerce.service.request.FilterInputRequestProduct;
-import com.example.ecommerce.service.request.KeySearchRequest;
-import com.example.ecommerce.service.response.APIListResponse;
-import com.example.ecommerce.service.response.AuthenResponse;
+import com.example.ecommerce.service.algorithm.search.ProductFilterType;
+import com.example.ecommerce.service.algorithm.sort.ProductSortType;
+import com.example.ecommerce.domain.response.APIListResponse;
+import com.example.ecommerce.domain.response.AuthenResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,9 +34,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.example.ecommerce.service.algorithm.search.ProductFilterType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -130,7 +135,7 @@ class ProductControllerTest {
     private ProductRequest getProductRequest() {
         ProductRequest request = new ProductRequest();
         request.setBrandId(1l);
-        request.setCategoryId(2l);
+        request.setCategoryId(1l);
         request.setDescription("hello worldrkwejwejfkdjglsdfksldgkdsogerscsfsafcsaca");
         request.setPrice(2500);
         request.setCombination(false);
@@ -156,13 +161,11 @@ class ProductControllerTest {
 
         ProductRequest v4 = getProductRequest();
         v4.setLanguage(new Product.Language("ao the thao man united", "ao the thao man united"));
-        v4.setPrice(3000);
-        v4.setBrandId(1l);
+        v4.setPrice(2300);
 
         ProductRequest v5 = getProductRequest();
         v5.setLanguage(new Product.Language("ao the thao barca jean", "ao the thao barca jean"));
-        v5.setBrandId(1l);
-        v5.setPrice(2300);
+        v5.setPrice(3000);
 
         performTestProductCreate(v1);
         performTestProductCreate(v2);
@@ -234,19 +237,19 @@ class ProductControllerTest {
     @Test
     void getAllProduct() throws Exception {
         initListProduct();
-        Map<String, String> keys = new HashMap<>();
-        keys.put(KeySearchRequest.CATEGORY_PARENT_ID.name(), String.valueOf(1l));
-        keys.put(KeySearchRequest.BRAND_ID.name(), String.valueOf(1l));
+
+        FilterProductRequest filter = new FilterProductRequest();
+        Map<ProductFilterType, String> keys = new HashMap<>();
+        keys.put(CATEGORY_PARENT, String.valueOf(1l));
+        keys.put(BRAND, String.valueOf(1l));
 //        keys.put(KeySearchRequest.PRODUCT_NAME.name(), "ao the thao");
-        keys.put(KeySearchRequest.PRICE.name(), "2000;3000");
-        FilterInputRequestProduct request =
-                FilterInputRequestProduct.builder()
-                        .mapKey(keys)
-                        .build();
+        keys.put(PRICE, "2000;3000");
+        filter.setData(keys);
+        filter.setSortType(ProductSortType.PRICE);
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.post(
                         "/api/v1/products/search"
                 ).contentType("application/json")
-                .content(objectMapper.writeValueAsString(request));
+                .content(objectMapper.writeValueAsString(filter));
         APIListResponse<ProductGalleryModelView> productResponses
                 = objectMapper.readValue(mockMvc.perform(builder)
                         .andReturn().getResponse()

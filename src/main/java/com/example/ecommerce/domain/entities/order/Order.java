@@ -35,4 +35,14 @@ public class Order extends BaseEntity{
     private boolean purchased;
     private boolean received;
 
+    @Transient
+    public Integer getTotalPrice() {
+        return lineItems.stream().mapToInt(lineItem -> {
+            return lineItem.getItems().stream().mapToInt(item ->
+                    item.getProductInventory().getProduct().getPrice() * item.getQuantity())
+                    .sum();
+        }).sum();
+    }
+
+
 }

@@ -1,6 +1,6 @@
 package com.example.ecommerce.domain.entities;
 
-import com.example.ecommerce.domain.entities.file.FileEntityType;
+import com.example.ecommerce.event.listener.NotificationActionType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 public class Notification extends BaseEntity {
     private String message;
-    private Long entityId;
-    @Enumerated(EnumType.STRING)
-    private FileEntityType type;
+    @Embedded
+    private EntityType entityType;
+    private NotificationActionType notificationActionType;
 }

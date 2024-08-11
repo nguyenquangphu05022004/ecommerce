@@ -11,12 +11,15 @@ import com.example.ecommerce.repository.EvaluationRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IEvaluationService;
 import com.example.ecommerce.service.IFilesStorageService;
+import com.example.ecommerce.domain.response.APIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +30,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
     private final UserRepository userRepository;
     @Override
     @Transactional
-    public EvaluationDetailsModelView save(EvaluationRequest request) {
+    public APIResponse<?> save(EvaluationRequest request) {
         Evaluation evaluation = Evaluation.builder()
                 .rating(request.getRating())
                 .content(request.getContent())
@@ -46,24 +49,33 @@ public class EvaluationServiceImpl implements IEvaluationService {
                     .toList();
             saved.setImages(files);
         }
-        return new EvaluationDetailsModelView(saved);
+        return apiResponse("created evaluation", new EvaluationDetailsModelView(saved));
     }
 
     @Override
-    public long countByProductId(Long productId) {
-        return evaluationRepository.countByProductId(productId);
+    public APIResponse<?> countByProductId(Long productId) {
+        return apiResponse(
+                "number of evaluation of product",
+                evaluationRepository.countByProductId(productId));
     }
 
     @Override
-    public long countByVendorId(Long vendorId) {
-        return 0;
+    public APIResponse<?> countByVendorId(Long vendorId) {
+        return apiResponse(
+                "number of evaluation of vendor",
+                1
+        );
     }
 
     @Override
-    public void delete(Long id) {
+    public APIResponse<?> delete(Long id) {
         Evaluation evaluation = evaluationRepository.findById(id)
                 .orElseThrow(() -> new GeneralException("Not found"));
         evaluation.getImages().forEach(f -> filesStorageService.deleteImage(f));
         evaluationRepository.delete(evaluation);
+        return apiResponse(
+                SecurityUtils.getUsername() + " deleted evaluation",
+                null
+        );
     }
 }

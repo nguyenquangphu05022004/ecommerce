@@ -9,16 +9,15 @@ import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductBrand;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.domain.model.binding.CartRequest;
-import com.example.ecommerce.domain.model.modelviews.cart.VendorCartModelView;
+import com.example.ecommerce.domain.model.modelviews.cart.VendorCartUserProfileModelView;
 import com.example.ecommerce.repository.*;
-import com.example.ecommerce.service.request.AuthenRequest;
-import com.example.ecommerce.service.response.AuthenResponse;
+import com.example.ecommerce.domain.model.binding.AuthenRequest;
+import com.example.ecommerce.domain.response.AuthenResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -107,7 +106,7 @@ class ShoppingCartControllerTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        List<VendorCartModelView> cart = objectMapper.readValue(response, ArrayList.class);
+        List<VendorCartUserProfileModelView> cart = objectMapper.readValue(response, ArrayList.class);
         assertThat(cart.size()).isGreaterThan(0);
     }
 

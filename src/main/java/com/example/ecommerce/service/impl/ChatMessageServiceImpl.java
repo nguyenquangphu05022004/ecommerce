@@ -8,7 +8,7 @@ import com.example.ecommerce.domain.model.modelviews.messages.ChatMessageViewMod
 import com.example.ecommerce.repository.ChatMessageRepository;
 import com.example.ecommerce.service.IChatMessageService;
 import com.example.ecommerce.service.IFilesStorageService;
-import com.example.ecommerce.service.response.APIListResponse;
+import com.example.ecommerce.domain.response.APIListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -72,7 +72,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
         );
         return new APIListResponse<>(
                 "ok",
-                "",
+                0,
                 1,
                 HttpStatus.OK.value(),
                 page,

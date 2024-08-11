@@ -4,8 +4,8 @@ import com.example.ecommerce.domain.entities.BaseEntity;
 import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductBrand;
-import com.example.ecommerce.domain.model.modelviews.profile.VendorModelView;
-import com.example.ecommerce.service.mapper.ImageMapper;
+import com.example.ecommerce.domain.model.modelviews.profile.VendorUserProfileModelView;
+import com.example.ecommerce.service.ImageMapper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +22,7 @@ public class ProductModelView extends BaseEntity implements ImageMapper {
     private ProductBrand productBrand;
     private String imageUrl;
     private String slug;
-    private VendorModelView vendor;
+    private VendorUserProfileModelView vendor;
     public ProductModelView(Product product) {
         this.name = product.getLanguage().getNameVn();
         setId(product.getId());
@@ -32,6 +32,6 @@ public class ProductModelView extends BaseEntity implements ImageMapper {
         this.price = product.getPrice();
         this.imageUrl = CollectionUtils.isEmpty(product.getImages()) ? null : getImageUrl(FileEntityType.PRODUCT.name(), product.getImages().get(0));
         this.slug = product.getSlug();
-        this.vendor = new VendorModelView(product.getVendor());
+        this.vendor = new VendorUserProfileModelView(product.getVendor());
     }
 }

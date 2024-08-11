@@ -16,7 +16,6 @@ public class OrderSubscribe {
     @PostConstruct
     public void initSubscribe() {
         getInstance().subscribe(ORDER_PAYMENT, orderListener.orderPaymentListener());
-        getInstance().subscribe(ORDER_DELETE, orderListener.orderDeleteListener());
         getInstance().subscribe(ORDER_CREATE, orderListener.orderCreateListener());
     }
 }

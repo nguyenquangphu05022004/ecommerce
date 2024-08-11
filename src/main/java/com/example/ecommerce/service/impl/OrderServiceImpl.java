@@ -6,15 +6,24 @@ import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.order.*;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
-import com.example.ecommerce.domain.model.binding.order.ItemRequest;
-import com.example.ecommerce.domain.model.binding.order.OrderRequest;
+import com.example.ecommerce.domain.model.binding.FilterOrderRequest;
+import com.example.ecommerce.domain.model.binding.ItemRequest;
+import com.example.ecommerce.domain.model.binding.OrderRequest;
 import com.example.ecommerce.domain.model.modelviews.order.OrderViewModel;
 import com.example.ecommerce.event.Event;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.handler.exception.NotFoundException;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IOrderService;
+import com.example.ecommerce.domain.response.APIListResponse;
+import com.example.ecommerce.domain.response.APIResponse;
+import com.example.ecommerce.timer.TimerInfo;
+import com.example.ecommerce.timer.TimerService;
+import com.example.ecommerce.timer.job.OrderApprovalJob;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,21 +32,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.ecommerce.event.Event.EventType.*;
+import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class OrderServiceImpl implements IOrderService {
     private final OrderRepository orderRepository;
-    private final NotificationRepository notificationRepository;
-    private final EventRepository eventRepository;
     private final LineItemRepository lineItemRepository;
     private final ItemRepository itemRepository;
     private final InventoryRepository inventoryRepository;
     private final UserRepository userRepository;
-
+    private final TimerService timerService;
     @Override
-    public void createOrder(OrderRequest request) {
+    public APIResponse<?> createOrder(OrderRequest request) {
         User user = userRepository.findByUsernameIgnoreCase(
                 SecurityUtils.getUsername()
         ).orElseThrow(() -> new UsernameNotFoundException("You aren't login"));
@@ -77,33 +85,48 @@ public class OrderServiceImpl implements IOrderService {
             });
         });
         postNotificationEvent(ORDER_CREATE, order);
+        timerService.schedulerJob(
+                OrderApprovalJob.class,
+                //offsetMinis: 8h; job execute when created order push 8h
+                new TimerInfo(
+                        1,
+                        5000l,
+                        8*60*60*1000l,
+                        false,
+                        order.getId().toString())
+        );
+        return apiResponse("cretead order",null);
     }
 
 
     @Override
-    public List<OrderViewModel> getAllOrderByCustomer(OrderStatus status) {
-        List<Order> listOrder;
-        if (status != null && status != OrderStatus.ALL) {
-            listOrder = orderRepository
-                    .findAllByCreatedByAndOrderStatus(SecurityUtils.getUsername(), status);
+    public APIListResponse<?> getAllOrderByCustomer(FilterOrderRequest request) {
+        Page<Order> pageOrders;
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getLimit());
+        if (request.getOrderStatus() != null && request.getOrderStatus() != OrderStatus.ALL) {
+            pageOrders = orderRepository
+                    .findAllByCreatedByAndOrderStatus(SecurityUtils.getUsername(), request.getOrderStatus(), pageable);
         } else {
-            listOrder = orderRepository.findAllByCreatedBy(SecurityUtils.getUsername());
+            pageOrders = orderRepository.findAllByCreatedBy(SecurityUtils.getUsername(), pageable);
         }
-        return listOrder.stream().map(order -> new OrderViewModel(order))
-                .toList();
+        return new APIListResponse<>(
+                "ok", 0, 1, 200, request.getPage(), request.getLimit(),
+                pageOrders.getTotalPages(),
+                pageOrders.getContent().stream().map(o -> new OrderViewModel(o)).toList()
+        );
     }
 
     @Override
-    public void updatePayment(Long orderId) {
+    public APIResponse<?> updatePayment(Long orderId) {
         Order order = orderRepository
                 .findById(orderId)
                 .orElseThrow(() -> new GeneralException("Not found order"));
         postNotificationEvent(ORDER_PAYMENT, order);
+        return apiResponse("update payment success", null);
     }
 
     @Override
-    public void deleteById(Long orderId) {
-        System.out.println("-----------------------delete order------------------");
+    public APIResponse<?> deleteById(Long orderId) {
         List<LineItem> lineItems = lineItemRepository.findAllByOrderId(orderId);
         lineItems.stream().forEach(lineItem -> {
             itemRepository.deleteByLineItem_Id(lineItem.getId());
@@ -112,6 +135,7 @@ public class OrderServiceImpl implements IOrderService {
         Order order = lineItems.get(0).getOrder();
         orderRepository.delete(order);
         postNotificationEvent(ORDER_DELETE, order);
+        return apiResponse("delete order success", null);
     }
 
 

@@ -3,7 +3,7 @@ package com.example.ecommerce.domain.model.modelviews.profile;
 import com.example.ecommerce.domain.entities.BaseEntity;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.file.FileEntityType;
-import com.example.ecommerce.service.mapper.ImageMapper;
+import com.example.ecommerce.service.ImageMapper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

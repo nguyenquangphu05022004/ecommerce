@@ -11,8 +11,8 @@ import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.modelviews.evaluation.EvaluationDetailsModelView;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IAuthenService;
-import com.example.ecommerce.service.request.AuthenRequest;
-import com.example.ecommerce.service.response.AuthenResponse;
+import com.example.ecommerce.domain.model.binding.AuthenRequest;
+import com.example.ecommerce.domain.response.AuthenResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 

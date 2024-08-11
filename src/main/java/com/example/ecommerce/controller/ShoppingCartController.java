@@ -2,7 +2,7 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.domain.model.binding.CartRequest;
 import com.example.ecommerce.service.ICartService;
-import com.example.ecommerce.service.response.OperationResponse;
+import com.example.ecommerce.domain.response.OperationResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

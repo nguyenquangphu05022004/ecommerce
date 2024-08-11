@@ -1,15 +1,13 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.domain.model.binding.FilterProductRequest;
 import com.example.ecommerce.domain.model.binding.InventoryRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
 import com.example.ecommerce.service.IProductService;
-import com.example.ecommerce.service.request.FilterInputRequestProduct;
-import com.example.ecommerce.service.response.OperationResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +21,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<?> createProduct(@RequestBody @Valid ProductRequest request) {
-        ProductDetailsViewModel response = productService.save(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok( productService.save(request));
     }
 
     @GetMapping("/{id}/{slug}")
@@ -39,9 +36,9 @@ public class ProductController {
 
     @PostMapping("/search")
     public ResponseEntity<?> getAllProduct(
-            @RequestBody FilterInputRequestProduct filter
+            @RequestBody FilterProductRequest filter
     ) {
-        return ResponseEntity.ok(productService.searchProduct(filter));
+        return ResponseEntity.ok(productService.filterProduct(filter));
     }
 
     @GetMapping("/inventories")

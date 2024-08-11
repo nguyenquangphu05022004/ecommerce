@@ -1,11 +1,10 @@
 package com.example.ecommerce.domain.model.modelviews.evaluation;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
-import com.example.ecommerce.domain.entities.EntityType;
 import com.example.ecommerce.domain.entities.Evaluation;
 import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.domain.model.modelviews.profile.UserSimpleModelView;
-import com.example.ecommerce.service.mapper.ImageMapper;
+import com.example.ecommerce.service.ImageMapper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

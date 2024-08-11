@@ -1,15 +1,14 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.service.request.CouponRequest;
-import com.example.ecommerce.service.request.VendorRequest;
-import com.example.ecommerce.service.response.APIResponse;
-import com.example.ecommerce.service.response.CouponResponse;
+import com.example.ecommerce.domain.model.binding.CouponRequest;
+import com.example.ecommerce.domain.model.binding.VendorRequest;
+import com.example.ecommerce.domain.response.APIResponse;
 
 public interface IVendorService{
-    void saveOrUpdate(VendorRequest request);
-    void userFollow(Long vendorId);
-    void createCoupon(CouponRequest request);
-    APIResponse<CouponResponse> checkCouponExpire(Long vendorId, String couponCode);
+    APIResponse<?> saveOrUpdate(VendorRequest request);
+    APIResponse<?> userFollow(Long vendorId);
+    APIResponse<?> createCoupon(CouponRequest request);
+    APIResponse<?> checkCouponExpire(Long vendorId, String couponCode);
 
-    void cancelFollowVendor(Long userId, Long vendorId);
+    APIResponse<?> cancelFollowVendor(Long userId, Long vendorId);
 }

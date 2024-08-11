@@ -1,7 +1,7 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.service.IUserService;
-import com.example.ecommerce.service.request.RegisterRequest;
+import com.example.ecommerce.domain.model.binding.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

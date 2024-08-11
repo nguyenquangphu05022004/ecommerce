@@ -1,11 +1,11 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.domain.model.binding.AuthenRequest;
+import com.example.ecommerce.domain.model.binding.ForgetPasswordRequest;
+import com.example.ecommerce.domain.model.binding.PasswordChangeRequest;
+import com.example.ecommerce.domain.model.binding.RegisterRequest;
 import com.example.ecommerce.service.IAuthenService;
-import com.example.ecommerce.service.request.AuthenRequest;
-import com.example.ecommerce.service.request.ForgetPasswordRequest;
-import com.example.ecommerce.service.request.PasswordChangeRequest;
-import com.example.ecommerce.service.request.RegisterRequest;
-import com.example.ecommerce.service.response.OperationResponse;
+import com.example.ecommerce.domain.response.OperationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +32,7 @@ public class AuthController {
         OperationResponse operationResponse = authenService.registerAccount(request);
         return ResponseEntity.ok(operationResponse);
     }
+
 
     @PostMapping("/forget-password")
     public OperationResponse forgetPassword(@RequestParam("username") String username) {

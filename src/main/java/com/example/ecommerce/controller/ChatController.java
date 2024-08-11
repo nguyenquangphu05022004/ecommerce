@@ -4,7 +4,7 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.domain.model.binding.ChatMessageRequest;
 import com.example.ecommerce.domain.model.modelviews.messages.ChatMessageViewModel;
 import com.example.ecommerce.service.IChatMessageService;
-import com.example.ecommerce.service.response.OperationResponse;
+import com.example.ecommerce.domain.response.OperationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,17 +1,17 @@
 package com.example.ecommerce.service.algorithm.search;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ProductFilterFactory {
-    public static ProductFilterStrategy getInstance(
-            ProductFilterType type,
-            FilterData filterData
-    ) {
-        return switch (type){
-            case CATEGORY_PARENT -> new ProductFilterCategoryParent(filterData);
-            case CATEGORY_CHILDREN -> new ProductFilterCategoryChildren(filterData);
-            case NAME -> new ProductFilterName(filterData);
-            case BRAND -> new ProductFilterBrand(filterData);
-            case PRICE -> new ProductFilterPrice(filterData);
-            case VENDOR -> new ProductFilterVendor(filterData);
-        };
+
+    private static final Map<ProductFilterType, ProductFilterStrategy> instances = new HashMap<>();
+
+    public static ProductFilterStrategy getInstance(ProductFilterType filterType) {
+        if(!instances.containsKey(filterType)) {
+            instances.put(filterType, ProductFilterSimpleFactory.getInstance(filterType));
+        }
+        return instances.get(filterType);
     }
+
 }

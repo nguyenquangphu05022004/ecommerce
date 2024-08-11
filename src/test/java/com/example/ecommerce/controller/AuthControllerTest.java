@@ -2,37 +2,30 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.domain.entities.auth.*;
+import com.example.ecommerce.domain.model.binding.AuthenRequest;
+import com.example.ecommerce.domain.model.binding.ForgetPasswordRequest;
+import com.example.ecommerce.domain.model.binding.PasswordChangeRequest;
+import com.example.ecommerce.domain.model.binding.RegisterRequest;
 import com.example.ecommerce.repository.TokenRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IUserService;
-import com.example.ecommerce.service.request.AuthenRequest;
-import com.example.ecommerce.service.request.ForgetPasswordRequest;
-import com.example.ecommerce.service.request.PasswordChangeRequest;
-import com.example.ecommerce.service.request.RegisterRequest;
-import com.example.ecommerce.service.response.AuthenResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.example.ecommerce.domain.response.AuthenResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc

@@ -1,12 +1,11 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.service.request.AuthenRequest;
-import com.example.ecommerce.service.request.ForgetPasswordRequest;
-import com.example.ecommerce.service.request.PasswordChangeRequest;
-import com.example.ecommerce.service.request.RegisterRequest;
-import com.example.ecommerce.service.response.APIResponse;
-import com.example.ecommerce.service.response.AuthenResponse;
-import com.example.ecommerce.service.response.OperationResponse;
+import com.example.ecommerce.domain.model.binding.AuthenRequest;
+import com.example.ecommerce.domain.model.binding.ForgetPasswordRequest;
+import com.example.ecommerce.domain.model.binding.PasswordChangeRequest;
+import com.example.ecommerce.domain.model.binding.RegisterRequest;
+import com.example.ecommerce.domain.response.AuthenResponse;
+import com.example.ecommerce.domain.response.OperationResponse;
 
 public interface IAuthenService {
     AuthenResponse authenticate(AuthenRequest request);

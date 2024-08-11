@@ -5,7 +5,7 @@ import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.domain.model.binding.CartRequest;
 import com.example.ecommerce.domain.model.modelviews.cart.ItemCartModelView;
-import com.example.ecommerce.domain.model.modelviews.cart.VendorCartModelView;
+import com.example.ecommerce.domain.model.modelviews.cart.VendorCartUserProfileModelView;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.InventoryRepository;
 import com.example.ecommerce.service.ICartService;
@@ -88,7 +88,7 @@ public class CartServiceImpl implements ICartService {
             /**
              * Store vendor
              */
-            VendorCartModelView vendorCartModelView = new VendorCartModelView(vendor);
+            VendorCartUserProfileModelView vendorCartModelView = new VendorCartUserProfileModelView(vendor);
             if (!redisTemplate.opsForHash().hasKey(
                     "VENDOR",
                     redisKey.getVendorKey())) {
@@ -105,13 +105,13 @@ public class CartServiceImpl implements ICartService {
 
 
     @Override
-    public List<VendorCartModelView> getShoppingCart(HttpServletRequest servletRequest) {
+    public List<VendorCartUserProfileModelView> getShoppingCart(HttpServletRequest servletRequest) {
         List<RedisKey> redisKeys = getValueKeyUser(servletRequest);
-        List<VendorCartModelView> res = new ArrayList<>();
+        List<VendorCartUserProfileModelView> res = new ArrayList<>();
         if (redisKeys == null) return res;
         redisKeys.forEach(redisKey -> {
             List<ItemCartModelView> itemResponses = getListItemResponseWithVendorItemProductKey(redisKey.getVendorItemProductKey());
-            VendorCartModelView vendorResponse = getVendorResponseWithKetVendorKey(redisKey.getVendorKey());
+            VendorCartUserProfileModelView vendorResponse = getVendorResponseWithKetVendorKey(redisKey.getVendorKey());
             vendorResponse.setItems(itemResponses);
             res.add(vendorResponse);
         });
@@ -157,10 +157,10 @@ public class CartServiceImpl implements ICartService {
         }).collect(Collectors.toList());
     }
 
-    private VendorCartModelView getVendorResponseWithKetVendorKey(String vendorKey) {
+    private VendorCartUserProfileModelView getVendorResponseWithKetVendorKey(String vendorKey) {
         String json = (String) redisTemplate.opsForHash().get("VENDOR", vendorKey);
         try {
-            return objectMapper.readValue(json, VendorCartModelView.class);
+            return objectMapper.readValue(json, VendorCartUserProfileModelView.class);
         } catch (JsonProcessingException e) {
             throw new GeneralException(e.getMessage());
         }

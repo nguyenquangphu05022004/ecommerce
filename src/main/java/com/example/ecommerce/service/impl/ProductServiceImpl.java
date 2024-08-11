@@ -1,7 +1,6 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.entities.auth.Role;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.product.Category;
@@ -10,22 +9,22 @@ import com.example.ecommerce.domain.entities.product.ProductBrand;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.domain.entities.product.recommendation.ProductActionCache;
 import com.example.ecommerce.domain.entities.product.recommendation.ProductSimilarity;
-import com.example.ecommerce.domain.model.binding.FilterRequest;
+import com.example.ecommerce.domain.model.binding.FilterProductRequest;
 import com.example.ecommerce.domain.model.binding.InventoryRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductGalleryModelView;
 import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
+import com.example.ecommerce.domain.response.APIListResponse;
+import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.algorithm.Similarity;
 import com.example.ecommerce.service.algorithm.search.FilterData;
-import com.example.ecommerce.service.algorithm.sort.ProductSortFactory;
-import com.example.ecommerce.service.request.FilterInputRequestProduct;
-import com.example.ecommerce.service.request.KeySearchRequest;
-import com.example.ecommerce.service.response.APIListResponse;
 import com.example.ecommerce.service.algorithm.search.ProductFilterFactory;
+import com.example.ecommerce.service.algorithm.search.ProductFilterStrategy;
+import com.example.ecommerce.service.algorithm.sort.ProductSortFactory;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -38,11 +37,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static com.example.ecommerce.domain.entities.product.recommendation.TypeAction.CLICK_PRODUCT;
-import static com.example.ecommerce.event.Event.*;
-import static com.example.ecommerce.event.Event.EventType.*;
+import static com.example.ecommerce.event.Event.EventType.PRODUCT_CREATE;
+import static com.example.ecommerce.event.Event.getInstance;
+import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -56,27 +55,19 @@ public class ProductServiceImpl implements IProductService {
     private final ProductSimilarityRepository productSimilarityRepository;
 
     @Override
-    public void delete(Long id) {
-        productRepository.deleteById(id);
-    }
-
-    @Override
-    public ProductDetailsViewModel findById(Long id) {
+    public APIResponse<?> findById(Long id) {
         User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("You aren't login"));
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(String.format("Product with id %s not found", id)));
         saveProductSimilarity(product, user);
-        return new ProductDetailsViewModel(product);
+        return apiResponse("get product by id",  new ProductDetailsViewModel(product));
     }
 
     @Override
-    public ProductDetailsViewModel save(ProductRequest request) {
+    public   APIResponse<?> save(ProductRequest request) {
         User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("You aren't login"));
-        if (user.getRole() != Role.VENDOR) {
-            throw new GeneralException("Your role can't create product");
-        }
         Product product = Product.builder()
                 .price(request.getPrice())
                 .description(request.getDescription())
@@ -89,67 +80,8 @@ public class ProductServiceImpl implements IProductService {
         Product saved = productRepository.save(product);
         new Thread(() -> getInstance().postEvent(PRODUCT_CREATE, saved)).start();
         final ProductDetailsViewModel response = new ProductDetailsViewModel(saved);
-        return response;
+        return apiResponse("created product", response);
     }
-
-    @Override
-    public APIListResponse<ProductGalleryModelView> searchProduct(FilterInputRequestProduct filterInputProduct) {
-        Specification<Product> specification;
-        if (filterInputProduct.getMapKey() == null || filterInputProduct.getMapKey().size() == 0) {
-            specification = null;
-        } else {
-            specification = (root, query, criteriaBuilder) -> {
-                List<Predicate> predicates = new ArrayList<>();
-                List<Predicate> predicatesOfChildrenCategory = new ArrayList<>();
-                filterInputProduct.getMapKey().entrySet().forEach(pair -> {
-                    if (pair.getKey().startsWith(KeySearchRequest.PRODUCT_NAME.name())) {
-                        predicates.add(criteriaBuilder.like(root.join("language").get("nameEn"), "%" + pair.getValue().toLowerCase() + "%"));
-                        predicates.add(criteriaBuilder.like(root.join("language").get("nameVn"), "%" + pair.getValue().toLowerCase() + "%"));
-                    } else if (pair.getKey().startsWith(KeySearchRequest.CATEGORY_PARENT_ID.name())) {
-                        predicates.add(criteriaBuilder.equal(root.join("category").get("parent").get("id"), pair.getValue()));
-                    } else if (pair.getKey().startsWith(KeySearchRequest.CATEGORY_CHILDREN_ID.name())) {
-                        predicatesOfChildrenCategory.add(criteriaBuilder.equal(root.join("category").get("id"), pair.getValue()));
-                    } else if (pair.getKey().startsWith(KeySearchRequest.BRAND_ID.name())) {
-                        predicates.add(criteriaBuilder.equal(root.join("productBrand").get("id"), pair.getValue()));
-                    } else if (pair.getKey().startsWith(KeySearchRequest.PRICE.name())) {
-                        String words[] = pair.getValue().split(";");
-                        int x1 = Integer.parseInt(words[0]);
-                        int x2 = Integer.parseInt(words[1]);
-                        predicates.add(criteriaBuilder.between(root.get("price"), x1, x2));
-                    } else if (pair.getKey().startsWith(KeySearchRequest.VENDOR_ID.name())) {
-                        predicates.add(criteriaBuilder.equal(root.join("vendor").get("id"), pair.getValue()));
-                    }
-                });
-                Predicate p1 = null;
-                for (Predicate element : predicates) {
-                    Predicate tmp = criteriaBuilder.and(element);
-                    if (p1 == null) p1 = tmp;
-                    p1 = criteriaBuilder.and(p1, tmp);
-                }
-                Predicate p2 = null;
-                for (Predicate element : predicatesOfChildrenCategory) {
-                    Predicate tmp = criteriaBuilder.or(element);
-                    if (p2 == null) p2 = tmp;
-                    p2 = criteriaBuilder.or(p2, tmp);
-                }
-                if (p2 == null) return p1;
-                return criteriaBuilder.and(p1, p2);
-            };
-        }
-        Page<Product> pageProducts = specification != null ?
-                productRepository.findAll(specification, PageRequest.of(
-                        filterInputProduct.getPage() - 1,
-                        filterInputProduct.getLimit()
-                ))
-                :
-                productRepository.findAll(PageRequest.of(
-                        filterInputProduct.getPage() - 1,
-                        filterInputProduct.getLimit()
-                ));
-        List<Product> products = pageProducts.getContent();
-        return responseAPI(pageProducts, products);
-    }
-
     @Override
     public ProductInventoryModelView getInventory(InventoryRequest request) {
         ProductInventory inventory = inventoryRepository
@@ -182,34 +114,33 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public APIListResponse<ProductGalleryModelView> filterProduct(FilterRequest filterRequest) {
+    public APIListResponse<ProductGalleryModelView> filterProduct(FilterProductRequest filterProductRequest) {
         Specification<Product> specification = (root, query, criteriaBuilder) -> {
             final List<Predicate> predicates = new ArrayList<>();
-            filterRequest.getData().entrySet().stream().forEach(entry -> {
-                FilterData filterData = new FilterData(criteriaBuilder, root, entry.getValue());
-                Predicate condition = ProductFilterFactory.getInstance(entry.getKey(), filterData).filter();
+            filterProductRequest.getData().entrySet().stream().forEach(entry -> {
+                ProductFilterStrategy filterStrategy = ProductFilterFactory.getInstance(entry.getKey());
+                filterStrategy.setFilterData(new FilterData(criteriaBuilder, root, entry.getValue()));
+                Predicate condition = filterStrategy.filter();
                 predicates.add(condition);
             });
             Predicate predicate = null;
-            for (var pre : predicates) {
-                if (predicate == null) predicate = pre;
-                else predicate = criteriaBuilder.and(predicate, pre);
-            }
+            for (var pre : predicates) predicate = predicate != null ? criteriaBuilder.and(pre, predicate) : pre;
             return predicate;
         };
-        PageRequest pageRequest = PageRequest.of(filterRequest.getPage() - 1, filterRequest.getLimit());
+        PageRequest pageRequest = PageRequest.of(filterProductRequest.getPage() - 1, filterProductRequest.getLimit());
         Page<Product> pageProducts = productRepository.findAll(specification, pageRequest);
-        ProductSortFactory.getInstance(filterRequest.getSortType()).sort(pageProducts.getContent());
-        return responseAPI(pageProducts);
+        List<Product> products = ProductSortFactory.getInstance(filterProductRequest.getSortType()).sort(pageProducts.getContent());
+        return responseAPI(pageProducts, products);
     }
 
+    //{end}////////////////////////////////////////////////////////////////////////////////
     private APIListResponse<ProductGalleryModelView> responseAPI(
             Page<Product> page,
             List<Product> products
     ) {
         APIListResponse<ProductGalleryModelView> response = new APIListResponse<>(
                 "ok",
-                "",
+                0,
                 1,
                 HttpStatus.OK.value(),
                 page != null ? page.getNumber() : -1,
@@ -223,7 +154,7 @@ public class ProductServiceImpl implements IProductService {
     ) {
         APIListResponse<ProductGalleryModelView> response = new APIListResponse<>(
                 "ok",
-                "",
+                0,
                 1,
                 HttpStatus.OK.value(),
                 page != null ? page.getNumber() : -1,

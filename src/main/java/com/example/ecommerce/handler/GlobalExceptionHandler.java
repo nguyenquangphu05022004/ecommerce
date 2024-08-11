@@ -1,7 +1,7 @@
 package com.example.ecommerce.handler;
 
 import com.example.ecommerce.handler.exception.*;
-import com.example.ecommerce.service.response.OperationResponse;
+import com.example.ecommerce.domain.response.OperationResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

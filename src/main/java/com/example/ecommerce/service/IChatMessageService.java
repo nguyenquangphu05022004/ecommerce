@@ -3,9 +3,7 @@ package com.example.ecommerce.service;
 
 import com.example.ecommerce.domain.model.binding.ChatMessageRequest;
 import com.example.ecommerce.domain.model.modelviews.messages.ChatMessageViewModel;
-import com.example.ecommerce.service.response.APIListResponse;
-
-import java.util.List;
+import com.example.ecommerce.domain.response.APIListResponse;
 
 public interface IChatMessageService {
 
