@@ -1,7 +1,7 @@
-package com.example.ecommerce.event.listener;
+package com.example.ecommerce.service.event.listener;
 
 import com.example.ecommerce.domain.model.binding.EmailDetails;
-import com.example.ecommerce.event.Observer;
+import com.example.ecommerce.service.event.Observer;
 import com.example.ecommerce.handler.exception.GeneralException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;

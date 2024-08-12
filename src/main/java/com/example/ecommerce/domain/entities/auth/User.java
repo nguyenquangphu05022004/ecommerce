@@ -14,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -25,9 +26,8 @@ import java.util.*;
 public class User extends BaseEntity implements UserDetails {
 
     private String fullName;
-
     private String username; //email
-
+    private LocalDateTime birthOfDate;
     private String password;
 
     @Enumerated(EnumType.STRING)

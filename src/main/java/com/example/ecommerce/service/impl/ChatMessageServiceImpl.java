@@ -56,7 +56,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
             template.convertAndSend(String.format("/topic/public/group/%s/message", saved.getToDestinationId()), chatMessageViewModel);
             return null;
         } else {
-            template.convertAndSendToUser(saved.getToDestinationId() + "", "/user/private/message", chatMessageViewModel);
+            template.convertAndSendToUser(saved.getToDestinationId() + "", "/user/topic/private-message", chatMessageViewModel);
             return chatMessageViewModel;
         }
     }

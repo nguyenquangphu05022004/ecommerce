@@ -1,9 +1,9 @@
-package com.example.ecommerce.timer.job;
+package com.example.ecommerce.service.timer.job;
 
 import com.example.ecommerce.domain.entities.order.Order;
 import com.example.ecommerce.repository.OrderRepository;
-import com.example.ecommerce.timer.TimerInfo;
-import com.example.ecommerce.timer.TimerUtils;
+import com.example.ecommerce.service.timer.TimerInfo;
+import com.example.ecommerce.service.timer.TimerUtils;
 import lombok.RequiredArgsConstructor;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

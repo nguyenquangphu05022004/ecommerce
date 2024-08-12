@@ -1,11 +1,11 @@
-package com.example.ecommerce.event.listener;
+package com.example.ecommerce.service.event.listener;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.Notification;
 import com.example.ecommerce.domain.model.binding.EmailDetails;
-import com.example.ecommerce.event.Event;
+import com.example.ecommerce.service.event.Event;
 
-import static com.example.ecommerce.event.Event.EventType.SEND_MAIL;
+import static com.example.ecommerce.service.event.Event.EventType.SEND_MAIL;
 
 public class Utils {
 

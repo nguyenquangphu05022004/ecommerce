@@ -10,16 +10,16 @@ import com.example.ecommerce.domain.model.binding.FilterOrderRequest;
 import com.example.ecommerce.domain.model.binding.ItemRequest;
 import com.example.ecommerce.domain.model.binding.OrderRequest;
 import com.example.ecommerce.domain.model.modelviews.order.OrderViewModel;
-import com.example.ecommerce.event.Event;
+import com.example.ecommerce.service.event.Event;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.handler.exception.NotFoundException;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IOrderService;
 import com.example.ecommerce.domain.response.APIListResponse;
 import com.example.ecommerce.domain.response.APIResponse;
-import com.example.ecommerce.timer.TimerInfo;
-import com.example.ecommerce.timer.TimerService;
-import com.example.ecommerce.timer.job.OrderApprovalJob;
+import com.example.ecommerce.service.timer.TimerInfo;
+import com.example.ecommerce.service.timer.TimerService;
+import com.example.ecommerce.service.timer.job.OrderApprovalJob;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.ecommerce.event.Event.EventType.*;
+import static com.example.ecommerce.service.event.Event.EventType.*;
 import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 
 @Service
@@ -121,6 +121,8 @@ public class OrderServiceImpl implements IOrderService {
         Order order = orderRepository
                 .findById(orderId)
                 .orElseThrow(() -> new GeneralException("Not found order"));
+        order.setPurchased(true);
+        orderRepository.save(order);
         postNotificationEvent(ORDER_PAYMENT, order);
         return apiResponse("update payment success", null);
     }

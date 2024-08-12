@@ -28,8 +28,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.ecommerce.event.Event.EventType.SEND_MAIL;
-import static com.example.ecommerce.event.Event.getInstance;
+import static com.example.ecommerce.service.event.Event.EventType.SEND_MAIL;
+import static com.example.ecommerce.service.event.Event.getInstance;
 
 @Service
 @RequiredArgsConstructor

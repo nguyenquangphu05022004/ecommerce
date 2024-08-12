@@ -1,6 +1,5 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.common.enums.CustomStatusCode;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.auth.Customer;
 import com.example.ecommerce.domain.entities.auth.User;
@@ -72,7 +71,7 @@ public class UserServiceImpl implements IUserService {
                 "ok",
                 null,
                 1,
-                CustomStatusCode.SUCCESS.getNumber(),
+                200,
                 new UserModelView(user)
         );
     }

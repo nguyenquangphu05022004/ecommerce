@@ -1,19 +1,18 @@
-package com.example.ecommerce.event.listener;
+package com.example.ecommerce.service.event.listener;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.EntityType;
-import com.example.ecommerce.domain.entities.EntityType.Type;
 import com.example.ecommerce.domain.entities.Notification;
 import com.example.ecommerce.domain.entities.order.Order;
-import com.example.ecommerce.event.Observer;
+import com.example.ecommerce.service.event.Observer;
 import com.example.ecommerce.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import static com.example.ecommerce.domain.entities.EntityType.Type.*;
-import static com.example.ecommerce.event.listener.NotificationActionType.CREATE_ORDER;
-import static com.example.ecommerce.event.listener.NotificationActionType.ORDER_PAYMENT;
+import static com.example.ecommerce.service.event.listener.NotificationActionType.CREATE_ORDER;
+import static com.example.ecommerce.service.event.listener.NotificationActionType.ORDER_PAYMENT;
 
 @Component
 @RequiredArgsConstructor

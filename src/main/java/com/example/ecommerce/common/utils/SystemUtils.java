@@ -5,10 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 public class SystemUtils {
-    public static final Integer EVENT_TIME_HOUR_EXPIRE = 8;
-    public static final Integer DEFAULT_PAGE = 1;
-    public static final Integer LIMIT_ITEM = 9;
-    public static final String TAG = "files/image";
     public static final String SEPARATE = "-_-";
     public static String code() {
         StringBuilder builder = new StringBuilder();

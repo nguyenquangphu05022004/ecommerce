@@ -39,8 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.ecommerce.domain.entities.product.recommendation.TypeAction.CLICK_PRODUCT;
-import static com.example.ecommerce.event.Event.EventType.PRODUCT_CREATE;
-import static com.example.ecommerce.event.Event.getInstance;
+import static com.example.ecommerce.service.event.Event.EventType.PRODUCT_CREATE;
+import static com.example.ecommerce.service.event.Event.getInstance;
 import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 
 @Service

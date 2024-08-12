@@ -1,4 +1,4 @@
-package com.example.ecommerce.timer;
+package com.example.ecommerce.service.timer;
 
 import com.example.ecommerce.handler.exception.GeneralException;
 import jakarta.annotation.PostConstruct;

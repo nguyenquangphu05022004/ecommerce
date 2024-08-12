@@ -1,6 +1,6 @@
 package com.example.ecommerce.domain.entities;
 
-import com.example.ecommerce.event.listener.NotificationActionType;
+import com.example.ecommerce.service.event.listener.NotificationActionType;
 import jakarta.persistence.*;
 import lombok.*;
 

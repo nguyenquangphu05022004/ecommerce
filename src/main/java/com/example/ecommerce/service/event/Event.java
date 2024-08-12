@@ -1,4 +1,4 @@
-package com.example.ecommerce.event;
+package com.example.ecommerce.service.event;
 
 import lombok.extern.slf4j.Slf4j;
 

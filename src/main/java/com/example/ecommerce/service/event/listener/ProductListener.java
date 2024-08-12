@@ -1,10 +1,10 @@
-package com.example.ecommerce.event.listener;
+package com.example.ecommerce.service.event.listener;
 
 import com.example.ecommerce.domain.entities.EntityType;
 import com.example.ecommerce.domain.entities.Notification;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
-import com.example.ecommerce.event.Observer;
+import com.example.ecommerce.service.event.Observer;
 import com.example.ecommerce.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import static com.example.ecommerce.domain.entities.EntityType.Type.*;
-import static com.example.ecommerce.event.listener.NotificationActionType.VENDOR_UPDATE_PRODUCT;
-import static com.example.ecommerce.event.listener.NotificationActionType.VENDOR_UPDATE_PRODUCT_INVENTORY;
 
 @Component
 @Slf4j
@@ -29,7 +27,7 @@ public class ProductListener {
     public  Observer<Product> createProductListener() {
         return product -> {
             Notification notification = Notification.builder()
-                    .notificationActionType(VENDOR_UPDATE_PRODUCT)
+                    .notificationActionType(NotificationActionType.VENDOR_UPDATE_PRODUCT)
                     .entityType(EntityType.builder().entityType(PRODUCT).entityId(product.getId()).build())
                     .message(String.format("Vendor: %s created product with name: %s",product.getVendor().getShopName(), product.getLanguage().getNameVn()))
                     .build();
@@ -41,7 +39,7 @@ public class ProductListener {
     public  Observer<ProductInventory> updateQuantityProduct() {
         return inventory -> {
             Notification notification = Notification.builder()
-                    .notificationActionType(VENDOR_UPDATE_PRODUCT_INVENTORY)
+                    .notificationActionType(NotificationActionType.VENDOR_UPDATE_PRODUCT_INVENTORY)
                     .entityType(EntityType.builder().entityType(PRODUCT_INVENTORY).entityId(inventory.getId()).build())
                     .message(String.format("Vendor: %s updated product with name: %s",inventory.getProduct().getVendor().getShopName(), inventory.getProduct().getLanguage().getNameVn()))
                     .build();

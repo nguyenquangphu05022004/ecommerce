@@ -1,13 +1,13 @@
-package com.example.ecommerce.event.subscribe;
+package com.example.ecommerce.service.event.subscribe;
 
-import com.example.ecommerce.event.listener.ProductListener;
+import com.example.ecommerce.service.event.listener.ProductListener;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import static com.example.ecommerce.event.Event.EventType.PRODUCT_CREATE;
-import static com.example.ecommerce.event.Event.EventType.PRODUCT_INVENTORY_UPDATE_QUANTITY;
-import static com.example.ecommerce.event.Event.getInstance;
+import static com.example.ecommerce.service.event.Event.EventType.PRODUCT_CREATE;
+import static com.example.ecommerce.service.event.Event.EventType.PRODUCT_INVENTORY_UPDATE_QUANTITY;
+import static com.example.ecommerce.service.event.Event.getInstance;
 
 @Component
 @RequiredArgsConstructor

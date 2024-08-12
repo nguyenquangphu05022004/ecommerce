@@ -18,6 +18,6 @@ public class EntityType {
     private Long entityId;
 
     public  enum Type {
-        CUSTOMER, VENDOR, ORDER, PRODUCT, PRODUCT_INVENTORY
+        USER, VENDOR, ORDER, PRODUCT, PRODUCT_INVENTORY
     }
 }

@@ -1,4 +1,4 @@
-package com.example.ecommerce.timer;
+package com.example.ecommerce.service.timer;
 
 import org.quartz.*;
 
