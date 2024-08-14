@@ -40,7 +40,7 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
             throw new GeneralException(FILE_NOT_FOUND);
         }
         String extension = getFilePathExtension(file.getOriginalFilename());
-        String uploadDir = UPLOAD_DIRS + fileEntityType.getType() + "/";
+        String uploadDir = UPLOAD_DIRS + fileEntityType.name() + "/";
         try {
             if (!Files.exists(getPath(uploadDir))) {
                 Files.createDirectories(getPath(uploadDir));
@@ -56,7 +56,7 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
                 case USER:
                     User.UserImage userImage = User.UserImage.builder()
                             .name(fullFileName)
-                            .type(fileEntityType.getType())
+                            .type(fileEntityType.name())
                             .path(path)
                             .user(User.builder().id(entityId).build())
                             .build();
@@ -64,7 +64,7 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
                 case CATEGORY:
                     CategoryImage categoryImage = CategoryImage.builder()
                             .name(fullFileName)
-                            .type(fileEntityType.getType())
+                            .type(fileEntityType.name())
                             .path(path)
                             .category(Category.builder().id(entityId).build())
                             .build();
@@ -72,7 +72,7 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
                 case EVALUATION:
                     Evaluation.EvaluationImage evaluationImage = Evaluation.EvaluationImage.builder()
                             .name(fullFileName)
-                            .type(fileEntityType.getType())
+                            .type(fileEntityType.name())
                             .path(path)
                             .evaluation(Evaluation.builder().id(entityId).build())
                             .build();
@@ -108,11 +108,11 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
             if (!Files.exists(path)) {
                 throw new GeneralException("File not found: " + file.getName());
             }
-            if (file.getType().equals(FileEntityType.CATEGORY.getType())) {
+            if (file.getType().equals(FileEntityType.CATEGORY.name())) {
                 categoryImageRepository.delete((CategoryImage) file);
-            } else if (file.getType().equals(FileEntityType.EVALUATION.getType())) {
+            } else if (file.getType().equals(FileEntityType.EVALUATION.name())) {
                 evaluationImageRepository.delete((Evaluation.EvaluationImage) file);
-            } else if (file.getType().equals(FileEntityType.USER.getType())) {
+            } else if (file.getType().equals(FileEntityType.USER.name())) {
                 userImageRepository.delete((User.UserImage) file);
             }
             Files.delete(path);

@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements IUserService {
@@ -31,7 +33,7 @@ public class UserServiceImpl implements IUserService {
     private final VendorRepository vendorRepository;
     private final CustomerRepository customerRepository;
     @Override
-    public void saveOrUpdate(RegisterRequest request) {
+    public APIResponse<UserModelView>  saveOrUpdate(RegisterRequest request) {
         User user = User.builder()
                 .userType(UserType.CUSTOMER)
                 .fullName(request.getFullName())
@@ -52,36 +54,33 @@ public class UserServiceImpl implements IUserService {
             user.setUserTypeId(customerRepository.save(new Customer()).getId());
         }
         userRepository.save(user);
+        return apiResponse("user created", null);
     }
 
     @Override
     @Transactional
-    public void uploadImage(MultipartFile multipartFile) {
+    public APIResponse<UserModelView>  uploadImage(MultipartFile multipartFile) {
         User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.getUsername()).get();
         filesStorageService.deleteImage(user.getUserImage());
         filesStorageService.saveFile(multipartFile, user.getId(), FileEntityType.USER);
+        return apiResponse(user.getPassword() + " update avatar", null);
     }
 
     @Override
-    public APIResponse<?> getInfoUser() {
+    public APIResponse<UserModelView>  getInfoUser() {
         User user = userRepository
                 .findByUsernameIgnoreCase(SecurityUtils.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("username not found"));
-        return new APIResponse<>(
-                "ok",
-                null,
-                1,
-                200,
-                new UserModelView(user)
-        );
+        return apiResponse("get info user",  new UserModelView(user));
     }
 
     @Override
-    public void updateOnlineStatus(String username, boolean b) {
+    public APIResponse<UserModelView>  updateOnlineStatus(String username, boolean b) {
         User user = userRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         user.setOnline(b);
         userRepository.save(user);
+        return apiResponse("change status user", null);
     }
 
 

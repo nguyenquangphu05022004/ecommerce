@@ -20,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Conversation extends BaseEntity {
+    private String name;
     @ManyToMany
     @JoinTable(name = "conversation_user", joinColumns = @JoinColumn(name = "conversation_id"),
     inverseJoinColumns = @JoinColumn(name = "user_id"))

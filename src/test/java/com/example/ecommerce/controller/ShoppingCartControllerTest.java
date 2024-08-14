@@ -43,7 +43,7 @@ class ShoppingCartControllerTest {
     @Autowired private TokenRepository tokenRepository;
     @Autowired private MockMvc mockMvc;
     @Autowired private PasswordEncoder encoder;
-    @Autowired private InventoryRepository inventoryRepository;
+    @Autowired private ProductInventoryRepository productInventoryRepository;
     @Autowired private ObjectMapper objectMapper;
     @Autowired private RedisTemplate<String, String> redisTemplate;
     private AuthenResponse authenResponse;
@@ -58,16 +58,16 @@ class ShoppingCartControllerTest {
         ProductInventory in1 = ProductInventory.builder().product(product).skuCode("pen-red").quantity(3).attributeCombinationKey("Color:Red").numberOfProductSold(0).build();
         ProductInventory in2 = ProductInventory.builder().product(product).skuCode("pen-black").quantity(2).attributeCombinationKey("Color:Black").numberOfProductSold(0).build();
         ProductInventory in3 = ProductInventory.builder().product(product).skuCode("pen-blue").quantity(4).attributeCombinationKey("Color:Blue").numberOfProductSold(0).build();
-        inventoryRepository.save(in1);
-        inventoryRepository.save(in2);
-        inventoryRepository.save(in3);
+        productInventoryRepository.save(in1);
+        productInventoryRepository.save(in2);
+        productInventoryRepository.save(in3);
         this.authenResponse = objectMapper.readValue(mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/login").contentType("application/json").content(objectMapper.writeValueAsString(new AuthenRequest("test2004", "test2004")))).andReturn().getResponse().getContentAsString(), AuthenResponse.class);
 
     }
     @AfterEach
     public void destroy() {
         tokenRepository.deleteAll();
-        inventoryRepository.deleteAll();
+        productInventoryRepository.deleteAll();
         productRepository.deleteAll();
         vendorRepository.deleteAll();
         userRepository.deleteAll();
@@ -78,7 +78,7 @@ class ShoppingCartControllerTest {
         Vendor vendor = vendorRepository.findAll().stream().findFirst().get();
         CartRequest cartRequest = new CartRequest();
         cartRequest.setQuantity(1);
-        cartRequest.setInventoryId(vendor.getProducts().get(0).getProductInventory().get(0).getId());
+        cartRequest.setInventoryId(vendor.getProducts().get(0).getProductInventories().get(0).getId());
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.post(
                         "/api/v1/shopping-cart/products/inventories"
                 ).contentType("application/json")
@@ -115,7 +115,7 @@ class ShoppingCartControllerTest {
         Vendor vendor = vendorRepository.findAll().stream().findFirst().get();
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.delete(
                         "/api/v1/shopping-cart/products/inventories"
-                ).queryParam("inventoryId", vendor.getProducts().get(0).getProductInventory().get(1).getId().toString())
+                ).queryParam("inventoryId", vendor.getProducts().get(0).getProductInventories().get(1).getId().toString())
                 .queryParam("vendorId", vendor.getId().toString())
                 .header("Authorization", getBearerToken());
         mockMvc.perform(builder)
@@ -131,13 +131,13 @@ class ShoppingCartControllerTest {
         Vendor vendor = vendorRepository.findAll().stream().findFirst().get();
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.delete(
                         "/api/v1/shopping-cart/products/inventories"
-                ).queryParam("inventoryId", vendor.getProducts().get(0).getProductInventory().get(0).getId().toString())
+                ).queryParam("inventoryId", vendor.getProducts().get(0).getProductInventories().get(0).getId().toString())
                 .queryParam("vendorId", vendor.getId().toString())
                 .header("Authorization", getBearerToken());
         mockMvc.perform(builder)
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message")
-                        .value(String.format("Stock with id %s is deleted", vendor.getProducts().get(0).getProductInventory().get(0).getId())));
+                        .value(String.format("Stock with id %s is deleted", vendor.getProducts().get(0).getProductInventories().get(0).getId())));
     }
 }

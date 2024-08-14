@@ -3,7 +3,6 @@ package com.example.ecommerce.domain.entities.product;
 import com.example.ecommerce.domain.entities.BaseEntity;
 import com.example.ecommerce.domain.entities.Evaluation;
 import com.example.ecommerce.domain.entities.auth.Vendor;
-import com.example.ecommerce.domain.entities.file.ProductImage;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +15,6 @@ import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "products")
@@ -53,10 +51,7 @@ public class Product extends BaseEntity {
     private boolean combination;
 
     @OneToMany(mappedBy = "product")
-    private List<ProductInventory> productInventory;
-
-    @OneToMany(mappedBy = "product")
-    private List<ProductImage> images;
+    private List<ProductInventory> productInventories;
 
     @Entity
     @Table(name = "languages")

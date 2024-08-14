@@ -172,7 +172,8 @@ class EvaluationControllerTest {
         AuthenRequest login = new AuthenRequest();
         login.setPassword("mahiru");
         login.setUsername(user.getUsername());
-        this.authenResponse = this.authenService.authenticate(login);
+        this.authenResponse = (AuthenResponse) this.authenService
+                .authenticate(login).getData();
     }
 
 }

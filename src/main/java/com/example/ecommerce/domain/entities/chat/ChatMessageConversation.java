@@ -1,6 +1,5 @@
-package com.example.ecommerce.domain.entities.file;
+package com.example.ecommerce.domain.entities.chat;
 
-import com.example.ecommerce.domain.entities.product.Product;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -8,16 +7,18 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "stock_images")
+@Getter
+@Setter
+@Table(name = "chat_message_groups")
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder(toBuilder = true)
-@Getter
-public  class ProductImage extends FileEntity {
+public class ChatMessageConversation extends ChatMessageEntity{
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "to_conversation_id")
+    private Conversation toConversation;
 }

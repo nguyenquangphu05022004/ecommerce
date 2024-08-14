@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class APIResponse <T>{
     private String message;
-    private String error;
+    private int error;
     private int ok;
     private int status;
     private T data;

@@ -24,9 +24,19 @@ public class ProductDetailsViewModel extends ProductGalleryModelView {
     public ProductDetailsViewModel(final Product product) {
         super(product);
         this.evaluations = mapToEvalDetails(product.getEvaluations());
-        this.attributeMaps = extractAttributeKey(product.getProductInventory());
-        this.imageUrls = getImageUrl(FileEntityType.PRODUCT.name(), product.getImages());
+        this.attributeMaps = extractAttributeKey(product.getProductInventories());
+        this.imageUrls = extractUrlImages(product);
         vendor = new VendorModelView(product.getVendor());
+    }
+
+    public List<String> extractUrlImages(Product product) {
+        if(!CollectionUtils.isEmpty(product.getProductInventories())) {
+            return product.getProductInventories().stream()
+                    .map(productInventory -> getImageUrl(FileEntityType.PRODUCT_INVENTORY.name(), productInventory.getImageRepresent()))
+                    .filter(x -> x != null)
+                    .toList();
+        }
+        return null;
     }
 
     private List<EvaluationDetailsModelView> mapToEvalDetails(List<Evaluation> evaluations) {

@@ -9,7 +9,7 @@ import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.domain.model.binding.AuthenRequest;
 import com.example.ecommerce.domain.model.binding.FilterProductRequest;
-import com.example.ecommerce.domain.model.binding.InventoryRequest;
+import com.example.ecommerce.domain.model.binding.ProductInventoryFilterRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductGalleryModelView;
@@ -64,7 +64,7 @@ class ProductControllerTest {
     @Autowired
     private LanguageRepository languageRepository;
     @Autowired
-    private InventoryRepository inventoryRepository;
+    private ProductInventoryRepository productInventoryRepository;
     private AuthenResponse authenResponse;
     @Autowired private ProductCacheRepository productCacheRepository;
     @Autowired private ProductSimilarityRepository productSimilarityRepository;
@@ -100,7 +100,7 @@ class ProductControllerTest {
         productSimilarityRepository.deleteAll();
         productCacheRepository.deleteAll();
         userRepository.deleteAll();
-        inventoryRepository.deleteAll();
+        productInventoryRepository.deleteAll();
         productRepository.deleteAll();
         languageRepository.deleteAll();
         vendorRepository.deleteAll();
@@ -274,7 +274,7 @@ class ProductControllerTest {
                 ProductDetailsViewModel.class
         );
 
-        ProductInventory inventory = inventoryRepository.save(
+        ProductInventory inventory = productInventoryRepository.save(
                 ProductInventory.builder()
                         .attributeCombinationKey(String.format(
                                 "Color:Red%sSize:45%sRam:8GB", SystemUtils.SEPARATE, SystemUtils.SEPARATE
@@ -286,18 +286,18 @@ class ProductControllerTest {
                         .build()
         );
 
-        inventoryRepository.save(inventory);
+        productInventoryRepository.save(inventory);
 
-        InventoryRequest inventoryRequest = new InventoryRequest();
-        inventoryRequest.setProductId(product.getId());
-        inventoryRequest.setAttributeCombinationKey(String.format(
+        ProductInventoryFilterRequest productInventoryFilterRequest = new ProductInventoryFilterRequest();
+        productInventoryFilterRequest.setProductId(product.getId());
+        productInventoryFilterRequest.setAttributeCombinationKey(String.format(
                 "Color:Red%sSize:45%sRam:8GB", SystemUtils.SEPARATE, SystemUtils.SEPARATE
         ));
         MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.get(
                         "/api/v1/products/inventories"
                 ).header("Authorization", "Bearer " + this.authenResponse.getToken())
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(inventoryRequest));
+                .content(objectMapper.writeValueAsString(productInventoryFilterRequest));
         mockMvc.perform(httpRequest)
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id")

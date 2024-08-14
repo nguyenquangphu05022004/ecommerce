@@ -1,10 +1,8 @@
 package com.example.ecommerce.domain.entities.product;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.example.ecommerce.domain.entities.file.ProductInventoryImage;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,7 +22,8 @@ public class ProductInventory extends BaseEntity {
     private Product product;
     private String skuCode;
     private Integer numberOfProductSold;
-
+    @OneToOne(mappedBy = "productInventory")
+    private ProductInventoryImage imageRepresent;
     public ProductInventory(Long id) {
         super(id);
     }

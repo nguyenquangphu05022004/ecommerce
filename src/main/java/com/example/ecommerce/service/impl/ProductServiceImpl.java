@@ -6,15 +6,12 @@ import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.product.Category;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductBrand;
-import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.domain.entities.product.recommendation.ProductActionCache;
 import com.example.ecommerce.domain.entities.product.recommendation.ProductSimilarity;
 import com.example.ecommerce.domain.model.binding.FilterProductRequest;
-import com.example.ecommerce.domain.model.binding.InventoryRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductGalleryModelView;
-import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
 import com.example.ecommerce.domain.response.APIListResponse;
 import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.handler.exception.GeneralException;
@@ -49,7 +46,7 @@ import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 public class ProductServiceImpl implements IProductService {
 
     private final ProductRepository productRepository;
-    private final InventoryRepository inventoryRepository;
+    private final ProductInventoryRepository productInventoryRepository;
     private final ProductCacheRepository productCacheRepository;
     private final UserRepository userRepository;
     private final ProductSimilarityRepository productSimilarityRepository;
@@ -81,19 +78,6 @@ public class ProductServiceImpl implements IProductService {
         new Thread(() -> getInstance().postEvent(PRODUCT_CREATE, saved)).start();
         final ProductDetailsViewModel response = new ProductDetailsViewModel(saved);
         return apiResponse("created product", response);
-    }
-    @Override
-    public ProductInventoryModelView getInventory(InventoryRequest request) {
-        ProductInventory inventory = inventoryRepository
-                .findByProductIdAndAttributeCombinationKey(
-                        request.getProductId(),
-                        request.getAttributeCombinationKey())
-                .orElseThrow(() -> new GeneralException(
-                        String.format("Key %s of product %s not found",
-                                request.getAttributeCombinationKey(),
-                                request.getProductId())
-                ));
-        return new ProductInventoryModelView(inventory);
     }
 
     @Override

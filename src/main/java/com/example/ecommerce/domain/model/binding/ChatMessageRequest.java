@@ -15,22 +15,14 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ChatMessageRequest extends BaseEntity {
+public class ChatMessageRequest {
     @NotNull(message = InvalidMessage.NOT_NULL)
     private Long fromUserId;
     @NotNull(message = InvalidMessage.NOT_NULL)
     private Long toDestinationId;
     @NotNull(message = InvalidMessage.NOT_NULL)
-    private ChatMessageType chatMessageType;
+    private Boolean isUser;
     @NotEmpty(message = InvalidMessage.NOT_EMPTY)
     private String content;
     private List<MultipartFile> files;
-
-    protected ChatMessageRequest(ChatMessage message) {
-        this.fromUserId = message.getFromUserId();
-        this.toDestinationId = message.getToDestinationId();
-        this.chatMessageType = message.getChatMessageType();
-        this.content = message.getContent();
-        this.setId(message.getId());
-    }
 }

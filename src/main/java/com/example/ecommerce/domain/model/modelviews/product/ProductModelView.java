@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @Setter
@@ -30,8 +32,14 @@ public class ProductModelView extends BaseEntity implements ImageMapper {
         this.category = new CategoryModelView(product.getCategory());
         this.description = product.getDescription();
         this.price = product.getPrice();
-        this.imageUrl = CollectionUtils.isEmpty(product.getImages()) ? null : getImageUrl(FileEntityType.PRODUCT.name(), product.getImages().get(0));
+        this.imageUrl = extractImage(product);
         this.slug = product.getSlug();
         this.vendor = new VendorUserProfileModelView(product.getVendor());
+    }
+
+    private String extractImage(Product product) {
+        List<String> imageUrls =
+                new ProductDetailsViewModel().extractUrlImages(product);
+        return imageUrls != null ? imageUrls.get(0) : null;
     }
 }

@@ -6,8 +6,10 @@ import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.domain.model.binding.CartRequest;
 import com.example.ecommerce.domain.model.modelviews.cart.ItemCartModelView;
 import com.example.ecommerce.domain.model.modelviews.cart.VendorCartUserProfileModelView;
+import com.example.ecommerce.domain.response.APIListResponse;
+import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.handler.exception.GeneralException;
-import com.example.ecommerce.repository.InventoryRepository;
+import com.example.ecommerce.repository.ProductInventoryRepository;
 import com.example.ecommerce.service.ICartService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,22 +27,24 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
+
 @Service
 @AllArgsConstructor
 public class CartServiceImpl implements ICartService {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
-    private final InventoryRepository inventoryRepository;
+    private final ProductInventoryRepository productInventoryRepository;
     private final String USER_KEY = "USER_%s_CART";
     private final String VENDOR_ITEM_PRODUCT = "USER_%s_VENDOR_ITEM_PRODUCT_%s";
     private final String VENDOR_KEY = "USER_%s_VENDOR_%s";
     private final String INVENTORY_KEY = "INVENTORY_%s";
 
     @Override
-    public void add(CartRequest cartRequest, HttpServletRequest servletRequest) {
+    public APIResponse<VendorCartUserProfileModelView> add(CartRequest cartRequest) {
         try {
-            ProductInventory inventory = inventoryRepository
+            ProductInventory inventory = productInventoryRepository
                     .findById(cartRequest.getInventoryId())
                     .orElseThrow(() -> new GeneralException("Id not found"));
             Vendor vendor = inventory.getProduct().getVendor();
@@ -56,7 +60,7 @@ public class CartServiceImpl implements ICartService {
              * store all key
              */
             redisTemplate.opsForSet().add(
-                    getUserKey(servletRequest),
+                    getUserKey(),
                     objectMapper.writeValueAsString(redisKey)
             );
 
@@ -101,25 +105,26 @@ public class CartServiceImpl implements ICartService {
         } catch (JsonProcessingException ex) {
             throw new GeneralException(ex.getMessage());
         }
+        return apiResponse("add product to cart", null);
     }
 
 
     @Override
-    public List<VendorCartUserProfileModelView> getShoppingCart(HttpServletRequest servletRequest) {
-        List<RedisKey> redisKeys = getValueKeyUser(servletRequest);
+    public APIListResponse<VendorCartUserProfileModelView> getShoppingCart() {
+        List<RedisKey> redisKeys = getValueKeyUser();
         List<VendorCartUserProfileModelView> res = new ArrayList<>();
-        if (redisKeys == null) return res;
+        if (redisKeys == null) return null;
         redisKeys.forEach(redisKey -> {
             List<ItemCartModelView> itemResponses = getListItemResponseWithVendorItemProductKey(redisKey.getVendorItemProductKey());
             VendorCartUserProfileModelView vendorResponse = getVendorResponseWithKetVendorKey(redisKey.getVendorKey());
             vendorResponse.setItems(itemResponses);
             res.add(vendorResponse);
         });
-        return res;
+        return new APIListResponse<>("get carts", 0, 1, 200, null,null, null, res);
     }
 
     @Override
-    public void delete(Long inventory, Long vendorId, HttpServletRequest servletRequest) {
+    public  APIResponse<VendorCartUserProfileModelView> delete(Long inventory, Long vendorId) {
         String keyUser =  SecurityUtils.getUsername();
         if(redisTemplate.opsForHash().hasKey(
                 String.format(VENDOR_ITEM_PRODUCT,keyUser, vendorId),
@@ -132,18 +137,19 @@ public class CartServiceImpl implements ICartService {
         } else {
             throw new GeneralException("You haven't item in cart");
         }
+        return apiResponse("delete product in cart", null);
     }
 
-    private String getUserKey(HttpServletRequest servletRequest) {
-        String keyUser = SecurityUtils.getUsername() == null ? servletRequest.getRemoteAddr() : SecurityUtils.getUsername();
+    private String getUserKey() {
+        String keyUser =  SecurityUtils.getUsername();
         return String.format(USER_KEY, keyUser);
     }
 
 
 
 
-    private List<RedisKey> getValueKeyUser(HttpServletRequest servletRequest) {
-        Set<String> members = redisTemplate.opsForSet().members(getUserKey(servletRequest));
+    private List<RedisKey> getValueKeyUser() {
+        Set<String> members = redisTemplate.opsForSet().members(getUserKey());
         if (members == null) {
             return null;
         }

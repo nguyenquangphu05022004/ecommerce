@@ -11,16 +11,19 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
+@MappedSuperclass
 @Getter
 @Setter
-@NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-@Entity
-@Table(name = "chat_messages")
-public class ChatMessage extends ChatMessageEntity {
-    private String content;
+@NoArgsConstructor
+@AllArgsConstructor
+public abstract class ChatMessageEntity extends BaseEntity {
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatMessageImage> chatMessageImages;
     @ManyToOne
-    @JoinColumn(name = "to_user_id", nullable = false)
-    private User toUser;
-}
+    @JoinColumn(name = "from_user_id")
+    private User fromUser;
+    private String content;
 
+
+}

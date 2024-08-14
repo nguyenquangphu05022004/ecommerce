@@ -5,13 +5,12 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum FileEntityType {
-    PRODUCT("product"),
-    EVALUATION("evaluation"),
-    CATEGORY("category"),
-    USER("avatar"),
-    ORDER("order"),
-    CHAT_MESSAGE("chat message");
-    @Getter
-    private final String type;
+    PRODUCT_INVENTORY,
+    EVALUATION,
+    CATEGORY,
+    USER,
+    ORDER,
+    CHAT_MESSAGE,
+    CHAT_MESSAGE_CONVERSATION;
 
 }

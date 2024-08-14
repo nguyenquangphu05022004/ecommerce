@@ -50,7 +50,7 @@ class OrderControllerTest {
     @Autowired
     private TokenRepository tokenRepository;
     @Autowired
-    private InventoryRepository inventoryRepository;
+    private ProductInventoryRepository productInventoryRepository;
     @Autowired private PasswordEncoder encoder;
     @Autowired private CustomerRepository customerRepository;
     @Autowired private OrderRepository orderRepository;
@@ -107,7 +107,7 @@ class OrderControllerTest {
                 .skuCode(product.getSlug() + "-red-xl")
                 .attributeCombinationKey("Color:Red-_-Size:XL")
                 .build();
-        inventoryRepository.save(inventory);
+        productInventoryRepository.save(inventory);
 
 
         AuthenRequest authenRequest = new AuthenRequest();
@@ -127,7 +127,7 @@ class OrderControllerTest {
         tokenRepository.deleteAll();
         userRepository.deleteAll();
         itemRepository.deleteAll();
-        inventoryRepository.deleteAll();
+        productInventoryRepository.deleteAll();
         productRepository.deleteAll();
         lineItemRepository.deleteAll();
         vendorRepository.deleteAll();
@@ -142,7 +142,7 @@ class OrderControllerTest {
                 .lineItems(Set.of(LineItemRequest.builder()
                         .vendorId(vendor.getId())
                         .items(List.of(ItemRequest.builder()
-                                .inventoryId(vendor.getProducts().get(0).getProductInventory().stream().findFirst().get().getId())
+                                .inventoryId(vendor.getProducts().get(0).getProductInventories().stream().findFirst().get().getId())
                                 .quantity(quantity)
                                 .build()))
                         .build()))

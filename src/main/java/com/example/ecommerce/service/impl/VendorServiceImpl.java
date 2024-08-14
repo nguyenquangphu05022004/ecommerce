@@ -93,10 +93,10 @@ public class VendorServiceImpl implements IVendorService {
         return apiResponse("cancel follow vendor", null);
     }
 
-    public static APIResponse<Object> apiResponse(String message, Object response) {
-        return new APIResponse<>(
+    public static <T> APIResponse<T> apiResponse(String message, T response) {
+        return new APIResponse<T>(
                 message,
-                "NULL",
+                0,
                 1,
                 200,
                 response

@@ -41,7 +41,7 @@ public class OrderServiceImpl implements IOrderService {
     private final OrderRepository orderRepository;
     private final LineItemRepository lineItemRepository;
     private final ItemRepository itemRepository;
-    private final InventoryRepository inventoryRepository;
+    private final ProductInventoryRepository productInventoryRepository;
     private final UserRepository userRepository;
     private final TimerService timerService;
     @Override
@@ -142,11 +142,11 @@ public class OrderServiceImpl implements IOrderService {
 
 
     private boolean checkStockExists(ItemRequest itemRequest) {
-        ProductInventory inventory = inventoryRepository.findById(itemRequest.getInventoryId())
+        ProductInventory inventory = productInventoryRepository.findById(itemRequest.getInventoryId())
                 .orElseThrow(() -> new GeneralException("Inventory not found"));
         if (inventory.getQuantity() >= itemRequest.getQuantity()) {
             inventory.setQuantity(inventory.getQuantity() - itemRequest.getQuantity());
-            inventoryRepository.save(inventory);
+            productInventoryRepository.save(inventory);
             return true;
         }
         return false;

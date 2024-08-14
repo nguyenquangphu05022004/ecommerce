@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class InventoryRequest {
+public class ProductInventoryFilterRequest {
     @NotNull
     private Long productId;
     @NotEmpty

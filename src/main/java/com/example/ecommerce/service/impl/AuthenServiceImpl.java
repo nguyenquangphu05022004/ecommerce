@@ -8,6 +8,7 @@ import com.example.ecommerce.domain.entities.auth.Token;
 import com.example.ecommerce.domain.entities.auth.TokenType;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.model.binding.*;
+import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.handler.exception.AuthenticationFailureException;
 import com.example.ecommerce.handler.exception.CodeExpiredException;
 import com.example.ecommerce.handler.exception.GeneralException;
@@ -30,6 +31,7 @@ import java.util.Optional;
 
 import static com.example.ecommerce.service.event.Event.EventType.SEND_MAIL;
 import static com.example.ecommerce.service.event.Event.getInstance;
+import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +44,7 @@ public class AuthenServiceImpl implements IAuthenService {
     private final JwtService jwtService;
 
     @Override
-    public AuthenResponse authenticate(AuthenRequest request) {
+    public APIResponse<?> authenticate(AuthenRequest request) {
         User user = userRepository.findByUsernameIgnoreCase(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 
@@ -60,17 +62,18 @@ public class AuthenServiceImpl implements IAuthenService {
                 .build();
         revokeAllToken(user.getId());
         tokenRepository.save(token);
-        return AuthenResponse.builder()
+        AuthenResponse response = AuthenResponse.builder()
                 .token(jwtToken)
                 .refreshToken(refreshToken)
                 .expiredAt(jwtService.extractExpiration(jwtToken).getTime())
                 .fullName(user.getFullName())
                 .build();
+        return apiResponse("user login", response);
     }
 
 
     @Override
-    public OperationResponse registerAccount(RegisterRequest request) {
+    public APIResponse<?> registerAccount(RegisterRequest request) {
         Optional<User> optionalUser = userRepository.findByUsernameIgnoreCase(request.getUsername());
 
         if (optionalUser.isEmpty()) {
@@ -82,17 +85,13 @@ public class AuthenServiceImpl implements IAuthenService {
                     .build();
             if (request.getRole() != null) user.setRole(request.getRole());
             userRepository.save(user);
-            return OperationResponse.builder()
-                    .message("You created account successfully")
-                    .success(true)
-                    .statusValue(HttpStatus.OK.value())
-                    .build();
+            return apiResponse("register account", null);
         }
         throw new UserNameAlreadyExistsException("Username exists");
     }
 
     @Override
-    public OperationResponse forgetPassword(String username) {
+    public APIResponse<?> forgetPassword(String username) {
         User user = userRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("%s not found", username)));
         Token token = Token.builder()
@@ -111,39 +110,27 @@ public class AuthenServiceImpl implements IAuthenService {
                         .content(token.getValue())
                         .build()
         );
-        return OperationResponse.builder()
-                .success(true)
-                .message("We were sending code verify for you. Please check your email and enter here")
-                .statusValue(HttpStatus.OK.value())
-                .build();
+        return apiResponse("forget password", null);
     }
 
     @Override
-    public OperationResponse forgetPasswordVerifyCode(String code) {
+    public APIResponse<?> forgetPasswordVerifyCode(String code) {
         verifyToken(code);
-        return OperationResponse.builder()
-                .message("Token was checked")
-                .success(true)
-                .statusValue(HttpStatus.OK.value())
-                .build();
+        return apiResponse("verify code", null);
     }
 
 
     @Override
-    public OperationResponse forgetPasswordGeneration(ForgetPasswordRequest request) {
+    public APIResponse<?> forgetPasswordGeneration(ForgetPasswordRequest request) {
         Token token = verifyToken(request.getCode());
         User user = token.getUser();
         user.setPassword(encoder.encode(request.getPassword()));
         userRepository.save(user);
-        return OperationResponse.builder()
-                .success(true)
-                .message("You updated for your password")
-                .statusValue(HttpStatus.OK.value())
-                .build();
+        return apiResponse("change pass when forget", null);
     }
 
     @Override
-    public OperationResponse changePassword(PasswordChangeRequest request) {
+    public APIResponse<?> changePassword(PasswordChangeRequest request) {
         if (SecurityUtils.getUsername() == null) {
             throw new GeneralException("You will not login");
         }
@@ -151,11 +138,7 @@ public class AuthenServiceImpl implements IAuthenService {
         if (this.encoder.matches(request.getOldPassword(), user.getPassword())) {
             user.setPassword(this.encoder.encode(request.getNewPassword()));
             userRepository.save(user);
-            return OperationResponse.builder()
-                    .success(true)
-                    .message("You changed your password")
-                    .statusValue(200)
-                    .build();
+            return apiResponse("change pass succcess", null);
         }
         throw new GeneralException("Password not match, You are not change password");
     }

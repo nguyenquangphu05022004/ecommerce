@@ -16,7 +16,7 @@ public class ProductSortSold implements ProductSortStrategy{
     }
 
     private int getWholeSold(Product p1) {
-        return p1.getProductInventory().stream()
+        return p1.getProductInventories().stream()
                 .flatMapToInt(i -> IntStream.of(i.getNumberOfProductSold()))
                 .sum();
     }

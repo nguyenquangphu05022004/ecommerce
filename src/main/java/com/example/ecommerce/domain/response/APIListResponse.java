@@ -15,8 +15,8 @@ public class APIListResponse <T>{
     private int error;
     private int ok;
     private int status;
-    private int page;
-    private int limit;
-    private int totalPage;
+    private Integer page;
+    private Integer limit;
+    private Integer totalPage;
     private List<T> data;
 }

@@ -19,7 +19,4 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 public class ChatMessageImage extends FileEntity {
-    @ManyToOne
-    @JoinColumn(name = "chat_message_id")
-    private ChatMessage chatMessage;
 }
