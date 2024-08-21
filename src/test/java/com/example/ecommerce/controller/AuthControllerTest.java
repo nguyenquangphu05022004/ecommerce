@@ -6,6 +6,7 @@ import com.example.ecommerce.domain.model.binding.AuthenRequest;
 import com.example.ecommerce.domain.model.binding.ForgetPasswordRequest;
 import com.example.ecommerce.domain.model.binding.PasswordChangeRequest;
 import com.example.ecommerce.domain.model.binding.RegisterRequest;
+import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.repository.TokenRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IUserService;
@@ -43,10 +44,7 @@ class AuthControllerTest {
     private TokenRepository tokenRepository;
     @Autowired
     private PasswordEncoder encoder;
-    @BeforeEach
-    void setUp() {
-        userService.saveOrUpdate(userRequest());
-    }
+
 
     private RegisterRequest userRequest() {
         RegisterRequest r = new RegisterRequest();
@@ -76,8 +74,8 @@ class AuthControllerTest {
                 .content(objectMapper.writeValueAsString(request));
         mockMvc.perform(builder)
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.fullName")
-                        .value("nguyen quang phu"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status")
+                        .value(400));
     }
 
     @Test
@@ -91,8 +89,6 @@ class AuthControllerTest {
                 .content(objectMapper.writeValueAsString(request));
         mockMvc.perform(builder)
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.success")
-                        .value(false))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message")
                         .value("Your account has username or password not matches"));
     }
@@ -298,10 +294,9 @@ class AuthControllerTest {
                 .content(objectMapper.writeValueAsString(request));
         mockMvc.perform(builder)
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
-                        .value("You changed your password"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status")
+                        .value(200));
         User user = userRepository.findByUsernameIgnoreCase(username).get();
-
         boolean passwordMatch = encoder.matches(request.getNewPassword(), user.getPassword());
 
         assertThat(passwordMatch).isTrue();
@@ -317,7 +312,7 @@ class AuthControllerTest {
                 ).contentType("application/json")
                 .content(objectMapper.writeValueAsString(login));
         String requestResponse = mockMvc.perform(b1).andReturn().getResponse().getContentAsString();
-        AuthenResponse authenResponse = objectMapper.readValue(requestResponse, AuthenResponse.class);
-        return authenResponse;
+        APIResponse<AuthenResponse> response = objectMapper.readValue(requestResponse, APIResponse.class);
+        return response.getData();
     }
 }

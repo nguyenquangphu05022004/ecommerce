@@ -5,6 +5,7 @@ import com.example.ecommerce.domain.model.binding.InventoryRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
+import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.service.IProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class ProductController {
     }
 
     @GetMapping("/inventories")
-    public ProductInventoryModelView getInventoryAttributeKey(
+    public APIResponse<ProductInventoryModelView> getInventoryAttributeKey(
             @RequestBody InventoryRequest request
             ) {
         return productService.getInventory(request);

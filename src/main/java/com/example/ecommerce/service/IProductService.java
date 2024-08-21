@@ -12,7 +12,7 @@ import com.example.ecommerce.domain.response.APIResponse;
 public interface IProductService {
     APIResponse<?> save(ProductRequest request);
     APIResponse<?> findById(Long id);
-    ProductInventoryModelView getInventory(InventoryRequest request);
+    APIResponse<ProductInventoryModelView> getInventory(InventoryRequest request);
     APIListResponse<ProductGalleryModelView>  productRecommendation(Long id);
     APIListResponse<ProductGalleryModelView> filterProduct(FilterProductRequest filterProductRequest);
 }

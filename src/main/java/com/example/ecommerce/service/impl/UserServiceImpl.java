@@ -22,44 +22,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final IFilesStorageService filesStorageService;
-    private final VendorRepository vendorRepository;
-    private final CustomerRepository customerRepository;
-    @Override
-    public void saveOrUpdate(RegisterRequest request) {
-        User user = User.builder()
-                .userType(UserType.CUSTOMER)
-                .fullName(request.getFullName())
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
-                .build();
-        if(request instanceof VendorRequest) {
-            VendorRequest vendorRequest = (VendorRequest)request;
-            Vendor vendor = Vendor.builder()
-                    .shopName(vendorRequest.getShopName())
-                    .perMoneyDelivery(vendorRequest.getPerMoneyDelivery())
-                    .build();
-            vendorRepository.save(vendor);
-            user.setUserType(UserType.VENDOR);
-            user.setUserTypeId(vendor.getId());
-        } else {
-            user.setUserTypeId(customerRepository.save(new Customer()).getId());
-        }
-        userRepository.save(user);
-    }
-
     @Override
     @Transactional
-    public void uploadImage(MultipartFile multipartFile) {
+    public APIResponse<?> uploadImage(MultipartFile multipartFile) {
         User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.getUsername()).get();
         filesStorageService.deleteImage(user.getUserImage());
         filesStorageService.saveFile(multipartFile, user.getId(), FileEntityType.USER);
+        return apiResponse("update avatar", null);
     }
 
     @Override

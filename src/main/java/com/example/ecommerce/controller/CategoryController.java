@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,7 +16,9 @@ public class CategoryController {
     private final ICategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<?> createCategory(@RequestBody @Valid CategoryRequest request) {
+    public ResponseEntity<?> createCategory(@RequestPart("request") @Valid CategoryRequest request,
+                                            @RequestParam("files")MultipartFile file) {
+        request.setFile(file);
         return ResponseEntity.ok(categoryService.save(request));
     }
     @GetMapping

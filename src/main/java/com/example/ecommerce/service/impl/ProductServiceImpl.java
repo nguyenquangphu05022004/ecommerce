@@ -83,7 +83,7 @@ public class ProductServiceImpl implements IProductService {
         return apiResponse("created product", response);
     }
     @Override
-    public ProductInventoryModelView getInventory(InventoryRequest request) {
+    public APIResponse<ProductInventoryModelView> getInventory(InventoryRequest request) {
         ProductInventory inventory = inventoryRepository
                 .findByProductIdAndAttributeCombinationKey(
                         request.getProductId(),
@@ -93,7 +93,7 @@ public class ProductServiceImpl implements IProductService {
                                 request.getAttributeCombinationKey(),
                                 request.getProductId())
                 ));
-        return new ProductInventoryModelView(inventory);
+        return apiResponse("get inventory", new ProductInventoryModelView(inventory));
     }
 
     @Override

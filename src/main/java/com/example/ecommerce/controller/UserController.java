@@ -1,5 +1,6 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.service.IUserService;
 import com.example.ecommerce.domain.model.binding.RegisterRequest;
 import lombok.RequiredArgsConstructor;
@@ -16,21 +17,14 @@ public class UserController {
 
     private final IUserService userService;
 
-    @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody RegisterRequest request) {
-        userService.saveOrUpdate(request);
-        return ResponseEntity.ok("A user was created");
-    }
-
 
     @PostMapping("/avatar")
-    public ResponseEntity<?> uploadUserAvatar(@RequestParam("file")MultipartFile file) {
-        userService.uploadImage(file);
-        return ResponseEntity.ok("Avatar of User was uploaded");
+    public APIResponse<?> uploadUserAvatar(@RequestParam("file") MultipartFile file) {
+        return userService.uploadImage(file);
     }
 
     @GetMapping("/info")
-    public ResponseEntity<?> getInfoUser() {
-        return ResponseEntity.ok(userService.getInfoUser());
+    public APIResponse<?> getInfoUser() {
+        return userService.getInfoUser();
     }
 }

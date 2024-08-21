@@ -4,6 +4,7 @@ import com.example.ecommerce.domain.model.binding.AuthenRequest;
 import com.example.ecommerce.domain.model.binding.ForgetPasswordRequest;
 import com.example.ecommerce.domain.model.binding.PasswordChangeRequest;
 import com.example.ecommerce.domain.model.binding.RegisterRequest;
+import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.service.IAuthenService;
 import com.example.ecommerce.domain.response.OperationResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,40 +20,39 @@ public class AuthController {
     private final IAuthenService authenService;
 
     @PostMapping({"/login", "/sign-in"})
-    public ResponseEntity<?> authenticate(
+    public APIResponse<?> authenticate(
             @RequestBody AuthenRequest authenRequest
     ) {
-        return ResponseEntity.ok(authenService.authenticate(authenRequest));
+        return authenService.authenticate(authenRequest);
     }
 
     @PostMapping({"/register", "/sign-up"})
-    public ResponseEntity<?> register(
+    public APIResponse<?> register(
             @RequestBody RegisterRequest request
     ) {
-        OperationResponse operationResponse = authenService.registerAccount(request);
-        return ResponseEntity.ok(operationResponse);
+        return authenService.registerAccount(request);
     }
 
 
     @PostMapping("/forget-password")
-    public OperationResponse forgetPassword(@RequestParam("username") String username) {
+    public APIResponse<?>  forgetPassword(@RequestParam("username") String username) {
         return authenService.forgetPassword(username);
     }
 
     @PostMapping("/forget-password-verify-code")
-    public OperationResponse forgetPasswordVerifyCode(@RequestParam("code") String code) {
+    public APIResponse<?>  forgetPasswordVerifyCode(@RequestParam("code") String code) {
         return authenService.forgetPasswordVerifyCode(code);
     }
 
     @PostMapping("/forget-password/generation")
-    public OperationResponse forgetPasswordGeneration(
+    public APIResponse<?>  forgetPasswordGeneration(
             @RequestBody ForgetPasswordRequest request
             ) {
         return authenService.forgetPasswordGeneration(request);
     }
 
     @PostMapping("/password-change")
-    public OperationResponse changePassword(
+    public APIResponse<?> changePassword(
             @RequestBody PasswordChangeRequest request
     ) {
         return authenService.changePassword(request);
