@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/chat")
+@RequestMapping("${api.version}" + "/chat")
 @RestController
 @CrossOrigin("*")
 public class ChatController {

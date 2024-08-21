@@ -10,7 +10,6 @@ import com.example.ecommerce.domain.model.binding.FilterMessageRequest;
 import com.example.ecommerce.domain.model.modelviews.messages.ChatMessageConversationModelView;
 import com.example.ecommerce.domain.model.modelviews.messages.ChatMessageDetailModelView;
 import com.example.ecommerce.domain.model.modelviews.messages.ChatMessageGalleryModelView;
-import com.example.ecommerce.domain.model.modelviews.messages.ChatMessageViewModel;
 import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.repository.ChatMessageConversationRepository;
 import com.example.ecommerce.repository.ChatMessageRepository;

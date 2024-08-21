@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/categories")
+@RequestMapping("${api.version}" + "/categories")
 @CrossOrigin("*")
 public class CategoryController {
     private final ICategoryService categoryService;
