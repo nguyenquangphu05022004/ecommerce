@@ -1,10 +1,6 @@
 package com.example.ecommerce.domain.entities.auth;
 
-import com.example.ecommerce.domain.entities.BaseEntity;
-import com.example.ecommerce.domain.entities.Evaluation;
-import com.example.ecommerce.domain.entities.Notification;
-import com.example.ecommerce.domain.entities.chat.Conversation;
-import com.example.ecommerce.domain.entities.file.FileEntity;
+import com.example.ecommerce.domain.entities.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,12 +26,11 @@ public class User extends BaseEntity implements UserDetails {
     private LocalDateTime birthOfDate;
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private UserType userType;
-    private Long userTypeId;
+    @Embedded
+    private EntityType entityType;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
-    private UserImage userImage;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FileEntity> images;
 
     @Enumerated(EnumType.STRING)
     private Role role;

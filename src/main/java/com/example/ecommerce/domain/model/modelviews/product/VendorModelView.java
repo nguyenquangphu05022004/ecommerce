@@ -18,8 +18,8 @@ public class VendorModelView extends VendorUserProfileModelView {
     public VendorModelView(Vendor v) {
         super(v);
         this.createdAt = v.getCreatedDate() != null ? SystemUtils.getFormatDate(v.getCreatedDate(), "dd/MM/yyyy") : null;
-        this.numberOfFollowers = v.getUsers() != null ? v.getUsers().size() : 0;
-        this.numberOfProducts = v.getUsers() != null ? v.getProducts().size() : 0;
+        this.numberOfFollowers = v.getUsersFavorite() != null ? v.getUsersFavorite().size() : 0;
+        this.numberOfProducts = v.getUsersFavorite() != null ? v.getProducts().size() : 0;
         this.percentRelyComment = 5;
     }
 }

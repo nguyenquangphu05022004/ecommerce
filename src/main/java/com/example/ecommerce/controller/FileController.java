@@ -1,6 +1,5 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.service.IFilesStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;

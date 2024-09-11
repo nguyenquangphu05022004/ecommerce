@@ -2,7 +2,6 @@ package com.example.ecommerce.domain.model.modelviews.product;
 
 import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.domain.entities.BaseEntity;
-import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.service.ImageMapper;
 import lombok.Getter;
@@ -27,7 +26,7 @@ public class ProductInventoryModelView extends BaseEntity implements ImageMapper
         this.quantity = p.getQuantity();
         this.skuCode = p.getSkuCode();
         this.numberOfProductSold = p.getNumberOfProductSold();
-        this.imageUrl = getImageUrl(FileEntityType.PRODUCT_INVENTORY.name(), p.getImageRepresent());
+        this.imageUrl = getImageUrl(p.getImages()).get(0);
         setId(p.getId());
     }
 

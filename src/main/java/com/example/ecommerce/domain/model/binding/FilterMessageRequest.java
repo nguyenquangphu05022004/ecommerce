@@ -1,5 +1,6 @@
 package com.example.ecommerce.domain.model.binding;
 
+import com.example.ecommerce.domain.entities.EntityType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class FilterMessageRequest {
-    private boolean isUser;
-    private Long  destinationId;
+    private Long toEntityId;
+    private int limit = 100;
+    private int page = 1;
 }

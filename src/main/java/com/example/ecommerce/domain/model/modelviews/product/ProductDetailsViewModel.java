@@ -2,7 +2,6 @@ package com.example.ecommerce.domain.model.modelviews.product;
 
 import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.domain.entities.Evaluation;
-import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.domain.model.modelviews.evaluation.EvaluationDetailsModelView;
@@ -19,22 +18,24 @@ import java.util.*;
 public class ProductDetailsViewModel extends ProductGalleryModelView {
     private List<EvaluationDetailsModelView> evaluations;
     private Map<String, List<String>> attributeMaps;
-    private List<String> imageUrls;
+    private Map<Long, List<String>> inventoryUrlsImage;
     private VendorModelView vendor;
     public ProductDetailsViewModel(final Product product) {
         super(product);
         this.evaluations = mapToEvalDetails(product.getEvaluations());
         this.attributeMaps = extractAttributeKey(product.getProductInventories());
-        this.imageUrls = extractUrlImages(product);
+        this.inventoryUrlsImage = extractUrlImages(product);
         vendor = new VendorModelView(product.getVendor());
     }
 
-    public List<String> extractUrlImages(Product product) {
+    public  Map<Long, List<String>> extractUrlImages(Product product) {
         if(!CollectionUtils.isEmpty(product.getProductInventories())) {
-            return product.getProductInventories().stream()
-                    .map(productInventory -> getImageUrl(FileEntityType.PRODUCT_INVENTORY.name(), productInventory.getImageRepresent()))
-                    .filter(x -> x != null)
-                    .toList();
+            Map<Long, List<String>> inventoryUrls = new HashMap<>();
+             product.getProductInventories().stream()
+                    .forEach(s -> {
+                        inventoryUrls.put(s.getId(), getImageUrl(s.getImages()));
+                    });
+             return inventoryUrls;
         }
         return null;
     }

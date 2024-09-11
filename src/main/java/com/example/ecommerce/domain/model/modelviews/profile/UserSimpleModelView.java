@@ -1,24 +1,28 @@
 package com.example.ecommerce.domain.model.modelviews.profile;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
+import com.example.ecommerce.domain.entities.EntityType;
 import com.example.ecommerce.domain.entities.auth.User;
-import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.service.ImageMapper;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserSimpleModelView extends BaseEntity implements ImageMapper {
-    private String userImage;
+    private List<String> urlsImage;
     private String fullName;
-    private String userType;
+    private EntityType userType;
     public UserSimpleModelView(User user) {
         setId(user.getId());
-        this.userType = user.getUserType().name();
+        this.userType = user.getEntityType();
         this.fullName = user.getFullName();
-        this.userImage = getImageUrl(FileEntityType.USER.name(), user.getUserImage());
+        this.urlsImage = getImageUrl(user.getImages());
     }
 }

@@ -1,12 +1,10 @@
 package com.example.ecommerce.controller;
 
 
-import com.example.ecommerce.domain.model.binding.ChatMessageRequest;
-import com.example.ecommerce.domain.model.modelviews.messages.ChatMessageViewModel;
-import com.example.ecommerce.service.IChatMessageService;
-import com.example.ecommerce.domain.response.OperationResponse;
+import com.example.ecommerce.domain.model.binding.FilterMessageRequest;
+import com.example.ecommerce.domain.model.binding.MessageRequest;
+import com.example.ecommerce.service.IMessageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,37 +12,34 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("${api.version}" + "/chat")
+@RequestMapping("${api.version}" + "/messenger")
 @RestController
 @CrossOrigin("*")
 public class ChatController {
-    private final IChatMessageService chatMessageService;
+    private final IMessageService chatMessageService;
 
-    @PostMapping("/messages")
+    @PostMapping("/chat")
     public ResponseEntity<?> createMessage(
-            @RequestPart("request") ChatMessageRequest request,
+            @RequestPart("request") MessageRequest request,
             @RequestPart(value = "files", required = false) List<MultipartFile> files
     ) {
         request.setFiles(files);
-        ChatMessageViewModel message = chatMessageService.createMessage(request);
-        if(message == null) {
-            return ResponseEntity.ok(
-                    new OperationResponse(
-                            true,
-                            "you created message to group",
-                            HttpStatus.OK.value())
-            );
-        }
-        return ResponseEntity.ok(message);
+        return ResponseEntity.ok(chatMessageService.createMessage(request));
     }
 
-    @GetMapping("/messages")
-    public ResponseEntity<?> getAllByConversationId(
-            @RequestBody ChatMessageRequest request,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "limit", defaultValue = "30") int limit
+    @PostMapping("/messages/details")
+    public ResponseEntity<?> getMessageDetails(
+            @RequestBody FilterMessageRequest request
     ) {
-        return ResponseEntity.ok(chatMessageService.getMessages(request, page, limit));
+        return ResponseEntity.ok(chatMessageService.getMessages(request));
+    }
+
+    @PostMapping("/messages/details")
+    public ResponseEntity<?> getMessageGallery(
+            @RequestParam(value = "limit", defaultValue = "100") int limit,
+            @RequestParam(value = "page", defaultValue = "1") int page
+    ) {
+        return ResponseEntity.ok(chatMessageService.getMessageGallery(page, limit));
     }
 
 }

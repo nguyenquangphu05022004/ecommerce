@@ -11,9 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class APIListResponse <T>{
-    private String message;
-    private int error;
-    private int ok;
     private int status;
     private Integer page;
     private Integer limit;

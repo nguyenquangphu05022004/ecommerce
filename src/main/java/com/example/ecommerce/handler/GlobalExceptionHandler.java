@@ -1,5 +1,6 @@
 package com.example.ecommerce.handler;
 
+import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.handler.exception.*;
 import com.example.ecommerce.domain.response.OperationResponse;
 import org.springframework.http.HttpStatus;
@@ -14,71 +15,51 @@ import org.springframework.web.multipart.MultipartException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = GeneralException.class)
-    public ResponseEntity<OperationResponse> handleGeneralException(GeneralException ex) {
-        return new ResponseEntity<>(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
-                HttpStatus.BAD_REQUEST
-        );
+    public APIResponse<?> handleGeneralException(GeneralException ex) {
+        return apiResponseError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
     }
 
     @ExceptionHandler(value = NotFoundException.class)
-    public ResponseEntity<OperationResponse> handleAuthenticationException(NotFoundException ex) {
-        return new ResponseEntity<>(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
-                HttpStatus.BAD_REQUEST
-        );
+    public APIResponse<?> handleAuthenticationException(NotFoundException ex) {
+        return apiResponseError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
     }
 
     @ExceptionHandler(value = AuthenticationFailureException.class)
-    public ResponseEntity<?> handleAuthenticationException(AuthenticationFailureException ex) {
-        return new ResponseEntity<>(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
-                HttpStatus.BAD_REQUEST
-        );
+    public APIResponse<?> handleAuthenticationException(AuthenticationFailureException ex) {
+        return apiResponseError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
     }
 
     @ExceptionHandler(value = CodeExpiredException.class)
-    public ResponseEntity<?> handleAuthenticationException(CodeExpiredException ex) {
-        return new ResponseEntity<>(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
-                HttpStatus.BAD_REQUEST
-        );
+    public APIResponse<?> handleAuthenticationException(CodeExpiredException ex) {
+        return apiResponseError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
+    }
+
+    private APIResponse<?> apiResponseError(int status, String message, Object o) {
+        return new APIResponse<>(status, o, message);
     }
 
     @ExceptionHandler(value = MultipartException.class)
-    public ResponseEntity<OperationResponse> handleParamFileException(MultipartException ex) {
-        return new ResponseEntity<>(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
-                HttpStatus.BAD_REQUEST
-        );
+    public APIResponse<?> handleParamFileException(MultipartException ex) {
+        return apiResponseError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
     }
 
     @ExceptionHandler(value = UsernameNotFoundException.class)
-    public ResponseEntity<?> handleUsernameNotFoundException(
+    public APIResponse<?> handleUsernameNotFoundException(
             UsernameNotFoundException ex
     ) {
-        return new ResponseEntity<>(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
-                HttpStatus.BAD_REQUEST
-        );
+        return apiResponseError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
     }
     @ExceptionHandler(value = UserNameAlreadyExistsException.class)
-    public ResponseEntity<?> handleUsernameNotFoundException(
+    public APIResponse<?> handleUsernameNotFoundException(
             UserNameAlreadyExistsException ex
     ) {
-        return new ResponseEntity<>(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
-                HttpStatus.BAD_REQUEST
-        );
+        return apiResponseError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationErrors(
+    public APIResponse<?> handleValidationErrors(
             MethodArgumentNotValidException ex
     ) {
-        return new ResponseEntity<>(
-                new OperationResponse(false, ex.getMessage(), HttpStatus.BAD_REQUEST.value()),
-                HttpStatus.BAD_REQUEST
-        );
+        return apiResponseError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
     }
 }

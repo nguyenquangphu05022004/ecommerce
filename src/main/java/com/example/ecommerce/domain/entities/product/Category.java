@@ -1,13 +1,14 @@
 package com.example.ecommerce.domain.entities.product;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
-import com.example.ecommerce.domain.entities.file.CategoryImage;
+import com.example.ecommerce.domain.entities.FileEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,8 +24,8 @@ public class Category extends BaseEntity  {
     @Column(nullable = false, length = 100)
     private String slug;
 
-    @OneToOne(mappedBy = "category")
-    private CategoryImage image;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FileEntity> images;
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
@@ -32,8 +33,6 @@ public class Category extends BaseEntity  {
 
     @OneToMany(mappedBy = "parent")
     private Set<Category> children;
-
-    private boolean displayAtHomePage;
 
     @OneToMany(mappedBy = "category")
     private Set<Product> products;

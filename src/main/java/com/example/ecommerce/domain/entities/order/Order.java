@@ -39,7 +39,7 @@ public class Order extends BaseEntity{
     public Integer getTotalPrice() {
         return lineItems.stream().mapToInt(lineItem -> {
             return lineItem.getItems().stream().mapToInt(item ->
-                    item.getProductInventory().getProduct().getPrice() * item.getQuantity())
+                    item.getProductInventory().getPrice()* item.getQuantity())
                     .sum();
         }).sum();
     }

@@ -1,9 +1,10 @@
 package com.example.ecommerce.domain.entities.chat;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
+import com.example.ecommerce.domain.entities.EntityType;
+import com.example.ecommerce.domain.entities.FileEntity;
 import com.example.ecommerce.domain.entities.auth.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,19 +12,27 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
-@MappedSuperclass
 @Getter
 @Setter
+@Entity
+@Table(name = "messages")
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-@AllArgsConstructor
-public abstract class ChatMessageEntity extends BaseEntity {
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChatMessageImage> chatMessageImages;
+public class Message extends BaseEntity {
+
+    private String content;
+
     @ManyToOne
     @JoinColumn(name = "from_user_id")
     private User fromUser;
-    private String content;
+
+
+    private EntityType toEntityType;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FileEntity> images;
+
+    private boolean watched;
 
 
 }

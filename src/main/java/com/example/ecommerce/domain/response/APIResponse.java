@@ -9,9 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class APIResponse <T>{
-    private String message;
-    private int error;
-    private int ok;
     private int status;
     private T data;
+    private String message;
 }

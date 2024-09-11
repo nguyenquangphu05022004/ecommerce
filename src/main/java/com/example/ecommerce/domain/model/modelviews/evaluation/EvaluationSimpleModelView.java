@@ -2,7 +2,6 @@ package com.example.ecommerce.domain.model.modelviews.evaluation;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
 import com.example.ecommerce.domain.entities.Evaluation;
-import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.domain.model.modelviews.profile.UserSimpleModelView;
 import com.example.ecommerce.service.ImageMapper;
 import lombok.Getter;
@@ -26,6 +25,6 @@ public class EvaluationSimpleModelView extends BaseEntity implements ImageMapper
         this.user = new UserSimpleModelView(evaluation.getUser());
         this.rating = evaluation.getRating();
         this.evalParentId = evaluation.getParent() != null ? evaluation.getParent().getId() : null;
-        this.imageUrls = getImageUrl(FileEntityType.EVALUATION.name(), evaluation.getImages());
+        this.imageUrls = getImageUrl(evaluation.getImages());
     }
 }

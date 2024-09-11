@@ -1,7 +1,6 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.common.utils.SystemUtils;
-import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.domain.model.binding.ProductInventoryFilterRequest;

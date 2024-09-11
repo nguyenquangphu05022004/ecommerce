@@ -34,9 +34,6 @@ public class BrandServiceImpl implements IBrandService {
     public APIListResponse<?> getAllBrand(int page, int limit) {
         Page<ProductBrand> pages = brandRepository.findAll(PageRequest.of(page - 1, limit));
         return new APIListResponse<>(
-                "get all brand",
-                0,
-                1,
                 200,
                 page,
                 limit,

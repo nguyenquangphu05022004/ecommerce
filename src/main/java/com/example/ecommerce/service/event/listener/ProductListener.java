@@ -49,8 +49,8 @@ public class ProductListener {
     }
 
     private void sendMailToFollower(Product product, Notification notification, String subject) {
-        if (!CollectionUtils.isEmpty(product.getVendor().getUsers())) {
-            product.getVendor().getUsers().stream().forEach(user -> {
+        if (!CollectionUtils.isEmpty(product.getVendor().getUsersFavorite())) {
+            product.getVendor().getUsersFavorite().stream().forEach(user -> {
                 simpMessagingTemplate.convertAndSendToUser(user.getId().toString(), "/user/topic/private-message", notification);
                 Utils.sendToEmail(user.getUsername(), notification, subject);
             });

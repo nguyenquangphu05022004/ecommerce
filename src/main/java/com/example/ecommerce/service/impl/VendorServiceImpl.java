@@ -3,7 +3,6 @@ package com.example.ecommerce.service.impl;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.auth.Role;
 import com.example.ecommerce.domain.entities.auth.User;
-import com.example.ecommerce.domain.entities.auth.UserType;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.order.Coupon;
 import com.example.ecommerce.domain.model.binding.CouponRequest;
@@ -63,7 +62,7 @@ public class VendorServiceImpl implements IVendorService {
                 ));
 
 
-        vendor.getUsers().add(user);
+        vendor.getUsersFavorite().add(user);
         vendorRepository.save(vendor);
         return apiResponse("follow vendor",null);
     }
@@ -88,7 +87,7 @@ public class VendorServiceImpl implements IVendorService {
     public APIResponse<?> cancelFollowVendor(Long userId, Long vendorId) {
         Vendor vendor = vendorRepository.findById(vendorId)
                 .orElseThrow(() -> new GeneralException(String.format("Vendor with id: %s not found", vendorId)));
-        vendor.getUsers().remove(User.builder().id(userId).build());
+        vendor.getUsersFavorite().remove(User.builder().id(userId).build());
         vendorRepository.save(vendor);
         return apiResponse("cancel follow vendor", null);
     }

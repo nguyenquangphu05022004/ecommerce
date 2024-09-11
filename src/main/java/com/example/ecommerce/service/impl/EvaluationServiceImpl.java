@@ -2,7 +2,6 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.Evaluation;
-import com.example.ecommerce.domain.entities.file.FileEntityType;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.model.binding.EvaluationRequest;
 import com.example.ecommerce.domain.model.modelviews.evaluation.EvaluationDetailsModelView;

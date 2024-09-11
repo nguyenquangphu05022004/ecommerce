@@ -3,7 +3,6 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.domain.entities.auth.Role;
 import com.example.ecommerce.domain.entities.auth.User;
-import com.example.ecommerce.domain.entities.auth.UserType;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductInventory;

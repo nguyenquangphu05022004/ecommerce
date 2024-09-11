@@ -27,7 +27,6 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "language_id")
     private Language language;
 
-    private int price;
     private String slug;
 
     @ManyToOne
