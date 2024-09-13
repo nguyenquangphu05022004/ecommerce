@@ -120,7 +120,7 @@ public class CartServiceImpl implements ICartService {
             vendorResponse.setItems(itemResponses);
             res.add(vendorResponse);
         });
-        return new APIListResponse<>("get carts", 0, 1, 200, null,null, null, res);
+        return new APIListResponse<>(200, null,null, null, res);
     }
 
     @Override

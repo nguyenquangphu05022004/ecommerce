@@ -5,6 +5,7 @@ import com.example.ecommerce.domain.entities.auth.Role;
 import com.example.ecommerce.config.jwt.JwtAuthentication;
 import com.example.ecommerce.config.jwt.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,6 +24,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    @Value("${api.version}")
+    private String apiVersion;
     private final JwtAuthentication jwtAuthentication;
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -36,35 +39,34 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> {
                     request
                             .requestMatchers(
-                                    "/api/v1/shopping-cart/**",
-                                    "/api/v1/auth/**",
-                                    "/api/v1/products/search")
+                                    apiVersion + "/shopping-cart/**",
+                                    apiVersion + "/auth/**",
+                                    apiVersion + "/products/search")
                             .permitAll()
-                            .requestMatchers("/api/v1/orders/**")
+                            .requestMatchers(apiVersion + "/orders/**")
                             .authenticated()
-                            .requestMatchers(HttpMethod.GET, SecurityUrlConstants.WHILE_LIST)
+                            .requestMatchers( 
+                                    apiVersion + "/products/**",
+                                    apiVersion + "/categories/**",
+                                    apiVersion + "/users/vendors/**",
+                                    apiVersion + "/files/**")
                             .permitAll()
-                            .requestMatchers(HttpMethod.POST, SecurityUrlConstants.WHILE_LIST)
+                            .requestMatchers(HttpMethod.GET, apiVersion + "/users/**")
                             .hasAnyAuthority(
                                     Role.ADMIN.name(),
                                     Role.VENDOR.name()
                             )
-                            .requestMatchers(HttpMethod.GET, SecurityUrlConstants.USER_URL)
-                            .hasAnyAuthority(
-                                    Role.ADMIN.name(),
-                                    Role.VENDOR.name()
-                            )
-                            .requestMatchers(HttpMethod.POST, SecurityUrlConstants.USER_URL)
+                            .requestMatchers(HttpMethod.POST, apiVersion + "/users/**")
                             .hasAnyAuthority(
                                     Permission.ADMIN_CREATE.name(),
                                     Permission.VENDOR_CREATE.name()
                             )
-                            .requestMatchers(HttpMethod.PUT, SecurityUrlConstants.USER_URL)
+                            .requestMatchers(HttpMethod.PUT, apiVersion + "/users/**")
                             .hasAnyAuthority(
                                     Permission.ADMIN_UPDATE.name(),
                                     Permission.VENDOR_UPDATE.name()
                             )
-                            .requestMatchers(HttpMethod.DELETE, SecurityUrlConstants.USER_URL)
+                            .requestMatchers(HttpMethod.DELETE, apiVersion + "/users/**")
                             .hasAnyAuthority(
                                     Permission.ADMIN_DELETE.name(),
                                     Permission.VENDOR_DELETE.name()
@@ -80,7 +82,7 @@ public class SecurityConfig {
                 })
                 .authenticationProvider(authenticationProvider)
                 .logout(logout -> {
-                    logout.logoutUrl("/api/v1/auth/logout")
+                    logout.logoutUrl(apiVersion + "/auth/logout")
                             .addLogoutHandler(
                                     (request, response, authentication) ->
                                             SecurityContextHolder.clearContext()
@@ -89,23 +91,4 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthentication, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-}
-
-class SecurityUrlConstants {
-    public static final String[] WHILE_LIST = {
-            "/api/v1/products/**",
-            "/api/v1/categories/**",
-            "/api/v1/users/vendors/**",
-            "/api/v1/files/**",
-            "/v2/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**",
-            "/v3/api-docs/**",
-            "/swagger-ui/**"
-    };
-    public static final String USER_URL = "/api/v1/users/**";
 }

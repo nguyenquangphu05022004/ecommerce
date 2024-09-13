@@ -6,8 +6,8 @@ import com.example.ecommerce.domain.response.APIResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface IUserService{
-    APIResponse<UserModelView>  saveOrUpdate(RegisterRequest request);
     APIResponse<UserModelView>  uploadImage(MultipartFile multipartFile);
     APIResponse<UserModelView> getInfoUser();
     APIResponse<UserModelView>  updateOnlineStatus(String username, boolean b);
+    void delete(String username);
 }

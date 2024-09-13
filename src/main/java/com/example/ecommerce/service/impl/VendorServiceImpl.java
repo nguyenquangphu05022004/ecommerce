@@ -1,6 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.domain.entities.EntityType;
 import com.example.ecommerce.domain.entities.auth.Role;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.Vendor;
@@ -22,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.example.ecommerce.domain.entities.EntityType.Type.VENDOR;
+
 @Service
 @RequiredArgsConstructor
 public class VendorServiceImpl implements IVendorService {
@@ -34,15 +37,13 @@ public class VendorServiceImpl implements IVendorService {
     public APIResponse<?> saveOrUpdate(VendorRequest request) {
         Vendor vendor = Vendor.builder()
                 .shopName(request.getShopName())
-                .perMoneyDelivery(request.getPerMoneyDelivery())
                 .build();
         vendorRepository.save(vendor);
         User user = User.builder()
                 .password(encoder.encode(request.getPassword()))
-                .userType(UserType.VENDOR)
                 .role(Role.VENDOR)
                 .fullName(request.getFullName())
-                .userTypeId(vendor.getId())
+                .entityType(new EntityType(VENDOR, vendor.getId()))
                 .build();
         userRepository.save(user);
         return apiResponse("create vendor", null);
@@ -92,13 +93,16 @@ public class VendorServiceImpl implements IVendorService {
         return apiResponse("cancel follow vendor", null);
     }
 
+    @Override
+    public void delete(Long entityId) {
+
+    }
+
     public static <T> APIResponse<T> apiResponse(String message, T response) {
         return new APIResponse<T>(
-                message,
-                0,
-                1,
                 200,
-                response
+                response,
+                message
         );
     }
 }

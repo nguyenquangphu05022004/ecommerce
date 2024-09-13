@@ -1,6 +1,5 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.model.binding.RegisterRequest;
 import com.example.ecommerce.domain.model.modelviews.profile.UserModelView;
 import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.service.IUserService;
@@ -16,13 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
 
     private final IUserService userService;
-
-    @PostMapping
-    public APIResponse<UserModelView>  createUser(@RequestBody RegisterRequest request) {
-        return userService.saveOrUpdate(request);
-    }
-
-
     @PostMapping("/avatar")
     public APIResponse<UserModelView>  uploadUserAvatar(@RequestParam("file")MultipartFile file) {
         return userService.uploadImage(file);

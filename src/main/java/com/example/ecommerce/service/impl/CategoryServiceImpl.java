@@ -7,6 +7,7 @@ import com.example.ecommerce.domain.model.modelviews.product.CategoryModelView;
 import com.example.ecommerce.domain.response.APIListResponse;
 import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.handler.exception.GeneralException;
+import com.example.ecommerce.handler.exception.NotFoundException;
 import com.example.ecommerce.repository.CategoryRepository;
 import com.example.ecommerce.service.ICategoryService;
 import com.example.ecommerce.service.IFilesStorageService;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.example.ecommerce.domain.entities.EntityType.Type.CATEGORY;
 import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
@@ -29,11 +32,36 @@ public class CategoryServiceImpl implements ICategoryService {
     @Transactional
     @Override
     public APIResponse<?> save(CategoryRequest request) {
-        Category category = Category.builder()
-                .name(request.getName())
-                .slug(request.getSlug())
-                .build();
-        filesStorageService.saveFile(request.getFile(), new EntityType(CATEGORY, category.getId()));
+        if (request.getId() != null) {
+            Category oldCate = categoryRepository.findById(request.getId())
+                    .orElseThrow(() -> new NotFoundException("not found category"))
+                    .toBuilder()
+                    .name(request.getName())
+                    .slug(request.getSlug())
+                    .build();
+
+            if(request.getFile() != null) {
+                oldCate.getImages().add(filesStorageService.saveFile(
+                        request.getFile(),
+                        new EntityType(CATEGORY, oldCate.getId())
+                ));
+            }
+            categoryRepository.save(oldCate);
+        } else {
+            Category category = Category.builder()
+                    .name(request.getName())
+                    .slug(request.getSlug())
+                    .build();
+            categoryRepository.save(category);
+
+            if(request.getFile() != null) {
+                category.setImages(List.of(filesStorageService.saveFile(
+                        request.getFile(),
+                        new EntityType(CATEGORY, category.getId())
+                )));
+            }
+            categoryRepository.save(category);
+        }
         return apiResponse("created category", null);
     }
 

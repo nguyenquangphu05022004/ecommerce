@@ -1,7 +1,13 @@
 package com.example.ecommerce.domain.model.modelviews.product;
 
 import com.example.ecommerce.domain.entities.product.ProductBrand;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class BrandModelView {
     private long id;
     private String name;

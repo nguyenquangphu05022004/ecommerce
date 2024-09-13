@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("${api.version}" + "/messenger")
 @RestController
 @CrossOrigin("*")
-public class ChatController {
+public class MessageController {
     private final IMessageService chatMessageService;
 
     @PostMapping("/chat")
@@ -34,7 +34,7 @@ public class ChatController {
         return ResponseEntity.ok(chatMessageService.getMessages(request));
     }
 
-    @PostMapping("/messages/details")
+    @PostMapping("/messages/galleries")
     public ResponseEntity<?> getMessageGallery(
             @RequestParam(value = "limit", defaultValue = "100") int limit,
             @RequestParam(value = "page", defaultValue = "1") int page

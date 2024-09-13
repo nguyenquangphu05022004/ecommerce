@@ -72,7 +72,7 @@ public class OrderServiceImpl implements IOrderService {
                                         .collect(Collectors.toSet()))
                                 .build())
                         .collect(Collectors.toSet()))
-                .customer(Customer.builder().id(user.getUserTypeId()).build())
+                .customer(Customer.builder().id(user.getEntityType().getEntityId()).build())
                 .build();
         orderRepository.save(order);
 
@@ -110,7 +110,7 @@ public class OrderServiceImpl implements IOrderService {
             pageOrders = orderRepository.findAllByCreatedBy(SecurityUtils.getUsername(), pageable);
         }
         return new APIListResponse<>(
-                "ok", 0, 1, 200, request.getPage(), request.getLimit(),
+                200, request.getPage(), request.getLimit(),
                 pageOrders.getTotalPages(),
                 pageOrders.getContent().stream().map(o -> new OrderViewModel(o)).toList()
         );

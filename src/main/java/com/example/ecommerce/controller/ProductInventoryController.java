@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/products/inventories")
@@ -20,9 +22,9 @@ public class ProductInventoryController {
     @PostMapping
     public APIResponse<ProductInventoryModelView> createProductInventory(
             @RequestPart("productInventoryRequest") @Valid ProductInventoryRequest request,
-            @RequestParam("file") MultipartFile file
+            @RequestParam("files") List<MultipartFile> files
     ) {
-        request.setImageRepresent(file);
+        request.setFiles(files);
         return productInventoryService.createProductInventory(request);
     }
 

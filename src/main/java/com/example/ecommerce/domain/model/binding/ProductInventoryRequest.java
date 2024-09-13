@@ -17,5 +17,6 @@ public class ProductInventoryRequest
     private Integer quantity;
     private Long productId;
     private String skuCode;
-    private MultipartFile imageRepresent;
+    private int price;
+    private List<MultipartFile> files;
 }

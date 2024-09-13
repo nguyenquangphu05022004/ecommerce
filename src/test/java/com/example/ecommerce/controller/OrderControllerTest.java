@@ -61,7 +61,6 @@ class OrderControllerTest {
     public void init() throws Exception {
         Vendor vendor = Vendor.builder()
                 .shopName("hello world")
-                .perMoneyDelivery(5000)
                 .build();
         vendorRepository.save(vendor);
 
@@ -71,16 +70,12 @@ class OrderControllerTest {
         customerRepository.save(customer);
 
         User userVendor = User.builder()
-                .userType(UserType.VENDOR)
-                .userTypeId(vendor.getId())
                 .role(Role.VENDOR)
                 .password(encoder.encode("mahiru"))
                 .username("mahiru")
                 .fullName("quang phu")
                 .build();
         User userCustomer = User.builder()
-                .userType(UserType.CUSTOMER)
-                .userTypeId(customer.getId())
                 .role(Role.USER)
                 .password(encoder.encode("test"))
                 .username("test")
@@ -92,7 +87,6 @@ class OrderControllerTest {
         Product product = Product.builder()
                 .productBrand(ProductBrand.builder().id(1l).build())
                 .category(Category.builder().id(2l).build())
-                .price(500)
                 .description("hello everybody today i will test my order controller")
                 .language(new Product.Language("ao vietnam", "ao vietnam"))
                 .combination(true)

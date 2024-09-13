@@ -24,6 +24,6 @@ public class EntityType {
 
     public  enum Type {
         USER, CUSTOMER, VENDOR, ORDER, PRODUCT, PRODUCT_INVENTORY, GROUP, MESSAGE,
-        CATEGORY;
+        CATEGORY, EVALUATION;
     }
 }

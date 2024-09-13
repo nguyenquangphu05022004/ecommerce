@@ -1,6 +1,7 @@
 package com.example.ecommerce.domain.entities.auth;
 
 import com.example.ecommerce.domain.entities.*;
+import com.example.ecommerce.domain.entities.chat.Group;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,14 +39,13 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Evaluation> evaluations = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "users")
-    private List<Conversation> conversations = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "usersFavorite")
     private Set<Vendor> vendors;
+
 
     private boolean isOnline;
 

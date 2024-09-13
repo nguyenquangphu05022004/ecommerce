@@ -1,6 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.common.utils.SystemUtils;
+import com.example.ecommerce.domain.entities.EntityType;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.domain.model.binding.ProductInventoryFilterRequest;
@@ -15,8 +16,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import static com.example.ecommerce.domain.entities.EntityType.Type.PRODUCT;
 import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 
 @RequiredArgsConstructor
@@ -39,9 +42,21 @@ public class ProductInventoryServiceImpl implements IProductInventoryService {
                 .skuCode(request.getSkuCode())
                 .quantity(request.getQuantity())
                 .attributeCombinationKey(attr)
+                .price(request.getPrice())
                 .build();
         productInventoryRepository.save(productInventory);
-        filesStorageService.saveFile(request.getImageRepresent(), productInventory.getId(), FileEntityType.PRODUCT_INVENTORY);
+
+        try {
+            if(productInventory.getImages() == null) productInventory.setImages(new ArrayList<>());
+
+            productInventory.setImages(request.getFiles()
+                    .stream()
+                    .map(s -> filesStorageService.saveFile(s, new EntityType(PRODUCT, productInventory.getId())))
+                    .toList());
+
+        } catch (Exception e) {
+            throw new GeneralException("file can't null");
+        }
         return apiResponse("created product inventory", null);
     }
 

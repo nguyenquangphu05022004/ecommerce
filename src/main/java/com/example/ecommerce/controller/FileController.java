@@ -15,12 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class FileController {
 
     private final IFilesStorageService filesStorageService;
-    @GetMapping(value = "/images/{fileType}/{fileName}",
-            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+
+    @GetMapping(produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> loadFile(
-            @PathVariable("fileType") FileEntityType fileType,
-            @PathVariable("fileName") String fileName
+           @RequestParam("url") String url
     ) {
-        return ResponseEntity.ok(filesStorageService.loadFileAsResource(fileName, fileType));
+        return ResponseEntity.ok(filesStorageService.loadFileAsResource(url));
     }
 }

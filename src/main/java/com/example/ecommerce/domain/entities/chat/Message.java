@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "messages")
+@Table(name = "msg_messages")
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 public class Message extends BaseEntity {

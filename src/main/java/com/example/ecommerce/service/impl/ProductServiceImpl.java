@@ -1,6 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.domain.entities.auth.Role;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.product.Category;
@@ -62,17 +63,20 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public   APIResponse<?> save(ProductRequest request) {
+    public APIResponse<?> save(ProductRequest request) {
         User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("You aren't login"));
+
+        if(user.getRole() != Role.VENDOR) {
+            throw new GeneralException("your role didnt VENDOR");
+        }
         Product product = Product.builder()
-                .price(request.getPrice())
                 .description(request.getDescription())
                 .combination(request.isCombination())
                 .language(request.getLanguage())
                 .productBrand(ProductBrand.builder().id(request.getBrandId()).build())
                 .category(Category.builder().id(request.getCategoryId()).build())
-                .vendor(Vendor.builder().id(user.getUserTypeId()).build())
+                .vendor(Vendor.builder().id(user.getEntityType().getEntityId()).build())
                 .build();
         Product saved = productRepository.save(product);
         new Thread(() -> getInstance().postEvent(PRODUCT_CREATE, saved)).start();
@@ -93,7 +97,6 @@ public class ProductServiceImpl implements IProductService {
                         .map(pa -> pa.getProduct())
                         .toList()
         );
-        response.setMessage(response.getData().get(0).getName());
         return response;
     }
 
@@ -123,9 +126,6 @@ public class ProductServiceImpl implements IProductService {
             List<Product> products
     ) {
         APIListResponse<ProductGalleryModelView> response = new APIListResponse<>(
-                "ok",
-                0,
-                1,
                 HttpStatus.OK.value(),
                 page != null ? page.getNumber() : -1,
                 page != null ? page.getSize() : -1,
@@ -137,9 +137,6 @@ public class ProductServiceImpl implements IProductService {
             Page<Product> page
     ) {
         APIListResponse<ProductGalleryModelView> response = new APIListResponse<>(
-                "ok",
-                0,
-                1,
                 HttpStatus.OK.value(),
                 page != null ? page.getNumber() : -1,
                 page != null ? page.getSize() : -1,

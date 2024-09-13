@@ -20,5 +20,6 @@ import lombok.experimental.SuperBuilder;
 public class ProductBrand extends BaseEntity {
     @Column(unique = true)
     private String name;
+    @Column(unique = true)
     private String slug;
 }

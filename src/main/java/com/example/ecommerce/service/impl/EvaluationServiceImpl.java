@@ -1,6 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
+import com.example.ecommerce.domain.entities.EntityType;
 import com.example.ecommerce.domain.entities.Evaluation;
 import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.model.binding.EvaluationRequest;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.example.ecommerce.domain.entities.EntityType.Type.EVALUATION;
 import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 
 @Service
@@ -39,14 +41,10 @@ public class EvaluationServiceImpl implements IEvaluationService {
                 .build();
         Evaluation saved = evaluationRepository.save(evaluation);
         if(request.getFiles() != null) {
-            List<Evaluation.EvaluationImage> files = request.getFiles()
-                    .stream().map(file -> (Evaluation.EvaluationImage) filesStorageService.saveFile(
-                            file,
-                            saved.getId(),
-                            FileEntityType.EVALUATION
-                    ))
-                    .toList();
-            saved.setImages(files);
+            saved.setImages(request.getFiles()
+                    .stream()
+                    .map(s -> filesStorageService.saveFile(s, new EntityType(EVALUATION, saved.getId())))
+                    .toList());
         }
         return apiResponse("created evaluation", new EvaluationDetailsModelView(saved));
     }
@@ -68,10 +66,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
 
     @Override
     public APIResponse<?> delete(Long id) {
-        Evaluation evaluation = evaluationRepository.findById(id)
-                .orElseThrow(() -> new GeneralException("Not found"));
-        evaluation.getImages().forEach(f -> filesStorageService.deleteImage(f));
-        evaluationRepository.delete(evaluation);
+        evaluationRepository.deleteById(id);
         return apiResponse(
                 SecurityUtils.getUsername() + " deleted evaluation",
                 null

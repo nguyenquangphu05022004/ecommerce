@@ -19,8 +19,9 @@ public class BrandController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllBrand(@RequestParam(value = "page", defaultValue = "1") int page,
-                                         @RequestParam(value = "limit", defaultValue = "20") int limit) {
+    public ResponseEntity<?> getAllBrand(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "50") int limit) {
         return ResponseEntity.ok(brandService.getAllBrand(page, limit));
     }
  }

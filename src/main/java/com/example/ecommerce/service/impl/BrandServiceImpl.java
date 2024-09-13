@@ -5,12 +5,15 @@ import com.example.ecommerce.domain.model.binding.BrandRequest;
 import com.example.ecommerce.domain.model.modelviews.product.BrandModelView;
 import com.example.ecommerce.domain.response.APIListResponse;
 import com.example.ecommerce.domain.response.APIResponse;
+import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.BrandRepository;
 import com.example.ecommerce.service.IBrandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,12 +25,16 @@ public class BrandServiceImpl implements IBrandService {
     private final BrandRepository brandRepository;
     @Override
     public APIResponse<?> createBrand(BrandRequest proBrand) {
-        ProductBrand brand = ProductBrand.builder()
-                .name(proBrand.getName())
-                .slug(proBrand.getSlug())
-                .build();
-        brandRepository.save(brand);
-        return apiResponse("create brand", new BrandModelView(brand));
+        try {
+            ProductBrand brand = ProductBrand.builder()
+                    .name(proBrand.getName())
+                    .slug(proBrand.getSlug().toLowerCase())
+                    .build();
+            brandRepository.save(brand);
+            return apiResponse("you created brand", new BrandModelView(brand));
+        } catch (Exception e) {
+            throw new GeneralException("brand name exists, you can't save it");
+        }
     }
 
     @Override
@@ -44,5 +51,11 @@ public class BrandServiceImpl implements IBrandService {
                         .toList()
         );
 
+    }
+
+    @Override
+    @Transactional
+    public void deleteByName(String name) {
+        brandRepository.deleteByName(name);
     }
 }

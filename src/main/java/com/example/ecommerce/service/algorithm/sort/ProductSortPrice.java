@@ -10,7 +10,20 @@ public class ProductSortPrice implements ProductSortStrategy{
     @Override
     public List<Product> sort(List<Product> products) {
         List<Product> modif =new ArrayList<>(products);
-        Collections.sort(modif, (p1, p2) -> p2.getPrice() - p1.getPrice());
+        Collections.sort(modif, (p1, p2) -> {
+            int avg1 = p1.getProductInventories()
+                    .stream()
+                    .mapToInt(s -> s.getPrice())
+                    .min()
+                    .getAsInt();
+
+            int avg2 = p2.getProductInventories()
+                    .stream()
+                    .mapToInt(s -> s.getPrice())
+                    .min()
+                    .getAsInt();
+            return avg2 - avg1;
+        });
         return modif;
     }
 }

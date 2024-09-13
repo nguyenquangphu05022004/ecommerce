@@ -32,7 +32,6 @@ public class EmailListener {
                     throw new GeneralException("Email invalid");
                 }
             }).start();
-
         };
     }
 }

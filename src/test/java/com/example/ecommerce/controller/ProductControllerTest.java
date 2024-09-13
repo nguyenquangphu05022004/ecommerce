@@ -12,11 +12,11 @@ import com.example.ecommerce.domain.model.binding.ProductInventoryFilterRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductGalleryModelView;
+import com.example.ecommerce.domain.response.APIListResponse;
+import com.example.ecommerce.domain.response.AuthenResponse;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.algorithm.search.ProductFilterType;
 import com.example.ecommerce.service.algorithm.sort.ProductSortType;
-import com.example.ecommerce.domain.response.APIListResponse;
-import com.example.ecommerce.domain.response.AuthenResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,22 +71,18 @@ class ProductControllerTest {
     public void init() {
         Vendor vendor = Vendor.builder()
                 .shopName("test")
-                .perMoneyDelivery(1555)
                 .build();
         vendorRepository.save(vendor);
         User user = User.builder()
                 .username("quangphu2050@gmail.com")
                 .password(passwordEncoder.encode("mahiru"))
                 .role(Role.USER)
-                .userType(UserType.CUSTOMER)
                 .build();
 
         User vendor1 = User.builder()
                 .username("vendor")
                 .password(passwordEncoder.encode("mahiru"))
                 .role(Role.VENDOR)
-                .userType(UserType.VENDOR)
-                .userTypeId(vendor.getId())
                 .build();
 
         userRepository.save(user);
@@ -220,8 +216,6 @@ class ProductControllerTest {
                 .isEqualTo(200);
         assertThat(apiResponses.getLimit())
                 .isEqualTo(-1);
-        assertThat(apiResponses.getMessage())
-                .isEqualTo("ao the thao barca jean");
     }
 
     private MockHttpServletRequestBuilder findProductByIdRequest(String url) {

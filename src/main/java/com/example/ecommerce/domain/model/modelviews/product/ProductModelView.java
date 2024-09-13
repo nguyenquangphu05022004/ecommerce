@@ -12,14 +12,13 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Setter
-public class ProductModelView extends BaseEntity implements ImageMapper {
+public class ProductModelView extends BaseEntity {
     private String name;
     private int minPrice;
     private int maxPrice;
     private String description;
     private CategoryModelView category;
     private ProductBrand productBrand;
-    private String imageUrl;
     private String slug;
     private VendorUserProfileModelView vendor;
 
@@ -39,11 +38,6 @@ public class ProductModelView extends BaseEntity implements ImageMapper {
                 .mapToInt(s -> s.getPrice())
                 .max()
                 .getAsInt();
-        try {
-            this.imageUrl = getImageUrl(product.getProductInventories().get(0).getImages()).get(0);
-        } catch (Exception e) {
-            this.imageUrl = null;
-        }
         this.slug = product.getSlug();
         this.vendor = new VendorUserProfileModelView(product.getVendor());
     }

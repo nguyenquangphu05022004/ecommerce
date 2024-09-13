@@ -3,16 +3,15 @@ package com.example.ecommerce.service.impl;
 import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.config.jwt.JwtService;
-import com.example.ecommerce.domain.entities.auth.Role;
-import com.example.ecommerce.domain.entities.auth.Token;
-import com.example.ecommerce.domain.entities.auth.TokenType;
-import com.example.ecommerce.domain.entities.auth.User;
+import com.example.ecommerce.domain.entities.EntityType;
+import com.example.ecommerce.domain.entities.auth.*;
 import com.example.ecommerce.domain.model.binding.*;
 import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.handler.exception.AuthenticationFailureException;
 import com.example.ecommerce.handler.exception.CodeExpiredException;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.handler.exception.UserNameAlreadyExistsException;
+import com.example.ecommerce.repository.CustomerRepository;
 import com.example.ecommerce.repository.TokenRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IAuthenService;
@@ -29,21 +28,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.ecommerce.domain.entities.EntityType.Type.CUSTOMER;
 import static com.example.ecommerce.service.event.Event.EventType.SEND_MAIL;
 import static com.example.ecommerce.service.event.Event.getInstance;
 import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AuthenServiceImpl implements IAuthenService {
 
     private final TokenRepository tokenRepository;
     private final PasswordEncoder encoder;
     private final UserRepository userRepository;
+    private final CustomerRepository customerRepository;
     private final JwtService jwtService;
 
     @Override
+    @Transactional
     public APIResponse<?> authenticate(AuthenRequest request) {
         User user = userRepository.findByUsernameIgnoreCase(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
@@ -73,17 +74,21 @@ public class AuthenServiceImpl implements IAuthenService {
 
 
     @Override
+    @Transactional
     public APIResponse<?> registerAccount(RegisterRequest request) {
         Optional<User> optionalUser = userRepository.findByUsernameIgnoreCase(request.getUsername());
-
         if (optionalUser.isEmpty()) {
+            Customer customer = Customer.builder()
+                    .createdBy(request.getUsername())
+                    .build();
+            customerRepository.save(customer);
             User user = User.builder()
                     .username(request.getUsername())
                     .password(encoder.encode(request.getPassword()))
                     .role(Role.USER)
                     .fullName(request.getFullName())
+                    .entityType(new EntityType(CUSTOMER, customer.getId()))
                     .build();
-            if (request.getRole() != null) user.setRole(request.getRole());
             userRepository.save(user);
             return apiResponse("register account", null);
         }
@@ -110,13 +115,13 @@ public class AuthenServiceImpl implements IAuthenService {
                         .content(token.getValue())
                         .build()
         );
-        return apiResponse("forget password", null);
+        return apiResponse("We sent code for restore your password through your email, please check it", null);
     }
 
     @Override
     public APIResponse<?> forgetPasswordVerifyCode(String code) {
         verifyToken(code);
-        return apiResponse("verify code", null);
+        return apiResponse("verify code ok", null);
     }
 
 
@@ -126,21 +131,21 @@ public class AuthenServiceImpl implements IAuthenService {
         User user = token.getUser();
         user.setPassword(encoder.encode(request.getPassword()));
         userRepository.save(user);
-        return apiResponse("change pass when forget", null);
+        return apiResponse("your password was updated success", null);
     }
 
     @Override
     public APIResponse<?> changePassword(PasswordChangeRequest request) {
         if (SecurityUtils.getUsername() == null) {
-            throw new GeneralException("You will not login");
+            throw new GeneralException("you no login");
         }
         User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.getUsername()).get();
         if (this.encoder.matches(request.getOldPassword(), user.getPassword())) {
             user.setPassword(this.encoder.encode(request.getNewPassword()));
             userRepository.save(user);
-            return apiResponse("change pass succcess", null);
+            return apiResponse("your password was updated", null);
         }
-        throw new GeneralException("Password not match, You are not change password");
+        throw new GeneralException("Password not match, You can't change password");
     }
 
     private void revokeAllToken(Long userId) {

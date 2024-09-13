@@ -11,4 +11,6 @@ public interface IVendorService{
     APIResponse<?> checkCouponExpire(Long vendorId, String couponCode);
 
     APIResponse<?> cancelFollowVendor(Long userId, Long vendorId);
+
+    void delete(Long entityId);
 }

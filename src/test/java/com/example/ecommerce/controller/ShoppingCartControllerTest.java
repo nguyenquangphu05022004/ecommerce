@@ -48,11 +48,11 @@ class ShoppingCartControllerTest {
     private AuthenResponse authenResponse;
     @BeforeEach
     public void init() throws Exception {
-        Vendor vendor = Vendor.builder().shopName("test").perMoneyDelivery(300).build();
+        Vendor vendor = Vendor.builder().shopName("test").build();
         vendorRepository.save(vendor);
-        User user = User.builder().username("test2004").password(encoder.encode("test2004")).role(Role.VENDOR).userTypeId(vendor.getId()).userType(UserType.VENDOR).fullName("test").build();
+        User user = User.builder().username("test2004").password(encoder.encode("test2004")).role(Role.VENDOR).fullName("test").build();
         userRepository.save(user);
-        Product product = Product.builder().productBrand(ProductBrand.builder().id(1l).build()).category(Category.builder().id(2l).build()).price(300).description("hello world").combination(false).language(new Product.Language("but bi thang long", "but bi thang long")).slug("but-bi-thang-long").vendor(vendor).build();
+        Product product = Product.builder().productBrand(ProductBrand.builder().id(1l).build()).category(Category.builder().id(2l).build()).description("hello world").combination(false).language(new Product.Language("but bi thang long", "but bi thang long")).slug("but-bi-thang-long").vendor(vendor).build();
         productRepository.save(product);
         ProductInventory in1 = ProductInventory.builder().product(product).skuCode("pen-red").quantity(3).attributeCombinationKey("Color:Red").numberOfProductSold(0).build();
         ProductInventory in2 = ProductInventory.builder().product(product).skuCode("pen-black").quantity(2).attributeCombinationKey("Color:Black").numberOfProductSold(0).build();

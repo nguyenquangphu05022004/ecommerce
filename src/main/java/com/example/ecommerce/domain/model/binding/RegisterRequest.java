@@ -24,7 +24,5 @@ public class RegisterRequest {
     private String fullName;
     private Role role;
     @NotNull(message = InvalidMessage.NOT_NULL)
-    private UserType userType;
-    @NotNull(message = InvalidMessage.NOT_NULL)
     private LocalDateTime dateOfBirth;
 }
