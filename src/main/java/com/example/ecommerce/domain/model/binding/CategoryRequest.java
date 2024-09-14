@@ -16,4 +16,5 @@ public class CategoryRequest {
     @Length(min = 6)
     private String slug;
     private MultipartFile file;
+    private Long parentId;
 }

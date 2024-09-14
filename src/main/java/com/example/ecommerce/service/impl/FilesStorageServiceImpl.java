@@ -38,7 +38,8 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
         if (!(f = new File(url)).exists() && f.mkdir()) ;
         url = url + "/" + entityType.getEntityType().name();
         if (!(f = new File(url)).exists() && f.mkdir()) ;
-
+        url = url + "/" + entityType.getEntityId();
+        if (!(f = new File(url)).exists() && f.mkdir()) ;
         String extension = file.getOriginalFilename()
                 .substring(file.getOriginalFilename().lastIndexOf(".") + 1);
 
@@ -76,11 +77,8 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
         FileEntity file = fileEntityRepository.findById(fileId)
                 .orElseThrow(() -> new NotFoundException("file not found"));
         Path path = Path.of(file.getPath());
-
         try {
-            if (Files.deleteIfExists(path)) {
-                fileEntityRepository.delete(file);
-            }
+            Files.deleteIfExists(path);
         } catch (IOException e) {
             throw new GeneralException("Can't delete file");
         }

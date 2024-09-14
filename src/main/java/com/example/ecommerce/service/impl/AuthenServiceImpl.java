@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.ecommerce.domain.entities.EntityType.Type.CUSTOMER;
+import static com.example.ecommerce.domain.entities.EntityType.Type.USER;
 import static com.example.ecommerce.service.event.Event.EventType.SEND_MAIL;
 import static com.example.ecommerce.service.event.Event.getInstance;
 import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
@@ -68,6 +69,7 @@ public class AuthenServiceImpl implements IAuthenService {
                 .refreshToken(refreshToken)
                 .expiredAt(jwtService.extractExpiration(jwtToken).getTime())
                 .fullName(user.getFullName())
+                .entityType(new EntityType(USER, user.getId()))
                 .build();
         return apiResponse("user login", response);
     }

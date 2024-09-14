@@ -3,6 +3,7 @@ package com.example.ecommerce.service.impl;
 import com.example.ecommerce.domain.entities.EntityType;
 import com.example.ecommerce.domain.entities.product.Category;
 import com.example.ecommerce.domain.model.binding.CategoryRequest;
+import com.example.ecommerce.domain.model.modelviews.messages.MessageModelView;
 import com.example.ecommerce.domain.model.modelviews.product.CategoryModelView;
 import com.example.ecommerce.domain.response.APIListResponse;
 import com.example.ecommerce.domain.response.APIResponse;
@@ -32,37 +33,31 @@ public class CategoryServiceImpl implements ICategoryService {
     @Transactional
     @Override
     public APIResponse<?> save(CategoryRequest request) {
+        Category category = new Category();
+        String message = "created";
         if (request.getId() != null) {
-            Category oldCate = categoryRepository.findById(request.getId())
+            category = categoryRepository.findById(request.getId())
                     .orElseThrow(() -> new NotFoundException("not found category"))
                     .toBuilder()
-                    .name(request.getName())
-                    .slug(request.getSlug())
                     .build();
-
-            if(request.getFile() != null) {
-                oldCate.getImages().add(filesStorageService.saveFile(
-                        request.getFile(),
-                        new EntityType(CATEGORY, oldCate.getId())
-                ));
-            }
-            categoryRepository.save(oldCate);
-        } else {
-            Category category = Category.builder()
-                    .name(request.getName())
-                    .slug(request.getSlug())
-                    .build();
-            categoryRepository.save(category);
-
-            if(request.getFile() != null) {
-                category.setImages(List.of(filesStorageService.saveFile(
-                        request.getFile(),
-                        new EntityType(CATEGORY, category.getId())
-                )));
-            }
-            categoryRepository.save(category);
+            message = "updated";
         }
-        return apiResponse("created category", null);
+        category = category.toBuilder()
+                .slug(request.getSlug())
+                .name(request.getName())
+                .build();
+
+        if(request.getParentId() != null) {
+            category.setParent(Category.builder().id(request.getParentId()).build());
+        }
+        if(request.getFile() != null) {
+            category.getImages().add(filesStorageService.saveFile(
+                    request.getFile(),
+                    new EntityType(CATEGORY, category.getId())
+            ));
+        }
+        categoryRepository.save(category);
+        return  apiResponse(message +" category", new CategoryModelView(category));
     }
 
     @Override
@@ -73,5 +68,19 @@ public class CategoryServiceImpl implements ICategoryService {
                 200, page, limit, pages.getTotalPages(),
                 pages.stream().map(c -> new CategoryModelView(c)).toList()
         );
+    }
+
+    /**
+     * Method for test
+     * @param name
+     */
+    @Override
+    @Transactional
+    public void deleteByName(String name) {
+        Category category = categoryRepository.findByName(name).orElse(null);
+        if(category != null) {
+            filesStorageService.deleteImage(category.getImages());
+            categoryRepository.delete(category);
+        }
     }
 }

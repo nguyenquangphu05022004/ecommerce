@@ -4,6 +4,9 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.domain.model.binding.FilterMessageRequest;
 import com.example.ecommerce.domain.model.binding.MessageRequest;
 import com.example.ecommerce.service.IMessageService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +20,15 @@ import java.util.List;
 @CrossOrigin("*")
 public class MessageController {
     private final IMessageService chatMessageService;
-
+    private final ObjectMapper objectMapper;
     @PostMapping("/chat")
     public ResponseEntity<?> createMessage(
-            @RequestPart("request") MessageRequest request,
+            @RequestParam("messageRequest") String request,
             @RequestPart(value = "files", required = false) List<MultipartFile> files
-    ) {
-        request.setFiles(files);
-        return ResponseEntity.ok(chatMessageService.createMessage(request));
+    ) throws JsonProcessingException {
+        MessageRequest messageRequest = this.objectMapper.readValue(request, new TypeReference<MessageRequest>() {});
+        messageRequest.setFiles(files);
+        return ResponseEntity.ok(chatMessageService.createMessage(messageRequest));
     }
 
     @PostMapping("/messages/details")

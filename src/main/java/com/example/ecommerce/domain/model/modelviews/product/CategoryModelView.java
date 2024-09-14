@@ -6,6 +6,10 @@ import com.example.ecommerce.service.ImageMapper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -14,14 +18,18 @@ public class CategoryModelView extends BaseEntity implements ImageMapper {
     private String name;
     private String slug;
     private String urlImage;
+    private List<CategoryModelView> categoryModelViews;
     public CategoryModelView(Category category) {
         this.name = category.getName();
         this.slug = category.getSlug();
         setId(category.getId());
-        try {
+        if(!CollectionUtils.isEmpty(category.getImages())) {
             this.urlImage = getImageUrl(category.getImages().get(category.getImages().size() - 1));
-        } catch (Exception e) {
-            this.urlImage = null;
+        }
+        if(!CollectionUtils.isEmpty(category.getChildren())) {
+            this.categoryModelViews = category.getChildren().stream()
+                    .map(s -> new CategoryModelView(s))
+                    .collect(Collectors.toList());
         }
     }
 }

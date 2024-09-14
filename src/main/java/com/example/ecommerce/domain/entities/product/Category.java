@@ -8,20 +8,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "product_categories")
-@NoArgsConstructor
 @Getter
 @Setter
 @SuperBuilder(toBuilder = true)
 public class Category extends BaseEntity  {
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, unique = true)
     private String name;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, unique = true)
     private String slug;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -37,5 +38,9 @@ public class Category extends BaseEntity  {
     @OneToMany(mappedBy = "category")
     private Set<Product> products;
 
+    public Category() {
+        this.images = new ArrayList<>();
+        this.children = new HashSet<>();
+    }
 }
 
