@@ -64,7 +64,7 @@ class BrandControllerTest {
             brandRequests.add(b);
         }
 
-        this.authenResponse = AuthResponse.authResponse(apiVersion, mockMvc, objectMapper);
+        this.authenResponse = AuthResponse.authResponse(apiVersion, mockMvc, objectMapper, 1).get(0);
     }
 
     @AfterEach

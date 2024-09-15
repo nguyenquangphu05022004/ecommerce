@@ -58,7 +58,8 @@ public class MessageServiceImpl implements IMessageService {
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getLimit());
         Page<Message> pageMessage = messageRepository.getMessageDetails(
                 user.getId(),
-                request.getToEntityId(),
+                request.getEntityType().getEntityId(),
+                request.getEntityType().getEntityType(),
                 pageable
         );
         return new APIListResponse<>(

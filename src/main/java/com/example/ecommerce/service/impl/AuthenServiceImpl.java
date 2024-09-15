@@ -69,7 +69,8 @@ public class AuthenServiceImpl implements IAuthenService {
                 .refreshToken(refreshToken)
                 .expiredAt(jwtService.extractExpiration(jwtToken).getTime())
                 .fullName(user.getFullName())
-                .entityType(new EntityType(USER, user.getId()))
+                .entityType(user.getEntityType())
+                .userId(user.getId())
                 .build();
         return apiResponse("user login", response);
     }

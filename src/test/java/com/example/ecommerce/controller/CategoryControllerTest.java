@@ -54,8 +54,9 @@ class CategoryControllerTest {
         authenResponse = AuthResponse.authResponse(
                 apiVersion,
                 mockMvc,
-                objectMapper
-        );
+                objectMapper,
+                1
+        ).get(0);
         categoryChildRequest = new CategoryRequest();
         categoryChildRequest.setName("T-Shirt");
         categoryChildRequest.setSlug("t-shirt");

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class FilterMessageRequest {
-    private Long toEntityId;
+    private EntityType entityType;
     private int limit = 100;
     private int page = 1;
 }

@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthenResponse {
+    private Long userId;
     private String token;
     private String refreshToken;
     private long expiredAt;

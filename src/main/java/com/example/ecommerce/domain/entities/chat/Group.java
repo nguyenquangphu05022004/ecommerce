@@ -8,7 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,4 +36,12 @@ public class Group extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FileEntity> images;
+
+
+    public Set<User> getUsers() {
+        if(users == null) {
+            users = new HashSet<>();
+        }
+        return users;
+    }
 }

@@ -16,41 +16,62 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AuthResponse {
 
-    public static AuthenResponse authResponse(
-            String apiVersion,
-            MockMvc mockMvc,
-            ObjectMapper objectMapper
-    ) throws Exception {
+
+    private static RegisterRequest getRegisterRequest() {
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername("test@gmail.com");
         registerRequest.setFullName("nguyen van test");
         registerRequest.setPassword("test2004");
         registerRequest.setRole(Role.USER);
         registerRequest.setDateOfBirth(LocalDateTime.now());
+        return registerRequest;
+    }
 
-        AuthenRequest authenRequest = new AuthenRequest();
-        authenRequest.setPassword(registerRequest.getPassword());
-        authenRequest.setUsername(registerRequest.getUsername());
+    public static List<AuthenResponse> authResponse(
+            String apiVersion,
+            MockMvc mockMvc,
+            ObjectMapper objectMapper,
+            int numberOfAuthen
+    ) throws Exception {
+        List<RegisterRequest> registers=  new ArrayList<>();
+        for(int i = 0; i < numberOfAuthen; i++) {
+            RegisterRequest r = getRegisterRequest();
+            r.setUsername(r.getUsername() + i);
+            registers.add(r);
+        }
+        List<AuthenResponse> authenResponses = new ArrayList<>();
+        registers.forEach(registerRequest -> {
+            try {
+                AuthenRequest authenRequest = new AuthenRequest();
+                authenRequest.setPassword(registerRequest.getPassword());
+                authenRequest.setUsername(registerRequest.getUsername());
 
-        String json = objectMapper.writeValueAsString(registerRequest);
-        MockHttpServletRequestBuilder builder = httpRequestRegisterAccount(apiVersion, json);
-        mockMvc.perform(builder)
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status")
-                        .value(200));
+                String json = objectMapper.writeValueAsString(registerRequest);
+                MockHttpServletRequestBuilder builder = httpRequestRegisterAccount(apiVersion, json);
+                mockMvc.perform(builder)
+                        .andDo(MockMvcResultHandlers.print())
+                        .andExpect(MockMvcResultMatchers.status().isOk())
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.status")
+                                .value(200));
 
-        builder = htttpRequestLogin(apiVersion,objectMapper, authenRequest);
-        String contentAsString = mockMvc.perform(builder)
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.fullName")
-                        .value(registerRequest.getFullName()))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-        return objectMapper.readValue(contentAsString, new TypeReference<APIResponse<AuthenResponse>>() {}).getData();
+                builder = htttpRequestLogin(apiVersion,objectMapper, authenRequest);
+                String contentAsString = mockMvc.perform(builder)
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.data.fullName")
+                                .value(registerRequest.getFullName()))
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString();
+                authenResponses.add(objectMapper.readValue(contentAsString, new TypeReference<APIResponse<AuthenResponse>>() {}).getData());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        return authenResponses;
     }
 
     private static MockHttpServletRequestBuilder htttpRequestLogin(String apiVersion,
