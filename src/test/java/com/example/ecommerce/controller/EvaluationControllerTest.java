@@ -62,7 +62,6 @@ class EvaluationControllerTest {
         request.setBrandId(1l);
         request.setCategoryId(2l);
         request.setDescription("hello worldrkwejwejfkdjglsdfksldgkdsogerscsfsafcsaca");
-        request.setPrice(2500);
         request.setCombination(false);
         request.setLanguage(new Product.Language("Ao the liverpool", "ao the thao liverpool"));
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.post(

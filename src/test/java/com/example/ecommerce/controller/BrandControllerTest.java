@@ -5,14 +5,10 @@ import com.example.ecommerce.domain.model.binding.BrandRequest;
 import com.example.ecommerce.domain.model.modelviews.product.BrandModelView;
 import com.example.ecommerce.domain.response.APIListResponse;
 import com.example.ecommerce.domain.response.AuthenResponse;
-import com.example.ecommerce.repository.BrandRepository;
 import com.example.ecommerce.service.IBrandService;
 import com.example.ecommerce.service.IUserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.aspectj.lang.annotation.After;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,13 +21,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -64,7 +58,7 @@ class BrandControllerTest {
             brandRequests.add(b);
         }
 
-        this.authenResponse = AuthResponse.authResponse(apiVersion, mockMvc, objectMapper, 1).get(0);
+        this.authenResponse = LoginResponse.authResponse(apiVersion, mockMvc, objectMapper, 1).get(0);
     }
 
     @AfterEach

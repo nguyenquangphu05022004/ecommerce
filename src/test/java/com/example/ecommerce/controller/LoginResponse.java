@@ -8,7 +8,6 @@ import com.example.ecommerce.domain.response.AuthenResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -19,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuthResponse {
+public class LoginResponse {
 
 
     private static RegisterRequest getRegisterRequest() {
@@ -32,6 +31,35 @@ public class AuthResponse {
         return registerRequest;
     }
 
+    public static AuthenResponse authResponse(
+            RegisterRequest registerRequest,
+            ObjectMapper objectMapper,
+            MockMvc mockMvc,
+            String apiVersion,
+            boolean accountExists) throws Exception {
+        AuthenRequest authenRequest = new AuthenRequest();
+        authenRequest.setPassword(registerRequest.getPassword());
+        authenRequest.setUsername(registerRequest.getUsername());
+
+        if(!accountExists) {
+            String json = objectMapper.writeValueAsString(registerRequest);
+            MockHttpServletRequestBuilder builder = httpRequestRegisterAccount(apiVersion, json);
+            mockMvc.perform(builder)
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.status")
+                            .value(200));
+        }
+
+        MockHttpServletRequestBuilder builder = htttpRequestLogin(apiVersion,objectMapper, authenRequest);
+        String contentAsString = mockMvc.perform(builder)
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.fullName")
+                        .value(registerRequest.getFullName()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        return (objectMapper.readValue(contentAsString, new TypeReference<APIResponse<AuthenResponse>>() {}).getData());
+    }
     public static List<AuthenResponse> authResponse(
             String apiVersion,
             MockMvc mockMvc,
@@ -47,26 +75,13 @@ public class AuthResponse {
         List<AuthenResponse> authenResponses = new ArrayList<>();
         registers.forEach(registerRequest -> {
             try {
-                AuthenRequest authenRequest = new AuthenRequest();
-                authenRequest.setPassword(registerRequest.getPassword());
-                authenRequest.setUsername(registerRequest.getUsername());
-
-                String json = objectMapper.writeValueAsString(registerRequest);
-                MockHttpServletRequestBuilder builder = httpRequestRegisterAccount(apiVersion, json);
-                mockMvc.perform(builder)
-                        .andDo(MockMvcResultHandlers.print())
-                        .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.jsonPath("$.status")
-                                .value(200));
-
-                builder = htttpRequestLogin(apiVersion,objectMapper, authenRequest);
-                String contentAsString = mockMvc.perform(builder)
-                        .andExpect(MockMvcResultMatchers.jsonPath("$.data.fullName")
-                                .value(registerRequest.getFullName()))
-                        .andReturn()
-                        .getResponse()
-                        .getContentAsString();
-                authenResponses.add(objectMapper.readValue(contentAsString, new TypeReference<APIResponse<AuthenResponse>>() {}).getData());
+               authenResponses.add(authResponse(
+                       registerRequest,
+                       objectMapper,
+                       mockMvc,
+                       apiVersion,
+                       false
+               ));
             } catch (Exception e) {
                 e.printStackTrace();
             }

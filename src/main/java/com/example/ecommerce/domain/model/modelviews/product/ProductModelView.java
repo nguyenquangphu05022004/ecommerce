@@ -8,6 +8,9 @@ import com.example.ecommerce.service.ImageMapper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collections;
 
 @Getter
 @NoArgsConstructor
@@ -28,16 +31,18 @@ public class ProductModelView extends BaseEntity {
         this.productBrand = product.getProductBrand();
         this.category = new CategoryModelView(product.getCategory());
         this.description = product.getDescription();
-        this.minPrice = product.getProductInventories()
-                .stream()
-                .mapToInt(s -> s.getPrice())
-                .min()
-                .getAsInt();
-        this.maxPrice = product.getProductInventories()
-                .stream()
-                .mapToInt(s -> s.getPrice())
-                .max()
-                .getAsInt();
+        if(!CollectionUtils.isEmpty(product.getProductInventories())) {
+            this.minPrice = product.getProductInventories()
+                    .stream()
+                    .mapToInt(s -> s.getPrice())
+                    .min()
+                    .getAsInt();
+            this.maxPrice = product.getProductInventories()
+                    .stream()
+                    .mapToInt(s -> s.getPrice())
+                    .max()
+                    .getAsInt();
+        }
         this.slug = product.getSlug();
         this.vendor = new VendorUserProfileModelView(product.getVendor());
     }

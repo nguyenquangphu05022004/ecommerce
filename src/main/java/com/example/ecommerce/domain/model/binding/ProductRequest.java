@@ -18,9 +18,10 @@ public class ProductRequest {
     @NotNull(message = InvalidMessage.NOT_NULL)
     private Long brandId;
     @NotEmpty(message = InvalidMessage.NOT_EMPTY)
-    @Length(min = 50)
+    @Length(min = 10)
     private String description;
-    @NotNull(message = InvalidMessage.NOT_NULL)
-    private Integer price;
+    @NotNull
+    @Length(min = 6)
+    private String slug;
     private boolean combination;
 }

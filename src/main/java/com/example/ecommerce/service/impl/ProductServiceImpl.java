@@ -13,6 +13,7 @@ import com.example.ecommerce.domain.model.binding.FilterProductRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductGalleryModelView;
+import com.example.ecommerce.domain.model.modelviews.product.ProductModelView;
 import com.example.ecommerce.domain.response.APIListResponse;
 import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.handler.exception.GeneralException;
@@ -58,7 +59,7 @@ public class ProductServiceImpl implements IProductService {
                 .orElseThrow(() -> new UsernameNotFoundException("You aren't login"));
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(String.format("Product with id %s not found", id)));
-        saveProductSimilarity(product, user);
+//        saveProductSimilarity(product, user);
         return apiResponse("get product by id",  new ProductDetailsViewModel(product));
     }
 
@@ -77,10 +78,11 @@ public class ProductServiceImpl implements IProductService {
                 .productBrand(ProductBrand.builder().id(request.getBrandId()).build())
                 .category(Category.builder().id(request.getCategoryId()).build())
                 .vendor(Vendor.builder().id(user.getEntityType().getEntityId()).build())
+                .slug(request.getSlug())
                 .build();
         Product saved = productRepository.save(product);
         new Thread(() -> getInstance().postEvent(PRODUCT_CREATE, saved)).start();
-        final ProductDetailsViewModel response = new ProductDetailsViewModel(saved);
+        final ProductModelView response = new ProductModelView(saved);
         return apiResponse("created product", response);
     }
 

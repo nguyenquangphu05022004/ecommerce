@@ -51,7 +51,7 @@ class CategoryControllerTest {
         categoryRequest = new CategoryRequest();
         categoryRequest.setName("Fashion");
         categoryRequest.setSlug("fashion");
-        authenResponse = AuthResponse.authResponse(
+        authenResponse = LoginResponse.authResponse(
                 apiVersion,
                 mockMvc,
                 objectMapper,

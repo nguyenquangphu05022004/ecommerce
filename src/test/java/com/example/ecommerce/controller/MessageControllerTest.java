@@ -12,7 +12,6 @@ import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.domain.response.AuthenResponse;
 import com.example.ecommerce.repository.GroupRepository;
 import com.example.ecommerce.repository.MessageRepository;
-import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IUserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,7 +61,7 @@ class MessageControllerTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        this.authenResponses = AuthResponse.authResponse(
+        this.authenResponses = LoginResponse.authResponse(
                 apiVersion, mockMvc, objectMapper, 3
         );
         this.authen1 = this.authenResponses.get(0);
