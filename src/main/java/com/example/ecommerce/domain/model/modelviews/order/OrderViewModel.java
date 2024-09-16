@@ -1,6 +1,6 @@
 package com.example.ecommerce.domain.model.modelviews.order;
 
-import com.example.ecommerce.domain.entities.order.OrderStatus;
+import com.example.ecommerce.domain.entities.order.states.OrderState;
 import com.example.ecommerce.domain.entities.order.LineItem;
 import com.example.ecommerce.domain.entities.order.Order;
 import com.example.ecommerce.domain.entities.order.Payment;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class OrderViewModel {
     private Payment payment;
-    private OrderStatus orderStatus;
+    private OrderState orderStatus;
     private boolean approval;
     private boolean purchased;
     private boolean received;

@@ -5,6 +5,9 @@ import com.example.ecommerce.domain.entities.auth.Customer;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.order.*;
+import com.example.ecommerce.domain.entities.order.states.OrderState;
+import com.example.ecommerce.domain.entities.order.states.OrderStateFactory;
+import com.example.ecommerce.domain.entities.order.states.ProcessingState;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.domain.model.binding.FilterOrderRequest;
 import com.example.ecommerce.domain.model.binding.ItemRequest;
@@ -44,33 +47,31 @@ public class OrderServiceImpl implements IOrderService {
     private final ProductInventoryRepository productInventoryRepository;
     private final UserRepository userRepository;
     private final TimerService timerService;
+
     @Override
     public APIResponse<?> createOrder(OrderRequest request) {
-        User user = userRepository.findByUsernameIgnoreCase(
-                SecurityUtils.getUsername()
-        ).orElseThrow(() -> new UsernameNotFoundException("You aren't login"));
+        User user = userRepository
+                .findByUsernameIgnoreCase(SecurityUtils.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("You aren't login"));
 
         Order order = Order.builder()
-                .orderStatus(OrderStatus.NOT_APPROVAL)
+                .orderStatus(ProcessingState.class.getSimpleName())
                 .payment(request.getPayment())
-                .approval(false)
-                .received(false)
+                .approval(false).received(false)
                 .purchased(false)
-                .lineItems(request.getLineItems().stream()
+                .lineItems(request.getLineItems()
+                        .stream()
                         .map(lineItem -> LineItem.builder()
                                 .vendor(new Vendor(lineItem.getVendorId()))
                                 .coupon(lineItem.getCouponId() != null ? new Coupon(lineItem.getCouponId()) : null)
                                 .items(lineItem.getItems().stream().map(item -> {
-                                            if (checkStockExists(item)) {
-                                                return Item.builder()
-                                                        .productInventory(new ProductInventory(item.getInventoryId()))
-                                                        .quantity(item.getQuantity())
-                                                        .build();
-                                            }
-                                            throw new NotFoundException("Item out of bound inventory");
-                                        })
-                                        .collect(Collectors.toSet()))
-                                .build())
+                                    if (checkStockExists(item)) {
+                                        return Item.builder()
+                                                .productInventory(new ProductInventory(item.getInventoryId()))
+                                                .quantity(item.getQuantity()).build();
+                                    }
+                                    throw new NotFoundException("Item out of bound inventory");
+                                }).collect(Collectors.toSet())).build())
                         .collect(Collectors.toSet()))
                 .customer(Customer.builder().id(user.getEntityType().getEntityId()).build())
                 .build();
@@ -85,42 +86,38 @@ public class OrderServiceImpl implements IOrderService {
             });
         });
         postNotificationEvent(ORDER_CREATE, order);
-        timerService.schedulerJob(
-                OrderApprovalJob.class,
+        timerService.schedulerJob(OrderApprovalJob.class,
                 //offsetMinis: 8h; job execute when created order push 8h
-                new TimerInfo(
-                        1,
-                        5000l,
-                        8*60*60*1000l,
-                        false,
-                        order.getId().toString())
-        );
-        return apiResponse("cretead order",null);
+                new TimerInfo(1, 5000L,
+                        8 * 60 * 60 * 1000L,
+                        false, order.getId().toString()));
+        return apiResponse("created order", null);
+    }
+
+    @Override
+    public APIResponse<?> updateOrderState(Long orderId, boolean isNext) {
+        Order order = orderRepository
+                .findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Not found order"));
+        String message = "";
+        if (isNext) {
+            message = OrderStateFactory.getOrderState(order.getOrderStatus()).next(order);
+        } else {
+            message = OrderStateFactory.getOrderState(order.getOrderStatus()).prev(order);
+        }
+        orderRepository.save(order);
+        return apiResponse(message, null);
     }
 
 
     @Override
     public APIListResponse<?> getAllOrderByCustomer(FilterOrderRequest request) {
-        Page<Order> pageOrders;
-        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getLimit());
-        if (request.getOrderStatus() != null && request.getOrderStatus() != OrderStatus.ALL) {
-            pageOrders = orderRepository
-                    .findAllByCreatedByAndOrderStatus(SecurityUtils.getUsername(), request.getOrderStatus(), pageable);
-        } else {
-            pageOrders = orderRepository.findAllByCreatedBy(SecurityUtils.getUsername(), pageable);
-        }
-        return new APIListResponse<>(
-                200, request.getPage(), request.getLimit(),
-                pageOrders.getTotalPages(),
-                pageOrders.getContent().stream().map(o -> new OrderViewModel(o)).toList()
-        );
+        return null;
     }
 
     @Override
     public APIResponse<?> updatePayment(Long orderId) {
-        Order order = orderRepository
-                .findById(orderId)
-                .orElseThrow(() -> new GeneralException("Not found order"));
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new GeneralException("Not found order"));
         order.setPurchased(true);
         orderRepository.save(order);
         postNotificationEvent(ORDER_PAYMENT, order);
@@ -142,8 +139,7 @@ public class OrderServiceImpl implements IOrderService {
 
 
     private boolean checkStockExists(ItemRequest itemRequest) {
-        ProductInventory inventory = productInventoryRepository.findById(itemRequest.getInventoryId())
-                .orElseThrow(() -> new GeneralException("Inventory not found"));
+        ProductInventory inventory = productInventoryRepository.findById(itemRequest.getInventoryId()).orElseThrow(() -> new GeneralException("Inventory not found"));
         if (inventory.getQuantity() >= itemRequest.getQuantity()) {
             inventory.setQuantity(inventory.getQuantity() - itemRequest.getQuantity());
             productInventoryRepository.save(inventory);
@@ -154,9 +150,7 @@ public class OrderServiceImpl implements IOrderService {
 
     private void postNotificationEvent(Event.EventType eventType, Order order) {
         new Thread(() -> {
-            Event.getInstance().postEvent(
-                    eventType,
-                    order);
+            Event.getInstance().postEvent(eventType, order);
         }).start();
     }
 }

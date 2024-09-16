@@ -12,4 +12,5 @@ public interface IOrderService {
     APIResponse<?> updatePayment(Long orderId);
 
     APIResponse<?> deleteById(Long orderId);
+    APIResponse<?> updateOrderState(Long orderId, boolean isNext);
 }
