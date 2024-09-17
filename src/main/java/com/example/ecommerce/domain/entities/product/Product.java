@@ -23,10 +23,8 @@ import java.util.List;
 @Setter
 @SuperBuilder(toBuilder = true)
 public class Product extends BaseEntity {
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "language_id")
-    private Language language;
-
+    private String nameVn;
+    private String nameEn;
     private String slug;
 
     @ManyToOne
@@ -51,22 +49,6 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product")
     private List<ProductInventory> productInventories;
-
-    @Entity
-    @Table(name = "languages")
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Language extends BaseEntity {
-        @NotNull
-        @NotEmpty
-        @Length(min = 6)
-        private String nameVn;
-        @NotNull
-        @NotEmpty
-        @Length(min = 6)
-        private String nameEn;
-    }
 
 }
 

@@ -29,11 +29,11 @@ public class ProductListener {
             Notification notification = Notification.builder()
                     .notificationActionType(NotificationActionType.VENDOR_UPDATE_PRODUCT)
                     .entityType(EntityType.builder().entityType(PRODUCT).entityId(product.getId()).build())
-                    .message(String.format("Vendor: %s created product with name: %s",product.getVendor().getShopName(), product.getLanguage().getNameVn()))
+                    .message(String.format("Vendor: %s created product with name: %s",product.getVendor().getShopName(), product.getNameVn()))
                     .build();
             notificationRepository.save(notification);
             sendMailToFollower(product, notification, "New Product is created maybe you prefer");
-            log.info(String.format("Vendor: %s created product with name: %s",product.getVendor().getShopName(), product.getLanguage().getNameVn()));
+            log.info(String.format("Vendor: %s created product with name: %s",product.getVendor().getShopName(), product.getNameVn()));
         };
     }
     public  Observer<ProductInventory> updateQuantityProduct() {
@@ -41,7 +41,7 @@ public class ProductListener {
             Notification notification = Notification.builder()
                     .notificationActionType(NotificationActionType.VENDOR_UPDATE_PRODUCT_INVENTORY)
                     .entityType(EntityType.builder().entityType(PRODUCT_INVENTORY).entityId(inventory.getId()).build())
-                    .message(String.format("Vendor: %s updated product with name: %s",inventory.getProduct().getVendor().getShopName(), inventory.getProduct().getLanguage().getNameVn()))
+                    .message(String.format("Vendor: %s updated product with name: %s",inventory.getProduct().getVendor().getShopName(), inventory.getProduct().getNameVn()))
                     .build();
             notificationRepository.save(notification);
             sendMailToFollower(inventory.getProduct(), notification, "Vendor updated Product is created maybe you prefer");

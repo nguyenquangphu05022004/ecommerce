@@ -11,8 +11,10 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @Setter
 public class ProductRequest {
-    @NotNull(message = InvalidMessage.NOT_NULL)
-    private Product.Language language;
+    @Length(min = 6)
+    private String nameVn;
+    @Length(min = 6)
+    private String nameEn;
     @NotNull(message = InvalidMessage.NOT_NULL)
     private Long categoryId;
     @NotNull(message = InvalidMessage.NOT_NULL)

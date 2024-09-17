@@ -5,20 +5,20 @@ import com.example.ecommerce.domain.entities.auth.Role;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.product.Category;
-import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductBrand;
-import com.example.ecommerce.domain.model.binding.AuthenRequest;
-import com.example.ecommerce.domain.model.binding.FilterProductRequest;
+import com.example.ecommerce.domain.model.binding.ProductFilterRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.binding.RegisterRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
+import com.example.ecommerce.domain.model.modelviews.product.ProductGalleryModelView;
 import com.example.ecommerce.domain.model.modelviews.product.ProductModelView;
+import com.example.ecommerce.domain.response.APIListResponse;
 import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.domain.response.AuthenResponse;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IUserService;
-import com.example.ecommerce.service.algorithm.search.ProductFilterType;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.example.ecommerce.service.algorithm.search.product.BrandFilter;
+import com.example.ecommerce.service.algorithm.search.product.NameFilter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
@@ -36,10 +36,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.example.ecommerce.domain.entities.EntityType.Type.VENDOR;
 
@@ -62,10 +60,10 @@ class ProductControllerTest {
     private String apiVersion;
     private RegisterRequest registerRequest;
     private Vendor vendor;
-    private ProductRequest productRequest;
     @Autowired
     private ProductRepository productRepository;
 
+    private List<ProductRequest> productRequests = new ArrayList<>();
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -76,6 +74,10 @@ class ProductControllerTest {
     private List<ProductModelView> productModelViews = new ArrayList<>();
     private Category category;
     private ProductBrand brand;
+
+    private List<Category> categories = new ArrayList<>();
+    private List<ProductBrand> brands = new ArrayList<>();
+
     @BeforeEach
     void setup() throws Exception {
         vendor = Vendor.builder()
@@ -103,42 +105,85 @@ class ProductControllerTest {
                 apiVersion,
                 true
         );
-         category = new Category();
-        category.setSlug("test");
-        category.setName("test");
-        categoryRepository.save(category);
 
-         brand = new ProductBrand();
-        brand.setName("test");
-        brand.setSlug("test");
-        brandRepository.save(brand);
+        Category c1 = getCategory("Shirts");
+        Category c2 = getCategory("Computers");
+        Category c3 = getCategory("Sports");
+        Category c4 = getCategory("Pants");
 
-        productRequest = new ProductRequest();
-        productRequest.setCategoryId(category.getId());
-        productRequest.setBrandId(brand.getId());
+        categories.addAll(List.of(c1, c2, c3, c4));
+
+        ProductBrand b1 = getBrand("Adidas");
+        ProductBrand b2 = getBrand("Nike");
+        ProductBrand b3 = getBrand("Asus");
+        ProductBrand b4 = getBrand("Dell");
+
+        brands.addAll(List.of(b1, b2, b3, b4));
+
+
+        ProductRequest p1 = getProductRequest(c3.getId(), b1.getId(), "Ao the thao liverpool");
+        ProductRequest p2 = getProductRequest(c3.getId(), b2.getId(), "Ao the thao liverpool");
+        ProductRequest p3 = getProductRequest(c2.getId(), b3.getId(), "Laptop gaming ASUS");
+        ProductRequest p4 = getProductRequest(c2.getId(), b3.getId(), "Laptop Inspire Dell 15 3000");
+
+        productRequests.addAll(List.of(p1, p2, p3, p4));
+    }
+
+    public ProductRequest getProductRequest(Long cateId, Long brandId, String name) {
+        ProductRequest productRequest = new ProductRequest();
+        productRequest.setCategoryId(cateId);
+        productRequest.setBrandId(brandId);
         productRequest.setDescription("asdasdasdadadadasdad");
         productRequest.setCombination(false);
-        productRequest.setLanguage(new Product.Language("test product", "test product"));
-        productRequest.setSlug("test product");
+        productRequest.setNameEn(name);
+        productRequest.setNameVn(name);
+        productRequest.setSlug(Arrays.stream(name.split("\\s+")).collect(Collectors.joining("-")));
+        return productRequest;
+    }
+
+    public ProductBrand getBrand(String name) {
+        ProductBrand brand = new ProductBrand();
+        brand.setName(name);
+        brand.setSlug(Arrays.stream(name.toLowerCase().split("\\s+")).collect(Collectors.joining("-")));
+        brandRepository.save(brand);
+        return brand;
+    }
+
+    public Category getCategory(String name) {
+        Category category = new Category();
+        category.setSlug(Arrays.stream(name.toLowerCase().split("\\s+")).collect(Collectors.joining("-")));
+        category.setName(name);
+        categoryRepository.save(category);
+        return category;
     }
 
     @AfterEach
     public void destroy() {
-        productModelViews.forEach(s -> {
-            productRepository.deleteById(s.getId());
+        if (productModelViews != null) {
+            productModelViews.forEach(s -> {
+                productRepository.deleteById(s.getId());
+            });
+        }
+        brands.forEach(s -> {
+            brandRepository.delete(s);
         });
-        brandRepository.delete(brand);
-        categoryRepository.delete(category);
+        categories.forEach(s -> {
+            categoryRepository.delete(s);
+        });
         userService.delete(this.registerRequest.getUsername());
     }
 
     @Test
     void createProduct() throws Exception {
+        httpCreateProduct(this.productRequests.get(0));
+    }
+
+    void httpCreateProduct(ProductRequest productRequest) throws Exception {
         String contentAsString = this.mockMvc.perform(MockMvcRequestBuilders.post(
                                 apiVersion + "/products"
                         ).header("Authorization", "Bearer " + this.authenResponse.getToken())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper.writeValueAsBytes(this.productRequest)))
+                        .content(this.objectMapper.writeValueAsBytes(productRequest)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status")
                         .value(200))
                 .andReturn()
@@ -148,7 +193,7 @@ class ProductControllerTest {
         ProductModelView data = this.objectMapper.readValue(contentAsString, new TypeReference<APIResponse<ProductModelView>>() {
         }).getData();
 
-        Assertions.assertThat(data.getSlug()).isEqualTo(this.productRequest.getSlug());
+        Assertions.assertThat(data.getSlug()).isEqualTo(productRequest.getSlug());
         this.productModelViews.add(data);
     }
 
@@ -173,8 +218,34 @@ class ProductControllerTest {
     }
 
     @Test
-    void getAllProduct() {
-        FilterProductRequest request = new FilterProductRequest();
-        Map<ProductFilterType, String> map = new HashMap<>();
+    void getAllProduct() throws Exception {
+        productRequests.forEach(s -> {
+            try {
+                httpCreateProduct(s);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        ProductFilterRequest request = new ProductFilterRequest();
+        Map<String, String> map = new HashMap<>();
+         map.put(NameFilter.class.getSimpleName(), "ao the thao");
+         map.put(BrandFilter.class.getSimpleName(), brands.get(1).getId() + "");
+        request.setData(map);
+        String contentAsString = this.mockMvc.perform(MockMvcRequestBuilders.post(
+                                apiVersion + "/products/search"
+                        ).header("Authorization", "Bearer " + this.authenResponse.getToken())
+                        .content(this.objectMapper.writeValueAsBytes(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        APIListResponse<ProductGalleryModelView> responses = this.objectMapper.readValue(
+                contentAsString,
+                new TypeReference<APIListResponse<ProductGalleryModelView>>() {}
+        );
+
+        Assertions.assertThat(responses.getData().size()).isEqualTo(1);
+
     }
 }

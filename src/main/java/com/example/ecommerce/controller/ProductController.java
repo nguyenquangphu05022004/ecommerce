@@ -1,15 +1,12 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.model.binding.FilterProductRequest;
-import com.example.ecommerce.domain.model.binding.ProductInventoryFilterRequest;
+import com.example.ecommerce.domain.model.binding.ProductFilterRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
-import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
 import com.example.ecommerce.domain.response.APIListResponse;
 import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.service.IProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -37,8 +34,8 @@ public class ProductController {
 
     @PostMapping("/search")
     public APIListResponse<?> getAllProduct(
-            @RequestBody FilterProductRequest filter
+            @RequestBody ProductFilterRequest filter
     ) {
-        return productService.filterProduct(filter);
+        return productService.productFilter(filter);
     }
 }

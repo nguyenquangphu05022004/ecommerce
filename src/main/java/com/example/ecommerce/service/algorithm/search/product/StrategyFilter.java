@@ -1,14 +1,14 @@
-package com.example.ecommerce.service.algorithm.search;
+package com.example.ecommerce.service.algorithm.search.product;
 
 import jakarta.persistence.criteria.Predicate;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Setter
-public abstract class  ProductFilterStrategy {
-    protected FilterData filterData;
+public abstract class StrategyFilter {
+    protected DataFilter dataFilter;
+
     public abstract Predicate filter();
 }

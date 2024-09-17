@@ -16,7 +16,8 @@ import java.util.Collections;
 @NoArgsConstructor
 @Setter
 public class ProductModelView extends BaseEntity {
-    private String name;
+    private String nameVn;
+    private String nameEn;
     private int minPrice;
     private int maxPrice;
     private String description;
@@ -26,7 +27,8 @@ public class ProductModelView extends BaseEntity {
     private VendorUserProfileModelView vendor;
 
     public ProductModelView(Product product) {
-        this.name = product.getLanguage().getNameVn();
+        this.nameEn = product.getNameEn();
+        this.nameVn = product.getNameVn();
         setId(product.getId());
         this.productBrand = product.getProductBrand();
         this.category = new CategoryModelView(product.getCategory());

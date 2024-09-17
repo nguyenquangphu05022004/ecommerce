@@ -1,6 +1,5 @@
 package com.example.ecommerce.domain.model.binding;
 
-import com.example.ecommerce.service.algorithm.search.ProductFilterType;
 import com.example.ecommerce.service.algorithm.sort.ProductSortType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -10,10 +9,10 @@ import lombok.Setter;
 import java.util.Map;
 @NoArgsConstructor
 @Setter
-public class FilterProductRequest {
+public class ProductFilterRequest {
     @Getter
     @NotNull
-    private Map<ProductFilterType, String> data;
+    private Map<String, String> data;
     @Getter
     private ProductSortType sortType;
     public Integer page;
@@ -24,7 +23,7 @@ public class FilterProductRequest {
         return page;
     }
     public Integer getLimit() {
-        if(limit == null) limit = 20;
+        if(limit == null) limit = 50;
         return limit;
     }
 

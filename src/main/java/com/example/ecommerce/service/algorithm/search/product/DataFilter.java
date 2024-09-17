@@ -1,4 +1,4 @@
-package com.example.ecommerce.service.algorithm.search;
+package com.example.ecommerce.service.algorithm.search.product;
 
 import com.example.ecommerce.domain.entities.product.Product;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class FilterData {
+public class DataFilter {
     private CriteriaBuilder criteriaBuilder;
     private Root<Product> productRoot;
     private String data;

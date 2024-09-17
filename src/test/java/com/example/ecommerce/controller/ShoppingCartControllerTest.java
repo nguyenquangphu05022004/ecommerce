@@ -52,7 +52,7 @@ class ShoppingCartControllerTest {
         vendorRepository.save(vendor);
         User user = User.builder().username("test2004").password(encoder.encode("test2004")).role(Role.VENDOR).fullName("test").build();
         userRepository.save(user);
-        Product product = Product.builder().productBrand(ProductBrand.builder().id(1l).build()).category(Category.builder().id(2l).build()).description("hello world").combination(false).language(new Product.Language("but bi thang long", "but bi thang long")).slug("but-bi-thang-long").vendor(vendor).build();
+        Product product = Product.builder().productBrand(ProductBrand.builder().id(1l).build()).category(Category.builder().id(2l).build()).description("hello world").combination(false).nameVn("but bi thang long").nameEn("but bi thang long").slug("but-bi-thang-long").vendor(vendor).build();
         productRepository.save(product);
         ProductInventory in1 = ProductInventory.builder().product(product).skuCode("pen-red").quantity(3).attributeCombinationKey("Color:Red").numberOfProductSold(0).build();
         ProductInventory in2 = ProductInventory.builder().product(product).skuCode("pen-black").quantity(2).attributeCombinationKey("Color:Black").numberOfProductSold(0).build();

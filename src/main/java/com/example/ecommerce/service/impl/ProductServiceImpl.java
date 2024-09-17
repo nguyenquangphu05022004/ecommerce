@@ -9,7 +9,7 @@ import com.example.ecommerce.domain.entities.product.Product;
 import com.example.ecommerce.domain.entities.product.ProductBrand;
 import com.example.ecommerce.domain.entities.product.recommendation.ProductActionCache;
 import com.example.ecommerce.domain.entities.product.recommendation.ProductSimilarity;
-import com.example.ecommerce.domain.model.binding.FilterProductRequest;
+import com.example.ecommerce.domain.model.binding.ProductFilterRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductGalleryModelView;
@@ -20,9 +20,9 @@ import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.algorithm.Similarity;
-import com.example.ecommerce.service.algorithm.search.FilterData;
-import com.example.ecommerce.service.algorithm.search.ProductFilterFactory;
-import com.example.ecommerce.service.algorithm.search.ProductFilterStrategy;
+import com.example.ecommerce.service.algorithm.search.product.DataFilter;
+import com.example.ecommerce.service.algorithm.search.product.FactoryFilter;
+import com.example.ecommerce.service.algorithm.search.product.StrategyFilter;
 import com.example.ecommerce.service.algorithm.sort.ProductSortFactory;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -74,7 +74,8 @@ public class ProductServiceImpl implements IProductService {
         Product product = Product.builder()
                 .description(request.getDescription())
                 .combination(request.isCombination())
-                .language(request.getLanguage())
+                .nameEn(request.getNameEn())
+                .nameVn(request.getNameVn())
                 .productBrand(ProductBrand.builder().id(request.getBrandId()).build())
                 .category(Category.builder().id(request.getCategoryId()).build())
                 .vendor(Vendor.builder().id(user.getEntityType().getEntityId()).build())
@@ -103,22 +104,24 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public APIListResponse<ProductGalleryModelView> filterProduct(FilterProductRequest filterProductRequest) {
+    public APIListResponse<ProductGalleryModelView> productFilter(
+            ProductFilterRequest productFilterRequest
+    ) {
         Specification<Product> specification = (root, query, criteriaBuilder) -> {
             final List<Predicate> predicates = new ArrayList<>();
-            filterProductRequest.getData().entrySet().stream().forEach(entry -> {
-                ProductFilterStrategy filterStrategy = ProductFilterFactory.getInstance(entry.getKey());
-                filterStrategy.setFilterData(new FilterData(criteriaBuilder, root, entry.getValue()));
-                Predicate condition = filterStrategy.filter();
+            productFilterRequest.getData().entrySet().stream().forEach(entry -> {
+                StrategyFilter strategyFilter = FactoryFilter.getInstance(entry.getKey());
+                strategyFilter.setDataFilter(new DataFilter(criteriaBuilder, root, entry.getValue()));
+                Predicate condition = strategyFilter.filter();
                 predicates.add(condition);
             });
             Predicate predicate = null;
             for (var pre : predicates) predicate = predicate != null ? criteriaBuilder.and(pre, predicate) : pre;
             return predicate;
         };
-        PageRequest pageRequest = PageRequest.of(filterProductRequest.getPage() - 1, filterProductRequest.getLimit());
+        PageRequest pageRequest = PageRequest.of(productFilterRequest.getPage() - 1, productFilterRequest.getLimit());
         Page<Product> pageProducts = productRepository.findAll(specification, pageRequest);
-        List<Product> products = ProductSortFactory.getInstance(filterProductRequest.getSortType()).sort(pageProducts.getContent());
+        List<Product> products = ProductSortFactory.getInstance(productFilterRequest.getSortType()).sort(pageProducts.getContent());
         return responseAPI(pageProducts, products);
     }
 
@@ -164,12 +167,12 @@ public class ProductServiceImpl implements IProductService {
 
         products.stream().forEach((p) -> {
             double similarity1 = Similarity.similarity(
-                    productActionCache.getProduct().getLanguage().getNameEn(),
-                    p.getLanguage().getNameEn()
+                    productActionCache.getProduct().getNameEn(),
+                    p.getNameEn()
             );
             double similarity2 = Similarity.similarity(
-                    productActionCache.getProduct().getLanguage().getNameVn(),
-                    p.getLanguage().getNameVn()
+                    productActionCache.getProduct().getNameVn(),
+                    p.getNameVn()
             );
             ProductSimilarity productSimilarity = ProductSimilarity.builder()
                     .similarity((similarity2 + similarity1) / 2)
