@@ -12,7 +12,7 @@ import com.example.ecommerce.domain.model.binding.OrderRequest;
 import com.example.ecommerce.domain.model.modelviews.order.OrderViewModel;
 import com.example.ecommerce.service.event.Event;
 import com.example.ecommerce.handler.exception.GeneralException;
-import com.example.ecommerce.handler.exception.NotFoundException;
+import com.example.ecommerce.handler.exception.ResourcesNotFoundException;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IOrderService;
 import com.example.ecommerce.domain.response.APIListResponse;
@@ -67,7 +67,7 @@ public class OrderServiceImpl implements IOrderService {
                                                         .quantity(item.getQuantity())
                                                         .build();
                                             }
-                                            throw new NotFoundException("Item out of bound inventory");
+                                            throw new ResourcesNotFoundException("Item out of bound inventory");
                                         })
                                         .collect(Collectors.toSet()))
                                 .build())

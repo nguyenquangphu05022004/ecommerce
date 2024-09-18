@@ -13,7 +13,9 @@ public class VendorUserProfileModelView {
     private String shopName;
 
     public VendorUserProfileModelView(Vendor v) {
-        this.id = v.getId();
-        this.shopName = v.getShopName();
+        if(v != null) {
+            this.id = v.getId();
+            this.shopName = v.getShopName();
+        }
     }
 }

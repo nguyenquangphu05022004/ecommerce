@@ -3,7 +3,7 @@ package com.example.ecommerce.service.impl;
 import com.example.ecommerce.domain.entities.EntityType;
 import com.example.ecommerce.domain.entities.FileEntity;
 import com.example.ecommerce.handler.exception.GeneralException;
-import com.example.ecommerce.handler.exception.NotFoundException;
+import com.example.ecommerce.handler.exception.ResourcesNotFoundException;
 import com.example.ecommerce.repository.FileEntityRepository;
 import com.example.ecommerce.service.IFilesStorageService;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +75,7 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
     @Override
     public void deleteImage(Long fileId) {
         FileEntity file = fileEntityRepository.findById(fileId)
-                .orElseThrow(() -> new NotFoundException("file not found"));
+                .orElseThrow(() -> new ResourcesNotFoundException("file not found"));
         Path path = Path.of(file.getPath());
         try {
             Files.deleteIfExists(path);

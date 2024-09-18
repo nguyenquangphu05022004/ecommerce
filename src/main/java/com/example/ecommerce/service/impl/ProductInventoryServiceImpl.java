@@ -9,6 +9,7 @@ import com.example.ecommerce.domain.model.binding.ProductInventoryRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
 import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.handler.exception.GeneralException;
+import com.example.ecommerce.handler.exception.ResourcesNotFoundException;
 import com.example.ecommerce.repository.ProductInventoryRepository;
 import com.example.ecommerce.service.IFilesStorageService;
 import com.example.ecommerce.service.IProductInventoryService;
@@ -57,7 +58,7 @@ public class ProductInventoryServiceImpl implements IProductInventoryService {
         } catch (Exception e) {
             throw new GeneralException("file can't null");
         }
-        return apiResponse("created product inventory", null);
+        return apiResponse("created product inventory", new ProductInventoryModelView(productInventory));
     }
 
     @Override
@@ -72,5 +73,15 @@ public class ProductInventoryServiceImpl implements IProductInventoryService {
                                 request.getProductId())
                 ));
         return apiResponse("filter productInventory", new ProductInventoryModelView(inventory));
+    }
+
+    @Override
+    public void delete(Long inventoryId) {
+        ProductInventory inventory = productInventoryRepository.findById(inventoryId)
+                .orElseThrow(() -> new ResourcesNotFoundException("Not found inventory with id: " + inventoryId));
+        if(inventory.getImages() != null) {
+            filesStorageService.deleteImage(inventory.getImages());
+        }
+        productInventoryRepository.delete(inventory);
     }
 }

@@ -11,7 +11,7 @@ import com.example.ecommerce.domain.model.binding.VendorRequest;
 import com.example.ecommerce.domain.model.modelviews.product.CouponModelView;
 import com.example.ecommerce.handler.exception.CodeExpiredException;
 import com.example.ecommerce.handler.exception.GeneralException;
-import com.example.ecommerce.handler.exception.NotFoundException;
+import com.example.ecommerce.handler.exception.ResourcesNotFoundException;
 import com.example.ecommerce.repository.CouponRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.VendorRepository;
@@ -76,7 +76,7 @@ public class VendorServiceImpl implements IVendorService {
     @Override
     public APIResponse<?> checkCouponExpire(Long vendorId, String couponCode) {
         Coupon coupon = couponRepository.findByVendorIdAndAndCode(vendorId, couponCode)
-                .orElseThrow(() -> new NotFoundException("Coupon code that you enter not found"));
+                .orElseThrow(() -> new ResourcesNotFoundException("Coupon code that you enter not found"));
         if (coupon.isExpired()) {
             throw new CodeExpiredException(String.format("Your code that you enter: %s was expired", couponCode));
         }

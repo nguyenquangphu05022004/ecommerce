@@ -14,6 +14,7 @@ public class CommonFilter {
         );
     }
 
+
     protected static Predicate hasJoinEqual(
             String joinAttr,
             String targetCompare,

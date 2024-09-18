@@ -19,17 +19,20 @@ public class CategoryModelView extends BaseEntity implements ImageMapper {
     private String slug;
     private String urlImage;
     private List<CategoryModelView> categoryModelViews;
+
     public CategoryModelView(Category category) {
-        this.name = category.getName();
-        this.slug = category.getSlug();
-        setId(category.getId());
-        if(!CollectionUtils.isEmpty(category.getImages())) {
-            this.urlImage = getImageUrl(category.getImages().get(category.getImages().size() - 1));
-        }
-        if(!CollectionUtils.isEmpty(category.getChildren())) {
-            this.categoryModelViews = category.getChildren().stream()
-                    .map(s -> new CategoryModelView(s))
-                    .collect(Collectors.toList());
+        if (category != null) {
+            this.name = category.getName();
+            this.slug = category.getSlug();
+            setId(category.getId());
+            if (!CollectionUtils.isEmpty(category.getImages())) {
+                this.urlImage = getImageUrl(category.getImages().get(category.getImages().size() - 1));
+            }
+            if (!CollectionUtils.isEmpty(category.getChildren())) {
+                this.categoryModelViews = category.getChildren().stream()
+                        .map(s -> new CategoryModelView(s))
+                        .collect(Collectors.toList());
+            }
         }
     }
 }

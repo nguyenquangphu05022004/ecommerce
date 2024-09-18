@@ -1,6 +1,6 @@
 package com.example.ecommerce.common;
 
-import com.example.ecommerce.handler.exception.NotFoundException;
+import com.example.ecommerce.handler.exception.ResourcesNotFoundException;
 
 import java.lang.reflect.Constructor;
 
@@ -15,7 +15,7 @@ public class Factory {
             Constructor<?> constructor = clazz.getConstructor(classes);
             return constructor.newInstance(objects);
         } catch (Exception e) {
-            throw new NotFoundException("Class: " + className + " not found");
+            throw new ResourcesNotFoundException("Class: " + className + " not found");
         }
     }
 }

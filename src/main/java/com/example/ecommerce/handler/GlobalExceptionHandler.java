@@ -2,9 +2,7 @@ package com.example.ecommerce.handler;
 
 import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.handler.exception.*;
-import com.example.ecommerce.domain.response.OperationResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,8 +17,8 @@ public class GlobalExceptionHandler {
         return apiResponseError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
     }
 
-    @ExceptionHandler(value = NotFoundException.class)
-    public APIResponse<?> handleAuthenticationException(NotFoundException ex) {
+    @ExceptionHandler(value = ResourcesNotFoundException.class)
+    public APIResponse<?> handleAuthenticationException(ResourcesNotFoundException ex) {
         return apiResponseError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
     }
 

@@ -5,20 +5,27 @@ import com.example.ecommerce.domain.entities.auth.Role;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.product.Category;
+import com.example.ecommerce.domain.entities.product.ProductAttribute;
 import com.example.ecommerce.domain.entities.product.ProductBrand;
 import com.example.ecommerce.domain.model.binding.ProductFilterRequest;
+import com.example.ecommerce.domain.model.binding.ProductInventoryRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.binding.RegisterRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductGalleryModelView;
+import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
 import com.example.ecommerce.domain.model.modelviews.product.ProductModelView;
 import com.example.ecommerce.domain.response.APIListResponse;
 import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.domain.response.AuthenResponse;
 import com.example.ecommerce.repository.*;
+import com.example.ecommerce.service.IProductInventoryService;
 import com.example.ecommerce.service.IUserService;
 import com.example.ecommerce.service.algorithm.search.product.BrandFilter;
+import com.example.ecommerce.service.algorithm.search.product.CateParentFilter;
 import com.example.ecommerce.service.algorithm.search.product.NameFilter;
+import com.example.ecommerce.service.algorithm.search.product.PriceFilter;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
@@ -30,6 +37,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -62,9 +70,8 @@ class ProductControllerTest {
     private Vendor vendor;
     @Autowired
     private ProductRepository productRepository;
-
     private List<ProductRequest> productRequests = new ArrayList<>();
-
+    private List<ProductInventoryModelView> productInventoryModelViews = new ArrayList<>();
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -72,11 +79,13 @@ class ProductControllerTest {
     @Autowired
     private PasswordEncoder encoder;
     private List<ProductModelView> productModelViews = new ArrayList<>();
-    private Category category;
-    private ProductBrand brand;
-
+    private ProductAttributeRepository productAttributeRepository;
+    private ProductAttributeMappingValueRepository productAttributeMappingValueRepository;
+    private List<ProductInventoryRequest> productInventoryRequests = new ArrayList<>();
     private List<Category> categories = new ArrayList<>();
     private List<ProductBrand> brands = new ArrayList<>();
+    @Autowired
+    private IProductInventoryService productInventoryService;
 
     @BeforeEach
     void setup() throws Exception {
@@ -127,6 +136,8 @@ class ProductControllerTest {
         ProductRequest p4 = getProductRequest(c2.getId(), b3.getId(), "Laptop Inspire Dell 15 3000");
 
         productRequests.addAll(List.of(p1, p2, p3, p4));
+
+
     }
 
     public ProductRequest getProductRequest(Long cateId, Long brandId, String name) {
@@ -159,6 +170,11 @@ class ProductControllerTest {
 
     @AfterEach
     public void destroy() {
+        if (productInventoryModelViews != null) {
+            productInventoryModelViews.forEach(s -> {
+                productInventoryService.delete(s.getId());
+            });
+        }
         if (productModelViews != null) {
             productModelViews.forEach(s -> {
                 productRepository.deleteById(s.getId());
@@ -217,8 +233,47 @@ class ProductControllerTest {
     void getAllProductRecommendation() {
     }
 
+    public ProductInventoryRequest getInventoryRequest(int price, ProductModelView p1) {
+        ProductInventoryRequest request = new ProductInventoryRequest();
+        request.setProductId(p1.getId());
+        Map<String, String> attributeMap = new HashMap<>();
+        attributeMap.put("Color", "Red");
+        attributeMap.put("Size", "XL");
+        request.setAttributes(attributeMap);
+        request.setPrice(price);
+        request.setQuantity(2000);
+        request.setSkuCode("LIVER-XL-RED");
+        return request;
+    }
+
+    void httpCreateProductInventory(ProductInventoryRequest request) throws Exception {
+
+        MockMultipartFile file = new MockMultipartFile(
+                "files",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "hello world".getBytes()
+        );
+        String contentAsString = mockMvc.perform(MockMvcRequestBuilders.multipart(
+                                apiVersion + "/products/inventories"
+                        )
+                        .file(file)
+                        .header("Authorization", "Bearer " + this.authenResponse.getToken())
+                        .param("productInventoryRequest", this.objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("created product inventory"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        ProductInventoryModelView inventoryModelView = this.objectMapper.readValue(
+                contentAsString,
+                new TypeReference<APIResponse<ProductInventoryModelView>>() {
+                }
+        ).getData();
+        this.productInventoryModelViews.add(inventoryModelView);
+    }
     @Test
-    void getAllProduct() throws Exception {
+    void create_product_inventory() throws Exception {
         productRequests.forEach(s -> {
             try {
                 httpCreateProduct(s);
@@ -226,10 +281,32 @@ class ProductControllerTest {
                 throw new RuntimeException(e);
             }
         });
+        httpCreateProductInventory(getInventoryRequest(
+                2000,
+                productModelViews.get(0)
+        ));
+        httpCreateProductInventory(getInventoryRequest(
+                1500,
+                productModelViews.get(1)
+        ));
+        httpCreateProductInventory(getInventoryRequest(
+                500,
+                productModelViews.get(2)
+        ));
+        httpCreateProductInventory(getInventoryRequest(
+                200,
+                productModelViews.get(3)
+        ));
+    }
+
+
+    @Test
+    void getAllProduct() throws Exception {
+        this.create_product_inventory();
         ProductFilterRequest request = new ProductFilterRequest();
         Map<String, String> map = new HashMap<>();
-         map.put(NameFilter.class.getSimpleName(), "ao the thao");
-         map.put(BrandFilter.class.getSimpleName(), brands.get(1).getId() + "");
+        map.put(PriceFilter.class.getSimpleName(), "200;1500");
+        map.put(CateParentFilter.class.getSimpleName(), categories.get(2).getId() + "");
         request.setData(map);
         String contentAsString = this.mockMvc.perform(MockMvcRequestBuilders.post(
                                 apiVersion + "/products/search"
@@ -242,10 +319,11 @@ class ProductControllerTest {
                 .getContentAsString();
         APIListResponse<ProductGalleryModelView> responses = this.objectMapper.readValue(
                 contentAsString,
-                new TypeReference<APIListResponse<ProductGalleryModelView>>() {}
+                new TypeReference<APIListResponse<ProductGalleryModelView>>() {
+                }
         );
 
-        Assertions.assertThat(responses.getData().size()).isEqualTo(1);
+        Assertions.assertThat(responses.getData().size()).isEqualTo(0);
 
     }
 }

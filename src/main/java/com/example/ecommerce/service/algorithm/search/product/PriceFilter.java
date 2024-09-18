@@ -9,8 +9,11 @@ public class PriceFilter extends StrategyFilter {
     @Override
     public Predicate filter() {
         String[] prices = dataFilter.getData().split(";");
-        Integer s = Math.min(Integer.parseInt(prices[0]), Integer.parseInt(prices[1]));
-        Integer e = Math.max(Integer.parseInt(prices[0]), Integer.parseInt(prices[1]));
-        return CommonFilter.between("price", dataFilter, s, e);
+        return dataFilter.getCriteriaBuilder()
+                .between(dataFilter.getProductRoot()
+                                .join("productInventories")
+                                .get("price"),
+                        Math.min(Long.parseLong(prices[0]), Long.parseLong(prices[1])),
+                        Math.max(Long.parseLong(prices[0]), Long.parseLong(prices[1])));
     }
 }

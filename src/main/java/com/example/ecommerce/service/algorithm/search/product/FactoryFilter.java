@@ -1,9 +1,7 @@
 package com.example.ecommerce.service.algorithm.search.product;
 
 import com.example.ecommerce.common.Factory;
-import com.example.ecommerce.handler.exception.NotFoundException;
 
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
