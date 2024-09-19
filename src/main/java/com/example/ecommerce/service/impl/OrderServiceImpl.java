@@ -39,8 +39,6 @@ import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 @Transactional
 public class OrderServiceImpl implements IOrderService {
     private final OrderRepository orderRepository;
-    private final LineItemRepository lineItemRepository;
-    private final ItemRepository itemRepository;
     private final ProductInventoryRepository productInventoryRepository;
     private final UserRepository userRepository;
     private final TimerService timerService;
@@ -53,9 +51,6 @@ public class OrderServiceImpl implements IOrderService {
         Order order = Order.builder()
                 .orderStatus(OrderStatus.NOT_APPROVAL)
                 .payment(request.getPayment())
-                .approval(false)
-                .received(false)
-                .purchased(false)
                 .lineItems(request.getLineItems().stream()
                         .map(lineItem -> LineItem.builder()
                                 .vendor(new Vendor(lineItem.getVendorId()))
@@ -75,15 +70,6 @@ public class OrderServiceImpl implements IOrderService {
                 .customer(Customer.builder().id(user.getEntityType().getEntityId()).build())
                 .build();
         orderRepository.save(order);
-
-        order.getLineItems().stream().forEach(l -> {
-            l.setOrder(order);
-            lineItemRepository.save(l);
-            l.getItems().stream().forEach(i -> {
-                i.setLineItem(l);
-                itemRepository.save(i);
-            });
-        });
         postNotificationEvent(ORDER_CREATE, order);
         timerService.schedulerJob(
                 OrderApprovalJob.class,
@@ -95,7 +81,7 @@ public class OrderServiceImpl implements IOrderService {
                         false,
                         order.getId().toString())
         );
-        return apiResponse("cretead order",null);
+        return apiResponse("cretead order",new OrderViewModel(order));
     }
 
 
@@ -121,7 +107,6 @@ public class OrderServiceImpl implements IOrderService {
         Order order = orderRepository
                 .findById(orderId)
                 .orElseThrow(() -> new GeneralException("Not found order"));
-        order.setPurchased(true);
         orderRepository.save(order);
         postNotificationEvent(ORDER_PAYMENT, order);
         return apiResponse("update payment success", null);
@@ -129,12 +114,8 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public APIResponse<?> deleteById(Long orderId) {
-        List<LineItem> lineItems = lineItemRepository.findAllByOrderId(orderId);
-        lineItems.stream().forEach(lineItem -> {
-            itemRepository.deleteByLineItem_Id(lineItem.getId());
-        });
-        lineItemRepository.deleteAll(lineItems);
-        Order order = lineItems.get(0).getOrder();
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourcesNotFoundException("Not found order"));
         orderRepository.delete(order);
         postNotificationEvent(ORDER_DELETE, order);
         return apiResponse("delete order success", null);

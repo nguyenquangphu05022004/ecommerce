@@ -1,8 +1,9 @@
 package com.example.ecommerce.domain.model.modelviews.order;
 
-import com.example.ecommerce.domain.entities.order.OrderStatus;
+import com.example.ecommerce.domain.entities.BaseEntity;
 import com.example.ecommerce.domain.entities.order.LineItem;
 import com.example.ecommerce.domain.entities.order.Order;
+import com.example.ecommerce.domain.entities.order.OrderStatus;
 import com.example.ecommerce.domain.entities.order.Payment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,20 +17,16 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrderViewModel {
+public class OrderViewModel extends BaseEntity {
     private Payment payment;
     private OrderStatus orderStatus;
-    private boolean approval;
-    private boolean purchased;
-    private boolean received;
     private Set<LineItemModelView> lineItems;
 
     public OrderViewModel(Order o) {
+        setId(o.getId());
+        setCreatedBy(o.getCreatedBy());
         this.payment = o.getPayment();
         this.orderStatus = o.getOrderStatus();
-        this.approval = o.isApproval();
-        this.purchased = o.isPurchased();
-        this.received = o.isReceived();
         this.lineItems = mapToOrderViewModel(o.getLineItems());
     }
 

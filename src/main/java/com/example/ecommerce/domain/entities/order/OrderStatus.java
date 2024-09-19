@@ -5,10 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum OrderStatus {
-    ALL("Tất cả"),
-    SUCCESS("Thành công"),
+    DELIVERED("Da giao hang"),
     PROCESSING("Đang tiến hành"),
-    NOT_APPROVAL("Chưa nhận đơn");
+    SHIPPED("Dang van chuyen");
     @Getter
     private final String value;
 }

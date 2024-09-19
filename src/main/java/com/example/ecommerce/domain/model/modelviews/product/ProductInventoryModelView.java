@@ -26,12 +26,17 @@ public class ProductInventoryModelView extends BaseEntity implements ImageMapper
         this.quantity = p.getQuantity();
         this.skuCode = p.getSkuCode();
         this.numberOfProductSold = p.getNumberOfProductSold();
-        this.imageUrl = getImageUrl(p.getImages()).get(0);
+        if(p.getImages() != null) {
+            this.imageUrl = getImageUrl(p.getImages()).get(0);
+        }
         setId(p.getId());
     }
 
     private String extractAttribute(String attributeCombinationKey) {
-        return Arrays.stream(attributeCombinationKey.split(SystemUtils.SEPARATE))
-                .collect(Collectors.joining(", "));
+        if(attributeCombinationKey != null) {
+            return Arrays.stream(attributeCombinationKey.split(SystemUtils.SEPARATE))
+                    .collect(Collectors.joining(", "));
+        }
+        return null;
     }
 }

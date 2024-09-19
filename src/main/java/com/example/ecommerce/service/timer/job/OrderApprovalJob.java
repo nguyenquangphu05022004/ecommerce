@@ -19,7 +19,6 @@ public class OrderApprovalJob implements Job {
     public void execute(JobExecutionContext exe) {
         TimerInfo timerInfo = TimerUtils.extractTimerInfo(NotificationBirthDayJob.class, exe);
         Order order = orderRepository.findById(Long.parseLong(timerInfo.getCallback())).get();
-        order.setApproval(true);
         orderRepository.save(order);
     }
 }

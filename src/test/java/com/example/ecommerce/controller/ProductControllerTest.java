@@ -1,16 +1,15 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.config.jwt.JwtService;
 import com.example.ecommerce.domain.entities.EntityType;
 import com.example.ecommerce.domain.entities.auth.Role;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.Vendor;
+import com.example.ecommerce.domain.entities.order.Payment;
 import com.example.ecommerce.domain.entities.product.Category;
-import com.example.ecommerce.domain.entities.product.ProductAttribute;
 import com.example.ecommerce.domain.entities.product.ProductBrand;
-import com.example.ecommerce.domain.model.binding.ProductFilterRequest;
-import com.example.ecommerce.domain.model.binding.ProductInventoryRequest;
-import com.example.ecommerce.domain.model.binding.ProductRequest;
-import com.example.ecommerce.domain.model.binding.RegisterRequest;
+import com.example.ecommerce.domain.model.binding.*;
+import com.example.ecommerce.domain.model.modelviews.order.OrderViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductGalleryModelView;
 import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
@@ -21,11 +20,8 @@ import com.example.ecommerce.domain.response.AuthenResponse;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IProductInventoryService;
 import com.example.ecommerce.service.IUserService;
-import com.example.ecommerce.service.algorithm.search.product.BrandFilter;
 import com.example.ecommerce.service.algorithm.search.product.CateParentFilter;
-import com.example.ecommerce.service.algorithm.search.product.NameFilter;
 import com.example.ecommerce.service.algorithm.search.product.PriceFilter;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
@@ -67,6 +63,9 @@ class ProductControllerTest {
     @Value("${api.version}")
     private String apiVersion;
     private RegisterRequest registerRequest;
+   @Autowired
+    private OrderRepository orderRepository;
+    private List<OrderViewModel> orderViewModels = new ArrayList<>();
     private Vendor vendor;
     @Autowired
     private ProductRepository productRepository;
@@ -79,16 +78,24 @@ class ProductControllerTest {
     @Autowired
     private PasswordEncoder encoder;
     private List<ProductModelView> productModelViews = new ArrayList<>();
-    private ProductAttributeRepository productAttributeRepository;
+    private AuthenResponse userAuthen;
     private ProductAttributeMappingValueRepository productAttributeMappingValueRepository;
     private List<ProductInventoryRequest> productInventoryRequests = new ArrayList<>();
     private List<Category> categories = new ArrayList<>();
     private List<ProductBrand> brands = new ArrayList<>();
     @Autowired
     private IProductInventoryService productInventoryService;
-
+    @Autowired
+    private JwtService jwtService;
     @BeforeEach
     void setup() throws Exception {
+
+        userAuthen = LoginResponse.authResponse(
+                apiVersion,
+                mockMvc,
+                objectMapper,
+                1
+        ).get(0);
         vendor = Vendor.builder()
                 .shopName("test-shop")
                 .build();
@@ -170,6 +177,11 @@ class ProductControllerTest {
 
     @AfterEach
     public void destroy() {
+        if(orderViewModels != null) {
+            orderViewModels.forEach(s -> {
+                orderRepository.deleteById(s.getId());
+            });
+        }
         if (productInventoryModelViews != null) {
             productInventoryModelViews.forEach(s -> {
                 productInventoryService.delete(s.getId());
@@ -187,6 +199,7 @@ class ProductControllerTest {
             categoryRepository.delete(s);
         });
         userService.delete(this.registerRequest.getUsername());
+        userService.delete(jwtService.extractUsername(this.userAuthen.getToken()));
     }
 
     @Test
@@ -272,6 +285,7 @@ class ProductControllerTest {
         ).getData();
         this.productInventoryModelViews.add(inventoryModelView);
     }
+
     @Test
     void create_product_inventory() throws Exception {
         productRequests.forEach(s -> {
@@ -324,6 +338,46 @@ class ProductControllerTest {
         );
 
         Assertions.assertThat(responses.getData().size()).isEqualTo(0);
+    }
+
+
+    /**
+     * Order product
+     */
+
+    @Test
+    void test_create_order() throws Exception {
+        this.create_product_inventory();
+        OrderRequest orderRequest = new OrderRequest();
+        orderRequest.setPayment(Payment.PAY_AT_HOME);
+        Set<LineItemRequest> lineItemRequests = new HashSet<>();
+        LineItemRequest lineItemRequest = new LineItemRequest();
+        lineItemRequest.setCouponId(null);
+        lineItemRequest.setVendorId(this.vendor.getId());
+        ItemRequest itemRequest = new ItemRequest();
+        itemRequest.setQuantity(5);
+        itemRequest.setInventoryId(this.productInventoryModelViews.get(0).getId());
+        lineItemRequest.setItems(new ArrayList<>(List.of(itemRequest)));
+        lineItemRequests.add(lineItemRequest);
+        orderRequest.setLineItems(lineItemRequests);
+
+
+        String contentAsString = this.mockMvc.perform(MockMvcRequestBuilders.post(
+                                apiVersion + "/orders"
+                        ).content(this.objectMapper.writeValueAsBytes(orderRequest))
+                        .header("Authorization", "Bearer " + this.userAuthen.getToken())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("cretead order"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        OrderViewModel orderViewModel = this.objectMapper.readValue(
+                contentAsString,
+                new TypeReference<APIResponse<OrderViewModel>>() {}
+        ).getData();
+        this.orderViewModels.add(orderViewModel);
 
     }
+
 }

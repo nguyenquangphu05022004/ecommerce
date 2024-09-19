@@ -22,12 +22,9 @@ public class LineItem extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "vendor_id", nullable = false)
     private Vendor vendor;
-    @OneToMany(mappedBy = "lineItem")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Item> items;
     @ManyToOne
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
-    @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
 }

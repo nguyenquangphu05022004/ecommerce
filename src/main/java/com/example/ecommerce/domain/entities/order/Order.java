@@ -22,7 +22,7 @@ public class Order extends BaseEntity{
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<LineItem> lineItems;
 
     @Enumerated(EnumType.STRING)
@@ -30,11 +30,6 @@ public class Order extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-
-    private boolean approval;
-    private boolean purchased;
-    private boolean received;
-
     @Transient
     public Integer getTotalPrice() {
         return lineItems.stream().mapToInt(lineItem -> {
