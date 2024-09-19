@@ -5,14 +5,11 @@ import com.example.ecommerce.domain.entities.auth.Customer;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.order.*;
-import com.example.ecommerce.domain.entities.order.states.OrderState;
-import com.example.ecommerce.domain.entities.order.states.OrderStateFactory;
 import com.example.ecommerce.domain.entities.order.states.ProcessingState;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.domain.model.binding.FilterOrderRequest;
 import com.example.ecommerce.domain.model.binding.ItemRequest;
 import com.example.ecommerce.domain.model.binding.OrderRequest;
-import com.example.ecommerce.domain.model.modelviews.order.OrderViewModel;
 import com.example.ecommerce.service.event.Event;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.handler.exception.NotFoundException;
@@ -24,9 +21,6 @@ import com.example.ecommerce.service.timer.TimerInfo;
 import com.example.ecommerce.service.timer.TimerService;
 import com.example.ecommerce.service.timer.job.OrderApprovalJob;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,18 +41,16 @@ public class OrderServiceImpl implements IOrderService {
     private final ProductInventoryRepository productInventoryRepository;
     private final UserRepository userRepository;
     private final TimerService timerService;
+    private final OrderStateRepository orderStateRepository;
 
     @Override
     public APIResponse<?> createOrder(OrderRequest request) {
         User user = userRepository
                 .findByUsernameIgnoreCase(SecurityUtils.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("You aren't login"));
-
         Order order = Order.builder()
-                .orderStatus(ProcessingState.class.getSimpleName())
+                .stateName(ProcessingState.class.getSimpleName())
                 .payment(request.getPayment())
-                .approval(false).received(false)
-                .purchased(false)
                 .lineItems(request.getLineItems()
                         .stream()
                         .map(lineItem -> LineItem.builder()
@@ -76,7 +68,6 @@ public class OrderServiceImpl implements IOrderService {
                 .customer(Customer.builder().id(user.getEntityType().getEntityId()).build())
                 .build();
         orderRepository.save(order);
-
         order.getLineItems().stream().forEach(l -> {
             l.setOrder(order);
             lineItemRepository.save(l);
@@ -85,6 +76,11 @@ public class OrderServiceImpl implements IOrderService {
                 itemRepository.save(i);
             });
         });
+        OrderStateMessage orderStateMessage = OrderStateMessage.builder()
+                .message("Cac nha cung cap dang tien hanh xu ly.")
+                .order(order)
+                .build();
+        orderStateRepository.save(orderStateMessage);
         postNotificationEvent(ORDER_CREATE, order);
         timerService.schedulerJob(OrderApprovalJob.class,
                 //offsetMinis: 8h; job execute when created order push 8h
@@ -96,17 +92,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public APIResponse<?> updateOrderState(Long orderId, boolean isNext) {
-        Order order = orderRepository
-                .findById(orderId)
-                .orElseThrow(() -> new NotFoundException("Not found order"));
-        String message = "";
-        if (isNext) {
-            message = OrderStateFactory.getOrderState(order.getOrderStatus()).next(order);
-        } else {
-            message = OrderStateFactory.getOrderState(order.getOrderStatus()).prev(order);
-        }
-        orderRepository.save(order);
-        return apiResponse(message, null);
+
     }
 
 
@@ -118,7 +104,6 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public APIResponse<?> updatePayment(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new GeneralException("Not found order"));
-        order.setPurchased(true);
         orderRepository.save(order);
         postNotificationEvent(ORDER_PAYMENT, order);
         return apiResponse("update payment success", null);

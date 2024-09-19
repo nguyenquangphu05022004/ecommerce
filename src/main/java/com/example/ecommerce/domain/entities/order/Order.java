@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,11 +29,10 @@ public class Order extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private Payment payment;
 
-    private String orderStatus;
+    @OneToMany(mappedBy = "order")
+    private List<OrderStateMessage> orderStateMessages;
 
-    private boolean approval;
-    private boolean purchased;
-    private boolean received;
+    private String stateName;
 
     @Transient
     public Integer getTotalPrice() {

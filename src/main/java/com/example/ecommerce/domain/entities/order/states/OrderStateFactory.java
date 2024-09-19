@@ -21,7 +21,7 @@ public class OrderStateFactory {
                 OrderState state = (OrderState) constructor.newInstance();
                 orderStates.put(orderState, state);
             } catch (Exception e) {
-                throw new GeneralException("OrderState not found: " + orderState);
+                throw new GeneralException("OrderStateMessage not found: " + orderState);
             }
         }
         return orderStates.get(orderState);
