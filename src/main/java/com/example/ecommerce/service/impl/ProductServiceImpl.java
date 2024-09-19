@@ -110,7 +110,7 @@ public class ProductServiceImpl implements IProductService {
         Specification<Product> specification = (root, query, criteriaBuilder) -> {
             final List<Predicate> predicates = new ArrayList<>();
             productFilterRequest.getData().entrySet().stream().forEach(entry -> {
-                StrategyFilter strategyFilter = FactoryFilter.getInstance(entry.getKey());
+                StrategyFilter strategyFilter = FactoryFilter.getStrategyFilter(entry.getKey());
                 strategyFilter.setDataFilter(new DataFilter(criteriaBuilder, root, entry.getValue()));
                 Predicate condition = strategyFilter.filter();
                 predicates.add(condition);

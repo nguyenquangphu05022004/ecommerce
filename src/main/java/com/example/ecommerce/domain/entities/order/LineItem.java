@@ -27,4 +27,5 @@ public class LineItem extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
+    private String stateName;
 }

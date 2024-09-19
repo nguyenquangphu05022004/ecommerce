@@ -1,13 +1,14 @@
-package com.example.ecommerce.domain.entities.order.states;
+package com.example.ecommerce.domain.entities.order.states.order;
 
 import com.example.ecommerce.domain.entities.order.Order;
+import com.example.ecommerce.domain.entities.order.State;
 
-public class ProcessingState implements OrderState {
+public class ProcessingState implements State<Order, String> {
     @Override
     public String next(Order order) {
-        order.setOrderStatus(ProcessingState.class.getSimpleName());
+        order.setStateName(ProcessingState.class.getSimpleName());
         return String.format("Order state from %s to %s",
-                order.getOrderStatus(),
+                order.getStateName(),
                 ShippedState.class.getSimpleName());
     }
 

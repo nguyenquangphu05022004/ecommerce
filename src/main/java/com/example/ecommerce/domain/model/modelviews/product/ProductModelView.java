@@ -27,25 +27,27 @@ public class ProductModelView extends BaseEntity {
     private VendorUserProfileModelView vendor;
 
     public ProductModelView(Product product) {
-        this.nameEn = product.getNameEn();
-        this.nameVn = product.getNameVn();
-        setId(product.getId());
-        this.productBrand = product.getProductBrand();
-        this.category = new CategoryModelView(product.getCategory());
-        this.description = product.getDescription();
-        if(!CollectionUtils.isEmpty(product.getProductInventories())) {
-            this.minPrice = product.getProductInventories()
-                    .stream()
-                    .mapToInt(s -> s.getPrice())
-                    .min()
-                    .getAsInt();
-            this.maxPrice = product.getProductInventories()
-                    .stream()
-                    .mapToInt(s -> s.getPrice())
-                    .max()
-                    .getAsInt();
+        if (product != null) {
+            this.nameEn = product.getNameEn();
+            this.nameVn = product.getNameVn();
+            setId(product.getId());
+            this.productBrand = product.getProductBrand();
+            this.category = new CategoryModelView(product.getCategory());
+            this.description = product.getDescription();
+            if (!CollectionUtils.isEmpty(product.getProductInventories())) {
+                this.minPrice = product.getProductInventories()
+                        .stream()
+                        .mapToInt(s -> s.getPrice())
+                        .min()
+                        .getAsInt();
+                this.maxPrice = product.getProductInventories()
+                        .stream()
+                        .mapToInt(s -> s.getPrice())
+                        .max()
+                        .getAsInt();
+            }
+            this.slug = product.getSlug();
+            this.vendor = new VendorUserProfileModelView(product.getVendor());
         }
-        this.slug = product.getSlug();
-        this.vendor = new VendorUserProfileModelView(product.getVendor());
     }
 }

@@ -22,7 +22,4 @@ public class Item extends BaseEntity {
     private ProductInventory productInventory;
     @Column(nullable = false)
     private Integer quantity;
-    @ManyToOne
-    @JoinColumn(name = "line_item_id")
-    private LineItem lineItem;
 }

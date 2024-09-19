@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/orders")
+@RequestMapping( "${api.version}"+ "/orders")
 @CrossOrigin("*")
 
 public class OrderController {
@@ -31,7 +31,6 @@ public class OrderController {
 
     @DeleteMapping("/{id}")
     public APIResponse<?> deleteOrderById(@PathVariable("id") Long orderId) {
-        orderService.deleteById(orderId);
         return orderService.deleteById(orderId);
     }
 }
