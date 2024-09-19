@@ -28,13 +28,6 @@ public class Order extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private Payment payment;
 
-    @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
-
-    private boolean approval;
-    private boolean purchased;
-    private boolean received;
-
     @Transient
     public Integer getTotalPrice() {
         return lineItems.stream().mapToInt(lineItem -> {

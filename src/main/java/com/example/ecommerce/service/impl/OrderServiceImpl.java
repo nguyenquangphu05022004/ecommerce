@@ -51,11 +51,7 @@ public class OrderServiceImpl implements IOrderService {
         ).orElseThrow(() -> new UsernameNotFoundException("You aren't login"));
 
         Order order = Order.builder()
-                .orderStatus(OrderStatus.NOT_APPROVAL)
                 .payment(request.getPayment())
-                .approval(false)
-                .received(false)
-                .purchased(false)
                 .lineItems(request.getLineItems().stream()
                         .map(lineItem -> LineItem.builder()
                                 .vendor(new Vendor(lineItem.getVendorId()))
@@ -121,7 +117,6 @@ public class OrderServiceImpl implements IOrderService {
         Order order = orderRepository
                 .findById(orderId)
                 .orElseThrow(() -> new GeneralException("Not found order"));
-        order.setPurchased(true);
         orderRepository.save(order);
         postNotificationEvent(ORDER_PAYMENT, order);
         return apiResponse("update payment success", null);
@@ -138,6 +133,11 @@ public class OrderServiceImpl implements IOrderService {
         orderRepository.delete(order);
         postNotificationEvent(ORDER_DELETE, order);
         return apiResponse("delete order success", null);
+    }
+
+    @Override
+    public APIResponse<?> updateOrderState(Long orderId, boolean isNext) {
+        return null;
     }
 
 
