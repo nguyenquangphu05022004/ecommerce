@@ -6,10 +6,12 @@ import com.example.ecommerce.domain.entities.auth.Role;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.order.Payment;
+import com.example.ecommerce.domain.entities.order.states.ProcessingState;
+import com.example.ecommerce.domain.entities.order.states.ShippedState;
 import com.example.ecommerce.domain.entities.product.Category;
 import com.example.ecommerce.domain.entities.product.ProductBrand;
 import com.example.ecommerce.domain.model.binding.*;
-import com.example.ecommerce.domain.model.modelviews.order.OrderViewModel;
+import com.example.ecommerce.domain.model.modelviews.order.OrderModelView;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
 import com.example.ecommerce.domain.model.modelviews.product.ProductGalleryModelView;
 import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
@@ -63,9 +65,9 @@ class ProductControllerTest {
     @Value("${api.version}")
     private String apiVersion;
     private RegisterRequest registerRequest;
-   @Autowired
+    @Autowired
     private OrderRepository orderRepository;
-    private List<OrderViewModel> orderViewModels = new ArrayList<>();
+    private List<OrderModelView> orderModelViews = new ArrayList<>();
     private Vendor vendor;
     @Autowired
     private ProductRepository productRepository;
@@ -87,6 +89,7 @@ class ProductControllerTest {
     private IProductInventoryService productInventoryService;
     @Autowired
     private JwtService jwtService;
+
     @BeforeEach
     void setup() throws Exception {
 
@@ -177,8 +180,8 @@ class ProductControllerTest {
 
     @AfterEach
     public void destroy() {
-        if(orderViewModels != null) {
-            orderViewModels.forEach(s -> {
+        if (orderModelViews != null) {
+            orderModelViews.forEach(s -> {
                 orderRepository.deleteById(s.getId());
             });
         }
@@ -361,7 +364,6 @@ class ProductControllerTest {
         lineItemRequests.add(lineItemRequest);
         orderRequest.setLineItems(lineItemRequests);
 
-
         String contentAsString = this.mockMvc.perform(MockMvcRequestBuilders.post(
                                 apiVersion + "/orders"
                         ).content(this.objectMapper.writeValueAsBytes(orderRequest))
@@ -372,12 +374,54 @@ class ProductControllerTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        OrderViewModel orderViewModel = this.objectMapper.readValue(
+        OrderModelView orderModelView = this.objectMapper.readValue(
                 contentAsString,
-                new TypeReference<APIResponse<OrderViewModel>>() {}
+                new TypeReference<APIResponse<OrderModelView>>() {
+                }
         ).getData();
-        this.orderViewModels.add(orderViewModel);
+        this.orderModelViews.add(orderModelView);
+    }
 
+    @Test
+    void test_update_status_order() throws Exception {
+        this.test_create_order();
+        this.mockMvc.perform(MockMvcRequestBuilders.put(
+                                apiVersion + "/orders/" + this.orderModelViews.get(0).getId()
+                        ).header("Authorization", "Bearer " + this.userAuthen.getToken())
+                        .param("isNext", String.valueOf(true)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("state was updated to " + ShippedState.class.getSimpleName()));
+    }
+
+    @Test
+    void test_get_orders() throws Exception {
+        FilterOrderRequest filterOrderRequest = new FilterOrderRequest();
+        filterOrderRequest.setOrderStateName(ProcessingState.class.getSimpleName());
+        this.test_create_order();
+        String contentAsString = this.mockMvc.perform(MockMvcRequestBuilders.get(
+                                apiVersion + "/orders"
+                        ).header("Authorization", "Bearer " + this.userAuthen.getToken())
+                        .content(this.objectMapper.writeValueAsBytes(filterOrderRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("get all order by order state"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        APIListResponse<OrderModelView> response = this.objectMapper.readValue(
+                contentAsString,
+                new TypeReference<APIListResponse<OrderModelView>>() {}
+        );
+        Assertions.assertThat(response.getData()).hasSize(1);
+    }
+    @Test
+    void test_delete_order() throws Exception {
+        this.test_create_order();
+        this.mockMvc.perform(MockMvcRequestBuilders.delete(
+                apiVersion + "/orders/" + this.orderModelViews.get(0).getId()
+        ).header("Authorization", "Bearer " + this.userAuthen.getToken()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("delete order success"));
     }
 
 }

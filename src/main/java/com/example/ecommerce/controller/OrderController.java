@@ -22,7 +22,14 @@ public class OrderController {
        return orderService.createOrder(orderRequest);
     }
 
-    @GetMapping("/customer")
+
+    @PutMapping("/{id}")
+    public APIResponse<?> updateOrderState(@PathVariable("id") Long orderId,
+                                           @RequestParam("isNext") boolean isNext) {
+        return this.orderService.updateOrderState(orderId, isNext);
+    }
+
+    @GetMapping
     public APIListResponse<?> getAllOrderCreatedByCustomer(
             @RequestBody FilterOrderRequest filterOrderRequest
     ) {

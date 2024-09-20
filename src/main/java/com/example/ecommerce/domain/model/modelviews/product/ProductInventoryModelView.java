@@ -7,6 +7,7 @@ import com.example.ecommerce.service.ImageMapper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public class ProductInventoryModelView extends BaseEntity implements ImageMapper
         this.quantity = p.getQuantity();
         this.skuCode = p.getSkuCode();
         this.numberOfProductSold = p.getNumberOfProductSold();
-        if(p.getImages() != null) {
+        if(p.getImages() != null && p.getImages().size() >0 ) {
             this.imageUrl = getImageUrl(p.getImages()).get(0);
         }
         setId(p.getId());

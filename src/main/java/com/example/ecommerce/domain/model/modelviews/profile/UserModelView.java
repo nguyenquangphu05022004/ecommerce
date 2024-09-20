@@ -3,7 +3,7 @@ package com.example.ecommerce.domain.model.modelviews.profile;
 
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.model.modelviews.evaluation.EvaluationProfileModelView;
-import com.example.ecommerce.domain.model.modelviews.order.OrderViewModel;
+import com.example.ecommerce.domain.model.modelviews.order.OrderModelView;
 import com.example.ecommerce.service.ImageMapper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 public class UserModelView extends UserSimpleModelView implements ImageMapper { ;
     private List<EvaluationProfileModelView> evaluations;
-    private List<OrderViewModel> orders;
+    private List<OrderModelView> orders;
     private List<VendorUserProfileModelView> vendors;
 
     public UserModelView(User user) {

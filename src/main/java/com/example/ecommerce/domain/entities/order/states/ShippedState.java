@@ -1,4 +1,4 @@
-package com.example.ecommerce.domain.entities.order.states.order;
+package com.example.ecommerce.domain.entities.order.states;
 
 import com.example.ecommerce.domain.entities.order.Order;
 import com.example.ecommerce.domain.entities.order.State;

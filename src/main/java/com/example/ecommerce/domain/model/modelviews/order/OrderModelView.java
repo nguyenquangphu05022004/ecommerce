@@ -1,13 +1,8 @@
 package com.example.ecommerce.domain.model.modelviews.order;
 
-<<<<<<< HEAD
-import com.example.ecommerce.domain.entities.order.State;
-=======
 import com.example.ecommerce.domain.entities.BaseEntity;
->>>>>>> v4.1
 import com.example.ecommerce.domain.entities.order.LineItem;
 import com.example.ecommerce.domain.entities.order.Order;
-import com.example.ecommerce.domain.entities.order.OrderStatus;
 import com.example.ecommerce.domain.entities.order.Payment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,30 +10,27 @@ import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrderViewModel extends BaseEntity {
+public class OrderModelView extends BaseEntity {
     private Payment payment;
-<<<<<<< HEAD
-    private State orderStatus;
-    private boolean approval;
-    private boolean purchased;
-    private boolean received;
-=======
-    private OrderStatus orderStatus;
->>>>>>> v4.1
+    private String stateName;
     private Set<LineItemModelView> lineItems;
-
-    public OrderViewModel(Order o) {
+    private List<String> orderStateMessages;
+    public OrderModelView(Order o) {
         setId(o.getId());
         setCreatedBy(o.getCreatedBy());
         this.payment = o.getPayment();
-        this.orderStatus = o.getOrderStatus();
+        this.stateName = o.getStateName();
         this.lineItems = mapToOrderViewModel(o.getLineItems());
+        this.orderStateMessages = o.getOrderStateMessages().stream()
+                .map(s -> s.getMessage())
+                .collect(Collectors.toList());;
     }
 
     private Set<LineItemModelView> mapToOrderViewModel(Set<LineItem> lineItems) {

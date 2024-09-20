@@ -1,18 +1,18 @@
-package com.example.ecommerce.domain.entities.order.states.item;
+package com.example.ecommerce.domain.entities.order.states;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-@Table(name = "line_item_messages")
 @Entity
-@SuperBuilder
+@Table(name = "order_state_messages")
 @Getter
+@SuperBuilder
 @NoArgsConstructor
-public class LineItemMessage extends BaseEntity {
+public class OrderStateMessage extends BaseEntity {
     private String message;
-    private boolean isHeader;
 }

@@ -5,11 +5,14 @@ import com.example.ecommerce.domain.entities.auth.Customer;
 import com.example.ecommerce.domain.entities.auth.User;
 import com.example.ecommerce.domain.entities.auth.Vendor;
 import com.example.ecommerce.domain.entities.order.*;
+import com.example.ecommerce.domain.entities.order.states.OrderStateFactory;
+import com.example.ecommerce.domain.entities.order.states.OrderStateMessage;
+import com.example.ecommerce.domain.entities.order.states.ProcessingState;
 import com.example.ecommerce.domain.entities.product.ProductInventory;
 import com.example.ecommerce.domain.model.binding.FilterOrderRequest;
 import com.example.ecommerce.domain.model.binding.ItemRequest;
 import com.example.ecommerce.domain.model.binding.OrderRequest;
-import com.example.ecommerce.domain.model.modelviews.order.OrderViewModel;
+import com.example.ecommerce.domain.model.modelviews.order.OrderModelView;
 import com.example.ecommerce.service.event.Event;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.handler.exception.ResourcesNotFoundException;
@@ -23,11 +26,11 @@ import com.example.ecommerce.service.timer.job.OrderApprovalJob;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +45,7 @@ public class OrderServiceImpl implements IOrderService {
     private final ProductInventoryRepository productInventoryRepository;
     private final UserRepository userRepository;
     private final TimerService timerService;
+
     @Override
     public APIResponse<?> createOrder(OrderRequest request) {
         User user = userRepository.findByUsernameIgnoreCase(
@@ -50,6 +54,7 @@ public class OrderServiceImpl implements IOrderService {
 
         Order order = Order.builder()
                 .payment(request.getPayment())
+                .stateName(ProcessingState.class.getSimpleName())
                 .lineItems(request.getLineItems().stream()
                         .map(lineItem -> LineItem.builder()
                                 .vendor(new Vendor(lineItem.getVendorId()))
@@ -67,6 +72,13 @@ public class OrderServiceImpl implements IOrderService {
                                 .build())
                         .collect(Collectors.toSet()))
                 .customer(Customer.builder().id(user.getEntityType().getEntityId()).build())
+                .orderStateMessages(new ArrayList<>(
+                        List.of(OrderStateMessage.builder()
+                                .message(OrderStateFactory
+                                        .getState(ProcessingState.class.getSimpleName())
+                                        .status())
+                                .build())
+                ))
                 .build();
         orderRepository.save(order);
         postNotificationEvent(ORDER_CREATE, order);
@@ -76,28 +88,28 @@ public class OrderServiceImpl implements IOrderService {
                 new TimerInfo(
                         1,
                         5000l,
-                        8*60*60*1000l,
+                        8 * 60 * 60 * 1000l,
                         false,
                         order.getId().toString())
         );
-        return apiResponse("cretead order",new OrderViewModel(order));
+        return apiResponse("cretead order", new OrderModelView(order));
     }
 
 
     @Override
     public APIListResponse<?> getAllOrderByCustomer(FilterOrderRequest request) {
-        Page<Order> pageOrders;
-        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getLimit());
-        if (request.getOrderStatus() != null && request.getOrderStatus() != OrderStatus.ALL) {
-            pageOrders = orderRepository
-                    .findAllByCreatedByAndOrderStatus(SecurityUtils.getUsername(), request.getOrderStatus(), pageable);
-        } else {
-            pageOrders = orderRepository.findAllByCreatedBy(SecurityUtils.getUsername(), pageable);
-        }
+        Page<Order> page = orderRepository.findAllByCreatedByAndStateName(
+                SecurityUtils.getUsername(),
+                request.getOrderStateName(),
+                PageRequest.of(request.getPage() - 1, request.getLimit())
+        );
         return new APIListResponse<>(
-                200, request.getPage(), request.getLimit(),
-                pageOrders.getTotalPages(),
-                pageOrders.getContent().stream().map(o -> new OrderViewModel(o)).toList()
+                "get all order by order state",
+                200,
+                request.getPage(),
+                request.getLimit(),
+                page.getTotalPages(),
+                page.getContent().stream().map(OrderModelView::new).toList()
         );
     }
 
@@ -122,7 +134,20 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public APIResponse<?> updateOrderState(Long orderId, boolean isNext) {
-
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourcesNotFoundException("Order not found"));
+        String message = "";
+        if (isNext) {
+            message = OrderStateFactory.getState(order.getStateName()).next(order);
+        } else {
+            message = OrderStateFactory.getState(order.getStateName()).prev(order);
+        }
+        OrderStateMessage orderStateMessage = OrderStateMessage.builder()
+                .message(message)
+                .build();
+        order.addOrderStateMessage(orderStateMessage);
+        orderRepository.save(order);
+        return apiResponse("state was updated to " + order.getStateName(), null);
     }
 
 
