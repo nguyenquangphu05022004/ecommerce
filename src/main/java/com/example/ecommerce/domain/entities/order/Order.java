@@ -24,14 +24,12 @@ public class Order extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<LineItem> lineItems;
+
     @Enumerated(EnumType.STRING)
     private Payment payment;
-    private String stateName;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<OrderStateMessage> orderStateMessages;
+
     @Transient
     public Integer getTotalPrice() {
         return lineItems.stream().mapToInt(lineItem -> {
@@ -39,14 +37,6 @@ public class Order extends BaseEntity{
                     item.getProductInventory().getPrice()* item.getQuantity())
                     .sum();
         }).sum();
-    }
-
-    @Transient
-    public void addOrderStateMessage(OrderStateMessage orderStateMessage) {
-        if(this.orderStateMessages == null) {
-            this.orderStateMessages = new ArrayList<>();
-        }
-        this.orderStateMessages.add(orderStateMessage);
     }
 
 
