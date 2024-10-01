@@ -1,9 +1,8 @@
 package com.example.ecommerce.domain.model.modelviews.cart;
 
-import com.example.ecommerce.common.utils.SystemUtils;
-import com.example.ecommerce.domain.entities.product.ProductInventory;
+import com.example.ecommerce.common.SystemUtils;
+import com.example.ecommerce.domain.entities.ProductInventory;
 import com.example.ecommerce.domain.model.modelviews.product.ProductModelView;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package com.example.ecommerce.domain.model.modelviews.product;
 
-import com.example.ecommerce.domain.entities.product.Product;
+import com.example.ecommerce.domain.entities.Product;
 import com.example.ecommerce.service.ImageMapper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

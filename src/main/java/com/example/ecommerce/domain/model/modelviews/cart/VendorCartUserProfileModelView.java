@@ -1,7 +1,7 @@
 package com.example.ecommerce.domain.model.modelviews.cart;
 
 
-import com.example.ecommerce.domain.entities.auth.Vendor;
+import com.example.ecommerce.domain.entities.Vendor;
 import com.example.ecommerce.domain.model.modelviews.profile.VendorUserProfileModelView;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

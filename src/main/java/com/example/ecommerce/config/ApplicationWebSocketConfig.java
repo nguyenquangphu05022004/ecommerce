@@ -1,11 +1,9 @@
 package com.example.ecommerce.config;
 
-import com.example.ecommerce.config.jwt.JwtAuthentication;
 import com.example.ecommerce.config.jwt.JwtService;
-import com.example.ecommerce.domain.entities.auth.User;
+import com.example.ecommerce.domain.entities.User;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.web.websocket.JWTAuthenticationToken;
-import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
@@ -15,7 +13,6 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
-import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.socket.config.annotation.*;
 

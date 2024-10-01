@@ -1,7 +1,6 @@
 package com.example.ecommerce.repository;
 
-import com.example.ecommerce.domain.entities.order.Order;
-import com.example.ecommerce.domain.entities.order.State;
+import com.example.ecommerce.domain.entities.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

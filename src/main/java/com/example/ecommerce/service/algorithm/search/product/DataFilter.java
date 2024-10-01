@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.algorithm.search.product;
 
-import com.example.ecommerce.domain.entities.product.Product;
+import com.example.ecommerce.domain.entities.Product;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;

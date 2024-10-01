@@ -23,7 +23,8 @@ public class EntityType {
     private Long entityId;
 
     public  enum Type {
-        USER, CUSTOMER, VENDOR, ORDER, PRODUCT, PRODUCT_INVENTORY, GROUP, MESSAGE,
+        USER, CUSTOMER, VENDOR, ORDER,
+        PRODUCT, PRODUCT_INVENTORY, GROUP, MESSAGE,
         CATEGORY, EVALUATION;
     }
 }

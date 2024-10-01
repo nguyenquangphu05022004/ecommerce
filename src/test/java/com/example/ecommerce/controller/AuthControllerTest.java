@@ -1,9 +1,9 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.entities.auth.Role;
-import com.example.ecommerce.domain.entities.auth.Token;
-import com.example.ecommerce.domain.entities.auth.TokenType;
-import com.example.ecommerce.domain.entities.auth.User;
+import com.example.ecommerce.domain.entities.Role;
+import com.example.ecommerce.domain.entities.Token;
+import com.example.ecommerce.domain.entities.TokenType;
+import com.example.ecommerce.domain.entities.User;
 import com.example.ecommerce.domain.model.binding.AuthenRequest;
 import com.example.ecommerce.domain.model.binding.ForgetPasswordRequest;
 import com.example.ecommerce.domain.model.binding.PasswordChangeRequest;
@@ -25,7 +25,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;

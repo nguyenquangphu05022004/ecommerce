@@ -1,7 +1,7 @@
 package com.example.ecommerce.domain.model.modelviews.profile;
 
 
-import com.example.ecommerce.domain.entities.auth.User;
+import com.example.ecommerce.domain.entities.User;
 import com.example.ecommerce.domain.model.modelviews.evaluation.EvaluationProfileModelView;
 import com.example.ecommerce.domain.model.modelviews.order.OrderModelView;
 import com.example.ecommerce.service.ImageMapper;

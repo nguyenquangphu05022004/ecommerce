@@ -1,8 +1,8 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.entities.auth.Vendor;
-import com.example.ecommerce.domain.entities.product.ProductInventory;
+import com.example.ecommerce.domain.entities.Vendor;
+import com.example.ecommerce.domain.entities.ProductInventory;
 import com.example.ecommerce.domain.model.binding.CartRequest;
 import com.example.ecommerce.domain.model.modelviews.cart.ItemCartModelView;
 import com.example.ecommerce.domain.model.modelviews.cart.VendorCartUserProfileModelView;
@@ -13,7 +13,6 @@ import com.example.ecommerce.repository.ProductInventoryRepository;
 import com.example.ecommerce.service.ICartService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

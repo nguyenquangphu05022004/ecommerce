@@ -19,6 +19,7 @@ import java.lang.invoke.TypeDescriptor;
 @CrossOrigin("*")
 public class AuthController {
     private final IAuthenService authenService;
+
     @PostMapping(value = { "/login", "/sign-in"})
     public ResponseEntity<?> authenticate(
             @RequestBody AuthenRequest authenRequest

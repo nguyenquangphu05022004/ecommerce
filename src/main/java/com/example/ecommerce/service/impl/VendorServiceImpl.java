@@ -2,10 +2,10 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.EntityType;
-import com.example.ecommerce.domain.entities.auth.Role;
-import com.example.ecommerce.domain.entities.auth.User;
-import com.example.ecommerce.domain.entities.auth.Vendor;
-import com.example.ecommerce.domain.entities.order.Coupon;
+import com.example.ecommerce.domain.entities.Role;
+import com.example.ecommerce.domain.entities.User;
+import com.example.ecommerce.domain.entities.Vendor;
+import com.example.ecommerce.domain.entities.Coupon;
 import com.example.ecommerce.domain.model.binding.CouponRequest;
 import com.example.ecommerce.domain.model.binding.VendorRequest;
 import com.example.ecommerce.domain.model.modelviews.product.CouponModelView;
@@ -33,21 +33,6 @@ public class VendorServiceImpl implements IVendorService {
     private final CouponRepository couponRepository;
     private final PasswordEncoder encoder;
 
-    @Override
-    public APIResponse<?> saveOrUpdate(VendorRequest request) {
-        Vendor vendor = Vendor.builder()
-                .shopName(request.getShopName())
-                .build();
-        vendorRepository.save(vendor);
-        User user = User.builder()
-                .password(encoder.encode(request.getPassword()))
-                .role(Role.VENDOR)
-                .fullName(request.getFullName())
-                .entityType(new EntityType(VENDOR, vendor.getId()))
-                .build();
-        userRepository.save(user);
-        return apiResponse("create vendor", null);
-    }
 
     @Override
     @Transactional

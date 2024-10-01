@@ -34,7 +34,11 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
-    public BaseEntity(Long id) {
+    public BaseEntity(Long id, String createdBy, String modifiedBy, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
+        this.createdBy = createdBy;
+        this.modifiedBy = modifiedBy;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
     }
 }

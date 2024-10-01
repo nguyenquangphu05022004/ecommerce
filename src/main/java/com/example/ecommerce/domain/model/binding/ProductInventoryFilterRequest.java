@@ -6,12 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.swing.*;
+import java.util.List;
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
 public class ProductInventoryFilterRequest {
     @NotNull
     private Long productId;
-    @NotEmpty
-    private String attributeCombinationKey;
+    private Set<Long> attrMapValueId;
 }

@@ -3,10 +3,9 @@ package com.example.ecommerce.service.impl;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.EntityType;
 import com.example.ecommerce.domain.entities.Evaluation;
-import com.example.ecommerce.domain.entities.product.Product;
+import com.example.ecommerce.domain.entities.Product;
 import com.example.ecommerce.domain.model.binding.EvaluationRequest;
 import com.example.ecommerce.domain.model.modelviews.evaluation.EvaluationDetailsModelView;
-import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.EvaluationRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IEvaluationService;
@@ -16,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static com.example.ecommerce.domain.entities.EntityType.Type.EVALUATION;
 import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;

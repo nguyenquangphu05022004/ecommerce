@@ -2,8 +2,8 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.EntityType;
-import com.example.ecommerce.domain.entities.auth.User;
-import com.example.ecommerce.domain.entities.chat.Message;
+import com.example.ecommerce.domain.entities.User;
+import com.example.ecommerce.domain.entities.Message;
 import com.example.ecommerce.domain.model.binding.FilterMessageRequest;
 import com.example.ecommerce.domain.model.binding.MessageRequest;
 import com.example.ecommerce.domain.model.modelviews.messages.MessageModelView;

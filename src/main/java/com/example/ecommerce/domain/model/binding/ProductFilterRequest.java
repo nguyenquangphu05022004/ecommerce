@@ -1,6 +1,5 @@
 package com.example.ecommerce.domain.model.binding;
 
-import com.example.ecommerce.service.algorithm.sort.ProductSortType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,7 @@ public class ProductFilterRequest {
     @NotNull
     private Map<String, String> data;
     @Getter
-    private ProductSortType sortType;
+    private String sortType;
     public Integer page;
     public Integer limit;
 
@@ -25,10 +24,5 @@ public class ProductFilterRequest {
     public Integer getLimit() {
         if(limit == null) limit = 50;
         return limit;
-    }
-
-    public ProductSortType getSortType() {
-        if(limit == null) sortType = ProductSortType.DEFAULT;
-        return sortType;
     }
 }

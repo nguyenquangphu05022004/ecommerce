@@ -1,7 +1,7 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.domain.entities.auth.Token;
-import com.example.ecommerce.domain.entities.auth.User;
+import com.example.ecommerce.domain.entities.Token;
+import com.example.ecommerce.domain.entities.User;
 import com.example.ecommerce.repository.TokenRepository;
 import com.example.ecommerce.service.VerifyService;
 import lombok.RequiredArgsConstructor;

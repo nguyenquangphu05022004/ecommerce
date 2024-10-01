@@ -8,6 +8,4 @@ import org.springframework.data.jpa.repository.Modifying;
 public interface IBrandService {
     APIResponse<?> createBrand(BrandRequest proBrand);
     APIListResponse<?> getAllBrand(int page, int limit);
-
-    void deleteByName(String name);
 }

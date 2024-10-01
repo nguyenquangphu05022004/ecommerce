@@ -1,7 +1,7 @@
 package com.example.ecommerce.repository;
 
 import com.example.ecommerce.domain.entities.EntityType;
-import com.example.ecommerce.domain.entities.chat.Message;
+import com.example.ecommerce.domain.entities.Message;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

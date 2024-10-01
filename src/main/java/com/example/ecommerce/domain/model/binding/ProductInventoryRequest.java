@@ -7,13 +7,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class ProductInventoryRequest
 {
-    private Map<String, String> attributes;
+    private Set<Long> attrMapValueId;
     private Integer quantity;
     private Long productId;
     private String skuCode;

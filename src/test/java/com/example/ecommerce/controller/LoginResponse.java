@@ -1,6 +1,6 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.entities.auth.Role;
+import com.example.ecommerce.domain.entities.Role;
 import com.example.ecommerce.domain.model.binding.AuthenRequest;
 import com.example.ecommerce.domain.model.binding.RegisterRequest;
 import com.example.ecommerce.domain.response.APIResponse;

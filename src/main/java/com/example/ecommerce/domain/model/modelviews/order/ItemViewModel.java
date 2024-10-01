@@ -1,6 +1,6 @@
 package com.example.ecommerce.domain.model.modelviews.order;
 
-import com.example.ecommerce.domain.entities.order.Item;
+import com.example.ecommerce.domain.entities.Item;
 import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

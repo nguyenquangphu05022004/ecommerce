@@ -27,11 +27,6 @@ public class ProductController {
         return productService.findById(id);
     }
 
-    @GetMapping("/{id}/recommendation")
-    public APIListResponse<?> getAllProductRecommendation(@PathVariable("id") Long id) {
-        return productService.productRecommendation(id);
-    }
-
     @PostMapping("/search")
     public APIListResponse<?> getAllProduct(
             @RequestBody ProductFilterRequest filter

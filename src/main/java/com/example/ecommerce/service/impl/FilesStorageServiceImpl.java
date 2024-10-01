@@ -47,7 +47,6 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
         url += "/" + name;
 
         FileEntity fileEntity = FileEntity.builder()
-                .entityType(entityType)
                 .name(name)
                 .path(url)
                 .build();
@@ -65,6 +64,7 @@ public class FilesStorageServiceImpl implements IFilesStorageService {
         if (Files.exists(Path.of(url))) {
             try {
                 Resource resource = new UrlResource(url);
+                return resource;
             } catch (MalformedURLException e) {
                 throw new GeneralException("can't get image");
             }

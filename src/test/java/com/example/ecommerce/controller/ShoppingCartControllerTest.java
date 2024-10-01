@@ -1,12 +1,12 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.domain.entities.auth.Role;
-import com.example.ecommerce.domain.entities.auth.User;
-import com.example.ecommerce.domain.entities.auth.Vendor;
-import com.example.ecommerce.domain.entities.product.Category;
-import com.example.ecommerce.domain.entities.product.Product;
-import com.example.ecommerce.domain.entities.product.ProductBrand;
-import com.example.ecommerce.domain.entities.product.ProductInventory;
+import com.example.ecommerce.domain.entities.Role;
+import com.example.ecommerce.domain.entities.User;
+import com.example.ecommerce.domain.entities.Vendor;
+import com.example.ecommerce.domain.entities.Category;
+import com.example.ecommerce.domain.entities.Product;
+import com.example.ecommerce.domain.entities.ProductBrand;
+import com.example.ecommerce.domain.entities.ProductInventory;
 import com.example.ecommerce.domain.model.binding.CartRequest;
 import com.example.ecommerce.domain.model.modelviews.cart.VendorCartUserProfileModelView;
 import com.example.ecommerce.repository.*;

@@ -1,9 +1,8 @@
 package com.example.ecommerce.domain.model.modelviews.profile;
 
-import com.example.ecommerce.domain.entities.auth.Address;
-import com.example.ecommerce.domain.entities.auth.Customer;
-import com.example.ecommerce.domain.entities.auth.User;
-import com.example.ecommerce.domain.entities.order.Order;
+import com.example.ecommerce.domain.entities.Customer;
+import com.example.ecommerce.domain.entities.User;
+import com.example.ecommerce.domain.entities.Order;
 import com.example.ecommerce.domain.model.modelviews.order.OrderModelView;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -13,7 +13,9 @@ import lombok.*;
 @NoArgsConstructor
 public class Notification extends BaseEntity {
     private String message;
-    @Embedded
-    private EntityType entityType;
+    @Enumerated(EnumType.STRING)
     private NotificationActionType notificationActionType;
+    @ManyToOne
+    @JoinColumn(name = "to_user_id")
+    private User toUser;
 }

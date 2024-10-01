@@ -1,25 +1,20 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.entities.auth.Customer;
-import com.example.ecommerce.domain.entities.auth.User;
-import com.example.ecommerce.domain.entities.auth.Vendor;
-import com.example.ecommerce.domain.entities.order.*;
-import com.example.ecommerce.domain.entities.order.states.OrderStateFactory;
-import com.example.ecommerce.domain.entities.order.states.OrderStateMessage;
-import com.example.ecommerce.domain.entities.order.states.ProcessingState;
-import com.example.ecommerce.domain.entities.product.ProductInventory;
+import com.example.ecommerce.domain.entities.*;
 import com.example.ecommerce.domain.model.binding.FilterOrderRequest;
 import com.example.ecommerce.domain.model.binding.ItemRequest;
 import com.example.ecommerce.domain.model.binding.OrderRequest;
 import com.example.ecommerce.domain.model.modelviews.order.OrderModelView;
-import com.example.ecommerce.service.event.Event;
-import com.example.ecommerce.handler.exception.GeneralException;
-import com.example.ecommerce.handler.exception.ResourcesNotFoundException;
-import com.example.ecommerce.repository.*;
-import com.example.ecommerce.service.IOrderService;
 import com.example.ecommerce.domain.response.APIListResponse;
 import com.example.ecommerce.domain.response.APIResponse;
+import com.example.ecommerce.handler.exception.GeneralException;
+import com.example.ecommerce.handler.exception.ResourcesNotFoundException;
+import com.example.ecommerce.repository.OrderRepository;
+import com.example.ecommerce.repository.ProductInventoryRepository;
+import com.example.ecommerce.repository.UserRepository;
+import com.example.ecommerce.service.IOrderService;
+import com.example.ecommerce.service.event.Event;
 import com.example.ecommerce.service.timer.TimerInfo;
 import com.example.ecommerce.service.timer.TimerService;
 import com.example.ecommerce.service.timer.job.OrderApprovalJob;
@@ -30,11 +25,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.ecommerce.service.event.Event.EventType.*;
+import static com.example.ecommerce.service.event.Event.EventType.ORDER_CREATE;
+import static com.example.ecommerce.service.event.Event.EventType.ORDER_PAYMENT;
 import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 
 @Service
@@ -54,15 +48,23 @@ public class OrderServiceImpl implements IOrderService {
 
         Order order = Order.builder()
                 .payment(request.getPayment())
-                .stateName(ProcessingState.class.getSimpleName())
                 .lineItems(request.getLineItems().stream()
                         .map(lineItem -> LineItem.builder()
-                                .vendor(new Vendor(lineItem.getVendorId()))
-                                .coupon(lineItem.getCouponId() != null ? new Coupon(lineItem.getCouponId()) : null)
-                                .items(lineItem.getItems().stream().map(item -> {
+                                .vendor(Vendor.builder()
+                                        .id(lineItem.getVendorId())
+                                        .build())
+                                .coupon(Coupon.builder()
+                                        .id(lineItem.getCouponId())
+                                        .build())
+                                .items(lineItem.getItems()
+                                        .stream()
+                                        .map(item -> {
                                             if (checkStockExists(item)) {
                                                 return Item.builder()
-                                                        .productInventory(new ProductInventory(item.getInventoryId()))
+                                                        .productInventory(
+                                                                ProductInventory.builder()
+                                                                .id(item.getInventoryId())
+                                                                .build())
                                                         .quantity(item.getQuantity())
                                                         .build();
                                             }
@@ -71,14 +73,8 @@ public class OrderServiceImpl implements IOrderService {
                                         .collect(Collectors.toSet()))
                                 .build())
                         .collect(Collectors.toSet()))
-                .customer(Customer.builder().id(user.getEntityType().getEntityId()).build())
-                .orderStateMessages(new ArrayList<>(
-                        List.of(OrderStateMessage.builder()
-                                .message(OrderStateFactory
-                                        .getState(ProcessingState.class.getSimpleName())
-                                        .status())
-                                .build())
-                ))
+                .customer((Customer) user)
+                .state(Order.State.PENDING)
                 .build();
         orderRepository.save(order);
         postNotificationEvent(ORDER_CREATE, order);
@@ -92,7 +88,7 @@ public class OrderServiceImpl implements IOrderService {
                         false,
                         order.getId().toString())
         );
-        return apiResponse("cretead order", new OrderModelView(order));
+        return apiResponse("created order", new OrderModelView(order));
     }
 
 
@@ -128,26 +124,16 @@ public class OrderServiceImpl implements IOrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourcesNotFoundException("Not found order"));
         orderRepository.delete(order);
-        postNotificationEvent(ORDER_DELETE, order);
         return apiResponse("delete order success", null);
     }
 
     @Override
-    public APIResponse<?> updateOrderState(Long orderId, boolean isNext) {
+    public APIResponse<?> updateOrderState(Long orderId, Order.State state) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourcesNotFoundException("Order not found"));
-        String message = "";
-        if (isNext) {
-            message = OrderStateFactory.getState(order.getStateName()).next(order);
-        } else {
-            message = OrderStateFactory.getState(order.getStateName()).prev(order);
-        }
-        OrderStateMessage orderStateMessage = OrderStateMessage.builder()
-                .message(message)
-                .build();
-        order.addOrderStateMessage(orderStateMessage);
+        order.setState(state);
         orderRepository.save(order);
-        return apiResponse("state was updated to " + order.getStateName(), null);
+        return apiResponse("state was updated to " + state, null);
     }
 
 

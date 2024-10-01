@@ -5,7 +5,7 @@ import com.example.ecommerce.common.Factory;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FactoryBuilder <T> {
+public abstract class FactoryBuilder <T> {
     private Class clazz;
     private Map<String, T> orderStates;
 

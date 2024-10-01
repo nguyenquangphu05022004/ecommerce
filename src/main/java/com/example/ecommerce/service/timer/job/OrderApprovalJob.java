@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.timer.job;
 
-import com.example.ecommerce.domain.entities.order.Order;
+import com.example.ecommerce.domain.entities.Order;
 import com.example.ecommerce.repository.OrderRepository;
 import com.example.ecommerce.service.timer.TimerInfo;
 import com.example.ecommerce.service.timer.TimerUtils;

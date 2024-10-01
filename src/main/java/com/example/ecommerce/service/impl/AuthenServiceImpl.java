@@ -1,24 +1,20 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.common.utils.SystemUtils;
+import com.example.ecommerce.common.SystemUtils;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.config.jwt.JwtService;
-import com.example.ecommerce.domain.entities.EntityType;
-import com.example.ecommerce.domain.entities.auth.*;
+import com.example.ecommerce.domain.entities.*;
 import com.example.ecommerce.domain.model.binding.*;
 import com.example.ecommerce.domain.response.APIResponse;
+import com.example.ecommerce.domain.response.AuthenResponse;
 import com.example.ecommerce.handler.exception.AuthenticationFailureException;
 import com.example.ecommerce.handler.exception.CodeExpiredException;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.handler.exception.UserNameAlreadyExistsException;
-import com.example.ecommerce.repository.CustomerRepository;
 import com.example.ecommerce.repository.TokenRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IAuthenService;
-import com.example.ecommerce.domain.response.AuthenResponse;
-import com.example.ecommerce.domain.response.OperationResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,8 +24,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.ecommerce.domain.entities.EntityType.Type.CUSTOMER;
-import static com.example.ecommerce.domain.entities.EntityType.Type.USER;
 import static com.example.ecommerce.service.event.Event.EventType.SEND_MAIL;
 import static com.example.ecommerce.service.event.Event.getInstance;
 import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
@@ -41,7 +35,6 @@ public class AuthenServiceImpl implements IAuthenService {
     private final TokenRepository tokenRepository;
     private final PasswordEncoder encoder;
     private final UserRepository userRepository;
-    private final CustomerRepository customerRepository;
     private final JwtService jwtService;
 
     @Override
@@ -69,7 +62,6 @@ public class AuthenServiceImpl implements IAuthenService {
                 .refreshToken(refreshToken)
                 .expiredAt(jwtService.extractExpiration(jwtToken).getTime())
                 .fullName(user.getFullName())
-                .entityType(user.getEntityType())
                 .userId(user.getId())
                 .build();
         return apiResponse("user login", response);
@@ -81,16 +73,21 @@ public class AuthenServiceImpl implements IAuthenService {
     public APIResponse<?> registerAccount(RegisterRequest request) {
         Optional<User> optionalUser = userRepository.findByUsernameIgnoreCase(request.getUsername());
         if (optionalUser.isEmpty()) {
-            Customer customer = Customer.builder()
-                    .createdBy(request.getUsername())
-                    .build();
-            customerRepository.save(customer);
-            User user = User.builder()
+            User user;
+            if(request instanceof VendorRequest) {
+                VendorRequest vRe = (VendorRequest)request;
+                user = Vendor.builder()
+                        .shopName(vRe.getShopName())
+                        .build();
+            } else {
+                user = Customer.builder()
+                        .build();
+            }
+            user = user.toBuilder()
                     .username(request.getUsername())
                     .password(encoder.encode(request.getPassword()))
-                    .role(Role.USER)
+                    .role(request.getRole())
                     .fullName(request.getFullName())
-                    .entityType(new EntityType(CUSTOMER, customer.getId()))
                     .build();
             userRepository.save(user);
             return apiResponse("register account", null);

@@ -1,6 +1,7 @@
 package com.example.ecommerce.domain.model.modelviews.profile;
 
-import com.example.ecommerce.domain.entities.auth.Vendor;
+import com.example.ecommerce.domain.entities.BaseEntity;
+import com.example.ecommerce.domain.entities.Vendor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,14 +9,11 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Setter
-public class VendorUserProfileModelView {
-    private Long id;
+public class VendorUserProfileModelView extends BaseEntity {
     private String shopName;
 
     public VendorUserProfileModelView(Vendor v) {
-        if(v != null) {
-            this.id = v.getId();
-            this.shopName = v.getShopName();
-        }
+        super(v.getId(), v.getCreatedBy(), v.getModifiedBy(), v.getCreatedDate(), v.getModifiedDate());
+        this.shopName = v.getShopName();
     }
 }

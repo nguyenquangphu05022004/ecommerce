@@ -1,6 +1,6 @@
 package com.example.ecommerce.config;
 
-import com.example.ecommerce.domain.entities.auth.User;
+import com.example.ecommerce.domain.entities.User;
 import com.example.ecommerce.repository.UserRepository;
 import com.sun.security.auth.UserPrincipal;
 import lombok.AllArgsConstructor;

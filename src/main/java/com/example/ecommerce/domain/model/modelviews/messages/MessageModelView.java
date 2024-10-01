@@ -2,7 +2,7 @@ package com.example.ecommerce.domain.model.modelviews.messages;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
 import com.example.ecommerce.domain.entities.EntityType;
-import com.example.ecommerce.domain.entities.chat.Message;
+import com.example.ecommerce.domain.entities.Message;
 import com.example.ecommerce.domain.model.modelviews.profile.UserSimpleModelView;
 import com.example.ecommerce.service.ImageMapper;
 import com.fasterxml.jackson.annotation.JsonInclude;

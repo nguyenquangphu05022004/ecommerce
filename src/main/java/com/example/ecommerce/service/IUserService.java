@@ -8,5 +8,6 @@ public interface IUserService{
     APIResponse<UserModelView>  uploadImage(MultipartFile multipartFile);
     APIResponse<UserModelView> getInfoUser();
     APIResponse<UserModelView>  updateOnlineStatus(String username, boolean b);
-    void delete(String username);
+    APIResponse<?> followVendor(Long vendorId);
+    APIResponse<?> removeFollowVendor(Long vendorId);
 }

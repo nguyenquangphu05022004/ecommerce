@@ -3,7 +3,7 @@ package com.example.ecommerce.service.event.listener;
 import com.example.ecommerce.config.SecurityUtils;
 import com.example.ecommerce.domain.entities.EntityType;
 import com.example.ecommerce.domain.entities.Notification;
-import com.example.ecommerce.domain.entities.order.Order;
+import com.example.ecommerce.domain.entities.Order;
 import com.example.ecommerce.service.event.Observer;
 import com.example.ecommerce.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,6 @@
 package com.example.ecommerce.domain.entities;
 
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,15 +10,11 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "files")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
-@Setter
-@SuperBuilder(toBuilder = true)
+@SuperBuilder
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type")
 public class FileEntity extends BaseEntity{
     private String path;
     private String name;
-    @Embedded
-    private EntityType entityType;
-
-
 }

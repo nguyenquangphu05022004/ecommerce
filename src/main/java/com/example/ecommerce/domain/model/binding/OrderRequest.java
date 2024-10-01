@@ -1,7 +1,7 @@
 package com.example.ecommerce.domain.model.binding;
 
 import com.example.ecommerce.common.InvalidMessage;
-import com.example.ecommerce.domain.entities.order.Payment;
+import com.example.ecommerce.domain.entities.Payment;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 

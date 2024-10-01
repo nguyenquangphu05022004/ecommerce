@@ -1,9 +1,9 @@
 package com.example.ecommerce.domain.model.modelviews.order;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
-import com.example.ecommerce.domain.entities.order.LineItem;
-import com.example.ecommerce.domain.entities.order.Order;
-import com.example.ecommerce.domain.entities.order.Payment;
+import com.example.ecommerce.domain.entities.LineItem;
+import com.example.ecommerce.domain.entities.Order;
+import com.example.ecommerce.domain.entities.Payment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

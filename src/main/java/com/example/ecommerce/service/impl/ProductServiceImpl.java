@@ -1,12 +1,12 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.entities.auth.Role;
-import com.example.ecommerce.domain.entities.auth.User;
-import com.example.ecommerce.domain.entities.auth.Vendor;
-import com.example.ecommerce.domain.entities.product.Category;
-import com.example.ecommerce.domain.entities.product.Product;
-import com.example.ecommerce.domain.entities.product.ProductBrand;
+import com.example.ecommerce.domain.entities.Role;
+import com.example.ecommerce.domain.entities.User;
+import com.example.ecommerce.domain.entities.Vendor;
+import com.example.ecommerce.domain.entities.Category;
+import com.example.ecommerce.domain.entities.Product;
+import com.example.ecommerce.domain.entities.ProductBrand;
 import com.example.ecommerce.domain.entities.product.recommendation.ProductActionCache;
 import com.example.ecommerce.domain.entities.product.recommendation.ProductSimilarity;
 import com.example.ecommerce.domain.model.binding.ProductFilterRequest;
@@ -19,11 +19,8 @@ import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.handler.exception.GeneralException;
 import com.example.ecommerce.repository.*;
 import com.example.ecommerce.service.IProductService;
-import com.example.ecommerce.service.algorithm.Similarity;
 import com.example.ecommerce.service.algorithm.search.product.DataFilter;
-import com.example.ecommerce.service.algorithm.search.product.FactoryFilter;
 import com.example.ecommerce.service.algorithm.search.product.StrategyFilter;
-import com.example.ecommerce.service.algorithm.sort.ProductSortFactory;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -38,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.ecommerce.domain.entities.product.recommendation.TypeAction.CLICK_PRODUCT;
+import static com.example.ecommerce.service.algorithm.search.product.FactoryFilter.*;
+import static com.example.ecommerce.service.algorithm.sort.SortFactory.*;
 import static com.example.ecommerce.service.event.Event.EventType.PRODUCT_CREATE;
 import static com.example.ecommerce.service.event.Event.getInstance;
 import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
@@ -48,37 +47,30 @@ import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 public class ProductServiceImpl implements IProductService {
 
     private final ProductRepository productRepository;
-    private final ProductInventoryRepository productInventoryRepository;
-    private final ProductCacheRepository productCacheRepository;
     private final UserRepository userRepository;
-    private final ProductSimilarityRepository productSimilarityRepository;
 
     @Override
     public APIResponse<?> findById(Long id) {
-        User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("You aren't login"));
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new GeneralException(String.format("Product with id %s not found", id)));
-//        saveProductSimilarity(product, user);
-        return apiResponse("get product by id",  new ProductDetailsViewModel(product));
+                .orElseThrow(() -> new GeneralException(
+                        String.format("Product with id %s not found", id))
+                );
+        return apiResponse(
+                "get product by id",
+                new ProductDetailsViewModel(product));
     }
 
     @Override
     public APIResponse<?> save(ProductRequest request) {
         User user = userRepository.findByUsernameIgnoreCase(SecurityUtils.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("You aren't login"));
-
-        if(user.getRole() != Role.VENDOR) {
-            throw new GeneralException("your role didnt VENDOR");
-        }
         Product product = Product.builder()
                 .description(request.getDescription())
-                .combination(request.isCombination())
                 .nameEn(request.getNameEn())
                 .nameVn(request.getNameVn())
                 .productBrand(ProductBrand.builder().id(request.getBrandId()).build())
                 .category(Category.builder().id(request.getCategoryId()).build())
-                .vendor(Vendor.builder().id(user.getEntityType().getEntityId()).build())
+                .vendor((Vendor) user)
                 .slug(request.getSlug())
                 .build();
         Product saved = productRepository.save(product);
@@ -87,21 +79,6 @@ public class ProductServiceImpl implements IProductService {
         return apiResponse("created product", response);
     }
 
-    @Override
-    public APIListResponse<ProductGalleryModelView> productRecommendation(Long productId) {
-        ProductActionCache productActionCache = productCacheRepository
-                .findByProductIdAndUserUsername(productId, SecurityUtils.getUsername())
-                .orElseThrow(() -> new GeneralException("Not found cache product id: " + productId));
-        APIListResponse<ProductGalleryModelView> response = responseAPI(
-                null,
-                productActionCache.getProductSimilarities()
-                        .stream()
-                        .sorted((s1, s2) -> s2.getSimilarity().compareTo(s1.getSimilarity()))
-                        .map(pa -> pa.getProduct())
-                        .toList()
-        );
-        return response;
-    }
 
     @Override
     public APIListResponse<ProductGalleryModelView> productFilter(
@@ -109,23 +86,38 @@ public class ProductServiceImpl implements IProductService {
     ) {
         Specification<Product> specification = (root, query, criteriaBuilder) -> {
             final List<Predicate> predicates = new ArrayList<>();
+
             productFilterRequest.getData().entrySet().stream().forEach(entry -> {
-                StrategyFilter strategyFilter = FactoryFilter.getStrategyFilter(entry.getKey());
-                strategyFilter.setDataFilter(new DataFilter(criteriaBuilder, root, entry.getValue()));
+
+                StrategyFilter strategyFilter = getStrategyFilter(entry.getKey());
+                strategyFilter.setDataFilter(new DataFilter(
+                        criteriaBuilder, root, entry.getValue()
+                ));
                 Predicate condition = strategyFilter.filter();
                 predicates.add(condition);
             });
             Predicate predicate = null;
-            for (var pre : predicates) predicate = predicate != null ? criteriaBuilder.and(pre, predicate) : pre;
+            for (var pre : predicates)
+                predicate = predicate != null
+                        ? criteriaBuilder.and(pre, predicate) : pre;
             return predicate;
         };
-        PageRequest pageRequest = PageRequest.of(productFilterRequest.getPage() - 1, productFilterRequest.getLimit());
-        Page<Product> pageProducts = productRepository.findAll(specification, pageRequest);
-        List<Product> products = ProductSortFactory.getInstance(productFilterRequest.getSortType()).sort(pageProducts.getContent());
+        PageRequest pageRequest = PageRequest.of(
+                productFilterRequest.getPage() - 1,
+                productFilterRequest.getLimit()
+        );
+
+        Page<Product> pageProducts = productRepository.findAll(
+                specification,
+                pageRequest
+        );
+
+        List<Product> products = getSortStrategy(
+                productFilterRequest.getSortType()
+        ).sort(pageProducts.getContent());
         return responseAPI(pageProducts, products);
     }
 
-    //{end}////////////////////////////////////////////////////////////////////////////////
     private APIListResponse<ProductGalleryModelView> responseAPI(
             Page<Product> page,
             List<Product> products
@@ -138,6 +130,7 @@ public class ProductServiceImpl implements IProductService {
                 products.stream().map(ProductGalleryModelView::new).toList());
         return response;
     }
+
     private APIListResponse<ProductGalleryModelView> responseAPI(
             Page<Product> page
     ) {
@@ -148,40 +141,6 @@ public class ProductServiceImpl implements IProductService {
                 page != null ? page.getTotalPages() : -1,
                 page.getContent().stream().map(ProductGalleryModelView::new).toList());
         return response;
-    }
-
-
-    /**
-     * thread for saveProductActionCache
-     */
-    private void saveProductSimilarity(final Product product, final User user) {
-//        new Thread(() -> {
-        ProductActionCache productActionCache = productCacheRepository.save(
-                ProductActionCache.builder()
-                        .product(product)
-                        .typeAction(CLICK_PRODUCT)
-                        .user(user)
-                        .build()
-        );
-        List<Product> products = productRepository.findAllDifferentId(productActionCache.getProduct().getId());
-
-        products.stream().forEach((p) -> {
-            double similarity1 = Similarity.similarity(
-                    productActionCache.getProduct().getNameEn(),
-                    p.getNameEn()
-            );
-            double similarity2 = Similarity.similarity(
-                    productActionCache.getProduct().getNameVn(),
-                    p.getNameVn()
-            );
-            ProductSimilarity productSimilarity = ProductSimilarity.builder()
-                    .similarity((similarity2 + similarity1) / 2)
-                    .productActionCache(productActionCache)
-                    .product(p)
-                    .build();
-            productSimilarityRepository.save(productSimilarity);
-        });
-//        }).start();
     }
 }
 

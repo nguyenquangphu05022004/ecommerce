@@ -1,7 +1,7 @@
 package com.example.ecommerce.domain.model.modelviews.order;
 
-import com.example.ecommerce.domain.entities.order.Item;
-import com.example.ecommerce.domain.entities.order.LineItem;
+import com.example.ecommerce.domain.entities.Item;
+import com.example.ecommerce.domain.entities.LineItem;
 import com.example.ecommerce.domain.model.modelviews.profile.VendorUserProfileModelView;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

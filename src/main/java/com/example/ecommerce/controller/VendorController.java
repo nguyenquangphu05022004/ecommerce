@@ -15,11 +15,6 @@ import org.springframework.web.bind.annotation.*;
 public class VendorController {
     private final IVendorService vendorService;
 
-    @PostMapping
-    public APIResponse<?> createVendor(@RequestBody VendorRequest request) {
-        return vendorService.saveOrUpdate(request);
-    }
-
     @PutMapping("/follow/{vendorId}")
     public APIResponse<?> userFollowVendor(
             @PathVariable("vendorId") Long vendorId

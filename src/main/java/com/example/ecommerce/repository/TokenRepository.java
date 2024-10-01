@@ -1,9 +1,8 @@
 package com.example.ecommerce.repository;
 
-import com.example.ecommerce.domain.entities.auth.TokenType;
-import com.example.ecommerce.domain.entities.auth.Token;
+import com.example.ecommerce.domain.entities.TokenType;
+import com.example.ecommerce.domain.entities.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.List;
 import java.util.Optional;

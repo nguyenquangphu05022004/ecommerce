@@ -1,9 +1,9 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.common.utils.SystemUtils;
 import com.example.ecommerce.domain.entities.EntityType;
-import com.example.ecommerce.domain.entities.product.Product;
-import com.example.ecommerce.domain.entities.product.ProductInventory;
+import com.example.ecommerce.domain.entities.Product;
+import com.example.ecommerce.domain.entities.ProductAttributeMappingValue;
+import com.example.ecommerce.domain.entities.ProductInventory;
 import com.example.ecommerce.domain.model.binding.ProductInventoryFilterRequest;
 import com.example.ecommerce.domain.model.binding.ProductInventoryRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
@@ -28,27 +28,35 @@ import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 public class ProductInventoryServiceImpl implements IProductInventoryService {
     private final ProductInventoryRepository productInventoryRepository;
     private final IFilesStorageService filesStorageService;
+
     @Override
-    public APIResponse<ProductInventoryModelView> createProductInventory(ProductInventoryRequest request) {
-        String attr = null;
-        if(!CollectionUtils.isEmpty(request.getAttributes())) {
-            attr = request.getAttributes().entrySet()
-                    .stream()
-                    .map(entry -> entry.getKey() + ":" + entry.getValue())
-                    .collect(Collectors.joining(SystemUtils.SEPARATE));
-        }
+    public APIResponse<ProductInventoryModelView> createProductInventory(
+            ProductInventoryRequest request
+    ) {
+
         ProductInventory productInventory = ProductInventory.builder()
-                .product(Product.builder().id(request.getProductId()).build())
+                .productAttributeMappingValues(
+                        CollectionUtils.isEmpty(request.getAttrMapValueId())
+                                ? null : request.getAttrMapValueId()
+                                .stream()
+                                .map(s -> ProductAttributeMappingValue
+                                        .builder()
+                                        .id(s)
+                                        .build())
+                                .collect(Collectors.toList())
+                )
+                .product(Product.builder()
+                        .id(request.getProductId())
+                        .build())
                 .numberOfProductSold(0)
                 .skuCode(request.getSkuCode())
                 .quantity(request.getQuantity())
-                .attributeCombinationKey(attr)
                 .price(request.getPrice())
                 .build();
         productInventoryRepository.save(productInventory);
 
         try {
-            if(productInventory.getImages() == null) productInventory.setImages(new ArrayList<>());
+            if (productInventory.getImages() == null) productInventory.setImages(new ArrayList<>());
 
             productInventory.setImages(request.getFiles()
                     .stream()
@@ -64,14 +72,14 @@ public class ProductInventoryServiceImpl implements IProductInventoryService {
     @Override
     public APIResponse<ProductInventoryModelView> getProductInventory(ProductInventoryFilterRequest request) {
         ProductInventory inventory = productInventoryRepository
-                .findByProductIdAndAttributeCombinationKey(
+                .findByProductIdAndAttribute(
                         request.getProductId(),
-                        request.getAttributeCombinationKey())
-                .orElseThrow(() -> new GeneralException(
-                        String.format("Key %s of product %s not found",
-                                request.getAttributeCombinationKey(),
-                                request.getProductId())
-                ));
+                        request.getAttrMapValueId()
+                                .stream()
+                                .mapToLong(s -> s)
+                                .sum()
+                )
+                .orElseThrow(() -> new GeneralException("product inventory not found"));
         return apiResponse("filter productInventory", new ProductInventoryModelView(inventory));
     }
 
@@ -79,7 +87,7 @@ public class ProductInventoryServiceImpl implements IProductInventoryService {
     public void delete(Long inventoryId) {
         ProductInventory inventory = productInventoryRepository.findById(inventoryId)
                 .orElseThrow(() -> new ResourcesNotFoundException("Not found inventory with id: " + inventoryId));
-        if(inventory.getImages() != null) {
+        if (inventory.getImages() != null) {
             filesStorageService.deleteImage(inventory.getImages());
         }
         productInventoryRepository.delete(inventory);

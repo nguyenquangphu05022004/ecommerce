@@ -1,13 +1,12 @@
 package com.example.ecommerce.domain.model.modelviews.product;
 
-import com.example.ecommerce.common.utils.SystemUtils;
+import com.example.ecommerce.common.SystemUtils;
 import com.example.ecommerce.domain.entities.BaseEntity;
-import com.example.ecommerce.domain.entities.product.ProductInventory;
+import com.example.ecommerce.domain.entities.ProductInventory;
 import com.example.ecommerce.service.ImageMapper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

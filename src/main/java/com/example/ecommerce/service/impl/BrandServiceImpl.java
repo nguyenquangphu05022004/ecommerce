@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.domain.entities.product.ProductBrand;
+import com.example.ecommerce.domain.entities.ProductBrand;
 import com.example.ecommerce.domain.model.binding.BrandRequest;
 import com.example.ecommerce.domain.model.modelviews.product.BrandModelView;
 import com.example.ecommerce.domain.response.APIListResponse;
@@ -11,11 +11,8 @@ import com.example.ecommerce.service.IBrandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 
@@ -51,11 +48,5 @@ public class BrandServiceImpl implements IBrandService {
                         .toList()
         );
 
-    }
-
-    @Override
-    @Transactional
-    public void deleteByName(String name) {
-        brandRepository.deleteByName(name);
     }
 }

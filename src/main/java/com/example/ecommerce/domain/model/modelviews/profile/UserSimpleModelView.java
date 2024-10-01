@@ -2,7 +2,7 @@ package com.example.ecommerce.domain.model.modelviews.profile;
 
 import com.example.ecommerce.domain.entities.BaseEntity;
 import com.example.ecommerce.domain.entities.EntityType;
-import com.example.ecommerce.domain.entities.auth.User;
+import com.example.ecommerce.domain.entities.User;
 import com.example.ecommerce.service.ImageMapper;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;

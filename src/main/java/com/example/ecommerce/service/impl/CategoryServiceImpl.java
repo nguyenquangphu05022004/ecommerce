@@ -1,7 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.domain.entities.EntityType;
-import com.example.ecommerce.domain.entities.product.Category;
+import com.example.ecommerce.domain.entities.Category;
 import com.example.ecommerce.domain.model.binding.CategoryRequest;
 import com.example.ecommerce.domain.model.modelviews.product.CategoryModelView;
 import com.example.ecommerce.domain.response.APIListResponse;
