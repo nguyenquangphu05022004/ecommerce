@@ -6,6 +6,7 @@ import com.example.ecommerce.domain.entities.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 @SuperBuilder()
+@Setter
 public class Group extends BaseEntity {
     private String name;
 

@@ -26,11 +26,7 @@ public class OrderModelView extends BaseEntity {
         setId(o.getId());
         setCreatedBy(o.getCreatedBy());
         this.payment = o.getPayment();
-        this.stateName = o.getStateName();
         this.lineItems = mapToOrderViewModel(o.getLineItems());
-        this.orderStateMessages = o.getOrderStateMessages().stream()
-                .map(s -> s.getMessage())
-                .collect(Collectors.toList());;
     }
 
     private Set<LineItemModelView> mapToOrderViewModel(Set<LineItem> lineItems) {

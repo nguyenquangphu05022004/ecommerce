@@ -18,12 +18,18 @@ import java.util.Set;
 @Setter
 public class CustomerModelView extends UserModelView {
     private List<OrderModelView> orderModelViews;
-    private Address address;
+    private String address;
+    private String province;
+    private String district;
+    private String ward;
 
-    public CustomerModelView(User user, Customer customer) {
-        super(user);
+    public CustomerModelView(Customer customer) {
+        super(customer);
         this.orderModelViews = map(customer.getOrders());
         this.address = customer.getAddress();
+        this.province = customer.getProvince();
+        this.district = customer.getDistrict();
+        this.ward =customer.getWard();
     }
 
     private List<OrderModelView> map(Set<Order> orders) {

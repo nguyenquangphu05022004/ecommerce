@@ -21,7 +21,6 @@ public class UserSimpleModelView extends BaseEntity implements ImageMapper {
     private EntityType userType;
     public UserSimpleModelView(User user) {
         setId(user.getId());
-        this.userType = user.getEntityType();
         this.fullName = user.getFullName();
         this.urlsImage = getImageUrl(user.getImages());
     }

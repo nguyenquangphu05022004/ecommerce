@@ -1,15 +1,13 @@
 package com.example.ecommerce.domain.model.modelviews.cart;
 
-import com.example.ecommerce.common.SystemUtils;
 import com.example.ecommerce.domain.entities.ProductInventory;
+import com.example.ecommerce.domain.model.modelviews.product.ProductInventoryModelView;
 import com.example.ecommerce.domain.model.modelviews.product.ProductModelView;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -19,16 +17,13 @@ public class ItemCartModelView {
     private String attribute;
     private int quantity;
     private LocalDateTime createdAt;
+
     public ItemCartModelView(ProductInventory inventory, int quantity) {
         this.product = new ProductModelView(inventory.getProduct());
-        this.attribute = extractAttribute(inventory.getAttributeCombinationKey());
+        this.attribute = ProductInventoryModelView.extractAttribute(
+                inventory.getProductAttributeMappingValues()
+        );
         this.quantity = quantity;
         this.createdAt = LocalDateTime.now();
-    }
-
-    private String extractAttribute(String attributeCombinationKey) {
-        return Arrays.stream(attributeCombinationKey.split(SystemUtils.SEPARATE))
-                .map(pair -> pair.split(":")[1])
-                .collect(Collectors.joining(", "));
     }
 }

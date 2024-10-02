@@ -30,9 +30,6 @@ import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;
 public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final IFilesStorageService filesStorageService;
-    private final TokenRepository tokenRepository;
-    private final IEvaluationService evaluationService;
-
     @Override
     @Transactional
     public APIResponse<UserModelView> uploadImage(MultipartFile multipartFile) {
@@ -100,9 +97,5 @@ public class UserServiceImpl implements IUserService {
         }
         userRepository.save(vendor);
     }
-    /**
-     * End
-     * Follow Action
-     */
 
 }

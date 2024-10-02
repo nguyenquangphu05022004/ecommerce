@@ -1,6 +1,5 @@
 package com.example.ecommerce.service.timer.job;
 
-import com.example.ecommerce.domain.entities.EntityType;
 import com.example.ecommerce.domain.entities.Notification;
 import com.example.ecommerce.domain.entities.User;
 import com.example.ecommerce.repository.NotificationRepository;
@@ -15,7 +14,6 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.ecommerce.domain.entities.EntityType.Type.USER;
 import static com.example.ecommerce.service.event.listener.NotificationActionType.HAPPY_BIRTHDAY;
 
 
@@ -36,7 +34,6 @@ public class NotificationBirthDayJob implements Job {
                         birthOfDate.getDayOfMonth() == LocalDateTime.now().getDayOfMonth() &&
                         birthOfDate.getMonthValue() == LocalDateTime.now().getMonthValue()) {
                     Notification notification = Notification.builder()
-                            .entityType(EntityType.builder().entityId(user.getId()).entityType(USER).build())
                             .notificationActionType(HAPPY_BIRTHDAY)
                             .message("Today is your birthday, Happy Birthday")
                             .build();

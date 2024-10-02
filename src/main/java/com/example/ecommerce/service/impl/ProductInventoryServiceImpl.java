@@ -71,16 +71,16 @@ public class ProductInventoryServiceImpl implements IProductInventoryService {
 
     @Override
     public APIResponse<ProductInventoryModelView> getProductInventory(ProductInventoryFilterRequest request) {
-        ProductInventory inventory = productInventoryRepository
-                .findByProductIdAndAttribute(
-                        request.getProductId(),
-                        request.getAttrMapValueId()
-                                .stream()
-                                .mapToLong(s -> s)
-                                .sum()
-                )
-                .orElseThrow(() -> new GeneralException("product inventory not found"));
-        return apiResponse("filter productInventory", new ProductInventoryModelView(inventory));
+//        ProductInventory inventory = productInventoryRepository
+//                .findByProductIdAndAttribute(
+//                        request.getProductId(),
+//                        request.getAttrMapValueId()
+//                                .stream()
+//                                .mapToLong(s -> s)
+//                                .sum()
+//                )
+//                .orElseThrow(() -> new GeneralException("product inventory not found"));
+        return apiResponse("filter productInventory", new ProductInventoryModelView(null));
     }
 
     @Override

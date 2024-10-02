@@ -14,6 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -33,16 +35,11 @@ class BrandControllerTest {
     @Value("${api.version}")
     private String apiVersion;
     @Autowired
-    private IBrandService brandService;
-    @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     private AuthenResponse authenResponse;
-    @Autowired
-    private IUserService userService;
-    @Autowired
-    private JwtService jwtService;
+
     private List<BrandRequest> brandRequests;
     @BeforeEach
     void init() throws Exception {
@@ -64,10 +61,6 @@ class BrandControllerTest {
     @AfterEach
     void destroy() {
 
-        userService.delete(this.jwtService.extractUsername(this.authenResponse.getToken()));
-        brandRequests.forEach(b -> {
-            brandService.deleteByName(b.getName());
-        });
     }
 
     @Test

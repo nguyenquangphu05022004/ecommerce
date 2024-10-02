@@ -39,7 +39,6 @@ class ShoppingCartControllerTest {
     @Autowired private UserRepository userRepository;
     @Autowired private ProductRepository productRepository;
     @Autowired private VendorRepository vendorRepository;
-    @Autowired private TokenRepository tokenRepository;
     @Autowired private MockMvc mockMvc;
     @Autowired private PasswordEncoder encoder;
     @Autowired private ProductInventoryRepository productInventoryRepository;
@@ -52,24 +51,23 @@ class ShoppingCartControllerTest {
         vendorRepository.save(vendor);
         User user = User.builder().username("test2004").password(encoder.encode("test2004")).role(Role.VENDOR).fullName("test").build();
         userRepository.save(user);
-        Product product = Product.builder().productBrand(ProductBrand.builder().id(1l).build()).category(Category.builder().id(2l).build()).description("hello world").combination(false).nameVn("but bi thang long").nameEn("but bi thang long").slug("but-bi-thang-long").vendor(vendor).build();
+        Product product = Product.builder()
+                .productBrand(ProductBrand.builder().id(1l).build())
+                .category(Category.builder().id(2l).build())
+                .description("hello world")
+                .nameVn("but bi thang long")
+                .nameEn("but bi thang long")
+                .slug("but-bi-thang-long")
+                .vendor(vendor).build();
         productRepository.save(product);
-        ProductInventory in1 = ProductInventory.builder().product(product).skuCode("pen-red").quantity(3).attributeCombinationKey("Color:Red").numberOfProductSold(0).build();
-        ProductInventory in2 = ProductInventory.builder().product(product).skuCode("pen-black").quantity(2).attributeCombinationKey("Color:Black").numberOfProductSold(0).build();
-        ProductInventory in3 = ProductInventory.builder().product(product).skuCode("pen-blue").quantity(4).attributeCombinationKey("Color:Blue").numberOfProductSold(0).build();
-        productInventoryRepository.save(in1);
-        productInventoryRepository.save(in2);
-        productInventoryRepository.save(in3);
+//        ProductInventory in1 = ProductInventory.builder().product(product).skuCode("pen-red").quantity(3).attributeCombinationKey("Color:Red").numberOfProductSold(0).build();
+//        ProductInventory in2 = ProductInventory.builder().product(product).skuCode("pen-black").quantity(2).attributeCombinationKey("Color:Black").numberOfProductSold(0).build();
+//        ProductInventory in3 = ProductInventory.builder().product(product).skuCode("pen-blue").quantity(4).attributeCombinationKey("Color:Blue").numberOfProductSold(0).build();
+//        productInventoryRepository.save(in1);
+//        productInventoryRepository.save(in2);
+//        productInventoryRepository.save(in3);
         this.authenResponse = objectMapper.readValue(mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/login").contentType("application/json").content(objectMapper.writeValueAsString(new AuthenRequest("test2004", "test2004")))).andReturn().getResponse().getContentAsString(), AuthenResponse.class);
 
-    }
-    @AfterEach
-    public void destroy() {
-        tokenRepository.deleteAll();
-        productInventoryRepository.deleteAll();
-        productRepository.deleteAll();
-        vendorRepository.deleteAll();
-        userRepository.deleteAll();
     }
 
     @Test

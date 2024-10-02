@@ -1,14 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.entities.Role;
-import com.example.ecommerce.domain.entities.User;
-import com.example.ecommerce.domain.entities.Vendor;
-import com.example.ecommerce.domain.entities.Category;
-import com.example.ecommerce.domain.entities.Product;
-import com.example.ecommerce.domain.entities.ProductBrand;
-import com.example.ecommerce.domain.entities.product.recommendation.ProductActionCache;
-import com.example.ecommerce.domain.entities.product.recommendation.ProductSimilarity;
+import com.example.ecommerce.domain.entities.*;
 import com.example.ecommerce.domain.model.binding.ProductFilterRequest;
 import com.example.ecommerce.domain.model.binding.ProductRequest;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
@@ -17,7 +10,8 @@ import com.example.ecommerce.domain.model.modelviews.product.ProductModelView;
 import com.example.ecommerce.domain.response.APIListResponse;
 import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.handler.exception.GeneralException;
-import com.example.ecommerce.repository.*;
+import com.example.ecommerce.repository.ProductRepository;
+import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.IProductService;
 import com.example.ecommerce.service.algorithm.search.product.DataFilter;
 import com.example.ecommerce.service.algorithm.search.product.StrategyFilter;
@@ -34,9 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.ecommerce.domain.entities.product.recommendation.TypeAction.CLICK_PRODUCT;
-import static com.example.ecommerce.service.algorithm.search.product.FactoryFilter.*;
-import static com.example.ecommerce.service.algorithm.sort.SortFactory.*;
+import static com.example.ecommerce.service.algorithm.search.product.FactoryFilter.getStrategyFilter;
+import static com.example.ecommerce.service.algorithm.sort.SortFactory.getSortStrategy;
 import static com.example.ecommerce.service.event.Event.EventType.PRODUCT_CREATE;
 import static com.example.ecommerce.service.event.Event.getInstance;
 import static com.example.ecommerce.service.impl.VendorServiceImpl.apiResponse;

@@ -16,15 +16,21 @@ import com.example.ecommerce.service.IUserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -38,21 +44,19 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class AuthControllerTest {
 
     @Value("${api.version}")
     private String apiVersion;
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private IUserService userService;
-    @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
     private TokenRepository tokenRepository;
+    @Autowired
+    private ObjectMapper objectMapper;
     @Autowired
     private PasswordEncoder encoder;
     private AuthenRequest authenRequest;
@@ -60,9 +64,6 @@ class AuthControllerTest {
     private RegisterRequest registerRequest;
     @BeforeEach
     void setUp() {
-        /**
-         * Init register account
-         */
         this.registerRequest = new RegisterRequest();
         this.registerRequest.setUsername("test@gmail.com");
         this.registerRequest.setFullName("nguyen van test");
@@ -79,18 +80,11 @@ class AuthControllerTest {
 
     }
 
-
     @AfterEach
-    @Transactional
-    void destroy() {
-        try {
-            userService.delete(this.registerRequest.getUsername());
-        } catch (Exception e) {
-
-        }
+    public void destroy() {
+        tokenRepository.deleteAll();
+        userRepository.deleteAll();
     }
-
-
     @Test
     void authenticate() throws Exception {
         register_account_success();

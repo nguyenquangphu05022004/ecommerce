@@ -20,6 +20,7 @@ public class ProductDetailsViewModel extends ProductGalleryModelView {
     private Map<String, List<String>> attributeMaps;
     private Map<Long, List<String>> inventoryUrlsImage;
     private VendorModelView vendor;
+
     public ProductDetailsViewModel(final Product product) {
         super(product);
         this.evaluations = mapToEvalDetails(product.getEvaluations());
@@ -28,20 +29,20 @@ public class ProductDetailsViewModel extends ProductGalleryModelView {
         vendor = new VendorModelView(product.getVendor());
     }
 
-    public  Map<Long, List<String>> extractUrlImages(Product product) {
-        if(!CollectionUtils.isEmpty(product.getProductInventories())) {
+    private Map<Long, List<String>> extractUrlImages(Product product) {
+        if (!CollectionUtils.isEmpty(product.getProductInventories())) {
             Map<Long, List<String>> inventoryUrls = new HashMap<>();
-             product.getProductInventories().stream()
+            product.getProductInventories().stream()
                     .forEach(s -> {
                         inventoryUrls.put(s.getId(), getImageUrl(s.getImages()));
                     });
-             return inventoryUrls;
+            return inventoryUrls;
         }
         return null;
     }
 
     private List<EvaluationDetailsModelView> mapToEvalDetails(List<Evaluation> evaluations) {
-        if(CollectionUtils.isEmpty(evaluations)) return Collections.emptyList();
+        if (CollectionUtils.isEmpty(evaluations)) return Collections.emptyList();
         return evaluations.stream()
                 .map(EvaluationDetailsModelView::new)
                 .toList();
@@ -49,23 +50,29 @@ public class ProductDetailsViewModel extends ProductGalleryModelView {
 
     private Map<String, List<String>> extractAttributeKey(
             List<ProductInventory> productInventory) {
-        if(CollectionUtils.isEmpty(productInventory)) {
+        if (CollectionUtils.isEmpty(productInventory)) {
             return Collections.emptyMap();
         }
         Map<String, List<String>> entries = new HashMap<>();
         productInventory.stream().forEach(proInventory -> {
-            String attributeCombinationKey = proInventory.getAttributeCombinationKey();
-            var pairKeys = attributeCombinationKey.split(SystemUtils.SEPARATE);
-            Arrays.stream(pairKeys).forEach(pair -> {
-                String pairs[] = pair.split(":");
-                if(entries.containsKey(pairs[0])) {
-                    entries.get(pairs[0]).add(pairs[1]);
-                } else {
-                    entries.put(pairs[0], Arrays.asList(pairs[1]));
-                }
-            });
+            proInventory.getProductAttributeMappingValues()
+                    .forEach(attr -> {
+                        if (entries
+                                .containsKey(attr
+                                        .getProductAttribute()
+                                        .getName())) {
+                            entries
+                                    .get(attr.getProductAttribute().getName())
+                                    .add(attr.getValue());
+                        } else {
+                            entries.put(
+                                    attr.getProductAttribute().getName(),
+                                    new ArrayList<>(List.of(attr.getValue()))
+                            );
+                        }
+                    });
         });
-
         return entries;
     }
+
 }

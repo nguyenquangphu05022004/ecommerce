@@ -44,14 +44,8 @@ class MessageControllerTest {
     private ObjectMapper objectMapper;
     private AuthenResponse authen1;
     private List<AuthenResponse> authenResponses;
-    @Autowired
-    private MessageRepository messageRepository;
     @Value("${api.version}")
     private String apiVersion;
-    @Autowired
-    private IUserService userService;
-    @Autowired
-    private JwtService jwtService;
     private List<MessageModelView> messageModelViews = new ArrayList<>();
     private List<MessageRequest> messageRequests = new ArrayList<>();
 
@@ -100,16 +94,6 @@ class MessageControllerTest {
         messageRequests.add(m4);
     }
 
-    @AfterEach
-    void tearDown() {
-        this.groupRepository.delete(this.group);
-        this.messageModelViews.forEach(s -> {
-            this.messageRepository.deleteById(s.getId());
-        });
-        this.authenResponses.forEach(s -> {
-            this.userService.delete(jwtService.extractUsername(s.getToken()));
-        });
-    }
 
     @Test
     void createMessage() throws Exception {

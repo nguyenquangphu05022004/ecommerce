@@ -7,11 +7,9 @@ import org.springframework.security.core.parameters.P;
 import java.util.Optional;
 
 public interface ProductInventoryRepository extends JpaRepository<ProductInventory, Long> {
-    Optional<ProductInventory> findByProductIdAndAttributeCombinationKey(Long productId,
-                                                                         String attributeCombinationKey);
 
-    Optional<ProductInventory> findByProductIdAndAttribute(
-            Long productId,
-            Long totalAttrMapValueId
-    );
+//    Optional<ProductInventory> findByProductIdAndAttribute(
+//            Long productId,
+//            Long totalAttrMapValueId
+//    );
 }

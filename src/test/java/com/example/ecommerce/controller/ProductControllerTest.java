@@ -1,15 +1,6 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.config.jwt.JwtService;
-import com.example.ecommerce.domain.entities.EntityType;
-import com.example.ecommerce.domain.entities.Role;
-import com.example.ecommerce.domain.entities.User;
-import com.example.ecommerce.domain.entities.Vendor;
-import com.example.ecommerce.domain.entities.Payment;
-import com.example.ecommerce.domain.entities.order.states.ProcessingState;
-import com.example.ecommerce.domain.entities.order.states.ShippedState;
-import com.example.ecommerce.domain.entities.Category;
-import com.example.ecommerce.domain.entities.ProductBrand;
+import com.example.ecommerce.domain.entities.*;
 import com.example.ecommerce.domain.model.binding.*;
 import com.example.ecommerce.domain.model.modelviews.order.OrderModelView;
 import com.example.ecommerce.domain.model.modelviews.product.ProductDetailsViewModel;
@@ -19,15 +10,15 @@ import com.example.ecommerce.domain.model.modelviews.product.ProductModelView;
 import com.example.ecommerce.domain.response.APIListResponse;
 import com.example.ecommerce.domain.response.APIResponse;
 import com.example.ecommerce.domain.response.AuthenResponse;
-import com.example.ecommerce.repository.*;
-import com.example.ecommerce.service.IProductInventoryService;
-import com.example.ecommerce.service.IUserService;
+import com.example.ecommerce.repository.BrandRepository;
+import com.example.ecommerce.repository.CategoryRepository;
+import com.example.ecommerce.repository.UserRepository;
+import com.example.ecommerce.repository.VendorRepository;
 import com.example.ecommerce.service.algorithm.search.product.CateParentFilter;
 import com.example.ecommerce.service.algorithm.search.product.PriceFilter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,16 +36,12 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.example.ecommerce.domain.entities.EntityType.Type.VENDOR;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 class ProductControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private IUserService userService;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -65,12 +52,10 @@ class ProductControllerTest {
     @Value("${api.version}")
     private String apiVersion;
     private RegisterRequest registerRequest;
-    @Autowired
-    private OrderRepository orderRepository;
+
     private List<OrderModelView> orderModelViews = new ArrayList<>();
     private Vendor vendor;
-    @Autowired
-    private ProductRepository productRepository;
+
     private List<ProductRequest> productRequests = new ArrayList<>();
     private List<ProductInventoryModelView> productInventoryModelViews = new ArrayList<>();
     @Autowired
@@ -81,14 +66,9 @@ class ProductControllerTest {
     private PasswordEncoder encoder;
     private List<ProductModelView> productModelViews = new ArrayList<>();
     private AuthenResponse userAuthen;
-    private ProductAttributeMappingValueRepository productAttributeMappingValueRepository;
     private List<ProductInventoryRequest> productInventoryRequests = new ArrayList<>();
     private List<Category> categories = new ArrayList<>();
     private List<ProductBrand> brands = new ArrayList<>();
-    @Autowired
-    private IProductInventoryService productInventoryService;
-    @Autowired
-    private JwtService jwtService;
 
     @BeforeEach
     void setup() throws Exception {
@@ -108,7 +88,6 @@ class ProductControllerTest {
         registerRequest.setPassword("test_vendor");
         registerRequest.setFullName("test nguyen");
         User user = User.builder()
-                .entityType(new EntityType(VENDOR, vendor.getId()))
                 .username(registerRequest.getUsername())
                 .password(encoder.encode(registerRequest.getPassword()))
                 .fullName(registerRequest.getFullName())
@@ -177,34 +156,6 @@ class ProductControllerTest {
         categoryRepository.save(category);
         return category;
     }
-
-    @AfterEach
-    public void destroy() {
-        if (orderModelViews != null) {
-            orderModelViews.forEach(s -> {
-                orderRepository.deleteById(s.getId());
-            });
-        }
-        if (productInventoryModelViews != null) {
-            productInventoryModelViews.forEach(s -> {
-                productInventoryService.delete(s.getId());
-            });
-        }
-        if (productModelViews != null) {
-            productModelViews.forEach(s -> {
-                productRepository.deleteById(s.getId());
-            });
-        }
-        brands.forEach(s -> {
-            brandRepository.delete(s);
-        });
-        categories.forEach(s -> {
-            categoryRepository.delete(s);
-        });
-        userService.delete(this.registerRequest.getUsername());
-        userService.delete(jwtService.extractUsername(this.userAuthen.getToken()));
-    }
-
     @Test
     void createProduct() throws Exception {
         httpCreateProduct(this.productRequests.get(0));
@@ -255,7 +206,6 @@ class ProductControllerTest {
         Map<String, String> attributeMap = new HashMap<>();
         attributeMap.put("Color", "Red");
         attributeMap.put("Size", "XL");
-        request.setAttributes(attributeMap);
         request.setPrice(price);
         request.setQuantity(2000);
         request.setSkuCode("LIVER-XL-RED");
@@ -352,7 +302,7 @@ class ProductControllerTest {
     void test_create_order() throws Exception {
         this.create_product_inventory();
         OrderRequest orderRequest = new OrderRequest();
-        orderRequest.setPayment(Payment.PAY_AT_HOME);
+        orderRequest.setPayment(Payment.AT_HOME);
         Set<LineItemRequest> lineItemRequests = new HashSet<>();
         LineItemRequest lineItemRequest = new LineItemRequest();
         lineItemRequest.setCouponId(null);
@@ -382,21 +332,10 @@ class ProductControllerTest {
         this.orderModelViews.add(orderModelView);
     }
 
-    @Test
-    void test_update_status_order() throws Exception {
-        this.test_create_order();
-        this.mockMvc.perform(MockMvcRequestBuilders.put(
-                                apiVersion + "/orders/" + this.orderModelViews.get(0).getId()
-                        ).header("Authorization", "Bearer " + this.userAuthen.getToken())
-                        .param("isNext", String.valueOf(true)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
-                        .value("state was updated to " + ShippedState.class.getSimpleName()));
-    }
 
     @Test
     void test_get_orders() throws Exception {
         FilterOrderRequest filterOrderRequest = new FilterOrderRequest();
-        filterOrderRequest.setOrderStateName(ProcessingState.class.getSimpleName());
         this.test_create_order();
         String contentAsString = this.mockMvc.perform(MockMvcRequestBuilders.get(
                                 apiVersion + "/orders"

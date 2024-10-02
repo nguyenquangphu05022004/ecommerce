@@ -37,14 +37,8 @@ class CategoryControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private ICategoryService categoryService;
-    @Autowired
-    private IUserService userService;
     @Value("${api.version}")
     private String apiVersion;
-    @Autowired
-    private JwtService jwtService;
 
     @BeforeEach
     void init() throws Exception {
@@ -62,12 +56,7 @@ class CategoryControllerTest {
         categoryChildRequest.setSlug("t-shirt");
     }
 
-    @AfterEach
-    void destroy() {
-        userService.delete(jwtService.extractUsername(authenResponse.getToken()));
-        categoryService.deleteByName(this.categoryChildRequest.getName());
-        categoryService.deleteByName(this.categoryRequest.getName());
-    }
+
 
     @Test
     void create_category() throws Exception {
