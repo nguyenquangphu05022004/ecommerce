@@ -1,6 +1,6 @@
 package com.example.ecommerce.service.timer.job;
 
-import com.example.ecommerce.domain.entities.Notification;
+import com.example.ecommerce.domain.notification.Notification;
 import com.example.ecommerce.domain.entities.User;
 import com.example.ecommerce.repository.NotificationRepository;
 import com.example.ecommerce.repository.UserRepository;

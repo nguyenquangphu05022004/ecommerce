@@ -1,7 +1,7 @@
 package com.example.ecommerce.service.event.listener;
 
 import com.example.ecommerce.config.SecurityUtils;
-import com.example.ecommerce.domain.entities.Notification;
+import com.example.ecommerce.domain.notification.Notification;
 import com.example.ecommerce.domain.model.binding.EmailDetails;
 import com.example.ecommerce.service.event.Event;
 

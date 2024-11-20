@@ -1,7 +1,6 @@
 package com.example.ecommerce.service.event.listener;
 
-import com.example.ecommerce.domain.entities.EntityType;
-import com.example.ecommerce.domain.entities.Notification;
+import com.example.ecommerce.domain.notification.Notification;
 import com.example.ecommerce.domain.entities.Product;
 import com.example.ecommerce.domain.entities.ProductInventory;
 import com.example.ecommerce.service.event.Observer;
@@ -11,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-
-import static com.example.ecommerce.domain.entities.EntityType.Type.*;
 
 @Component
 @Slf4j

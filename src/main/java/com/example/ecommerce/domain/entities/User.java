@@ -1,5 +1,6 @@
 package com.example.ecommerce.domain.entities;
 
+import com.example.ecommerce.domain.notification.Notification;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ import java.util.*;
 @SuperBuilder(toBuilder = true)
 @DiscriminatorColumn(name = "type")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User extends BaseEntity implements UserDetails {
+public class User extends UserSetting implements UserDetails {
 
     private String fullName;
     private String username; //email
@@ -41,8 +42,6 @@ public class User extends BaseEntity implements UserDetails {
 
     @ManyToMany(mappedBy = "usersFavorite")
     private Set<Vendor> vendors;
-
-    private boolean isOnline;
 
 
     @Override
