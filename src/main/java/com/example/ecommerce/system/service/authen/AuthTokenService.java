@@ -1,0 +1,12 @@
+package com.example.ecommerce.system.service.authen;
+
+import com.example.ecommerce.system.dal.dataobject.auth.AccessToken;
+import jakarta.persistence.Access;
+
+public interface AuthTokenService {
+
+    AccessToken createAccessToken(Long userId);
+    AccessToken getByAccessToken(String accessToken);
+    void deleteByAccessToken(String accessToken);
+    AccessToken refreshAccessToken(String freshToken);
+}

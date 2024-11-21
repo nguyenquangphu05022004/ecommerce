@@ -1,0 +1,7 @@
+package com.example.ecommerce.common.string;
+
+public class StringUtils {
+    public static boolean compareIgnoreCase(String s1, String s2) {
+        return s1.toLowerCase().compareTo(s2.toLowerCase()) == 0;
+    }
+}
