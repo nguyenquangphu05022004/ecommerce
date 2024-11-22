@@ -1,20 +1,38 @@
 package com.example.ecommerce.system.dal.dataobject.user;
 
-import com.example.ecommerce.domain.entities.BaseEntity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import lombok.Data;
+import com.example.ecommerce.frame.auditting.BaseEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
-@Data
+@Entity
+@Table(name = "sys_user_member")
+@Getter
+@Setter
+@SuperBuilder(toBuilder = true)
+@NoArgsConstructor
 public class UserMember extends BaseEntity {
     private String username;
     private String password;
     private boolean isOnline;
-
+    private String avatar;
     private String firstName;
     private String lastName;
-
-    @ManyToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
+    private String email;
+    private String phoneNumber;
+    @Enumerated(EnumType.STRING)
+    private Sex sex;
+    private boolean locked;
+    public static enum Sex {
+        FEMALE,
+        MALE
+    }
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

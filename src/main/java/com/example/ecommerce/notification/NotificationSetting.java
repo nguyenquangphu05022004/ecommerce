@@ -1,16 +1,20 @@
 package com.example.ecommerce.notification;
 
 
-import com.example.ecommerce.domain.entities.User;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.JoinColumn;
+import com.example.ecommerce.frame.auditting.BaseEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Setting notification of user
  */
 @Data
-public class NotificationSetting {
+@Table(name = "notification_notification_setting")
+@Entity
+@NoArgsConstructor
+public class NotificationSetting extends BaseEntity {
     /**
      * @link: User#getId()
      */

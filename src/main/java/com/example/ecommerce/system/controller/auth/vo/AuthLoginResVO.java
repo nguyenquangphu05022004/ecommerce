@@ -15,8 +15,8 @@ public class AuthLoginResVO {
 
 
     public AuthLoginResVO(AccessToken accessToken) {
-        this.userId = accessToken.getUser().getId();
-        this.fullName = accessToken.getUser().getFullName();
+        this.userId = accessToken.getUserMember().getId();
+        this.fullName = accessToken.getUserMember().getFullName();
         this.accessToken = accessToken.getAccessToken();
         this.refreshToken = accessToken.getRefreshToken();
         this.expires = accessToken.getExpires();

@@ -6,7 +6,6 @@ import jakarta.persistence.Access;
 public interface AuthTokenService {
 
     AccessToken createAccessToken(Long userId);
-    AccessToken getByAccessToken(String accessToken);
     void deleteByAccessToken(String accessToken);
     AccessToken refreshAccessToken(String freshToken);
 }

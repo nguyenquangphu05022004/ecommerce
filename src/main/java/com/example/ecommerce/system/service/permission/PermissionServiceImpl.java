@@ -4,15 +4,17 @@ import com.example.ecommerce.system.dal.dataobject.permission.MenuRole;
 import com.example.ecommerce.system.dal.dataobject.permission.Role;
 import com.example.ecommerce.system.enums.RoleType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Set;
 
-import static com.example.ecommerce.common.collection.CollUtils.convertList;
-import static com.example.ecommerce.common.string.StringUtils.compareIgnoreCase;
+import static com.example.ecommerce.frame.common.collection.CollUtils.convertList;
+import static com.example.ecommerce.frame.common.string.StringUtils.compareIgnoreCase;
 
 @RequiredArgsConstructor
+@Service
 public class PermissionServiceImpl implements PermissionService{
 
     private final RoleService roleService;

@@ -1,5 +1,6 @@
 package com.example.ecommerce.notification;
 
+import com.example.ecommerce.frame.auditting.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -12,9 +13,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Table(name = "notification_app_notifications")
-public class AppNotificationDetails {
-    @Id
-    private Long id;
+public class AppNotificationDetails extends BaseEntity {
+
     private Long fromUserId;
     private Long toUserId;
     private String message;

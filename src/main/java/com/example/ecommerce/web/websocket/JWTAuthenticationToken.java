@@ -1,6 +1,6 @@
 package com.example.ecommerce.web.websocket;
 
-import com.example.ecommerce.domain.entities.User;
+import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -8,11 +8,11 @@ import java.util.Collection;
 
 public class JWTAuthenticationToken extends AbstractAuthenticationToken  {
     private String token;
-    private User principle;
+    private UserMember principle;
 
     public JWTAuthenticationToken(Collection<? extends GrantedAuthority> authorities,
                                   String token,
-                                  User principle) {
+                                  UserMember principle) {
         super(authorities);
         this.token = token;
         this.principle = principle;
