@@ -14,5 +14,4 @@ public @interface OperationLog{
     boolean logResults() default false;
     boolean logArgs() default true;
     OperationType operationType() default OperationType.OTHER;
-    String describe();
 }

@@ -57,7 +57,7 @@ public class UserMemberController {
     @PutMapping
     @Operation(summary = "Update status account user")
     @PreAuthorize("@ss.hasPermission('sys:user:update-status-account')")
-    @OperationLog(describe = "Update status account user")
+    @OperationLog
     public CommonResult<Boolean> updateStatusAccountUser(@PathVariable("userId") Long userId,
                                             @RequestParam("locked") boolean locked) {
         this.userMemberService.updateStatusAccount(userId, locked);
