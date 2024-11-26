@@ -6,7 +6,7 @@ import com.example.ecommerce.system.dal.dataobject.auth.AccessToken;
 import com.example.ecommerce.system.dal.dataobject.auth.RefreshToken;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.system.dal.redis.dao.RedisAuthTokenDao;
-import com.example.ecommerce.system.dal.repository.UserMemberRepository;
+import com.example.ecommerce.system.dal.repository.user.UserMemberRepository;
 import com.example.ecommerce.system.dal.repository.auth.AccessTokenRepository;
 import com.example.ecommerce.system.dal.repository.auth.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;

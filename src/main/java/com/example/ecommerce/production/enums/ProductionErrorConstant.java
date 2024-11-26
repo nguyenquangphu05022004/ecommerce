@@ -15,4 +15,13 @@ public interface ProductionErrorConstant {
      *------------------Product Category----------------
      */
     ErrorCode CATEGORY_NOT_FOUND = new ErrorCode("ProductCategory not found", NOT_FOUND.value());
+    /**
+     * ------Product sku
+     */
+    ErrorCode PRODUCT_SKU_NOT_FOUND  = new ErrorCode("ProductSku not found", NOT_FOUND.value());
+    ErrorCode PRODUCT_SKU_PROPERTY_NOT_FOUND = new ErrorCode("ProductSkuProperty not found", NOT_FOUND.value());
+    /**
+     * ------Product spu
+     */
+    ErrorCode PRODUCT_SPU_NOT_FOUND =new ErrorCode("ProductSpu not found", NOT_FOUND.value());
 }

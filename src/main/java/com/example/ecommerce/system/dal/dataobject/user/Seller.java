@@ -1,13 +1,30 @@
 package com.example.ecommerce.system.dal.dataobject.user;
 
+import com.example.ecommerce.frame.auditting.BaseEntity;
+import com.example.ecommerce.production.dal.dataobject.spu.ProductSpu;
+import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 import java.util.List;
 
-public class Seller extends UserMember{
+
+@Entity
+@Table(name = "user_seller")
+@NoArgsConstructor
+@SuperBuilder
+public class Seller extends BaseEntity {
+
+    @OneToOne
+    @JoinColumn(name = "user_member_id")
+    private UserMember userMember;
 
     private String nameRepresentative;
+
     /**
-     * ProductSku#getId()
+     * List product is sold by seller;
      */
-    private List<Long> productSkuIds;
+    @OneToMany(mappedBy = "seller")
+    private List<ProductSpu> productSpus;
 
 }

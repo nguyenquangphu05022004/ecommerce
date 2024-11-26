@@ -1,4 +1,4 @@
-package com.example.ecommerce.system.dal.repository;
+package com.example.ecommerce.system.dal.repository.user;
 
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import org.springframework.data.jpa.repository.JpaRepository;

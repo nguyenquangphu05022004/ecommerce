@@ -4,7 +4,7 @@ import com.example.ecommerce.system.controller.user.vo.UserMemberCreateReqVO;
 import com.example.ecommerce.system.controller.user.vo.UserMemberUpdatePasswordReqVO;
 import com.example.ecommerce.system.controller.user.vo.UserMemberUpdateReqVO;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
-import com.example.ecommerce.system.dal.repository.UserMemberRepository;
+import com.example.ecommerce.system.dal.repository.user.UserMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
