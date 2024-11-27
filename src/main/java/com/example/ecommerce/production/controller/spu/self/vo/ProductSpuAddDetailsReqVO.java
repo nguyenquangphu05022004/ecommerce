@@ -1,4 +1,4 @@
-package com.example.ecommerce.production.controller.spu.vo;
+package com.example.ecommerce.production.controller.spu.self.vo;
 
 public class ProductSpuAddDetailsReqVO {
     private Long productSpuId;

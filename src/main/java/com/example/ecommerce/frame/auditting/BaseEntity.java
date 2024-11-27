@@ -26,7 +26,7 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @CreatedBy
-    private String createdBy;
+    private Long createdBy;
     @LastModifiedBy
     private String modifiedBy;
     @CreatedDate
@@ -34,7 +34,7 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
-    public BaseEntity(Long id, String createdBy, String modifiedBy, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public BaseEntity(Long id, Long createdBy, String modifiedBy, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.createdBy = createdBy;
         this.modifiedBy = modifiedBy;

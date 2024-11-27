@@ -10,8 +10,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OperationLog{
-    boolean enable() default true;
-    boolean logResults() default false;
+    boolean logResults() default true;
     boolean logArgs() default true;
     OperationType operationType() default OperationType.OTHER;
 }

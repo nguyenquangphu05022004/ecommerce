@@ -1,12 +1,12 @@
 package com.example.ecommerce.production.service.spu;
 
-import com.example.ecommerce.production.controller.spu.vo.ProductSpuCreateBaseReqVO;
-import com.example.ecommerce.production.controller.spu.vo.ProductSpuUpdateBaseReqVO;
+import com.example.ecommerce.frame.common.pojo.PageResult;
+import com.example.ecommerce.production.controller.spu.self.vo.ProductSpuCreateReqVO;
+import com.example.ecommerce.production.controller.spu.self.vo.ProductSpuUpdateBaseReqVO;
 import com.example.ecommerce.production.dal.dataobject.spu.ProductSpu;
 
 public interface ProductSpuService {
-    ProductSpu createProductSpu(ProductSpuCreateBaseReqVO reqVO);
+    ProductSpu createProductSpu(ProductSpuCreateReqVO reqVO);
     ProductSpu updateProductSpu(ProductSpuUpdateBaseReqVO reqVO);
-    void getListProductSpu();
-    ProductSpu updateProductSpuDetail();
+    PageResult<ProductSpu> getListProductSpu();
 }

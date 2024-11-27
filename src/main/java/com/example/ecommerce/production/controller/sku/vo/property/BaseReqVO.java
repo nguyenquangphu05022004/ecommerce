@@ -7,10 +7,4 @@ import lombok.Data;
     private Long productSkuId;
     private Long propertyId;
     private Long propertyValueId;
-
-    /**
-     * Options when property not exists
-     */
-    private String propertyName;
-    private String propertyValue;
 }

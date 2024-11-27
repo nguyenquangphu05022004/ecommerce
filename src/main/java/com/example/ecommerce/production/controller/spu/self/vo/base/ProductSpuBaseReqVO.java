@@ -1,4 +1,4 @@
-package com.example.ecommerce.production.controller.spu.vo.base;
+package com.example.ecommerce.production.controller.spu.self.vo.base;
 
 import lombok.Data;
 

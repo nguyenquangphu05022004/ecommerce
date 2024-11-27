@@ -1,5 +1,6 @@
 package com.example.ecommerce.frame.auditting;
 
+import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -15,13 +16,10 @@ import java.util.Optional;
 public class JpaAuditing {
 
     @Bean
-    public AuditorAware<String> auditorProvider() {
+    public AuditorAware<Long> auditorProvider() {
         return () -> {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if(authentication == null || (authentication instanceof AnonymousAuthenticationToken)) {
-                return null;
-            }
-            return Optional.of(authentication.getName());
+            Long loginUserMemberId = SecurityUtils.getLoginUserMemberId();
+            return Optional.of(loginUserMemberId);
         };
     }
 
