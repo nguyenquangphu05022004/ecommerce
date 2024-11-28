@@ -42,12 +42,17 @@ public class ProductSkuPropertyServiceImpl implements ProductSkuPropertyService{
     }
 
     @Override
-    public List<ProductSkuProperty> getListPropertyByProductSkuId(Long productSkuId) {
+    public List<ProductSkuProperty> getListProductSkuPropertyByProductSkuId(Long productSkuId) {
         return this.productSkuPropertyRepository.findAllByProductSkuId(productSkuId);
     }
 
     @Override
     public void deleteById(Long id) {
         this.productSkuPropertyRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ProductSkuProperty> getListProductSkuPropertyByProductSpuId(Long productSpuId) {
+        return null;
     }
 }

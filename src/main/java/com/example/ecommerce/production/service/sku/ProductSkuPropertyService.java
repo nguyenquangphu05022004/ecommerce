@@ -9,7 +9,8 @@ import java.util.List;
 public interface ProductSkuPropertyService {
     ProductSkuProperty createProductSkuProperty(ProductSkuPropertyCreateReqVO reqVO);
     ProductSkuProperty updateProductSkuProperty(ProductSkuPropertyUpdateReqVO reqVO);
-    List<ProductSkuProperty> getListPropertyByProductSkuId(Long productSkuId);
+    List<ProductSkuProperty> getListProductSkuPropertyByProductSkuId(Long productSkuId);
     void deleteById(Long id);
 
+     List<ProductSkuProperty> getListProductSkuPropertyByProductSpuId(Long productSpuId);
 }

@@ -1,9 +1,13 @@
 package com.example.ecommerce.production.controller.sku;
 
 import com.example.ecommerce.frame.common.pojo.CommonResult;
+import com.example.ecommerce.frame.common.pojo.Pair;
+import com.example.ecommerce.production.controller.property.vo.ProductPropertyVO;
+import com.example.ecommerce.production.controller.property.vo.ProductPropertyValueResVO;
 import com.example.ecommerce.production.controller.sku.vo.property.ProductSkuPropertyCreateReqVO;
 import com.example.ecommerce.production.controller.sku.vo.property.ProductSkuPropertyResVO;
 import com.example.ecommerce.production.controller.sku.vo.property.ProductSkuPropertyUpdateReqVO;
+import com.example.ecommerce.production.dal.dataobject.sku.ProductSkuProperty;
 import com.example.ecommerce.production.service.sku.ProductSkuPropertyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,8 +17,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.example.ecommerce.frame.common.collection.CollUtils.convertList;
+import static com.example.ecommerce.frame.common.collection.MapUtils.convertToMapList;
 import static com.example.ecommerce.frame.common.pojo.CommonResult.success;
 
 @RequiredArgsConstructor
@@ -41,7 +47,7 @@ public class ProductSkuPropertyController {
     @Operation(summary = "Get all property of product sku")
     @PermitAll
     public CommonResult<List<ProductSkuPropertyResVO>> getListPropertyOfProductSku(@PathVariable("productSkuId") Long productSkuId) {
-        return success(convertList(productSkuPropertyService.getListPropertyByProductSkuId(productSkuId), ProductSkuPropertyResVO::new));
+        return success(convertList(productSkuPropertyService.getListProductSkuPropertyByProductSkuId(productSkuId), ProductSkuPropertyResVO::new));
     }
 
     @DeleteMapping("/{id}")
@@ -51,4 +57,19 @@ public class ProductSkuPropertyController {
         this.productSkuPropertyService.deleteById(id);
         return success(true);
     }
+
+
+    @GetMapping("/product-spu/{productSpuId}")
+    @Operation(summary = "Get Map property by product spu")
+    @PermitAll
+    public CommonResult<Map<ProductPropertyVO, List<ProductPropertyValueResVO>>> getMapListPropertyOfProductSkuByProductSpu(Long productSpuId) {
+        List<ProductSkuProperty> properties = productSkuPropertyService.getListProductSkuPropertyByProductSpuId(productSpuId);
+        return success(convertToMap(convertList(properties, s -> {
+            return new Pair<>(
+                    new ProductPropertyVO(s.getProductProperty()),
+                    new ProductPropertyValueResVO(s.getProductPropertyValue())
+            );
+        })));
+    }
+
 }

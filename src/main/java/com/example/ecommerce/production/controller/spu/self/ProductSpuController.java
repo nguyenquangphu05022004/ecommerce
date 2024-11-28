@@ -8,10 +8,12 @@ import com.example.ecommerce.production.controller.spu.detail.vo.ProductSpuDetai
 import com.example.ecommerce.production.controller.spu.self.vo.ProductSpuCreateReqVO;
 import com.example.ecommerce.production.controller.spu.self.vo.ProductSpuResVO;
 import com.example.ecommerce.production.controller.spu.self.vo.ProductSpuUpdateBaseReqVO;
+import com.example.ecommerce.production.dal.dataobject.spu.ProductSpu;
 import com.example.ecommerce.production.service.spu.ProductSpuDetailService;
 import com.example.ecommerce.production.service.spu.ProductSpuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -50,4 +52,13 @@ public class ProductSpuController {
     public CommonResult<ProductSpuDetailResVO> addDetail(@RequestBody ProductSpuDetailReqVO reqVO) {
         return success(productSpuDetailService.addProductDetail(reqVO), ProductSpuDetailResVO::new);
     }
+
+
+    @GetMapping("/{productSpuId}")
+    @PermitAll
+    @Operation(summary = "Get product spu by id")
+    public CommonResult<ProductSpuResVO> getProductSpuByProductSpuId(@PathVariable("productSpuId") Long productSpuId) {
+        return CommonResult.success(productSpuService.getProductSpuById(productSpuId), ProductSpuResVO::new);
+    }
+
 }
