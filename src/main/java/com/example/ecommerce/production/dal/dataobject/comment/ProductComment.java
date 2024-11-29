@@ -8,6 +8,7 @@ import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class ProductComment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_member_id")
     private UserMember userMember;
+
 //    private UserMemberType userMemberType;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -40,8 +42,11 @@ public class ProductComment extends BaseEntity {
     @OneToMany(mappedBy = "replyProductComment")
     private List<ProductComment> productCommentChildren;
 
+    @OneToMany(mappedBy = "productComment")
+    @Setter
+    private List<ProductCommentEvaluation> productCommentEvaluations;
+
     private String content;
-    private Integer numberOfLike;
     private Double rating;
 
 }

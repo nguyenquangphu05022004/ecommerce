@@ -25,4 +25,12 @@ public class CommonResult<T> {
     public static <U, S> CommonResult<S> success(U data, Function<U, S> func) {
         return new CommonResult<>(null, 200, func.apply(data));
     }
+
+    public static <U, S> CommonResult<PageResult<S>> success(PageResult<U> pageResult, Function<U, S> func) {
+        PageResult<S> res = new PageResult<>();
+        res.setCurrentPage(pageResult.getCurrentPage());
+        res.setTotalPage(pageResult.getTotalPage());
+        res.setList(pageResult.getList().stream().map(func).toList());
+        return new CommonResult<>(null, 200, res);
+    }
 }

@@ -16,4 +16,11 @@ import lombok.experimental.SuperBuilder;
 @Getter
 public class ProductProperty extends BaseEntity {
     private String name;
+
+    public static enum ProductPropertyType {
+        SPU,
+        SKU,
+        COMMENT
+    }
+
 }

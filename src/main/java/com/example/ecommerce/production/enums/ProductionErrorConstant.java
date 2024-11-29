@@ -24,4 +24,8 @@ public interface ProductionErrorConstant {
      * ------Product spu
      */
     ErrorCode PRODUCT_SPU_NOT_FOUND =new ErrorCode("ProductSpu not found", NOT_FOUND.value());
+    /**
+     * ------Product comment
+     */
+    ErrorCode PRODUCT_COMMENT_NOT_FOUND = new ErrorCode("ProductComment not found", NOT_FOUND.value());
 }

@@ -45,4 +45,10 @@ public class MapUtils {
         return map;
     }
 
+    public static<K, V> boolean isEmpty(Map<K, V> map) {
+        if(map.size() == 0) {
+            return true;
+        }
+        return false;
+    }
 }

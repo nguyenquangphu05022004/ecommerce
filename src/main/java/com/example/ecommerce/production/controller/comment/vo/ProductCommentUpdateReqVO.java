@@ -8,7 +8,7 @@ import java.util.Map;
 public class ProductCommentUpdateReqVO {
     private Long id;
     private String content;
-    private Long rating;
+    private Double rating;
     private Map<Long, String> mapProperties;
 
 }

@@ -22,7 +22,7 @@ public class ProductCommentResVO {
     private List<String> productClassifications;
 
     @Schema(description = "Cac hang muc danh gia san pham: tinh nang noi bat: true, Chat luong san pham: rat la ok")
-    private List<ProductMappingPropertyResVO> productCommentProperties;
+    private List<ProductCommentEvaluationResVO> productCommentEvaluations;
     private String content;
 
     private List<String> mediaUrls;
@@ -36,6 +36,7 @@ public class ProductCommentResVO {
         this.productClassifications = convertList(productComment.getProductSku().getProductSkuProperties(), property -> {
             return property.getProductPropertyValue().getValue();
         });
+        this.productCommentEvaluations = convertList(productComment.getProductCommentEvaluations(), ProductCommentEvaluationResVO::new);
         this.mediaUrls = convertList(productComment.getMediaList(), f -> f.getPath());
         this.content = productComment.getContent();
         this.numberOfLike = productComment.getNumberOfLike();

@@ -35,7 +35,7 @@ public class ProductMappingProperty extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "property_id")
-    private ProductProperty property;
+    private ProductProperty productProperty;
     @ManyToOne
     @JoinColumn(name = "property_value_id")
     private ProductPropertyValue productPropertyValue;
