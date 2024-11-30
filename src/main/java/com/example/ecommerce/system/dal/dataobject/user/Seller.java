@@ -16,10 +16,10 @@ import java.util.List;
 public class Seller extends BaseEntity {
 
     @OneToOne
-    @JoinColumn(name = "user_member_id")
+    @JoinColumn(name = "user_member_id", unique = true)
     private UserMember userMember;
 
-    private String nameRepresentative;
+    private String shopName;
 
     /**
      * List product is sold by seller;

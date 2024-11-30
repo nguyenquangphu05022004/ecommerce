@@ -1,13 +1,17 @@
 package com.example.ecommerce.system.service.user;
 
+import com.example.ecommerce.frame.common.exception.ServiceException;
 import com.example.ecommerce.system.controller.user.vo.UserMemberCreateReqVO;
 import com.example.ecommerce.system.controller.user.vo.UserMemberUpdatePasswordReqVO;
 import com.example.ecommerce.system.controller.user.vo.UserMemberUpdateReqVO;
+import com.example.ecommerce.system.dal.dataobject.user.Customer;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
+import com.example.ecommerce.system.dal.repository.user.CustomerRepository;
 import com.example.ecommerce.system.dal.repository.user.UserMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
 import static com.example.ecommerce.system.enums.SysErrorCodeConstants.*;
@@ -15,16 +19,20 @@ import static com.example.ecommerce.system.enums.SysErrorCodeConstants.*;
 @Service
 @RequiredArgsConstructor
 public class UserMemberServiceImpl implements UserMemberService{
-
+    private final CustomerRepository customerRepository;
     private final UserMemberRepository userMemberRepository;
     private final PasswordEncoder passwordEncoder;
     @Override
+    @Transactional(rollbackFor = ServiceException.class)
     public UserMember createUser(UserMemberCreateReqVO reqVO) {
         UserMember userMember = UserMember.builder().email(reqVO.getEmail()).sex(reqVO.getSex())
                 .firstName(reqVO.getFirstName()).lastName(reqVO.getLastName())
                 .username(reqVO.getUsername()).phoneNumber(reqVO.getPhoneNumber())
                 .password(passwordEncoder.encode(reqVO.getPassword())).locked(false).build();
-        return this.userMemberRepository.save(userMember);
+        this.userMemberRepository.save(userMember);
+        Customer customer = Customer.builder().userMember(userMember).build();
+        this.customerRepository.save(customer);
+        return userMember;
     }
 
     @Override

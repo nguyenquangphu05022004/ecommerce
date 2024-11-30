@@ -46,6 +46,8 @@ public class ProductComment extends BaseEntity {
     @Setter
     private List<ProductCommentEvaluation> productCommentEvaluations;
 
+    @OneToMany(mappedBy = "productComment")
+    private List<ProductCommentFavorite> productCommentFavorites;
     private String content;
     private Double rating;
 

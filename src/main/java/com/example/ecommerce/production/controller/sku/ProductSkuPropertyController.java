@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.example.ecommerce.frame.common.collection.CollUtils.convertList;
+import static com.example.ecommerce.frame.common.collection.MapUtils.convertToMap;
 import static com.example.ecommerce.frame.common.collection.MapUtils.convertToMapList;
 import static com.example.ecommerce.frame.common.pojo.CommonResult.success;
 
@@ -63,13 +64,14 @@ public class ProductSkuPropertyController {
     @Operation(summary = "Get Map property by product spu")
     @PermitAll
     public CommonResult<Map<ProductPropertyVO, List<ProductPropertyValueResVO>>> getMapListPropertyOfProductSkuByProductSpu(Long productSpuId) {
-        List<ProductSkuProperty> properties = productSkuPropertyService.getListProductSkuPropertyByProductSpuId(productSpuId);
-        return success(convertToMap(convertList(properties, s -> {
-            return new Pair<>(
-                    new ProductPropertyVO(s.getProductProperty()),
-                    new ProductPropertyValueResVO(s.getProductPropertyValue())
-            );
-        })));
+//        List<ProductSkuProperty> properties = productSkuPropertyService.getListProductSkuPropertyByProductSpuId(productSpuId);
+//        return success(convertToMap(convertList(properties, s -> {
+//            return new Pair<>(
+//                    new ProductPropertyVO(s.getProductProperty()),
+//                    new ProductPropertyValueResVO(s.getProductPropertyValue())
+//            );
+//        })));
+        return null;
     }
 
 }

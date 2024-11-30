@@ -2,11 +2,9 @@ package com.example.ecommerce.system.controller.user;
 
 import com.example.ecommerce.frame.common.pojo.CommonResult;
 import com.example.ecommerce.frame.operatelog.annotation.OperationLog;
-import com.example.ecommerce.system.controller.user.vo.UserMemberCreateReqVO;
-import com.example.ecommerce.system.controller.user.vo.UserMemberResVO;
-import com.example.ecommerce.system.controller.user.vo.UserMemberUpdatePasswordReqVO;
-import com.example.ecommerce.system.controller.user.vo.UserMemberUpdateReqVO;
+import com.example.ecommerce.system.controller.user.vo.*;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
+import com.example.ecommerce.system.service.user.SellerService;
 import com.example.ecommerce.system.service.user.UserMemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,17 +17,27 @@ import static com.example.ecommerce.frame.common.pojo.CommonResult.*;
 import static com.example.ecommerce.frame.security.core.utils.SecurityUtils.*;
 
 @Tag(name = "User")
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 @CrossOrigin("*")
 public class UserMemberController {
     private final UserMemberService userMemberService;
-
+    private final SellerService sellerService;
     @PostMapping
     @PermitAll
     @Operation(summary = "Create new account")
     public CommonResult<Boolean> createUserMember(@RequestBody UserMemberCreateReqVO reqVO) {
         this.userMemberService.createUser(reqVO);
+        return success(true);
+    }
+
+
+    @PostMapping("/sellers")
+    @Operation(summary = "create seller")
+    @PreAuthorize("@ss.hasPermission('sys:user:create-seller')")
+    public CommonResult<Boolean> createSeller(@RequestBody SellerCreateReqVO reqVO) {
+        this.sellerService.createSeller(reqVO);
         return success(true);
     }
 

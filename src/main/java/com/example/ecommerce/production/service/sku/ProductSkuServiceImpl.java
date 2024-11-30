@@ -5,12 +5,14 @@ import com.example.ecommerce.file.FileStorageService;
 import com.example.ecommerce.file.Representation;
 import com.example.ecommerce.production.controller.sku.vo.ProductSkuCreateReqVO;
 import com.example.ecommerce.production.controller.sku.vo.ProductSkuUpdateReqVO;
+import com.example.ecommerce.production.controller.sku.vo.ProductSkuUpdateStockReqVO;
 import com.example.ecommerce.production.dal.dataobject.sku.ProductSku;
 import com.example.ecommerce.production.dal.dataobject.spu.ProductSpu;
 import com.example.ecommerce.production.dal.repository.property.ProductPropertyRepository;
 import com.example.ecommerce.production.dal.repository.property.ProductPropertyValueRepository;
 import com.example.ecommerce.production.dal.repository.sku.ProductSkuPropertyRepository;
 import com.example.ecommerce.production.dal.repository.sku.ProductSkuRepository;
+import com.example.ecommerce.production.service.sku.notify.ProductStockObservable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +32,11 @@ public class ProductSkuServiceImpl implements ProductSkuService{
     private final ProductSkuPropertyRepository productSkuPropertyRepository;
     private final ProductPropertyRepository productPropertyRepository;
     private final ProductPropertyValueRepository productPropertyValueRepository;
+
+    /**
+     * Notify users, when stock is updated(only current stock == 0)
+     */
+    private final ProductStockObservable productStockObservable;
 
     /**
      * Service
@@ -71,6 +78,16 @@ public class ProductSkuServiceImpl implements ProductSkuService{
         ProductSku productSku = getProductSkuById(productSkuId).toBuilder()
                 .image(fileEntity.getPath()).build();
         this.productSkuRepository.save(productSku);
+    }
+
+    @Override
+    public void updateProductSpuStock(ProductSkuUpdateStockReqVO reqVO) {
+        ProductSku productSku = getProductSkuById(reqVO.getProductSkuId());
+        if(productSku.getQuantity() == 0) {
+            productSku.setQuantity(reqVO.getNewStock());
+            this.productSkuRepository.save(productSku);
+//            this.productStockObservable.setData();
+        }
     }
 
 }

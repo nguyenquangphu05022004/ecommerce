@@ -34,7 +34,5 @@ public class ProductCommentController {
         return CommonResult.success(pageResult, ProductCommentResVO::new);
     }
 
-    @PutMapping("/like/{commentId}")
-    public
 
 }

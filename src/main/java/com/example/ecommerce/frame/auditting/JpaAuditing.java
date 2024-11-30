@@ -19,6 +19,9 @@ public class JpaAuditing {
     public AuditorAware<Long> auditorProvider() {
         return () -> {
             Long loginUserMemberId = SecurityUtils.getLoginUserMemberId();
+            if(loginUserMemberId == null) {
+                return null;
+            }
             return Optional.of(loginUserMemberId);
         };
     }

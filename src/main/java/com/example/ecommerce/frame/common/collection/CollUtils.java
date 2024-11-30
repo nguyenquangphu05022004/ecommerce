@@ -1,5 +1,6 @@
 package com.example.ecommerce.frame.common.collection;
 
+import com.example.ecommerce.production.dal.dataobject.comment.ProductCommentFavorite;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
@@ -28,5 +29,12 @@ public class CollUtils {
             return Collections.emptySet();
         }
         return coll.stream().map(func).collect(Collectors.toSet());
+    }
+
+    public static Integer size(List<ProductCommentFavorite> productCommentFavorites) {
+        if(isEmpty(productCommentFavorites)) {
+            return 0;
+        }
+        return productCommentFavorites.size();
     }
 }

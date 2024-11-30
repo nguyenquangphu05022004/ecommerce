@@ -29,7 +29,7 @@ public class ProductPropertyValueController {
         return success(productPropertyValueService.createProductPropertyValue(req), ProductPropertyValueResVO::new);
     }
 
-    @PostMapping
+    @PutMapping
     @PreAuthorize("@ss.hasPermission('production:product-property-value:update')")
     @Operation(summary = "Update value for property")
     public CommonResult<ProductPropertyValueResVO> updateProductPropertyValue(@RequestBody ProductPropertyValueReqVO reqVO) {

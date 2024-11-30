@@ -39,6 +39,6 @@ public class ProductCommentResVO {
         this.productCommentEvaluations = convertList(productComment.getProductCommentEvaluations(), ProductCommentEvaluationResVO::new);
         this.mediaUrls = convertList(productComment.getMediaList(), f -> f.getPath());
         this.content = productComment.getContent();
-        this.numberOfLike = productComment.getNumberOfLike();
+        this.numberOfLike = CollUtils.size(productComment.getProductCommentFavorites());
     }
 }

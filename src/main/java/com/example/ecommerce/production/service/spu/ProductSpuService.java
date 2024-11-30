@@ -11,6 +11,4 @@ public interface ProductSpuService {
     PageResult<ProductSpu> getListProductSpu();
 
     ProductSpu getProductSpuById(Long productSpuId);
-
-
 }

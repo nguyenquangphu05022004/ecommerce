@@ -13,6 +13,6 @@ public class ProductCategoryResVO {
         this.id = productCategory.getId();
         this.name = productCategory.getName();
         this.thumbnail = productCategory.getThumbnail();
-        this.categoryParent = new ProductCategoryResVO(productCategory.getCategoryParent());
+        this.categoryParent = (productCategory.getCategoryParent() != null) ? new ProductCategoryResVO(productCategory.getCategoryParent()) : null;
     }
 }

@@ -8,6 +8,7 @@ import com.example.ecommerce.production.controller.category.vo.ProductCategoryUp
 import com.example.ecommerce.production.dal.dataobject.category.ProductCategory;
 import com.example.ecommerce.production.service.category.ProductCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,8 @@ import static com.example.ecommerce.frame.common.pojo.CommonResult.success;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/categories")
+@Tag(name = "Production - Category")
+@CrossOrigin("*")
 public class ProductCategoryController {
     private final ProductCategoryService productCategoryService;
 

@@ -5,6 +5,7 @@ import com.example.ecommerce.production.dal.dataobject.spu.ProductSpu;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class ProductSku extends BaseEntity {
     private ProductSpu productSpu;
     private Integer price;
     private String image;
+    @Setter
     private Integer quantity;
     @OneToMany(mappedBy = "productSku")
     private List<ProductSkuProperty> productSkuProperties;
