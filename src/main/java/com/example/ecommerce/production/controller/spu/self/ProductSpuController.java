@@ -2,6 +2,7 @@ package com.example.ecommerce.production.controller.spu.self;
 
 
 import com.example.ecommerce.frame.common.pojo.CommonResult;
+import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.frame.operatelog.annotation.OperationLog;
 import com.example.ecommerce.production.controller.spu.detail.vo.ProductSpuDetailReqVO;
 import com.example.ecommerce.production.controller.spu.detail.vo.ProductSpuDetailResVO;
@@ -24,6 +25,7 @@ import static com.example.ecommerce.frame.common.pojo.CommonResult.success;
 @RequiredArgsConstructor
 @RequestMapping("/api/product-spus")
 @Tag(name = "Product SPU")
+@CrossOrigin("*")
 public class ProductSpuController {
     private final ProductSpuService productSpuService;
     private final ProductSpuDetailService productSpuDetailService;
@@ -44,6 +46,12 @@ public class ProductSpuController {
         return success(productSpuService.updateProductSpu(reqVO), ProductSpuResVO::new);
     }
 
+    @GetMapping("/seller/{userMemberId}")
+    public CommonResult<PageResult<ProductSpuResVO>> getListProductBySellerUserMemberId(
+            @PathVariable("userMemberId") Long userMemberId,
+            @RequestParam(value = "page", defaultValue = "1") int page) {
+        return CommonResult.success(productSpuService.getListProductSpuBySeller(userMemberId, page), ProductSpuResVO::new);
+    }
 
     @RequestMapping(value = "/details", method = {RequestMethod.POST, RequestMethod.PUT})
     @PreAuthorize("@ss.hasPermission('production:product-spu-detail:create/update')")

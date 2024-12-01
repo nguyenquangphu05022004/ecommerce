@@ -28,13 +28,13 @@ public abstract class BaseEntity {
     @CreatedBy
     private Long createdBy;
     @LastModifiedBy
-    private String modifiedBy;
+    private Long modifiedBy;
     @CreatedDate
     private LocalDateTime createdDate;
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
-    public BaseEntity(Long id, Long createdBy, String modifiedBy, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public BaseEntity(Long id, Long createdBy, Long modifiedBy, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.createdBy = createdBy;
         this.modifiedBy = modifiedBy;

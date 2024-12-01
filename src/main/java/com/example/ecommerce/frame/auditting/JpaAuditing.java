@@ -22,7 +22,7 @@ public class JpaAuditing {
             if(loginUserMemberId == null) {
                 return null;
             }
-            return Optional.of(loginUserMemberId);
+            return null;
         };
     }
 

@@ -9,6 +9,6 @@ public interface ProductSpuService {
     ProductSpu createProductSpu(ProductSpuCreateReqVO reqVO);
     ProductSpu updateProductSpu(ProductSpuUpdateBaseReqVO reqVO);
     PageResult<ProductSpu> getListProductSpu();
-
+    PageResult<ProductSpu> getListProductSpuBySeller(Long userMemberId, int page);
     ProductSpu getProductSpuById(Long productSpuId);
 }

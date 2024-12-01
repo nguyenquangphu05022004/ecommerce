@@ -2,6 +2,7 @@ package com.example.ecommerce.frame.security.core.utils;
 
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,8 +24,8 @@ public class SecurityUtils {
 
     public static UserMember getLoginUserMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null) {
-            return (UserMember) authentication;
+        if(!(authentication instanceof AnonymousAuthenticationToken)) {
+            return (UserMember) authentication.getPrincipal();
         }
         return null;
     }

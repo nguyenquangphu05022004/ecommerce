@@ -1,23 +1,45 @@
 package com.example.ecommerce.production.service.spu;
 
 import com.example.ecommerce.frame.common.pojo.PageResult;
+import com.example.ecommerce.frame.common.pojo.PagingLimitation;
+import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
 import com.example.ecommerce.production.controller.spu.self.vo.ProductSpuCreateReqVO;
 import com.example.ecommerce.production.controller.spu.self.vo.ProductSpuUpdateBaseReqVO;
+import com.example.ecommerce.production.dal.dataobject.brand.ProductBrand;
+import com.example.ecommerce.production.dal.dataobject.category.ProductCategory;
 import com.example.ecommerce.production.dal.dataobject.spu.ProductSpu;
 import com.example.ecommerce.production.dal.repository.spu.ProductSpuRepository;
+import com.example.ecommerce.system.dal.dataobject.user.Seller;
+import com.example.ecommerce.system.dal.repository.user.SellerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
 import static com.example.ecommerce.production.enums.ProductionErrorConstant.PRODUCT_SPU_NOT_FOUND;
+import static com.example.ecommerce.production.enums.ProductionErrorConstant.SELLER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
 public class ProductSpuServiceImpl implements ProductSpuService{
     private final ProductSpuRepository productSpuRepository;
+    private final SellerRepository sellerRepository;
     @Override
     public ProductSpu createProductSpu(ProductSpuCreateReqVO reqVO) {
-        return null;
+        Optional<Seller> opSeller = sellerRepository.findByUserMemberId(SecurityUtils.getLoginUserMemberId());
+        if(opSeller.isEmpty()) {
+            throw exception(SELLER_NOT_FOUND);
+        }
+        ProductSpu productSpu = ProductSpu.builder()
+                .productCategory(ProductCategory.builder().id(reqVO.getProductCategoryId()).build())
+                .productBrand(ProductBrand.builder().id(reqVO.getProductBrandId()).build())
+                .maxPrice(reqVO.getMaxPrice()).minPrice(reqVO.getMinPrice()).name(reqVO.getName())
+                .description(reqVO.getDescription()).seller(opSeller.get()).build();
+        this.productSpuRepository.save(productSpu);
+        return productSpu;
     }
 
     @Override
@@ -28,6 +50,14 @@ public class ProductSpuServiceImpl implements ProductSpuService{
     @Override
     public PageResult<ProductSpu> getListProductSpu() {
         return null;
+    }
+
+    @Override
+    public PageResult<ProductSpu> getListProductSpuBySeller(Long userMemberId, int page) {
+        Page<ProductSpu> pageResult = this.productSpuRepository.findAllBySellerUserMemberId(
+                userMemberId,
+                PageRequest.of(page - 1, PagingLimitation.PRODUCT_SPU_LIMIT));
+        return new PageResult<>(pageResult);
     }
 
     @Override

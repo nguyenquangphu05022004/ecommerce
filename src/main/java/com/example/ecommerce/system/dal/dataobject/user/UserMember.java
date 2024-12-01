@@ -1,6 +1,7 @@
 package com.example.ecommerce.system.dal.dataobject.user;
 
 import com.example.ecommerce.frame.auditting.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -32,6 +33,8 @@ public class UserMember extends BaseEntity {
         FEMALE,
         MALE
     }
+
+    @JsonIgnore
     public String getFullName() {
         return firstName + " " + lastName;
     }

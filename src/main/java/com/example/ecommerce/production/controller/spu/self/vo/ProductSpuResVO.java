@@ -21,6 +21,7 @@ import static com.example.ecommerce.frame.common.collection.MapUtils.*;
 
 @Data
 public class ProductSpuResVO extends ProductSpuBaseVO {
+    private Long id;
     private ProductCategoryResVO productCategory;
     private ProductBrandResVO productBrand;
     private List<String> slider;
@@ -32,6 +33,7 @@ public class ProductSpuResVO extends ProductSpuBaseVO {
 
     public ProductSpuResVO(ProductSpu productSpu) {
         super(productSpu);
+        this.id = productSpu.getId();
         this.productBrand = new ProductBrandResVO(productSpu.getProductBrand());
         this.productCategory = new ProductCategoryResVO(productSpu.getProductCategory());
         this.slider = convertList(productSpu.getProductSkus(), sku -> sku.getImage());

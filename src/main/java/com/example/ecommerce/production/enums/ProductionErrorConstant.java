@@ -27,5 +27,6 @@ public interface ProductionErrorConstant {
     /**
      * ------Product comment
      */
+    ErrorCode SELLER_NOT_FOUND = new ErrorCode("Seller not found", NOT_FOUND.value());
     ErrorCode PRODUCT_COMMENT_NOT_FOUND = new ErrorCode("ProductComment not found", NOT_FOUND.value());
 }

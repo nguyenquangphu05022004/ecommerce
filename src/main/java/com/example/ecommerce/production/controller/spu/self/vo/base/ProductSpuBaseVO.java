@@ -15,7 +15,7 @@ public class ProductSpuBaseVO {
     public ProductSpuBaseVO(ProductSpu productSpu) {
         this.name = productSpu.getName();
         this.description = productSpu.getDescription();
-        this.maxPrice = productSpu.getMaxPrice();
+        this.minPrice = productSpu.getMinPrice();
         this.maxPrice = productSpu.getMaxPrice();
     }
 }

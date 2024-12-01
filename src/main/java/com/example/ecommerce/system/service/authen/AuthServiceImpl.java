@@ -21,7 +21,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthLoginResVO login(AuthLoginReqVO reqVO) {
         UserMember user = userMemberService.getUserMemberByUsername(reqVO.getUsername());
-        if(userMemberService.isPasswordMatch(reqVO.getPassword(), user.getPassword())) {
+        if(!userMemberService.isPasswordMatch(reqVO.getPassword(), user.getPassword())) {
             throw exception(PASSWORD_NOT_FOUND);
         }
         if(user.isLocked()) {

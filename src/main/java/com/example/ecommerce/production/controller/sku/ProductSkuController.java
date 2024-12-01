@@ -21,6 +21,7 @@ import static com.example.ecommerce.frame.common.pojo.CommonResult.success;
 @RequiredArgsConstructor
 @RequestMapping("/api/product-skus")
 @Tag(name = "Product Sku")
+@CrossOrigin("*")
 public class ProductSkuController {
     private final ProductSkuService productSkuService;
     @PostMapping

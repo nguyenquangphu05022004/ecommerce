@@ -33,8 +33,8 @@ public class RedisAuthTokenDao {
         String key = getKey(accessToken.getAccessToken());
         Long time = (DateUtils.of(accessToken.getExpires()).getTime() - new Date().getTime())/1000;
         if(time > 0) {
-            accessToken = accessToken.toBuilder().modifiedBy(null).createdBy(null)
-                    .createdDate(null).modifiedDate(null).expires(null)
+            accessToken = accessToken.toBuilder().modifiedBy(null)
+                    .createdBy(null).createdDate(null).modifiedDate(null)
                     .userMember(accessToken.getUserMember().toBuilder().createdDate(null).modifiedDate(null).build()).build();
             redisTemplate.opsForValue().set(key, JsonUtils.write(accessToken), time, TimeUnit.SECONDS);
         }
