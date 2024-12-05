@@ -24,7 +24,7 @@ public class SecurityUtils {
 
     public static UserMember getLoginUserMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(!(authentication instanceof AnonymousAuthenticationToken)) {
+        if(authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
             return (UserMember) authentication.getPrincipal();
         }
         return null;

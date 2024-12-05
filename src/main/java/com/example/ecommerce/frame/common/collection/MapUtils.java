@@ -46,7 +46,7 @@ public class MapUtils {
     }
 
     public static<K, V> boolean isEmpty(Map<K, V> map) {
-        if(map.size() == 0) {
+        if(map == null || map.size() == 0) {
             return true;
         }
         return false;

@@ -20,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 public class UserMember extends BaseEntity {
     private String username;
     private String password;
-    private boolean isOnline;
+    private Boolean online;
     private String avatar;
     private String firstName;
     private String lastName;
@@ -28,7 +28,10 @@ public class UserMember extends BaseEntity {
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
     private Sex sex;
-    private boolean locked;
+    private Boolean locked;
+
+
+
     public static enum Sex {
         FEMALE,
         MALE

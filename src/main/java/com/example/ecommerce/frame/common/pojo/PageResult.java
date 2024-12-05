@@ -14,7 +14,7 @@ public class PageResult <T>{
     private List<T> list;
 
     public PageResult(Page<T> page) {
-        this.currentPage = page.getNumber();
+        this.currentPage = page.getNumber() + 1;
         this.totalPage = page.getTotalPages();
         this.list = page.getContent();
     }

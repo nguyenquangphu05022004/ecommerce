@@ -1,9 +1,10 @@
 package com.example.ecommerce.system.dal.dataobject.user;
 
 import com.example.ecommerce.frame.auditting.BaseEntity;
-import com.example.ecommerce.production.dal.dataobject.spu.ProductSpu;
+import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @Table(name = "user_seller")
 @NoArgsConstructor
 @SuperBuilder
+@Setter
 public class Seller extends BaseEntity {
 
     @OneToOne

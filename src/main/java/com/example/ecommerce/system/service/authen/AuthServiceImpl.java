@@ -24,7 +24,7 @@ public class AuthServiceImpl implements AuthService {
         if(!userMemberService.isPasswordMatch(reqVO.getPassword(), user.getPassword())) {
             throw exception(PASSWORD_NOT_FOUND);
         }
-        if(user.isLocked()) {
+        if(user.getLocked()) {
             throw exception(ACCOUNT_IS_LOCKED);
         }
         AccessToken accessToken = this.authTokenService.createAccessToken(user.getId());

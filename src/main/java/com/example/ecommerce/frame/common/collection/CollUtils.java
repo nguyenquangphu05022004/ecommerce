@@ -1,14 +1,12 @@
 package com.example.ecommerce.frame.common.collection;
 
-import com.example.ecommerce.production.dal.dataobject.comment.ProductCommentFavorite;
+import com.example.ecommerce.product.dal.dataobject.comment.ProductCommentFavorite;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CollUtils {
 
@@ -24,6 +22,8 @@ public class CollUtils {
         }
         return coll.stream().map(func).collect(Collectors.toList());
     }
+
+
     public static  <U, T> Set<T> convertSet(Collection<U> coll, Function<U, T> func) {
         if(isEmpty(coll)) {
             return Collections.emptySet();

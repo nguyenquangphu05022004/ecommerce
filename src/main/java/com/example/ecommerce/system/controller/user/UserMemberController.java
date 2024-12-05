@@ -58,7 +58,7 @@ public class UserMemberController {
     @GetMapping
     @Operation(summary = "Get profile account user")
     public CommonResult<UserMemberResVO> getProfileUser() {
-        UserMember userMember = userMemberService.getUserMemberProfile(getLoginUserMemberId());
+        UserMember userMember = userMemberService.getUserMemberById(getLoginUserMemberId());
         return success(userMember, UserMemberResVO::new);
     }
 

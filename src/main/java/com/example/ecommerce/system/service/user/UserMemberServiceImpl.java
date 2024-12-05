@@ -37,7 +37,7 @@ public class UserMemberServiceImpl implements UserMemberService{
 
     @Override
     public UserMember updateUser(Long userId, UserMemberUpdateReqVO reqVO) {
-        UserMember userMember = this.getUserMemberProfile(userId).toBuilder().email(reqVO.getEmail())
+        UserMember userMember = this.getUserMemberById(userId).toBuilder().email(reqVO.getEmail())
                 .lastName(reqVO.getLastName()).firstName(reqVO.getFirstName())
                 .phoneNumber(reqVO.getPhoneNumber()).sex(reqVO.getSex())
                 .build();
@@ -46,7 +46,7 @@ public class UserMemberServiceImpl implements UserMemberService{
 
     @Override
     public UserMember updatePassword(Long userId, UserMemberUpdatePasswordReqVO reqVO) {
-        UserMember userMember = this.getUserMemberProfile(userId);
+        UserMember userMember = this.getUserMemberById(userId);
         if(!isPasswordMatch(reqVO.getOldPassword(), userMember.getPassword())) {
             throw exception(PASSWORD_NOT_FOUND);
         }
@@ -60,7 +60,7 @@ public class UserMemberServiceImpl implements UserMemberService{
     }
 
     @Override
-    public UserMember getUserMemberProfile(Long userId) {
+    public UserMember getUserMemberById(Long userId) {
         return this.userMemberRepository.findById(userId)
                 .orElseThrow(() -> exception(USER_NOT_FOUND));
     }
@@ -73,7 +73,7 @@ public class UserMemberServiceImpl implements UserMemberService{
 
     @Override
     public void updateStatusAccount(Long userId, boolean locked) {
-        UserMember userMember = getUserMemberProfile(userId).toBuilder().locked(locked).build();
+        UserMember userMember = getUserMemberById(userId).toBuilder().locked(locked).build();
         this.userMemberRepository.save(userMember);
     }
 }

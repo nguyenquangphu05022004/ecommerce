@@ -10,7 +10,7 @@ public interface UserMemberService {
     UserMember updateUser(Long userId, UserMemberUpdateReqVO reqVO);
     UserMember updatePassword(Long userId, UserMemberUpdatePasswordReqVO reqVO);
     boolean isPasswordMatch(String raw, String encode);
-    UserMember getUserMemberProfile(Long userId);
+    UserMember getUserMemberById(Long userId);
     UserMember getUserMemberByUsername(String username);
     void updateStatusAccount(Long userId, boolean locked);
 }
