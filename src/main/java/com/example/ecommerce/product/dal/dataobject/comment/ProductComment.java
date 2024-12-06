@@ -33,6 +33,7 @@ public class ProductComment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "product_spu_id")
     private ProductSpu productSpu;
+
     @ManyToOne
     @JoinColumn(name = "product_sku_id")
     private ProductSku productSku;

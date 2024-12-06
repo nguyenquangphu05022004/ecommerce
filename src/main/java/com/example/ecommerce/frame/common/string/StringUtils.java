@@ -21,4 +21,9 @@ public class StringUtils {
         }
         return coll.stream().map(func).collect(Collectors.joining(separate));
     }
+
+    public static String title(String str) {
+        String low = str.toLowerCase();
+        return low.substring(0, 1).toUpperCase() + low.substring(1);
+    }
 }

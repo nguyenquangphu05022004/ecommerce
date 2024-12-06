@@ -20,7 +20,7 @@ public class ProductPropertyValueServiceImpl implements ProductPropertyValueServ
 
     @Override
     public ProductPropertyValue createProductPropertyValue(ProductPropertyValueReqVO reqVO) {
-        ProductPropertyValue productPropertyValue = ProductPropertyValue.builder().value(reqVO.getValue())
+        ProductPropertyValue productPropertyValue = ProductPropertyValue.builder().propertyValue(reqVO.getValue())
                 .productProperty(ProductProperty.builder().id(reqVO.getPropertyId()).build())
                 .build();
         this.productPropertyValueRepository.save(productPropertyValue);

@@ -11,7 +11,7 @@ import jakarta.persistence.criteria.Root;
 public class ProductSearchPrice implements ProductSearchStrategy {
     @Override
     public Predicate search(Root<ProductSpu> root, CriteriaBuilder builder, String jsonData) {
-        DataVO dataVO = JsonUtils.parseObject(jsonData, new TypeReference<DataVO>() {});
-        return null;
+        PriceDataSearchVO priceDataSearchVO = JsonUtils.parseObject(jsonData, new TypeReference<PriceDataSearchVO>() {});
+        return builder.between(root.get("productSkus").get("price"), priceDataSearchVO.getFromPrice(), priceDataSearchVO.getToPrice());
     }
 }

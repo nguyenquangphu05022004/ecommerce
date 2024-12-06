@@ -33,7 +33,7 @@ public class ProductCommentResVO {
         this.createdDate = productComment.getModifiedDate();
         this.rating = productComment.getRating();
         this.productClassifications = convertList(productComment.getProductSku().getProductSkuProperties(), property -> {
-            return property.getProductPropertyValue().getValue();
+            return property.getProductPropertyValue().getPropertyValue();
         });
         this.productCommentEvaluations = convertList(productComment.getProductCommentEvaluations(), ProductCommentEvaluationResVO::new);
         this.mediaUrls = convertList(productComment.getMediaList(), f -> f.getPath());

@@ -4,6 +4,7 @@ import com.example.ecommerce.frame.auditting.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
@@ -13,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @SuperBuilder(toBuilder = true)
+@Setter
 public class ProductCategory extends BaseEntity {
     private String name;
     @OneToMany(mappedBy = "categoryParent")

@@ -1,7 +1,5 @@
 package com.example.ecommerce.product.controller.sku.vo;
 
-import com.example.ecommerce.frame.common.collection.CollUtils;
-import com.example.ecommerce.frame.common.string.StringUtils;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
 import lombok.Data;
 
@@ -16,6 +14,6 @@ public class ProductSkuResVO extends ProductSkuBaseVO{
     public ProductSkuResVO(ProductSku productSku) {
         super(productSku);
         this.id = productSku.getId();
-        this.propertyValues = convertToString(productSku.getProductSkuProperties(), s -> s.getProductPropertyValue().getValue(), "_");
+        this.propertyValues = convertToString(productSku.getProductSkuProperties(), s -> s.getProductPropertyValue().getPropertyValue(), "_");
     }
 }

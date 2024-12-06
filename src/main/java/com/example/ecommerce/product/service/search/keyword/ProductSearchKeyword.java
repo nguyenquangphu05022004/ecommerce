@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.Root;
 public class ProductSearchKeyword implements ProductSearchStrategy {
     @Override
     public Predicate search(Root<ProductSpu> root, CriteriaBuilder builder, String jsonData) {
-        return null;
+        Predicate equal = builder.like(root.get("name"), "%" + jsonData + "%");
+        return equal;
     }
 }

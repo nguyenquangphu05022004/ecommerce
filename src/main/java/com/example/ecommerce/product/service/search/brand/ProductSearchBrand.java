@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.Root;
 public class ProductSearchBrand implements ProductSearchStrategy {
     @Override
     public Predicate search(Root<ProductSpu> root, CriteriaBuilder builder, String jsonData) {
-        return null;
+        Predicate equal = builder.equal(root.get("productBrand").get("id"), jsonData);
+        return equal;
     }
 }

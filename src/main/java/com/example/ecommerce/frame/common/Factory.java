@@ -1,21 +1,33 @@
 package com.example.ecommerce.frame.common;
 
-import com.example.ecommerce.handler.exception.ResourcesNotFoundException;
+import com.example.ecommerce.frame.common.exception.ServiceException;
+import org.springframework.http.HttpStatus;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class Factory {
-    public static Object buildInstance(Class factoryInstance,
-                                String className,
-                                Class[] classes,
-                                Object[] objects) {
+    public static Object buildInstance(String classNameAddress,
+                                Object[] objects)  {
+        Class<?> clazz = null;
         try {
-            String name = factoryInstance.getPackageName() + "." + className;
-            Class<?> clazz = Class.forName(name);
+            clazz = Class.forName(classNameAddress);
+            Class<?>[] classes = new Class[objects.length];
+            for(int i = 0; i < objects.length; i++) {
+                classes[i] = objects[i].getClass();
+            }
             Constructor<?> constructor = clazz.getConstructor(classes);
             return constructor.newInstance(objects);
-        } catch (Exception e) {
-            throw new ResourcesNotFoundException("Class: " + className + " not found");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 }

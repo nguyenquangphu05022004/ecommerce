@@ -9,6 +9,6 @@ public class ProductPropertyValueResVO {
     private String value;
     public ProductPropertyValueResVO(ProductPropertyValue p) {
         this.id = p.getId();
-        this.value = p.getValue();
+        this.value = p.getPropertyValue();
     }
 }

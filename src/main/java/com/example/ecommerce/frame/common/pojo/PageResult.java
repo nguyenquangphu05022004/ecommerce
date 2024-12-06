@@ -18,4 +18,9 @@ public class PageResult <T>{
         this.totalPage = page.getTotalPages();
         this.list = page.getContent();
     }
+    public PageResult(int page, int totalPage, List<T> list) {
+        this.currentPage = page +1;
+        this.totalPage = totalPage;
+        this.list = list;
+    }
 }

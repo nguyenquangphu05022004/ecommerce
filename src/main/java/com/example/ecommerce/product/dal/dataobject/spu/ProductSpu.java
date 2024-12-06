@@ -3,6 +3,7 @@ package com.example.ecommerce.product.dal.dataobject.spu;
 import com.example.ecommerce.frame.auditting.BaseEntity;
 import com.example.ecommerce.product.dal.dataobject.brand.ProductBrand;
 import com.example.ecommerce.product.dal.dataobject.category.ProductCategory;
+import com.example.ecommerce.product.dal.dataobject.comment.ProductComment;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
 import com.example.ecommerce.system.dal.dataobject.user.Seller;
 import jakarta.persistence.*;
@@ -58,4 +59,5 @@ public class ProductSpu extends BaseEntity {
      */
     @OneToMany(mappedBy = "productSpu")
     private List<ProductSpuDetail> productSpuDetails;
+
 }
