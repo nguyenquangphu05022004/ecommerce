@@ -2,6 +2,7 @@ package com.example.ecommerce.frame.common.string;
 
 import com.example.ecommerce.frame.common.collection.CollUtils;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -25,5 +26,15 @@ public class StringUtils {
     public static String title(String str) {
         String low = str.toLowerCase();
         return low.substring(0, 1).toUpperCase() + low.substring(1);
+    }
+
+    /**
+     * Every word have first character is upper else lower
+     * Hello Guy --- Ho Simulate Format
+     * @return
+     */
+    public static String headerFormat(String str) {
+         return Arrays.stream(str.split("\\s+")).map(s -> title(s))
+                 .collect(Collectors.joining(" "));
     }
 }

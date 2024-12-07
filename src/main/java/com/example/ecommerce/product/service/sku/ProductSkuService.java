@@ -15,6 +15,6 @@ public interface ProductSkuService {
     List<ProductSku> getListProductSkuByProductSpuId(Long productSpuId);
     void updateImage(Long productSkuId, MultipartFile file);
 
-    void updateProductSpuStock(ProductSkuUpdateStockReqVO reqVO);
+    void updateProductSkuStock(ProductSkuUpdateStockReqVO reqVO);
 
 }
