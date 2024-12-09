@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.example.ecommerce.frame.common.collection.CollUtils.convertList;
-import static com.example.ecommerce.frame.common.collection.MapUtils.convertToMapList;
 import static com.example.ecommerce.frame.common.pojo.CommonResult.success;
 
 @RequiredArgsConstructor
