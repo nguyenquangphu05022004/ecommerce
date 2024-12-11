@@ -4,8 +4,9 @@ import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.common.collection.MapUtils;
 import com.example.ecommerce.frame.common.collection.StreamUtils;
 import com.example.ecommerce.frame.common.pojo.Pair;
-import com.example.ecommerce.product.dal.dataobject.properties.ProductProperty;
-import com.example.ecommerce.product.dal.dataobject.properties.ProductPropertyValue;
+import com.example.ecommerce.frame.common.string.StringUtils;
+import com.example.ecommerce.product.controller.property.vo.ProductPropertyVO;
+import com.example.ecommerce.product.controller.property.vo.ProductPropertyValueResVO;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
 import com.example.ecommerce.trade.dal.dataobject.cart.Cart;
 import lombok.Getter;
@@ -20,7 +21,6 @@ public class CartResVO {
     private Integer quantity;
     private Long id;
     private Integer totalPrice;
-
     private Product product;
 
     public CartResVO(Cart cart) {
@@ -38,7 +38,8 @@ public class CartResVO {
         private String name;
         private String image;
         private Integer price;
-        private Map<ProductProperty, Set<Pair<ProductPropertyValue, Boolean>>> properties;
+        private String properties;
+        private Map<ProductPropertyVO, Set<Pair<ProductPropertyValueResVO, Boolean>>> propertiesMap;
 
         public Product(ProductSku sku) {
             this.productSpuId = sku.getProductSpu().getId();
@@ -46,20 +47,20 @@ public class CartResVO {
             this.name = sku.getProductSpu().getName();
             this.image = sku.getImage();
             this.price = sku.getPrice();
-            this.properties = mapProperties(sku);
+            this.properties = StringUtils.convertToString(sku.getProductSkuProperties(), s -> s.getProductPropertyValue().getPropertyValue(), ", ");
+            this.propertiesMap = mapProperties(sku);
         }
 
-        private Map<ProductProperty, Set<Pair<ProductPropertyValue, Boolean>>> mapProperties(ProductSku sku) {
+        private Map<ProductPropertyVO, Set<Pair<ProductPropertyValueResVO, Boolean>>> mapProperties(ProductSku sku) {
             Set<ProductSku> productSkus = sku.getProductSpu().getProductSkus();
 
-            Set<Map<ProductProperty, Set<Pair<ProductPropertyValue, Boolean>>>> collect = productSkus.stream().map(s -> {
+            Set<Map<ProductPropertyVO, Set<Pair<ProductPropertyValueResVO, Boolean>>>> collect = productSkus.stream().map(s -> {
                 return MapUtils.convertToMapSet(CollUtils.convertSet(s.getProductSkuProperties(), ss -> {
-                    return new Pair<>(
-                            ss.getProductProperty(),
-                            new Pair<>(ss.getProductPropertyValue(), StreamUtils.filter(sku.getProductSkuProperties(), p -> {
-                                return p.getProductPropertyValue().equals(ss.getProductPropertyValue());
-                            }))
-                    );
+                    return new Pair<>(new ProductPropertyVO(ss.getProductProperty()),
+                            new Pair<>(
+                                    new ProductPropertyValueResVO(ss.getProductPropertyValue()),
+                                    StreamUtils.filter(sku.getProductSkuProperties(), p ->  p.getProductPropertyValue().equals(ss.getProductPropertyValue()))
+                            ));
                 }));
             }).collect(Collectors.toSet());
 

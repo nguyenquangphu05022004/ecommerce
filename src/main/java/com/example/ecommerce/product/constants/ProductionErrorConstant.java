@@ -2,6 +2,7 @@ package com.example.ecommerce.product.constants;
 
 import com.example.ecommerce.frame.common.exception.ErrorCode;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 public interface ProductionErrorConstant {
@@ -17,6 +18,7 @@ public interface ProductionErrorConstant {
     /**
      * ------Product sku
      */
+    ErrorCode STOCK_NOT_ENOUGH = new ErrorCode("Stock not enough", BAD_REQUEST.value());
     ErrorCode PRODUCT_SKU_NOT_FOUND  = new ErrorCode("ProductSku not found", NOT_FOUND.value());
     ErrorCode PRODUCT_SKU_PROPERTY_NOT_FOUND = new ErrorCode("ProductSkuProperty not found", NOT_FOUND.value());
     /**

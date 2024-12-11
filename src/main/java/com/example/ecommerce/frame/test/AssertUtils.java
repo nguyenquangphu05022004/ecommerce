@@ -1,7 +1,10 @@
 package com.example.ecommerce.frame.test;
 
 
+import com.example.ecommerce.frame.common.exception.ErrorCode;
+import com.example.ecommerce.frame.common.exception.ServiceException;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.function.Executable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -50,5 +53,11 @@ public class AssertUtils {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    public static void assertException(ErrorCode errorCode, Executable executable) {
+        ServiceException serviceException = org.junit.jupiter.api.Assertions.assertThrows(ServiceException.class, executable);
+        assertPojoEquals(serviceException, errorCode);
     }
 }

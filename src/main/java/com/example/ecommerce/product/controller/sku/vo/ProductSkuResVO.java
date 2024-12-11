@@ -16,4 +16,5 @@ public class ProductSkuResVO extends ProductSkuBaseVO{
         this.id = productSku.getId();
         this.propertyValues = convertToString(productSku.getProductSkuProperties(), s -> s.getProductPropertyValue().getPropertyValue(), "_");
     }
+
 }
