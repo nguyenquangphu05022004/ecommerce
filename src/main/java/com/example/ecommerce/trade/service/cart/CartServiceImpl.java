@@ -3,6 +3,7 @@ package com.example.ecommerce.trade.service.cart;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.trade.controller.cart.vo.CartCreateReqVO;
+import com.example.ecommerce.trade.controller.cart.vo.CartListRespVO;
 import com.example.ecommerce.trade.controller.cart.vo.CartUpdateQuantityReqVO;
 import com.example.ecommerce.trade.dal.dataobject.cart.Cart;
 import com.example.ecommerce.trade.dal.repo.cart.CartRepository;
@@ -37,8 +38,9 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public List<Cart> getList(Long userId) {
-        return this.cartRepository.findAllByUserMemberId(userId);
+    public CartListRespVO getList(Long userId) {
+        List<Cart> carts = this.cartRepository.findAllByUserMemberId(userId);
+        return new CartListRespVO(carts);
     }
 
     @Override

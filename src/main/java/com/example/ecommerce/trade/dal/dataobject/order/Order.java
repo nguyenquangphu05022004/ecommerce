@@ -2,6 +2,7 @@ package com.example.ecommerce.trade.dal.dataobject.order;
 
 import com.example.ecommerce.frame.auditting.BaseEntity;
 import com.example.ecommerce.frame.common.collection.CollUtils;
+import com.example.ecommerce.promotion.dal.dataobject.coupon.Coupon;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.beans.Transient;
+import java.util.List;
 import java.util.Set;
 
 @SuperBuilder(toBuilder = true)
@@ -33,8 +35,10 @@ public class Order extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_member_id")
     private UserMember userMember;
-
     private String address;
+
+    @OneToMany
+    private Set<Coupon> coupons;
 
     /**
      * Moi user chi co the comment product 1 lan khi

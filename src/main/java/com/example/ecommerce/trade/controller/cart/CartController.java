@@ -1,37 +1,44 @@
 package com.example.ecommerce.trade.controller.cart;
 
 import com.example.ecommerce.frame.common.pojo.CommonResult;
+import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
 import com.example.ecommerce.trade.controller.cart.vo.CartCreateReqVO;
-import com.example.ecommerce.trade.controller.cart.vo.CartResVO;
+import com.example.ecommerce.trade.controller.cart.vo.CartListRespVO;
 import com.example.ecommerce.trade.controller.cart.vo.CartUpdateQuantityReqVO;
+import com.example.ecommerce.trade.service.cart.CartService;
 import jakarta.annotation.security.PermitAll;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/carts")
+@RequiredArgsConstructor
 public class CartController {
+
+    private final CartService cartService;
 
     @PostMapping
     @PermitAll
     public CommonResult<Boolean> createCart(@RequestBody CartCreateReqVO req) {
         //create cart
+        cartService.createCartProduct(SecurityUtils.getLoginUserMemberId(), req);
         return CommonResult.success(true);
     }
 
     @GetMapping
     @PermitAll
-    public CommonResult<List<CartResVO>> getListCart() {
-        List<CartResVO> cartResVOS = null;
-        return CommonResult.success(cartResVOS);
+    public CommonResult<CartListRespVO> getListCart() {
+        CartListRespVO cartServiceList = this.cartService.getList(SecurityUtils.getLoginUserMemberId());
+        return CommonResult.success(cartServiceList);
     }
-    @PutMapping
-    @PermitAll
-    public CommonResult<CartResVO> updateCart(@RequestBody CartUpdateQuantityReqVO reqVO) {
-        CartResVO cartResVO = null;
-        return CommonResult.success(cartResVO);
-    }
+//    @PutMapping
+//    @PermitAll
+//    public CommonResult<CartResVO> updateCart(@RequestBody CartUpdateQuantityReqVO reqVO) {
+//        CartResVO cartResVO = null;
+//        return CommonResult.success(cartResVO);
+//    }
 
     @DeleteMapping("/{cartId}")
     @PermitAll

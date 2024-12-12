@@ -18,7 +18,7 @@ public class CouponServiceImpl implements CouponService {
     private final CouponRepository couponRepository;
     @Override
     public Coupon createCoupon(CouponCreateReqVO reqVO) {
-        Coupon coupon = Coupon.builder().end(reqVO.getEnd()).begin(reqVO.getBegin())
+        Coupon coupon = Coupon.builder().endDate(reqVO.getEnd()).beginDate(reqVO.getBegin())
                 .couponScope(reqVO.getCouponScope()).countNumber(0)
                 .description(reqVO.getDescription()).limitMaxPrice(reqVO.getLimitMaxPrice())
                 .limitMinPrice(reqVO.getLimitMinPrice()).productScope(reqVO.getProductScope())

@@ -1,37 +1,36 @@
 package com.example.ecommerce.trade.service.cart;
 
 import com.example.ecommerce.TestBase;
-import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.test.AssertUtils;
 import com.example.ecommerce.frame.test.RandomUtils;
-import com.example.ecommerce.product.dal.dataobject.brand.ProductBrand;
-import com.example.ecommerce.product.dal.dataobject.category.ProductCategory;
-import com.example.ecommerce.product.dal.dataobject.comment.ProductComment;
 import com.example.ecommerce.product.dal.dataobject.properties.ProductProperty;
 import com.example.ecommerce.product.dal.dataobject.properties.ProductPropertyValue;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSkuProperty;
 import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
-import com.example.ecommerce.product.dal.dataobject.spu.ProductSpuDetail;
 import com.example.ecommerce.product.dal.repository.property.ProductPropertyRepository;
 import com.example.ecommerce.product.dal.repository.property.ProductPropertyValueRepository;
 import com.example.ecommerce.product.dal.repository.sku.ProductSkuPropertyRepository;
 import com.example.ecommerce.product.dal.repository.sku.ProductSkuRepository;
 import com.example.ecommerce.product.dal.repository.spu.ProductSpuRepository;
+import com.example.ecommerce.system.controller.user.vo.SellerResVO;
+import com.example.ecommerce.system.dal.dataobject.user.Seller;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
+import com.example.ecommerce.system.dal.repository.user.SellerRepository;
 import com.example.ecommerce.system.dal.repository.user.UserMemberRepository;
 import com.example.ecommerce.trade.controller.cart.vo.CartCreateReqVO;
-import com.example.ecommerce.trade.controller.cart.vo.CartResVO;
+import com.example.ecommerce.trade.controller.cart.vo.CartItemRespVO;
+import com.example.ecommerce.trade.controller.cart.vo.CartListRespVO;
 import com.example.ecommerce.trade.controller.cart.vo.CartUpdateQuantityReqVO;
 import com.example.ecommerce.trade.dal.dataobject.cart.Cart;
 import com.example.ecommerce.trade.dal.repo.cart.CartRepository;
-import org.h2.engine.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CartServiceImplTest extends TestBase {
 
@@ -43,9 +42,11 @@ class CartServiceImplTest extends TestBase {
     @Autowired private CartService cartService;
     @Autowired private ProductSkuPropertyRepository productSkuPropertyRepository;
     @Autowired private UserMemberRepository userMemberRepository;
+    @Autowired private SellerRepository sellerRepository;
     @Test
     void test_createCartProduct_success() {
-        ProductSpu spu = random1();
+        Seller seller = randSeller();
+        ProductSpu spu = random1(seller);
         ProductSku sku = randomSku(spu);
         ProductProperty p1 = randomProperty("size");
         ProductProperty p2 = randomProperty("color");
@@ -71,9 +72,14 @@ class CartServiceImplTest extends TestBase {
     @Test
     void test_getListCart_success() {
         test_createCartProduct_success();
-        List<Cart> list = this.cartService.getList(1l);
-        List<CartResVO> cartResVOS = CollUtils.convertList(list, CartResVO::new);
-        AssertUtils.assertPojoEquals(cartResVOS.get(0), list.get(0));
+        Seller seller = new Seller();
+        seller.setId(1l);
+        CartListRespVO cartLt = this.cartService.getList(1l);
+
+        Set<CartItemRespVO> cartItems = cartLt.getSellerMapItem().get(new SellerResVO(seller));
+
+        assertEquals(cartItems.size(), 1);
+
     }
 
     @Test
@@ -97,9 +103,14 @@ class CartServiceImplTest extends TestBase {
         this.userMemberRepository.save(userMember);
         return userMember;
     }
-    public ProductSpu random1() {
+    public Seller randSeller() {
+        Seller seller = new Seller();
+        this.sellerRepository.save(seller);
+        return seller;
+    }
+    public ProductSpu random1(Seller seller) {
         ProductSpu productSku = RandomUtils.randomPojo(ProductSpu.class, p -> {
-            p.setProductSkus(null);p.setSeller(null);
+            p.setProductSkus(null);p.setSeller(seller);
             p.setName("test search product"); p.setProductSpuDetails(null);
             p.setProductBrand(null); p.setProductCategory(null);
             p.setId(null);

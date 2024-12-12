@@ -23,6 +23,4 @@ public class DiscountActivity extends BaseEntity {
     private String activityName;
     private LocalDateTime activityStartTime;
     private LocalDateTime activityEndTime;
-
-
 }

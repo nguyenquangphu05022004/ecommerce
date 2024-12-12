@@ -28,4 +28,5 @@ public interface SysErrorCodeConstants {
      * --------------------User-------------
      */
     ErrorCode USER_NOT_FOUND = new ErrorCode("User not found", NOT_FOUND.value());
+    ErrorCode USER_ADDRESS_NOT_FOUND = new ErrorCode("Please enter your address", NOT_FOUND.value());
 }

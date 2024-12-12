@@ -28,9 +28,23 @@ public class CollUtils {
         if(isEmpty(coll)) {
             return Collections.emptySet();
         }
+//        return Collections.emptySet();
         return coll.stream().map(func).collect(Collectors.toSet());
     }
 
+
+    public static <A, B,C> Set<C> convertSet(Map<A, B> map, com.example.ecommerce.frame.common.lambda.Function<A, B, Collection<C>> func) {
+        if(MapUtils.isEmpty(map)) {
+            return Collections.emptySet();
+        }
+//        return Collections.emptySet();
+        Set<C> set = new HashSet<>();
+        map.entrySet().forEach(entry -> {
+            Collection<C> apply = func.apply(entry.getKey(), entry.getValue());
+            set.addAll(apply);
+        });
+        return set;
+    }
 
 
     public static Integer size(List<ProductCommentFavorite> productCommentFavorites) {

@@ -1,10 +1,31 @@
 package com.example.ecommerce.frame.common.collection;
 
+import com.example.ecommerce.frame.common.lambda.Function;
 import com.example.ecommerce.frame.common.pojo.Pair;
 
 import java.util.*;
 
 public class MapUtils {
+
+    public static <K, V, M>Map<K, Set<V>> convertToMapSet(Set<M> coll,
+                                                       java.util.function.Function<M, K> func1,
+                                                       java.util.function.Function<M, V> func2
+    ) {
+        Map<K, Set<V>> map = new HashMap<>();
+        if(CollUtils.isEmpty(coll)) {
+            return map;
+        }
+        for(M m : coll) {
+            K k = func1.apply(m);
+            V v = func2.apply(m);
+            if(map.containsKey(k)) {
+                map.get(k).add(v);
+            } else {
+                map.put(k, new HashSet<>(Set.of(v)));
+            }
+        }
+        return map;
+    }
     public static <K, V>Map<K, Set<V>> convertToMapSet(Set<Pair<K, V>> pairs) {
         Map<K, Set<V>> map = new HashMap<>();
         if(CollUtils.isEmpty(pairs)) {
@@ -17,6 +38,15 @@ public class MapUtils {
                 map.put(pair.getKey(), new HashSet<>(Set.of(pair.getValue())));
             }
         }
+        return map;
+    }
+
+
+    public static <K, V, S, N> Map<K, N> combinationTwoMap(Map<K, V> map1, Map<K, S> map2, Function<V, S, N> func) {
+        Map<K, N> map = new HashMap<>();
+        map1.entrySet().stream().forEach(entry -> {
+            map.put(entry.getKey(), func.apply(entry.getValue(), map2.get(entry.getKey())));
+        });
         return map;
     }
 
@@ -42,7 +72,21 @@ public class MapUtils {
         });
     }
 
-    public static <K, V>Map<K, V> convertToMap(List<Pair<K, V>> pairs) {
+//    public static <K, V, M> Map<K, V> convertToMap(Collection<M> coll,
+//                                                  java.util.function.Function<M, K> func1,
+//                                                  java.util.function.Function<M, V> func) {
+//        Map<K, V> map = new LinkedHashMap<>();
+//        if(CollUtils.isEmpty(coll)) {
+//            return map;
+//        }
+//        for(var value : coll) {
+//
+//        }
+//        return map;
+//    }
+
+
+    public static <K, V>Map<K, V> convertToMap(Collection<Pair<K, V>> pairs) {
         Map<K, V> map = new LinkedHashMap<>();
         if(CollUtils.isEmpty(pairs)) {
             return map;

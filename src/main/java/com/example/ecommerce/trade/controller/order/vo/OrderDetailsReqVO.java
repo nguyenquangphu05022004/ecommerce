@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Data
 public class OrderDetailsReqVO {
-    private Set<Long> cartIds;
-    private Long addressId;
+    private OrderCheckout orderCheckout;
     private PaymentMode paymentMode;
+    private Long addressId;
 }
