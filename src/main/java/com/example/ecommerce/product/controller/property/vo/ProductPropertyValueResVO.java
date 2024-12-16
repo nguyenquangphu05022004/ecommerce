@@ -1,9 +1,11 @@
 package com.example.ecommerce.product.controller.property.vo;
 
 import com.example.ecommerce.product.dal.dataobject.properties.ProductPropertyValue;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode
 public class ProductPropertyValueResVO {
     private Long id;
     private String value;

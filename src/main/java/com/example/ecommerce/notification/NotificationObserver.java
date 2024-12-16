@@ -4,7 +4,6 @@ package com.example.ecommerce.notification;
 import static com.example.ecommerce.notification.NotificationEvent.*;
 
 public interface NotificationObserver {
-
     @EventType(eventType = ON_STOCK)
     void onStockUpdate(String productSkuIdStr);
     @EventType(eventType = ON_ORDER_CREATE)
@@ -13,7 +12,6 @@ public interface NotificationObserver {
     void onCreateNewProduct(String productSpuIdStr);
     @EventType(eventType = ON_ORDER_DELIVERY)
     void onOrderDelivery();
-
-//    @EventType(eventType = ON_FORGET_PASSWORD, enableApp = false)
-//    void onForgetPassword();
+    @EventType(eventType = ON_STOCK)
+    default void onForgetPassword(){};
 }

@@ -1,12 +1,11 @@
 package com.example.ecommerce.product.controller.sku;
 
 import com.example.ecommerce.frame.common.pojo.CommonResult;
-import com.example.ecommerce.product.controller.sku.vo.ProductSkuCreateReqVO;
-import com.example.ecommerce.product.controller.sku.vo.ProductSkuResVO;
-import com.example.ecommerce.product.controller.sku.vo.ProductSkuUpdateReqVO;
+import com.example.ecommerce.product.controller.sku.vo.*;
 import com.example.ecommerce.product.service.sku.ProductSkuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +47,13 @@ public class ProductSkuController {
     public CommonResult<Boolean> updateThumbnailForProductSku(@PathVariable("productSkuId") Long productSkuId, @RequestParam("file") MultipartFile file) {
         this.productSkuService.updateImage(productSkuId, file);
         return success(true);
+    }
+
+    @GetMapping("/get-by-property")
+    @PermitAll
+    @Operation(summary = "Get sku when customer select property of spu")
+    public CommonResult<ProductSkuSimpleRespVO> getProductSkuByProperty(@RequestBody ProductSkuSearchReqVO reqVO) {
+        return success( this.productSkuService.getProductSkuByProperty(reqVO));
     }
 
 }

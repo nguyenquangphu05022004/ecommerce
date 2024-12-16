@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "production_product_skus")
@@ -24,5 +25,5 @@ public class ProductSku extends BaseEntity {
     private String image;
     private Integer quantity;
     @OneToMany(mappedBy = "productSku")
-    private List<ProductSkuProperty> productSkuProperties;
+    private Set<ProductSkuProperty> productSkuProperties;
 }

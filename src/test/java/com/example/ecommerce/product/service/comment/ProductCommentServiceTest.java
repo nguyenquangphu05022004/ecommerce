@@ -130,7 +130,7 @@ class ProductCommentServiceTest extends TestBase {
     }
     public List<ProductSku> random2(ProductSpu spu) {
         List<ProductSku> productSkus = RandomUtils.randomList(ProductSku.class, s -> {
-            s.setProductSkuProperties(Collections.emptyList());
+            s.setProductSkuProperties(Collections.emptySet());
             s.setProductSpu(spu);
             s.setId(null);
         });

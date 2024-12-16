@@ -54,10 +54,4 @@ public class ProductSpu extends BaseEntity {
     @OneToMany(mappedBy = "productSpu")
     private Set<ProductSku> productSkus;
 
-    /**
-     * List of detail about product
-     */
-    @OneToMany(mappedBy = "productSpu")
-    private List<ProductSpuDetail> productSpuDetails;
-
 }

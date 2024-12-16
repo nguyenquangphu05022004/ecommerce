@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Objects;
+
 @Getter
 @Entity
 @Table(name = "production_product_sku_properties")
@@ -46,4 +48,17 @@ public class ProductSkuProperty extends BaseEntity {
     @JoinColumn(name = "product_property_value_id")
     private ProductPropertyValue productPropertyValue;
 
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof ProductSkuProperty that)) return false;
+        if (!super.equals(object)) return false;
+        return Objects.equals(productProperty, that.productProperty) && Objects.equals(productPropertyValue, that.productPropertyValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), productProperty, productPropertyValue);
+    }
 }

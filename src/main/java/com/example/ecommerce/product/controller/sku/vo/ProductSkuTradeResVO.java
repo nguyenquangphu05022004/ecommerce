@@ -1,5 +1,6 @@
 package com.example.ecommerce.product.controller.sku.vo;
 
+import com.example.ecommerce.frame.common.collection.MapUtils;
 import com.example.ecommerce.frame.common.collection.StreamUtils;
 import com.example.ecommerce.frame.common.pojo.Pair;
 import com.example.ecommerce.frame.common.string.StringUtils;
@@ -33,19 +34,25 @@ public class ProductSkuTradeResVO {
         this.price = sku.getPrice();
         this.quantity = sku.getQuantity();
         this.properties = StringUtils.convertToString(sku.getProductSkuProperties(), s -> s.getProductPropertyValue().getPropertyValue(), ", ");
-        this.propertiesMap = mapProperties(sku);
+        this.propertiesMap = ProductSkuTradeResVO.mapProperties(sku);
     }
 
-    private Map<ProductPropertyVO, Set<Pair<ProductPropertyValueResVO, Boolean>>> mapProperties(ProductSku sku) {
+    private static Map<ProductPropertyVO, Set<Pair<ProductPropertyValueResVO, Boolean>>> mapProperties(ProductSku sku) {
         Set<ProductSku> productSkus = sku.getProductSpu().getProductSkus();
+        return MapUtils.convertMap(mapProperties(productSkus), (property, propertiesValues) -> {
+            return propertiesValues.stream().map(ss -> {
+                return new Pair<>(ss, StreamUtils.filter(sku.getProductSkuProperties(), p -> p.getProductPropertyValue().getId().equals(ss.getId())));
+            }).collect(Collectors.toSet());
+        });
+    }
 
-        Set<Map<ProductPropertyVO, Set<Pair<ProductPropertyValueResVO, Boolean>>>> collect = productSkus.stream().map(s -> {
+    public static Map<ProductPropertyVO, Set<ProductPropertyValueResVO>> mapProperties( Set<ProductSku> productSkus) {
+
+        Set<Map<ProductPropertyVO, Set<ProductPropertyValueResVO>>> collect = productSkus.stream().map(s -> {
             return convertToMapSet(convertSet(s.getProductSkuProperties(), ss -> {
-                return new Pair<>(new ProductPropertyVO(ss.getProductProperty()),
-                        new Pair<>(
-                                new ProductPropertyValueResVO(ss.getProductPropertyValue()),
-                                StreamUtils.filter(sku.getProductSkuProperties(), p ->  p.getProductPropertyValue().equals(ss.getProductPropertyValue()))
-                        ));
+                return new Pair<>(
+                        new ProductPropertyVO(ss.getProductProperty()),
+                        new ProductPropertyValueResVO(ss.getProductPropertyValue()));
             }));
         }).collect(Collectors.toSet());
 

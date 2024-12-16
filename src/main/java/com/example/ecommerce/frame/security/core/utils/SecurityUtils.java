@@ -15,6 +15,8 @@ public class SecurityUtils {
     private static final String AUTH = "Authorization";
     private static final String TOKEN_TYPE = "UUID";
 
+    public static final String DEFAULT_USERNAME = "Anonymous";
+
     public static String obtainToken(HttpServletRequest request) {
         String authHeader = request.getHeader(AUTH);
         if(authHeader == null) return null;
@@ -34,6 +36,10 @@ public class SecurityUtils {
         return userMember != null ? userMember.getId() : null;
     }
 
+    public static String getLoginUserUserMemberUsername() {
+        UserMember userMember = getLoginUserMember();
+        return userMember != null ? userMember.getUsername() : DEFAULT_USERNAME;
+    }
 
 
     private static Authentication setAuthentication(UserMember userMember, HttpServletRequest request) {

@@ -1,4 +1,4 @@
-package com.example.ecommerce.product.controller.spu.self.vo.base;
+package com.example.ecommerce.product.controller.spu.vo.base;
 
 import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
 import lombok.Data;

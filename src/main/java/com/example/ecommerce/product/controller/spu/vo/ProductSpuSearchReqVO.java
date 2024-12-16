@@ -1,4 +1,4 @@
-package com.example.ecommerce.product.controller.spu.self.vo;
+package com.example.ecommerce.product.controller.spu.vo;
 
 import lombok.Data;
 

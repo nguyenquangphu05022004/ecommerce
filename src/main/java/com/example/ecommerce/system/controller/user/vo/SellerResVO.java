@@ -1,11 +1,13 @@
 package com.example.ecommerce.system.controller.user.vo;
 
 import com.example.ecommerce.system.dal.dataobject.user.Seller;
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Objects;
 
 @Data
+@NoArgsConstructor
 public class SellerResVO {
     private String shopName;
     private String shopImage;

@@ -1,6 +1,7 @@
 package com.example.ecommerce.frame.common.collection;
 
 import com.example.ecommerce.product.dal.dataobject.comment.ProductCommentFavorite;
+import com.example.ecommerce.product.dal.dataobject.sku.ProductSkuProperty;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -47,10 +48,16 @@ public class CollUtils {
     }
 
 
-    public static Integer size(List<ProductCommentFavorite> productCommentFavorites) {
-        if(isEmpty(productCommentFavorites)) {
+    public static Integer size(Collection collection) {
+        if(isEmpty(collection)) {
             return 0;
         }
-        return productCommentFavorites.size();
+        return collection.size();
+    }
+
+    public static<U> boolean containsAll(Set<U> x1, Set<U> x2) {
+        return x2.stream().allMatch(x -> {
+            return x1.contains(x);
+        });
     }
 }

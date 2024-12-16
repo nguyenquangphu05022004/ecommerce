@@ -1,5 +1,6 @@
 package com.example.ecommerce.frame.common.collection;
 
+import com.example.ecommerce.frame.common.json.JsonUtils;
 import com.example.ecommerce.frame.common.lambda.Function;
 import com.example.ecommerce.frame.common.pojo.Pair;
 
@@ -49,6 +50,24 @@ public class MapUtils {
         });
         return map;
     }
+
+
+    public static <K, V, N> Map<K, N> convertMap(Map<K, V> map1,  Function<K, V, N> func) {
+        Map<K, N> map = new HashMap<>();
+        map1.entrySet().stream().forEach(entry -> {
+            map.put(entry.getKey(), func.apply(entry.getKey(), entry.getValue()));
+        });
+        return map;
+    }
+
+    public static <K, V> Map<String, V> convertMap(Map<K, V> map1, java.util.function.Function<K, String> func) {
+        Map<String, V> map = new HashMap<>();
+        map1.entrySet().stream().forEach(entry -> {
+            map.put(func.apply(entry.getKey()), entry.getValue());
+        });
+        return map;
+    }
+
 
     public static <K, V> Map<K, Set<V>> convertListMap(Set<Map<K, Set<V>>> kvCollection) {
         Map<K, Set<V>> res = new HashMap<>();

@@ -1,8 +1,6 @@
 package com.example.ecommerce.product.service.sku;
 
-import com.example.ecommerce.product.controller.sku.vo.ProductSkuCreateReqVO;
-import com.example.ecommerce.product.controller.sku.vo.ProductSkuUpdateReqVO;
-import com.example.ecommerce.product.controller.sku.vo.ProductSkuUpdateStockReqVO;
+import com.example.ecommerce.product.controller.sku.vo.*;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,5 +14,7 @@ public interface ProductSkuService {
     void updateImage(Long productSkuId, MultipartFile file);
 
     void updateProductSkuStock(ProductSkuUpdateStockReqVO reqVO);
+
+    ProductSkuSimpleRespVO getProductSkuByProperty(ProductSkuSearchReqVO searchReqVO);
 
 }

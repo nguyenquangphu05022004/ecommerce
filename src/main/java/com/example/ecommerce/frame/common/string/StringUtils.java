@@ -8,6 +8,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class StringUtils {
+    public static boolean startWithAny(String str, String... any) {
+        if(any.length == 0) return false;
+
+        for(String prefix : any) {
+            if(str.startsWith(prefix)) return true;
+        }
+        return false;
+    }
     public static boolean compareIgnoreCase(String s1, String s2) {
         return s1.toLowerCase().compareTo(s2.toLowerCase()) == 0;
     }

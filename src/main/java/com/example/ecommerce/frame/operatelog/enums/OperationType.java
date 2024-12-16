@@ -1,4 +1,4 @@
-package com.example.ecommerce.frame.operatelog.dto;
+package com.example.ecommerce.frame.operatelog.enums;
 
 public enum OperationType {
     GET,

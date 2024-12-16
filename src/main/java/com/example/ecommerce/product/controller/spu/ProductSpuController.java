@@ -1,15 +1,13 @@
-package com.example.ecommerce.product.controller.spu.self;
+package com.example.ecommerce.product.controller.spu;
 
 
 import com.example.ecommerce.frame.common.pojo.CommonResult;
 import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.frame.operatelog.annotation.OperationLog;
-import com.example.ecommerce.product.controller.spu.detail.vo.ProductSpuDetailReqVO;
-import com.example.ecommerce.product.controller.spu.detail.vo.ProductSpuDetailResVO;
-import com.example.ecommerce.product.controller.spu.self.vo.ProductSpuCreateReqVO;
-import com.example.ecommerce.product.controller.spu.self.vo.ProductSpuResVO;
-import com.example.ecommerce.product.controller.spu.self.vo.ProductSpuUpdateBaseReqVO;
-import com.example.ecommerce.product.service.spu.ProductSpuDetailService;
+import com.example.ecommerce.product.controller.spu.vo.ProductDetailsRespVO;
+import com.example.ecommerce.product.controller.spu.vo.ProductSpuCreateReqVO;
+import com.example.ecommerce.product.controller.spu.vo.ProductSpuResVO;
+import com.example.ecommerce.product.controller.spu.vo.ProductSpuUpdateBaseReqVO;
 import com.example.ecommerce.product.service.spu.ProductSpuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,8 +15,6 @@ import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static com.example.ecommerce.frame.common.pojo.CommonResult.success;
 
@@ -57,8 +53,8 @@ public class ProductSpuController {
     @GetMapping("/{productSpuId}")
     @PermitAll
     @Operation(summary = "Get product spu by id")
-    public CommonResult<ProductSpuResVO> getProductSpuByProductSpuId(@PathVariable("productSpuId") Long productSpuId) {
-        return CommonResult.success(productSpuService.getProductSpuById(productSpuId), ProductSpuResVO::new);
+    public CommonResult<ProductDetailsRespVO> getProductSpuByProductSpuId(@PathVariable("productSpuId") Long productSpuId) {
+        return CommonResult.success(productSpuService.getDetailsProduct(productSpuId));
     }
 
 }

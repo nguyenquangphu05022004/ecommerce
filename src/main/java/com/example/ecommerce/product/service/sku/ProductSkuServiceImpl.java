@@ -3,23 +3,24 @@ package com.example.ecommerce.product.service.sku;
 import com.example.ecommerce.file.FileEntity;
 import com.example.ecommerce.file.FileStorageService;
 import com.example.ecommerce.file.Representation;
-import com.example.ecommerce.notification.NotificationEvent;
+import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.notification.NotificationEventManager;
-import com.example.ecommerce.product.controller.sku.vo.ProductSkuCreateReqVO;
-import com.example.ecommerce.product.controller.sku.vo.ProductSkuUpdateReqVO;
-import com.example.ecommerce.product.controller.sku.vo.ProductSkuUpdateStockReqVO;
+import com.example.ecommerce.product.controller.sku.vo.*;
+import com.example.ecommerce.product.dal.dataobject.properties.ProductProperty;
+import com.example.ecommerce.product.dal.dataobject.properties.ProductPropertyValue;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
+import com.example.ecommerce.product.dal.dataobject.sku.ProductSkuProperty;
 import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
 import com.example.ecommerce.product.dal.repository.property.ProductPropertyRepository;
 import com.example.ecommerce.product.dal.repository.property.ProductPropertyValueRepository;
 import com.example.ecommerce.product.dal.repository.sku.ProductSkuPropertyRepository;
 import com.example.ecommerce.product.dal.repository.sku.ProductSkuRepository;
-//import com.example.ecommerce.production.service.sku.notify.ProductStockObservable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
 import static com.example.ecommerce.notification.NotificationEvent.ON_STOCK;
@@ -95,6 +96,30 @@ public class ProductSkuServiceImpl implements ProductSkuService{
         if(stockEmpty) {
             notificationEventManager.notify(ON_STOCK, productSku.getId().toString());
         }
+    }
+
+    @Override
+    public ProductSkuSimpleRespVO getProductSkuByProperty(ProductSkuSearchReqVO searchReqVO) {
+        Set<ProductSkuProperty> productSkuProperties = CollUtils.convertSet(searchReqVO.getProperties(), (p1, p2) -> {
+            return Set.of(ProductSkuProperty.builder()
+                    .productPropertyValue(ProductPropertyValue.builder().id(p2).build())
+                    .productProperty(ProductProperty.builder().id(p1).build())
+                    .build());
+        });
+        List<ProductSku> productSkus = this.getListProductSkuByProductSpuId(searchReqVO.getProductSpuId());
+
+        for(ProductSku productSku : productSkus) {
+            boolean match = productSku.getProductSkuProperties().containsAll(productSkuProperties);
+            if(match) {
+                return new ProductSkuSimpleRespVO(productSku);
+            }
+        }
+        return null;
+//        ProductSku sku = StreamUtils.filterAndThen(productSkus, proSku -> {
+//            return CollUtils.containsAll(proSku.getProductSkuProperties(), productSkuProperties);
+//        }).findFirst().orElseThrow(() -> exception(PRODUCT_SKU_NOT_FOUND));
+
+//        return new ProductSkuSimpleRespVO(sku);
     }
 
 }

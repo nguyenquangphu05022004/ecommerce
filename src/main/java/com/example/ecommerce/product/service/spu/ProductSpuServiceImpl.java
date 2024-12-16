@@ -1,15 +1,25 @@
 package com.example.ecommerce.product.service.spu;
 
+import com.example.ecommerce.frame.common.collection.CollUtils;
+import com.example.ecommerce.frame.common.collection.MapUtils;
+import com.example.ecommerce.frame.common.collection.StreamUtils;
 import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.frame.common.pojo.PagingLimitation;
-import com.example.ecommerce.frame.common.string.StringUtils;
 import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
-import com.example.ecommerce.product.controller.spu.self.vo.ProductSpuCreateReqVO;
-import com.example.ecommerce.product.controller.spu.self.vo.ProductSpuSearchReqVO;
-import com.example.ecommerce.product.controller.spu.self.vo.ProductSpuUpdateBaseReqVO;
+import com.example.ecommerce.product.controller.brand.vo.ProductBrandResVO;
+import com.example.ecommerce.product.controller.category.vo.ProductCategoryResVO;
+import com.example.ecommerce.product.controller.sku.vo.ProductSkuTradeResVO;
+import com.example.ecommerce.product.controller.spu.vo.ProductDetailsRespVO;
+import com.example.ecommerce.product.controller.spu.vo.ProductSpuCreateReqVO;
+import com.example.ecommerce.product.controller.spu.vo.ProductSpuSearchReqVO;
+import com.example.ecommerce.product.controller.spu.vo.ProductSpuUpdateBaseReqVO;
 import com.example.ecommerce.product.dal.dataobject.brand.ProductBrand;
 import com.example.ecommerce.product.dal.dataobject.category.ProductCategory;
+import com.example.ecommerce.product.dal.dataobject.comment.ProductComment;
+import com.example.ecommerce.product.dal.dataobject.favorite.ProductFavorite;
 import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
+import com.example.ecommerce.product.dal.repository.comment.ProductCommentRepository;
+import com.example.ecommerce.product.dal.repository.favorite.ProductFavoriteRepository;
 import com.example.ecommerce.product.dal.repository.spu.ProductSpuRepository;
 import com.example.ecommerce.product.service.search.ProductSearchFactory;
 import com.example.ecommerce.system.dal.dataobject.user.Seller;
@@ -35,6 +45,8 @@ import static com.example.ecommerce.product.constants.ProductionErrorConstant.SE
 public class ProductSpuServiceImpl implements ProductSpuService{
     private final ProductSpuRepository productSpuRepository;
     private final SellerRepository sellerRepository;
+    private final ProductCommentRepository commentRepository;
+    private final ProductFavoriteRepository productFavoriteRepository;
     @Override
     public ProductSpu createProductSpu(ProductSpuCreateReqVO reqVO) {
         Optional<Seller> opSeller = sellerRepository.findByUserMemberId(SecurityUtils.getLoginUserMemberId());
@@ -92,4 +104,25 @@ public class ProductSpuServiceImpl implements ProductSpuService{
         return this.productSpuRepository.findById(productSpuId)
                 .orElseThrow(() -> exception(PRODUCT_SPU_NOT_FOUND));
     }
+
+    @Override
+    public ProductDetailsRespVO getDetailsProduct(Long productSpuId) {
+        ProductSpu productSpu = this.getProductSpuById(productSpuId);
+        List<ProductComment> comments = this.commentRepository.findAllByProductSpuId(productSpuId);
+        List<ProductFavorite> productFavorites = productFavoriteRepository.findAllByProductSpuId(productSpuId);
+
+        return ProductDetailsRespVO.builder()
+                .id(productSpuId).description(productSpu.getDescription())
+                .name(productSpu.getName()).maxPrice(productSpu.getMaxPrice())
+                .minPrice(productSpu.getMinPrice()).numComment(CollUtils.size(comments))
+                .productCategory(new ProductCategoryResVO(productSpu.getProductCategory()))
+                .productBrand(new ProductBrandResVO(productSpu.getProductBrand()))
+                .sliders(CollUtils.convertSet(productSpu.getProductSkus(), sku -> sku.getImage()))
+                .availableStock(StreamUtils.mapInt(productSpu.getProductSkus(), sku -> sku.getQuantity()).sum())
+                .avgRating(StreamUtils.mapDouble(comments, c -> c.getRating()).average().getAsDouble())
+                .numFavorite(CollUtils.size(productFavorites)).numSold(0)
+                .properties(MapUtils.convertMap(ProductSkuTradeResVO.mapProperties(productSpu.getProductSkus()), k -> k.getId() + "_" + k.getName() ))
+                .build();
+    }
 }
+

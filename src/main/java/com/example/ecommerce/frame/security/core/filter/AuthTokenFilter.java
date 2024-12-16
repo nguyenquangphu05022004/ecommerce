@@ -19,7 +19,9 @@ import java.io.IOException;
 public class AuthTokenFilter extends OncePerRequestFilter {
     private final AuthTokenService authTokenService;
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         String accessToken = SecurityUtils.obtainToken(request);
 
         AccessToken authAccessToken = authTokenService.getAccessToken(accessToken);
