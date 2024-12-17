@@ -68,7 +68,7 @@ class ProductFavoriteServiceImplTest extends TestBase {
     }
     private ProductSpu randomSpu() {
         ProductSpu spu = RandomUtils.randomPojo(ProductSpu.class, s -> {
-            s.setId(null); s.setSeller(null); s.setProductSkus(null); s.setProductSpuDetails(null);
+            s.setId(null); s.setSeller(null); s.setProductSkus(null);
             s.setProductBrand(null); s.setProductCategory(null);
         });
         this.productSpuRepository.save(spu);

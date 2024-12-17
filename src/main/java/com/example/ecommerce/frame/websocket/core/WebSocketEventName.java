@@ -1,4 +1,4 @@
-package com.example.ecommerce.web.websocket;
+package com.example.ecommerce.frame.websocket.core;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -58,7 +58,7 @@ class ProductEvaluationServiceImplTest  extends TestBase {
     private List<ProductSpu> randomListSpu() {
         return randomList(ProductSpu.class, s -> {
             s.setId(null);s.setProductBrand(null);s.setProductSkus(Collections.emptySet());s.setSeller(null);
-            s.setProductCategory(null); s.setProductSpuDetails(Collections.emptyList());
+            s.setProductCategory(null);
         });
     }
     @Test

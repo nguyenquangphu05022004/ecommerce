@@ -1,11 +1,13 @@
 package com.example.ecommerce.frame.common.pojo;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.function.Function;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonResult<T> {
     private String message;
     private Integer code;
@@ -33,4 +35,12 @@ public class CommonResult<T> {
         res.setList(pageResult.getList().stream().map(func).toList());
         return new CommonResult<>(null, 200, res);
     }
+
+    public static <T> CommonResult<T> error(Integer code) {
+        return new CommonResult<>(null, code, null);
+    }
+    public static <T> CommonResult<T> error(Integer code, String message) {
+        return new CommonResult<>(message, code, null);
+    }
+
 }

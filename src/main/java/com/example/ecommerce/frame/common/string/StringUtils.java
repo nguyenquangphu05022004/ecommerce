@@ -4,6 +4,7 @@ import com.example.ecommerce.frame.common.collection.CollUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -16,7 +17,7 @@ public class StringUtils {
         }
         return false;
     }
-    public static boolean compareIgnoreCase(String s1, String s2) {
+    public static boolean equalIgnoreCase(String s1, String s2) {
         return s1.toLowerCase().compareTo(s2.toLowerCase()) == 0;
     }
 
@@ -45,4 +46,19 @@ public class StringUtils {
          return Arrays.stream(str.split("\\s+")).map(s -> title(s))
                  .collect(Collectors.joining(" "));
     }
+
+    /**
+     * Format content
+     * @param content: Hello {{name}}, welcome
+     * @param map: {name: Quang Phu}
+     * @return Hello Quang Phu, welcome
+     */
+    public static String formatContent(String content, Map<String, Object> map) {
+        for(Map.Entry<String, Object> entry : map.entrySet()) {
+            content = content.replace("{{" + entry.getKey() + "}}", entry.getValue().toString());
+        }
+        return content;
+    }
+
+
 }

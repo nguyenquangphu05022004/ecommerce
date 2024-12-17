@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.example.ecommerce.frame.common.collection.CollUtils.convertList;
-import static com.example.ecommerce.frame.common.string.StringUtils.compareIgnoreCase;
+import static com.example.ecommerce.frame.common.string.StringUtils.equalIgnoreCase;
 
 @RequiredArgsConstructor
 @Service
@@ -75,7 +75,7 @@ public class PermissionServiceImpl implements PermissionService{
          */
         check = roles
                 .stream()
-                .anyMatch(s -> compareIgnoreCase(words[0], s.getName()));
+                .anyMatch(s -> equalIgnoreCase(words[0], s.getName()));
         if(!check) return false;
 
         List<Role> menuRoleIds = convertList(this.getListMenuRole(), s -> s.getRole());

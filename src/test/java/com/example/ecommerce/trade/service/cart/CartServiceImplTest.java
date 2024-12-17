@@ -111,7 +111,7 @@ class CartServiceImplTest extends TestBase {
     public ProductSpu random1(Seller seller) {
         ProductSpu productSku = RandomUtils.randomPojo(ProductSpu.class, p -> {
             p.setProductSkus(null);p.setSeller(seller);
-            p.setName("test search product"); p.setProductSpuDetails(null);
+            p.setName("test search product");
             p.setProductBrand(null); p.setProductCategory(null);
             p.setId(null);
         });
