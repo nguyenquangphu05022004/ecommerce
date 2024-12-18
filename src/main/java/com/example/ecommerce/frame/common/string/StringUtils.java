@@ -2,10 +2,11 @@ package com.example.ecommerce.frame.common.string;
 
 import com.example.ecommerce.frame.common.collection.CollUtils;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class StringUtils {
@@ -58,6 +59,15 @@ public class StringUtils {
             content = content.replace("{{" + entry.getKey() + "}}", entry.getValue().toString());
         }
         return content;
+    }
+
+    public static List<String> extractStr(String str, Pattern pattern) {
+        Matcher matcher = pattern.matcher(str);
+        Set<String> placeholders = new HashSet<>();
+        while (matcher.find()) {
+            placeholders.add(matcher.group(1)); // Extract the content inside {}
+        }
+        return new ArrayList<>(placeholders);
     }
 
 

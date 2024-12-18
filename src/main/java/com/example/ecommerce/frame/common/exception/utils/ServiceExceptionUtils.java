@@ -9,6 +9,11 @@ public class ServiceExceptionUtils {
         return new ServiceException(errorCode.getMessage(), errorCode.getCode());
     }
 
+    public static ServiceException exception(ErrorCode errorCode, Object...params)  {
+        return new ServiceException(errorCode.getMessage(), errorCode.getCode());
+    }
+
+
     public static ServiceException exception(String message, int code) {
         return new ServiceException(message, code);
     }

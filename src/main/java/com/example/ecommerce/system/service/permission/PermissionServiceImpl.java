@@ -2,7 +2,7 @@ package com.example.ecommerce.system.service.permission;
 
 import com.example.ecommerce.system.dal.dataobject.permission.MenuRole;
 import com.example.ecommerce.system.dal.dataobject.permission.Role;
-import com.example.ecommerce.system.enums.RoleType;
+import com.example.ecommerce.system.enums.UserType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -68,7 +68,7 @@ public class PermissionServiceImpl implements PermissionService{
         /**
          * Check lieu rang user la super admin
          */
-        boolean check = roles.stream().anyMatch(s -> s.getRoleType() == RoleType.SUPER_ADMIN);
+        boolean check = roles.stream().anyMatch(s -> s.getUserType() == UserType.SUPER_ADMIN);
         if(check) return true;
         /**
          * Kiem tra xem roles cua user co chua words[0](role)

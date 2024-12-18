@@ -2,8 +2,7 @@ package com.example.ecommerce.system.enums;
 
 import com.example.ecommerce.frame.common.exception.ErrorCode;
 
-import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 public interface SysErrorCodeConstants {
     /**
@@ -29,4 +28,16 @@ public interface SysErrorCodeConstants {
      */
     ErrorCode USER_NOT_FOUND = new ErrorCode("User not found", NOT_FOUND.value());
     ErrorCode USER_ADDRESS_NOT_FOUND = new ErrorCode("Please enter your address", NOT_FOUND.value());
+
+    /**
+     * Mail
+     */
+    ErrorCode MAIL_TEMPLATE_NOT_FOUND = new ErrorCode("MailTemplate not found", NOT_FOUND.value());
+    /**
+     * Notify
+     */
+    ErrorCode NOTIFY_TEMPLATE_NOT_FOUND = new ErrorCode("NotifyTemplate not found", NOT_FOUND.value());
+    ErrorCode NOTIFY_TEMPLATE_PARAMS_MISSING_KEY = new ErrorCode("NotifyTemplate params missing key", NOT_FOUND.value());
+    ErrorCode NOTIFY_MESSAGE_NOT_FOUND = new ErrorCode("NotifyMessage not found", NOT_FOUND.value());
+    ErrorCode UPDATE_NOTIFY_MESSAGE_DENIED = new ErrorCode("Update NotifyMessage denied", FORBIDDEN.value());
 }
