@@ -42,6 +42,6 @@ public class MailTemplateServiceImpl implements MailTemplateService{
 
     @Override
     public void deleteMailTemplate(Long id) {
-
+        this.mailTemplateRepository.deleteById(id);
     }
 }

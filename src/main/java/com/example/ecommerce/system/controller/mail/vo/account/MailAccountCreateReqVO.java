@@ -1,5 +1,13 @@
 package com.example.ecommerce.system.controller.mail.vo.account;
 
-public class MailAccountCreateReqVO {
+import lombok.Data;
 
+@Data
+public class MailAccountCreateReqVO {
+    private String host = "smtp.gmail.com";
+    private Integer port = 587;
+    private String username;
+    private String password;
+    private Boolean auth = true;
+    private Boolean starttlsEnable = true;
 }

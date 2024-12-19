@@ -1,22 +1,25 @@
 package com.example.ecommerce.system.dal.dataobject.mail;
 
 import com.example.ecommerce.frame.auditting.BaseEntity;
-import com.example.ecommerce.frame.common.converter.JsonListConverter;
-import com.example.ecommerce.frame.common.converter.JsonMapConverter;
+import com.example.ecommerce.system.enums.SendMailStatus;
 import jakarta.persistence.*;
-
-import java.util.Map;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "sys_mail_mail_log")
+@Getter
+@Setter
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class MailLog extends BaseEntity {
-    private String fromEmail;
-    private String toEmail;
-
-    @ManyToOne
-    @JoinColumn(name = "mail_template_id")
-    private MailTemplate mailTemplate;
-    @Convert(converter = JsonListConverter.class)
-    private Map<String, Object> templateParams;
+    private String fromMail;
+    private String toMail;
+    private String content;
+    private String title;
+    @Enumerated(EnumType.STRING)
+    private SendMailStatus sendMailStatus;
 
 }

@@ -32,7 +32,11 @@ public interface SysErrorCodeConstants {
     /**
      * Mail
      */
+    ErrorCode MAIL_LOG_NOT_FOUND = new ErrorCode("MailLog not foun", NOT_FOUND.value());
+    ErrorCode MAIL_ACCOUNT_NOT_FOUND = new ErrorCode("MailAccount not found", NOT_FOUND.value());
+    ErrorCode USER_HAS_NOT_CREATEd_MAIL_ACCOUNT = new ErrorCode("User has not created mailaccount", BAD_REQUEST.value());
     ErrorCode MAIL_TEMPLATE_NOT_FOUND = new ErrorCode("MailTemplate not found", NOT_FOUND.value());
+    ErrorCode MAIL_TEMPLATE_PARAMS_MISSING_KEY = new ErrorCode("MailTemplate missing key", BAD_REQUEST.value());
     /**
      * Notify
      */

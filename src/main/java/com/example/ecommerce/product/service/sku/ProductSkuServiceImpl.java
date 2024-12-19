@@ -4,7 +4,6 @@ import com.example.ecommerce.file.FileEntity;
 import com.example.ecommerce.file.FileStorageService;
 import com.example.ecommerce.file.Representation;
 import com.example.ecommerce.frame.common.collection.CollUtils;
-import com.example.ecommerce.notification.NotificationEventManager;
 import com.example.ecommerce.product.controller.sku.vo.*;
 import com.example.ecommerce.product.dal.dataobject.properties.ProductProperty;
 import com.example.ecommerce.product.dal.dataobject.properties.ProductPropertyValue;
@@ -23,7 +22,6 @@ import java.util.List;
 import java.util.Set;
 
 import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
-import static com.example.ecommerce.notification.NotificationEvent.ON_STOCK;
 import static com.example.ecommerce.product.constants.ProductionErrorConstant.PRODUCT_SKU_NOT_FOUND;
 
 @Service
@@ -36,15 +34,6 @@ public class ProductSkuServiceImpl implements ProductSkuService{
     private final ProductSkuPropertyRepository productSkuPropertyRepository;
     private final ProductPropertyRepository productPropertyRepository;
     private final ProductPropertyValueRepository productPropertyValueRepository;
-    private final NotificationEventManager notificationEventManager;
-    /**
-     * Notify users, when stock is updated(only current stock == 0)
-     */
-//    private final ProductStockObservable productStockObservable;
-
-    /**
-     * Service
-     */
     private final FileStorageService fileStorageService;
     @Override
     public ProductSku createProductSku(ProductSkuCreateReqVO reqVO) {
@@ -87,15 +76,8 @@ public class ProductSkuServiceImpl implements ProductSkuService{
     @Override
     public void updateProductSkuStock(ProductSkuUpdateStockReqVO reqVO) {
         ProductSku productSku = getProductSkuById(reqVO.getProductSkuId());
-        boolean stockEmpty = false;
-        if(productSku.getQuantity() == 0) {
-            stockEmpty = true;
-        }
         productSku.setQuantity(reqVO.getNewStock());
         this.productSkuRepository.save(productSku);
-        if(stockEmpty) {
-            notificationEventManager.notify(ON_STOCK, productSku.getId().toString());
-        }
     }
 
     @Override
