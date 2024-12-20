@@ -46,5 +46,18 @@ public class Coupon extends BaseEntity {
     private Integer countNumber;
 
 
+    public void increment() {
+        if(countNumber == null) {
+            countNumber = 0;
+        }
+        this.countNumber ++;
+    }
+
+    public void decrement() {
+        if(countNumber == null || countNumber == 0) {
+            return;
+        }
+        this.countNumber --;
+    }
 
 }

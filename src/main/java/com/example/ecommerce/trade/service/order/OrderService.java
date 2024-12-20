@@ -1,7 +1,5 @@
 package com.example.ecommerce.trade.service.order;
 
-import com.example.ecommerce.trade.controller.order.vo.OrderCheckoutReqVO;
-import com.example.ecommerce.trade.controller.order.vo.OrderCheckout;
 import com.example.ecommerce.trade.controller.order.vo.OrderDetailsReqVO;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
 import com.example.ecommerce.trade.dal.dataobject.order.OrderStatus;
@@ -9,13 +7,12 @@ import com.example.ecommerce.trade.dal.dataobject.order.OrderStatus;
 import java.util.List;
 
 public interface OrderService {
-    void createOrder(Long userId, OrderDetailsReqVO reqVO);
-    void cancelOrder(Long orderId);
-    OrderCheckout checkout(Long userId, OrderCheckoutReqVO reqVO);
-
+    void createOrder(OrderDetailsReqVO reqVO);
+    void cancelOrder(Long userId, Long orderId);
     List<Order> getAllListOrder(Long userId);
     List<Order> getAllListOrderByStatus(Long userId, OrderStatus orderStatus);
-
     void updateNextStatus(Long orderId);
     void updatePreviousStatus(Long orderId);
+    Order getOrderById(Long orderId);
+    Order getOrderByUserIdAndOrderId(Long userId, Long orderId);
 }

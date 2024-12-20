@@ -1,7 +1,6 @@
 package com.example.ecommerce.trade.service.order;
 
 import com.example.ecommerce.TestBase;
-import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.test.RandomUtils;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
 import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
@@ -15,8 +14,6 @@ import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.system.dal.repository.user.AddressRepository;
 import com.example.ecommerce.system.dal.repository.user.SellerRepository;
 import com.example.ecommerce.system.dal.repository.user.UserMemberRepository;
-import com.example.ecommerce.trade.controller.order.vo.OrderCheckoutReqVO;
-import com.example.ecommerce.trade.controller.order.vo.OrderCheckout;
 import com.example.ecommerce.trade.dal.dataobject.cart.Cart;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
 import com.example.ecommerce.trade.dal.dataobject.order.OrderStatus;

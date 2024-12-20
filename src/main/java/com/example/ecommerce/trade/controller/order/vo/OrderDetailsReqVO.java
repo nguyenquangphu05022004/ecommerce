@@ -3,11 +3,14 @@ package com.example.ecommerce.trade.controller.order.vo;
 import com.example.ecommerce.trade.dal.dataobject.order.PaymentMode;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
 public class OrderDetailsReqVO {
-    private OrderCheckout orderCheckout;
+    private Long userId;
+    private Set<Long> cartIds;
     private PaymentMode paymentMode;
-    private Long addressId;
+    private String addressDetails;
+    private Set<Long> couponIds;
 }

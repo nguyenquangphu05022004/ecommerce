@@ -59,6 +59,12 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
+    public Cart getCartById(Long id) {
+        return this.cartRepository.findById(id)
+                .orElseThrow(() -> exception(CART_NOT_FOUND));
+    }
+
+    @Override
     public void delete(Long id) {
         this.cartRepository.deleteById(id);
     }

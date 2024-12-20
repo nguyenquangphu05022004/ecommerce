@@ -15,14 +15,14 @@ import lombok.experimental.SuperBuilder;
 public class OrderItem extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name  = "order_id")
-    private Order order;
-
-    @ManyToOne
     @JoinColumn(name = "product_sku_id")
     private ProductSku productSku;
 
     private Integer quantity;
+
+    @ManyToOne
+    @JoinColumn(name = "order_line_item_id")
+    private OrderLineItem orderLineItem;
 
     @Transient
     public Integer totalPrice() {

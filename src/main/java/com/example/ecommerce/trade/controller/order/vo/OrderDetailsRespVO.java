@@ -1,48 +1,47 @@
 package com.example.ecommerce.trade.controller.order.vo;
 
-import com.example.ecommerce.frame.common.pojo.Pair;
-import com.example.ecommerce.product.controller.sku.vo.ProductSkuResVO;
+import com.example.ecommerce.frame.common.collection.CollUtils;
+import com.example.ecommerce.product.controller.sku.vo.ProductSkuSimpleRespVO;
+import com.example.ecommerce.promotion.controller.coupon.CouponRespVO;
 import com.example.ecommerce.system.controller.user.vo.SellerResVO;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
+import com.example.ecommerce.trade.dal.dataobject.order.OrderItem;
+import com.example.ecommerce.trade.dal.dataobject.order.OrderLineItem;
+import lombok.Data;
 import lombok.Getter;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
-import static com.example.ecommerce.frame.common.collection.CollUtils.convertSet;
-import static com.example.ecommerce.frame.common.collection.MapUtils.convertToMapSet;
+import java.util.List;
 
 @Getter
-public class OrderDetailsRespVO {
-    private Long id;
-    private Integer totalPrice;
-    private Integer totalProduct;
-    private boolean combinationShop;
-    private Map<SellerResVO, Set<ProductSkuResVO>> sellerMapProductSku;
-    private String orderStatus;
-
+public class OrderDetailsRespVO extends OrderSimpleRespVO{
+    private List<OrderLineItemRespVO> lineItems;
     public OrderDetailsRespVO(Order order) {
-        Map<SellerResVO, Set<ProductSkuResVO>> mapItem = convertToMapSet(convertSet(order.getOrderItems(), item -> {
-            return new Pair<>(new SellerResVO(item.getProductSku().getProductSpu().getSeller()), new ProductSkuResVO(item.getProductSku()));
-        }));
-        this.orderStatus = order.getOrderStatus().getValue();
-        this.sellerMapProductSku = mapItem;
-        this.combinationShop = mapItem.size() > 1;
-        this.totalPrice = order.totalPrice();
-        this.totalProduct = order.totalProduct();
-        this.id = order.getId();
+        super(order);
+        this.lineItems = CollUtils.convertList(order.getLineItems(), OrderLineItemRespVO::new);
+    }
+    @Data
+    public static class OrderLineItemRespVO {
+        private SellerResVO seller;
+        private CouponRespVO coupon;
+        private List<OrderItemRespVO> items;
+        private Boolean commentStatus;
+        public OrderLineItemRespVO(OrderLineItem orderLineItem) {
+            this.seller = new SellerResVO(orderLineItem.getSeller());
+            this.coupon = orderLineItem.getCoupon() != null ? new CouponRespVO(orderLineItem.getCoupon()) : null;
+            this.items = CollUtils.convertList(orderLineItem.getItems(), item -> new OrderItemRespVO(item));
+            this.commentStatus = orderLineItem.getCommentStatus();
+        }
+
     }
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (!(object instanceof OrderDetailsRespVO that)) return false;
-        return Objects.equals(id, that.id);
-    }
+    @Data
+    public static class OrderItemRespVO {
+        private ProductSkuSimpleRespVO product;
+        private Integer quantity;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+        public OrderItemRespVO(OrderItem orderItem) {
+            this.product = new ProductSkuSimpleRespVO(orderItem.getProductSku());
+            this.quantity = orderItem.getQuantity();
+        }
     }
 }

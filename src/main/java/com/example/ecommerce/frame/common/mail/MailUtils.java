@@ -1,4 +1,4 @@
-package com.example.ecommerce.frame.mail;
+package com.example.ecommerce.frame.common.mail;
 
 import com.example.ecommerce.system.dal.dataobject.mail.MailAccount;
 import jakarta.mail.Message;

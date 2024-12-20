@@ -11,5 +11,6 @@ public interface CartService {
     void createCartProduct(Long userId, CartCreateReqVO reqVO);
     CartListRespVO getList(Long userId);
     Cart updateQuantity(CartUpdateQuantityReqVO reqVO);
+    Cart getCartById(Long id);
     void delete(Long id);
 }

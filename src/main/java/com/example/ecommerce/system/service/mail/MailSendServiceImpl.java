@@ -1,7 +1,7 @@
 package com.example.ecommerce.system.service.mail;
 
 import com.example.ecommerce.frame.common.string.StringUtils;
-import com.example.ecommerce.frame.mail.MailUtils;
+import com.example.ecommerce.frame.common.mail.MailUtils;
 import com.example.ecommerce.mq.message.mail.MailMessage;
 import com.example.ecommerce.mq.producer.MailProducer;
 import com.example.ecommerce.system.dal.dataobject.mail.MailAccount;

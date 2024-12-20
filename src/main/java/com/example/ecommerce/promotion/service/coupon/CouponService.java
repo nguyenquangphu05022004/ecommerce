@@ -1,9 +1,11 @@
 package com.example.ecommerce.promotion.service.coupon;
 
+import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.common.date.DateTimeUtils;
 import com.example.ecommerce.promotion.controller.coupon.CouponCreateReqVO;
 import com.example.ecommerce.promotion.dal.dataobject.coupon.Coupon;
 
+import java.util.Collection;
 import java.util.List;
 
 import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
@@ -13,6 +15,7 @@ import static com.example.ecommerce.trade.enums.ErrorConstants.COUPON_UNUSED;
 public interface CouponService {
     Coupon createCoupon(CouponCreateReqVO reqVO);
     Coupon getCouponByCode(String code);
+    Coupon getCouponById(Long id);
     default Coupon getValidCoupon(String code) {
         Coupon coupon = getCouponByCode(code);
         if(!DateTimeUtils.isBetween(coupon.getBeginDate(), coupon.getEndDate())) {
@@ -30,7 +33,5 @@ public interface CouponService {
      * @return
      */
     List<Coupon> getListCoupon(Long userId);
-
-
 
 }

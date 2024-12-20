@@ -27,39 +27,23 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    //createdDate -> createdDate
-    //cancelDate -> modifiedDate
     @OneToMany(mappedBy = "order")
-    private Set<OrderItem> orderItems;
+    private List<OrderLineItem> lineItems;
 
     @ManyToOne
     @JoinColumn(name = "user_member_id")
     private UserMember userMember;
-    private String address;
 
-    @OneToMany
-    private Set<Coupon> coupons;
-
-    /**
-     * Moi user chi co the comment product 1 lan khi
-     * mua san pham do
-     */
-    private Boolean commentStatus;
+    private String addressDetails;
 
     @Enumerated(EnumType.STRING)
     private PaymentMode paymentMode;
 
-    @Transient
-    @JsonIgnore
-    public Integer totalProduct() {
-        if(CollUtils.isEmpty(this.orderItems)) return 0;
-        return this.orderItems.stream().mapToInt(s -> s.getQuantity()).sum();
-    }
-    @Transient
-    @JsonIgnore
     public Integer totalPrice() {
-        if(CollUtils.isEmpty(this.orderItems)) return 0;
-        return this.orderItems.stream().mapToInt(s -> s.totalPrice()).sum();
+        return 0;
     }
 
+    public Integer totalProduct() {
+        return 0;
+    }
 }

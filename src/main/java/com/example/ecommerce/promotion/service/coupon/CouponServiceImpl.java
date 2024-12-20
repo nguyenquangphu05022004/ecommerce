@@ -34,7 +34,14 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
+    public Coupon getCouponById(Long id) {
+        return this.couponRepository.findById(id)
+                .orElseThrow(() -> exception(COUPON_NOT_FOUND));
+    }
+
+    @Override
     public List<Coupon> getListCoupon(Long userId) {
         return this.couponRepository.findAllByCreatedBy(userId);
     }
+
 }
