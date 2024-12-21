@@ -71,4 +71,8 @@ public class StringUtils {
     }
 
 
+    public static String cut(String content, int cutSize) {
+        if(content.length() <= cutSize) return content;
+        return content.substring(0, cutSize) + "...";
+    }
 }

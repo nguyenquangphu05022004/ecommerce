@@ -42,4 +42,9 @@ public class SellerServiceImpl implements SellerService{
 //                .id().joined().numComment().numFollow().numProduct()
 //                .shopImage().shopName().replyPercent().build();
     }
+
+    @Override
+    public Seller getSellerByUseMemberId(Long userMemberId) {
+        return null;
+    }
 }

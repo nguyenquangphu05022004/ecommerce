@@ -76,4 +76,11 @@ public class UserMemberServiceImpl implements UserMemberService{
         UserMember userMember = getUserMemberById(userId).toBuilder().locked(locked).build();
         this.userMemberRepository.save(userMember);
     }
+
+    @Override
+    public void updateUserOnline(String username, boolean isOnline) {
+        UserMember userMember = getUserMemberByUsername(username);
+        userMember.setOnline(isOnline);
+        this.userMemberRepository.save(userMember);
+    }
 }

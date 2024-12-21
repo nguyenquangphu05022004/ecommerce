@@ -19,6 +19,11 @@ public class SecurityUtils {
 
     public static String obtainToken(HttpServletRequest request) {
         String authHeader = request.getHeader(AUTH);
+        return obtainToken(authHeader);
+    }
+
+    public static String obtainToken(String authHeaderValue) {
+        String authHeader = authHeaderValue;
         if(authHeader == null) return null;
         if(!authHeader.startsWith(TOKEN_TYPE)) return null;
         return authHeader.substring(5);

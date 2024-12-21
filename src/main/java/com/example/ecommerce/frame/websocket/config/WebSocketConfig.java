@@ -1,6 +1,13 @@
 package com.example.ecommerce.frame.websocket.config;
 
+import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
+import com.example.ecommerce.frame.web.config.WebProperties;
+import com.example.ecommerce.frame.websocket.core.AuthenticationToken;
+import com.example.ecommerce.system.dal.dataobject.auth.AccessToken;
+import com.example.ecommerce.system.service.authen.AuthTokenService;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -13,26 +20,30 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Configuration
 @AllArgsConstructor
 @EnableWebSocketMessageBroker
+@EnableConfigurationProperties(WebSocketProperties.class)
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-//    private final UserHandShakeHandler userHandShakeHandler;
-//    private final UserRepository userRepository;
-//    private final JwtService jwtService;
+    private final WebSocketProperties webSocketProperties;
+    private final AuthTokenService authTokenService;
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")
-//                .setHandshakeHandler(userHandShakeHandler)
+        registry.addEndpoint(webSocketProperties.getEndpoint())
+                .setAllowedOrigins("http://localhost:4200/",
+                        "http://localhost:4200",
+                        "https://" + webSocketProperties.getUiDomain(),
+                        "https://" + webSocketProperties.getUiDomain() + "/")
                 .withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/app");
-        registry.enableSimpleBroker("/topic");
+        registry.setApplicationDestinationPrefixes(webSocketProperties.getAppPrefix());
+        registry.enableSimpleBroker(webSocketProperties.getBrokerPrefix());
     }
 
     @Override
@@ -44,14 +55,22 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 if (accessor.getCommand().equals(StompCommand.CONNECT)) {
                     Optional.ofNullable(accessor.getNativeHeader("Authorization"))
                             .ifPresent(ah -> {
-                                String bearerToken = ah.get(0).replace("Bearer ", "");
-//                                AuthenticationToken jwtAuth = getJWTAuthenticationToken(bearerToken);
-//                                accessor.setUser(jwtAuth);
+                                String token = SecurityUtils.obtainToken(ah.get(0));
+                                AuthenticationToken jwtAuthentication = getJWTAuthenticationToken(token);
+                                accessor.setUser(jwtAuthentication);
                             });
                 }
                 return message;
             }
         });
+    }
+
+    private AuthenticationToken getJWTAuthenticationToken(String token) {
+        AccessToken accessToken = this.authTokenService.getAccessToken(token);
+        AuthenticationToken authenticationToken = new AuthenticationToken(
+                Collections.emptyList(), token, accessToken.getUserMember()
+        );
+        return authenticationToken;
     }
 
 }

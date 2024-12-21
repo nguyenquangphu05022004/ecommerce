@@ -12,4 +12,4 @@ public enum WebSocketEventName {
 
     @Getter
     private final String destination;
-    }
+}

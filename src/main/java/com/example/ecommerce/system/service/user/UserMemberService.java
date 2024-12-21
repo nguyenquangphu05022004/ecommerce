@@ -13,4 +13,6 @@ public interface UserMemberService {
     UserMember getUserMemberById(Long userId);
     UserMember getUserMemberByUsername(String username);
     void updateStatusAccount(Long userId, boolean locked);
+
+    void updateUserOnline(String username, boolean isOnline);
 }

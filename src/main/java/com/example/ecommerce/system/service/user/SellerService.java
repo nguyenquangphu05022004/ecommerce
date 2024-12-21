@@ -11,4 +11,5 @@ public interface SellerService {
     Seller createSeller(SellerCreateReqVO reqVO);
     PageResult<Seller> getListSeller(int page);
     SellerDetailsRespVO getSellerDetails(Long sellerId);
+    Seller getSellerByUseMemberId(Long userMemberId);
 }
