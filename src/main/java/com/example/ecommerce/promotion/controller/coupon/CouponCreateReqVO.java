@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 public class CouponCreateReqVO {
     private String description;
-
+    private Long ownerId;
     private String code;
 
     private PromotionProductScopeEnum productScope;

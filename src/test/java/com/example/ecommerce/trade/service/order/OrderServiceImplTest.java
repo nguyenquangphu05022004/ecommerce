@@ -16,7 +16,7 @@ import com.example.ecommerce.system.dal.repository.user.SellerRepository;
 import com.example.ecommerce.system.dal.repository.user.UserMemberRepository;
 import com.example.ecommerce.trade.dal.dataobject.cart.Cart;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
-import com.example.ecommerce.trade.dal.dataobject.order.OrderStatus;
+import com.example.ecommerce.trade.enums.OrderStatus;
 import com.example.ecommerce.trade.dal.repo.cart.CartRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

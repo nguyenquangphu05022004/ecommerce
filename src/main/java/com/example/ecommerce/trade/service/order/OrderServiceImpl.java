@@ -3,19 +3,16 @@ package com.example.ecommerce.trade.service.order;
 import com.example.ecommerce.frame.common.exception.ServiceException;
 import com.example.ecommerce.frame.common.pojo.Pair;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
-import com.example.ecommerce.product.dal.repository.sku.ProductSkuRepository;
 import com.example.ecommerce.promotion.dal.dataobject.coupon.Coupon;
 import com.example.ecommerce.promotion.dal.repo.coupon.CouponRepository;
 import com.example.ecommerce.promotion.service.coupon.CouponService;
 import com.example.ecommerce.system.dal.dataobject.user.Seller;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
-import com.example.ecommerce.system.dal.repository.user.AddressRepository;
-import com.example.ecommerce.system.dal.repository.user.SellerRepository;
 import com.example.ecommerce.trade.controller.order.vo.OrderDetailsReqVO;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
 import com.example.ecommerce.trade.dal.dataobject.order.OrderItem;
 import com.example.ecommerce.trade.dal.dataobject.order.OrderLineItem;
-import com.example.ecommerce.trade.dal.dataobject.order.OrderStatus;
+import com.example.ecommerce.trade.enums.OrderStatus;
 import com.example.ecommerce.trade.dal.repo.order.OrderItemRepository;
 import com.example.ecommerce.trade.dal.repo.order.OrderLineItemRepository;
 import com.example.ecommerce.trade.dal.repo.order.OrderRepository;
@@ -33,7 +30,6 @@ import static com.example.ecommerce.frame.common.collection.CollUtils.convertSet
 import static com.example.ecommerce.frame.common.collection.MapUtils.convertToMap;
 import static com.example.ecommerce.frame.common.collection.MapUtils.convertToMapSet;
 import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
-import static com.example.ecommerce.trade.enums.ErrorConstants.COUPON_EXPIRED;
 import static com.example.ecommerce.trade.enums.ErrorConstants.ORDER_NOT_FOUND;
 
 @Service
@@ -57,7 +53,7 @@ public class OrderServiceImpl implements OrderService{
         /**
          * Map seller wth coupon
          */
-        Map<Seller, Coupon> couponMap = convertToMap(convertList(
+        Map<UserMember, Coupon> couponMap = convertToMap(convertList(
                 convertList(reqVO.getCouponIds(), id -> couponService.getCouponById(id)), coupon -> {
                     coupon.decrement();
                     return new Pair<>(coupon.getOwner(), coupon);
@@ -90,6 +86,7 @@ public class OrderServiceImpl implements OrderService{
 
             return orderLineItem;
         });
+        cartService.deleteAll(reqVO.getCartIds());
         this.orderRepository.save(order);
         this.orderLineItemRepository.saveAll(lineItems);
         convertList(lineItems, l -> this.orderItemRepository.saveAll(l.getItems()));

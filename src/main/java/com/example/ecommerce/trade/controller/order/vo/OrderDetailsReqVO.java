@@ -1,9 +1,8 @@
 package com.example.ecommerce.trade.controller.order.vo;
 
-import com.example.ecommerce.trade.dal.dataobject.order.PaymentMode;
+import com.example.ecommerce.trade.enums.PaymentMode;
 import lombok.Data;
 
-import java.util.List;
 import java.util.Set;
 
 @Data

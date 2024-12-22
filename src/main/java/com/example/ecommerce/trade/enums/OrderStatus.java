@@ -1,4 +1,4 @@
-package com.example.ecommerce.trade.dal.dataobject.order;
+package com.example.ecommerce.trade.enums;
 
 import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.common.collection.MapUtils;

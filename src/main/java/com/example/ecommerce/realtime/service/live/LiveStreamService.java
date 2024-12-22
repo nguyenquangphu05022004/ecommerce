@@ -1,10 +1,21 @@
 package com.example.ecommerce.realtime.service.live;
 
 import com.example.ecommerce.realtime.controller.live.livestream.vo.LiveStreamCreateReqVO;
+import com.example.ecommerce.realtime.dal.dataobject.live.LiveComment;
+import com.example.ecommerce.realtime.dal.dataobject.live.LiveStream;
 
 public interface LiveStreamService  {
-    void createLiveStream(LiveStreamCreateReqVO reqVO);
+    LiveStream createLiveStream(LiveStreamCreateReqVO reqVO);
+
     void startLiveStream(Long liveStreamId);
+
+    /**
+     * Delete this livestream
+     * @param liveStreamId
+     */
     void closeLiveStream(Long liveStreamId);
+
     void randomListLiveStream();
+
+    LiveStream getLiveStreamById(Long id);
 }

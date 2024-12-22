@@ -46,5 +46,5 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
      * @param fromUserId: 1
      * @return: List Message [5:2:1, 4:1:3]
      */
-    List<Message> findLatestMessageOfEachConversationFromUserId(@Param("fromUserId") Long fromUserId);
+//    List<Message> findLatestMessageOfEachConversationFromUserId(@Param("fromUserId") Long fromUserId);
 }

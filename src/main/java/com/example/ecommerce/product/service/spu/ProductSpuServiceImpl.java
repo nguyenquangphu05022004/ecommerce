@@ -5,7 +5,7 @@ import com.example.ecommerce.frame.common.collection.MapUtils;
 import com.example.ecommerce.frame.common.collection.StreamUtils;
 import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.frame.common.pojo.PagingLimitation;
-import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
+import com.example.ecommerce.frame.common.validate.user.UserUtils;
 import com.example.ecommerce.product.controller.brand.vo.ProductBrandResVO;
 import com.example.ecommerce.product.controller.category.vo.ProductCategoryResVO;
 import com.example.ecommerce.product.controller.sku.vo.ProductSkuTradeResVO;
@@ -23,7 +23,9 @@ import com.example.ecommerce.product.dal.repository.favorite.ProductFavoriteRepo
 import com.example.ecommerce.product.dal.repository.spu.ProductSpuRepository;
 import com.example.ecommerce.product.service.search.ProductSearchFactory;
 import com.example.ecommerce.system.dal.dataobject.user.Seller;
+import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.system.dal.repository.user.SellerRepository;
+import com.example.ecommerce.system.service.user.UserMemberService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,11 +36,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
 import static com.example.ecommerce.product.constants.ProductionErrorConstant.PRODUCT_SPU_NOT_FOUND;
-import static com.example.ecommerce.product.constants.ProductionErrorConstant.SELLER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -47,17 +47,17 @@ public class ProductSpuServiceImpl implements ProductSpuService{
     private final SellerRepository sellerRepository;
     private final ProductCommentRepository commentRepository;
     private final ProductFavoriteRepository productFavoriteRepository;
+    private final UserMemberService userMemberService;
+
     @Override
     public ProductSpu createProductSpu(ProductSpuCreateReqVO reqVO) {
-        Optional<Seller> opSeller = sellerRepository.findByUserMemberId(SecurityUtils.getLoginUserMemberId());
-        if(opSeller.isEmpty()) {
-            throw exception(SELLER_NOT_FOUND);
-        }
+        UserMember userMember = userMemberService.getUserMemberById(reqVO.getUserId());
+        UserUtils.isSeller(userMember);
         ProductSpu productSpu = ProductSpu.builder()
                 .productCategory(ProductCategory.builder().id(reqVO.getProductCategoryId()).build())
                 .productBrand(ProductBrand.builder().id(reqVO.getProductBrandId()).build())
                 .maxPrice(reqVO.getMaxPrice()).minPrice(reqVO.getMinPrice()).name(reqVO.getName())
-                .enable(false).description(reqVO.getDescription()).seller(opSeller.get())
+                .enable(false).description(reqVO.getDescription()).seller((Seller) userMember)
                 .build();
         this.productSpuRepository.save(productSpu);
         return productSpu;
@@ -93,7 +93,7 @@ public class ProductSpuServiceImpl implements ProductSpuService{
 
     @Override
     public PageResult<ProductSpu> getListProductSpuBySeller(Long userMemberId, int page) {
-        Page<ProductSpu> pageResult = this.productSpuRepository.findAllBySellerUserMemberId(
+        Page<ProductSpu> pageResult = this.productSpuRepository.findAllBySellerId(
                 userMemberId,
                 PageRequest.of(page - 1, PagingLimitation.PRODUCT_SPU_LIMIT));
         return new PageResult<>(pageResult);

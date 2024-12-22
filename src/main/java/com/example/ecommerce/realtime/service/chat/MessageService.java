@@ -11,7 +11,6 @@ public interface MessageService {
 
     List<Message> getListMessageBetweenTwoUsers(Long fromUserId, Long toUserId);
 
-
     Message getMessageById(Long id);
 
     int getTotalUnreadMessageFromUserId(Long fromUserId);

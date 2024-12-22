@@ -4,6 +4,5 @@ import lombok.Data;
 
 @Data
 public class LiveProductReqVO {
-    private Long productSpuId;
-    private Boolean display;
+    private Long productSkuId;
 }

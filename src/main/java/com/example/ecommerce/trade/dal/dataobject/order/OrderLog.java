@@ -1,12 +1,12 @@
 package com.example.ecommerce.trade.dal.dataobject.order;
 
 import com.example.ecommerce.frame.auditting.BaseEntity;
+import com.example.ecommerce.trade.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import net.bytebuddy.implementation.bind.annotation.Super;
 
 @Entity
 @Table(name = "trade_order_log")

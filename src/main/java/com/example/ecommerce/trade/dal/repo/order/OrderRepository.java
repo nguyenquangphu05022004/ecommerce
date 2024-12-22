@@ -1,7 +1,7 @@
 package com.example.ecommerce.trade.dal.repo.order;
 
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
-import com.example.ecommerce.trade.dal.dataobject.order.OrderStatus;
+import com.example.ecommerce.trade.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

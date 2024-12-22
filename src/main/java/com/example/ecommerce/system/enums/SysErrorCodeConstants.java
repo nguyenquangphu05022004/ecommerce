@@ -28,7 +28,7 @@ public interface SysErrorCodeConstants {
      */
     ErrorCode USER_NOT_FOUND = new ErrorCode("User not found", NOT_FOUND.value());
     ErrorCode USER_ADDRESS_NOT_FOUND = new ErrorCode("Please enter your address", NOT_FOUND.value());
-
+    ErrorCode USER_WAS_NOT_SELLER = new ErrorCode("User was not seller", BAD_REQUEST.value());
     /**
      * Mail
      */

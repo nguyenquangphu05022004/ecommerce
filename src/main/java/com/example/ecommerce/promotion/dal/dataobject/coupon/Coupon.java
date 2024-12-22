@@ -3,7 +3,7 @@ package com.example.ecommerce.promotion.dal.dataobject.coupon;
 import com.example.ecommerce.frame.auditting.BaseEntity;
 import com.example.ecommerce.promotion.dal.enums.PromotionCouponScopeTypeEnum;
 import com.example.ecommerce.promotion.dal.enums.PromotionProductScopeEnum;
-import com.example.ecommerce.system.dal.dataobject.user.Seller;
+import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +22,7 @@ public class Coupon extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private Seller owner;
+    private UserMember owner;
 
     private String description;
 
@@ -44,6 +44,8 @@ public class Coupon extends BaseEntity {
      * Dem so luot su dung phieu giam gia
      */
     private Integer countNumber;
+
+    private Boolean revokeCoupon;
 
 
     public void increment() {

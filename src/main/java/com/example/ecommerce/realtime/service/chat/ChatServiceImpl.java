@@ -11,6 +11,7 @@ import com.example.ecommerce.system.service.user.SellerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,8 @@ public class ChatServiceImpl implements ChatService{
 
     @Override
     public List<ConversationRespVO> getAllConversationFromUserId(Long userId) {
-        List<Message> messages = this.messageRepository.findLatestMessageOfEachConversationFromUserId(userId);
+        //this.messageRepository.findLatestMessageOfEachConversationFromUserId(userId
+        List<Message> messages = Collections.emptyList();
         List<Object[]> unreadMessage = this.messageRepository.countUnreadMessageFromUserId(userId);
 
         Map<Long, Message> idMapMessage =

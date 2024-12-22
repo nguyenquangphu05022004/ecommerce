@@ -1,32 +1,36 @@
 package com.example.ecommerce.realtime.dal.dataobject.live;
 
 import com.example.ecommerce.frame.auditting.BaseEntity;
-import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
-import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
+import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Entity
-@Table(name = "realtime_live_product")
+
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @Getter
-@Setter
-@SuperBuilder(toBuilder = true)
-public class LiveProduct extends BaseEntity {
+@Entity
+@Table(name = "realtime_live_comment")
+public class LiveComment extends BaseEntity {
     @ManyToOne
-    @JoinColumn(name = "product_sku_id")
-    private ProductSku productSku;
+    @JoinColumn(name = "user_member_id")
+    private UserMember userMember;
+    @ManyToOne
+    @JoinColumn(name = "reply_live_comment")
+    private LiveComment replyLiveComment;
 
-    private Boolean display;
-    private Boolean pin;
+    private Integer likeComment;
+
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "livestream_id")
     private LiveStream liveStream;
+
+
 }

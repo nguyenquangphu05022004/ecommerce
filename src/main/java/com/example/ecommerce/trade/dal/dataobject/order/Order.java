@@ -1,19 +1,17 @@
 package com.example.ecommerce.trade.dal.dataobject.order;
 
 import com.example.ecommerce.frame.auditting.BaseEntity;
-import com.example.ecommerce.frame.common.collection.CollUtils;
-import com.example.ecommerce.promotion.dal.dataobject.coupon.Coupon;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.ecommerce.trade.enums.OrderPlace;
+import com.example.ecommerce.trade.enums.OrderStatus;
+import com.example.ecommerce.trade.enums.PaymentMode;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.beans.Transient;
 import java.util.List;
-import java.util.Set;
 
 @SuperBuilder(toBuilder = true)
 @Entity
@@ -38,6 +36,9 @@ public class Order extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private PaymentMode paymentMode;
+
+    @Enumerated(EnumType.STRING)
+    private OrderPlace orderPlace;
 
     public Integer totalPrice() {
         return 0;

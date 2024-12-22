@@ -25,8 +25,6 @@ public class MessageServiceImpl implements MessageService{
 
     @Override
     public Message createMessage(MessageCreateReqVO req) {
-        //validDateUserSeller
-
         Message message = Message.builder()
                 .readMessage(false).content(req.getContent())
                 .fromUser(userMemberService.getUserMemberById(req.getFromUserId()))

@@ -20,14 +20,6 @@ import static com.example.ecommerce.system.enums.SysErrorCodeConstants.USER_NOT_
 public class SellerServiceImpl implements SellerService{
     private final SellerRepository sellerRepository;
     private final UserMemberRepository userMemberRepository;
-    @Override
-    public Seller createSeller(SellerCreateReqVO reqVO) {
-        UserMember userMember = this.userMemberRepository.findById(reqVO.getUserMemberId()).orElseThrow(() -> exception(USER_NOT_FOUND));
-        Seller seller = Seller.builder().shopName(reqVO.getShopName())
-                .userMember(userMember).build();
-        this.sellerRepository.save(seller);
-        return seller;
-    }
 
     @Override
     public PageResult<Seller> getListSeller(int page) {

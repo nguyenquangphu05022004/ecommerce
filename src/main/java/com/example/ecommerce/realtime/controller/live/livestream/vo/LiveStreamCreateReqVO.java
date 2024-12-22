@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class LiveStreamCreateReqVO {
     private String title;
+    private Long userId;
 }

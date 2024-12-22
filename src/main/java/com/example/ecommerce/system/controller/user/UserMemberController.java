@@ -23,12 +23,11 @@ import static com.example.ecommerce.frame.security.core.utils.SecurityUtils.*;
 @CrossOrigin("*")
 public class UserMemberController {
     private final UserMemberService userMemberService;
-    private final SellerService sellerService;
     @PostMapping
     @PermitAll
     @Operation(summary = "Create new account")
-    public CommonResult<Boolean> createUserMember(@RequestBody UserMemberCreateReqVO reqVO) {
-        this.userMemberService.createUser(reqVO);
+    public CommonResult<Boolean> createUserMember(@RequestBody CustomerCreateReqVO reqVO) {
+        this.userMemberService.createUserMember(reqVO);
         return success(true);
     }
 
@@ -37,7 +36,7 @@ public class UserMemberController {
     @Operation(summary = "create seller")
     @PreAuthorize("@ss.hasPermission('sys:user:create-seller')")
     public CommonResult<Boolean> createSeller(@RequestBody SellerCreateReqVO reqVO) {
-        this.sellerService.createSeller(reqVO);
+        this.userMemberService.createUserSeller(reqVO);
         return success(true);
     }
 

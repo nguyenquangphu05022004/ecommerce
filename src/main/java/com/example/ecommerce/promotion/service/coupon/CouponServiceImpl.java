@@ -4,6 +4,7 @@ import com.example.ecommerce.frame.test.RandomUtils;
 import com.example.ecommerce.promotion.controller.coupon.CouponCreateReqVO;
 import com.example.ecommerce.promotion.dal.dataobject.coupon.Coupon;
 import com.example.ecommerce.promotion.dal.repo.coupon.CouponRepository;
+import com.example.ecommerce.system.service.user.UserMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +17,14 @@ import static com.example.ecommerce.promotion.dal.enums.ErrorConstant.COUPON_NOT
 @RequiredArgsConstructor
 public class CouponServiceImpl implements CouponService {
     private final CouponRepository couponRepository;
+    private final UserMemberService userMemberService;
     @Override
     public Coupon createCoupon(CouponCreateReqVO reqVO) {
         Coupon coupon = Coupon.builder().endDate(reqVO.getEnd()).beginDate(reqVO.getBegin())
                 .couponScope(reqVO.getCouponScope()).countNumber(0)
                 .description(reqVO.getDescription()).limitMaxPrice(reqVO.getLimitMaxPrice())
                 .limitMinPrice(reqVO.getLimitMinPrice()).productScope(reqVO.getProductScope())
+                .owner(userMemberService.getUserMemberById(reqVO.getOwnerId()))
                 .code(RandomUtils.randomString()).build();
         this.couponRepository.save(coupon);
         return coupon;
@@ -37,6 +40,13 @@ public class CouponServiceImpl implements CouponService {
     public Coupon getCouponById(Long id) {
         return this.couponRepository.findById(id)
                 .orElseThrow(() -> exception(COUPON_NOT_FOUND));
+    }
+
+    @Override
+    public void revokeCoupon(Long id) {
+        Coupon coupon = getCouponById(id);
+        coupon.setRevokeCoupon(true);
+        this.couponRepository.save(coupon);
     }
 
     @Override
