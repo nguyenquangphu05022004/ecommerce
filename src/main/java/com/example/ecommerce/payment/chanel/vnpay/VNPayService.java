@@ -1,5 +1,6 @@
-package com.example.ecommerce.payment;
+package com.example.ecommerce.payment.chanel.vnpay;
 
+import com.example.ecommerce.payment.chanel.PaymentChannel;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-public class VNPayService {
+public class VNPayService implements PaymentChannel {
 
     public String createOrder(int total, String orderInfor, String urlReturn){
         String vnp_Version = "2.1.0";

@@ -1,4 +1,4 @@
-package com.example.ecommerce.payment;
+package com.example.ecommerce.payment.chanel.vnpay;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
