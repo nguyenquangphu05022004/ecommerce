@@ -1,6 +1,6 @@
 package com.example.ecommerce.frame.web.config;
 
-import com.example.ecommerce.frame.web.filter.WebFilterOrderEnum;
+import com.example.ecommerce.frame.web.enums.WebFilterOrderEnum;
 import jakarta.annotation.Resource;
 import jakarta.servlet.Filter;
 import org.springframework.boot.autoconfigure.AutoConfiguration;

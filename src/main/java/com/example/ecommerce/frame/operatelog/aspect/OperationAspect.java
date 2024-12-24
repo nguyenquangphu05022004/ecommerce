@@ -8,7 +8,7 @@ import com.example.ecommerce.frame.common.servlet.ServletUtils;
 import com.example.ecommerce.frame.operatelog.annotation.OperationLog;
 import com.example.ecommerce.frame.operatelog.dto.OperationLoggerDto;
 import com.example.ecommerce.frame.operatelog.enums.OperationType;
-import com.example.ecommerce.system.dal.repository.logger.OperationLoggerService;
+import com.example.ecommerce.system.service.logger.OperationLoggerService;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

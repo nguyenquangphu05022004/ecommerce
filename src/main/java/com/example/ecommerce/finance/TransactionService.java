@@ -9,7 +9,7 @@ public interface TransactionService {
     PageResult<Transaction> getPageTransactionByUser(Long userMemberId, PageTransactionReqVO req);
     PageResult<Transaction> getPageTransaction(PageTransactionReqVO req);
 
-    Transaction createTransaction(TransactionCreateReqVO req);
+    Long createTransaction(TransactionCreateReqVO req);
 
     Transaction getTransactionById(Long id);
 

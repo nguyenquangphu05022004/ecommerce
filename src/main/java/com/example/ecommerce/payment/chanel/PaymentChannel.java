@@ -1,9 +1,12 @@
 package com.example.ecommerce.payment.chanel;
 
-import com.example.ecommerce.payment.service.PaymentType;
+import org.springframework.scheduling.annotation.Async;
+
+import java.util.Map;
 
 public interface PaymentChannel {
 
-    default void doPayment(PaymentType paymentType, Object... params) {}
+
+    default Object doPayment(Map<String, Object> params) {return null;}
 
 }

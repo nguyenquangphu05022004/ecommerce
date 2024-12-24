@@ -1,7 +1,14 @@
 package com.example.ecommerce.payment.chanel.vnpay;
 
+import com.example.ecommerce.finance.Transaction;
+import com.example.ecommerce.finance.TransactionService;
+import com.example.ecommerce.finance.WalletService;
+import com.example.ecommerce.finance.vo.TransactionCreateReqVO;
+import com.example.ecommerce.frame.common.pojo.CommonResult;
+import com.example.ecommerce.frame.common.servlet.ServletUtils;
 import com.example.ecommerce.payment.chanel.PaymentChannel;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -10,10 +17,36 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.example.ecommerce.finance.TransactionStatus.*;
+import static com.example.ecommerce.payment.chanel.ParamEnum.*;
+import static com.example.ecommerce.payment.chanel.ParamEnum.AMOUNT;
+
 @Service
+@RequiredArgsConstructor
 public class VNPayService implements PaymentChannel {
 
-    public String createOrder(int total, String orderInfor, String urlReturn){
+    private final TransactionService transactionService;
+    private final WalletService walletService;
+    @Override
+    public Object doPayment(Map<String, Object> params) {
+        TransactionCreateReqVO req = new TransactionCreateReqVO();
+        req.setNo(System.currentTimeMillis() +"");
+        req.setTransferContent((String) params.get(CONTENT));
+        req.setToUserId((Long) params.get(TO_USER_ID));
+        req.setFromUserId((Long) params.get(FROM_USER_ID));
+        req.setAmountTransfer((Integer) params.get(AMOUNT));
+        req.setTransactionStatus(PROCESSING);
+        Long transactionId = this.transactionService.createTransaction(req);
+
+        String urlVNPay = createOrder(req.getAmountTransfer(),
+                req.getTransferContent(),
+                ServletUtils.getBaseUrl(), transactionId);
+
+        return urlVNPay;
+
+    }
+
+    private String createOrder(int total, String orderInfor, String urlReturn, Long transactionId){
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
@@ -27,7 +60,7 @@ public class VNPayService implements PaymentChannel {
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
         vnp_Params.put("vnp_Amount", String.valueOf(total*100));
         vnp_Params.put("vnp_CurrCode", "VND");
-
+        vnp_Params.put(TRANSACTION_ID, transactionId.toString());
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.put("vnp_OrderInfo", orderInfor);
         vnp_Params.put("vnp_OrderType", orderType);
@@ -82,7 +115,7 @@ public class VNPayService implements PaymentChannel {
         return paymentUrl;
     }
 
-    public int orderReturn(HttpServletRequest request){
+    public void orderReturn(HttpServletRequest request){
         Map fields = new HashMap();
         for (Enumeration params = request.getParameterNames(); params.hasMoreElements();) {
             String fieldName = null;
@@ -105,16 +138,24 @@ public class VNPayService implements PaymentChannel {
         if (fields.containsKey("vnp_SecureHash")) {
             fields.remove("vnp_SecureHash");
         }
+        Long transactionId = Long.parseLong(request.getParameter(TRANSACTION_ID));
         String signValue = VNPayConfig.hashAllFields(fields);
         if (signValue.equals(vnp_SecureHash)) {
             if ("00".equals(request.getParameter("vnp_TransactionStatus"))) {
-                return 1;
-            } else {
-                return 0;
+                Transaction transaction = this.transactionService.getTransactionById(transactionId);
+                walletService.topUpToWallet(transaction.getToUser().getId(), transaction.getAmountTransfer());
+                this.transactionService.updateTransactionStatus(transactionId, SUCCESS);
+                return;
+                //return 1;
             }
-        } else {
-            return -1;
+//            else {
+//                return 0;
+//            }
         }
+        this.transactionService.updateTransactionStatus(transactionId, FAILED);
+//        else {
+//            return -1;
+//        }
     }
 
 }

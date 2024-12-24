@@ -26,7 +26,7 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
-    public Transaction createTransaction(TransactionCreateReqVO req) {
+    public Long createTransaction(TransactionCreateReqVO req) {
         Transaction transaction = Transaction.builder().no(System.currentTimeMillis() + "")
                 .amountTransfer(req.getAmountTransfer())
                 .transferContent(req.getTransferContent())
@@ -36,7 +36,7 @@ public class TransactionServiceImpl implements TransactionService{
                 .errorMessage(null)
                 .build();
         this.transactionRepository.save(transaction);
-        return transaction;
+        return transaction.getId();
     }
 
     @Override

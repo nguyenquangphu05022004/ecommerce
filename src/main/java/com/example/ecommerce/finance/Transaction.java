@@ -1,5 +1,6 @@
 package com.example.ecommerce.finance;
 
+import com.example.ecommerce.frame.auditting.BaseEntity;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -8,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 
 @SuperBuilder(toBuilder = true)
 @Getter
-public class Transaction {
+public class Transaction extends BaseEntity {
     private Integer amountTransfer;
     private UserMember fromUser;
     private UserMember toUser;

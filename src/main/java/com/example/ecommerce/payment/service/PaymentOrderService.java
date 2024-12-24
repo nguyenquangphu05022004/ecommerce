@@ -1,36 +1,44 @@
 package com.example.ecommerce.payment.service;
 
-import com.example.ecommerce.finance.*;
-import com.example.ecommerce.finance.vo.TransactionCreateReqVO;
-import com.example.ecommerce.frame.common.exception.ServiceException;
+import com.example.ecommerce.finance.Wallet;
+import com.example.ecommerce.finance.WalletService;
+import com.example.ecommerce.finance.WalletType;
+import com.example.ecommerce.payment.vo.OrderPaymentReqVO;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
 import com.example.ecommerce.trade.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.example.ecommerce.payment.chanel.ParamEnum.*;
+
 @Service
 @RequiredArgsConstructor
-public class PaymentOrderService extends PaymentService{
+public class PaymentOrderService extends PaymentService<OrderPaymentReqVO>{
 
     private final OrderService orderService;
     private final WalletService walletService;
-    private final TransactionService transactionService;
-    @Override
-    public void payment(Long fromUser, Long orderId) {
-        Order order = this.orderService.getOrderById(orderId);
-        Wallet wallet = this.walletService.getWalletByWalletType(WalletType.SYSTEM);
-        TransactionCreateReqVO req = new TransactionCreateReqVO();
-        req.setNo(System.currentTimeMillis() + ""); req.setAmountTransfer(order.totalPrice());
-        req.setFromUserId(fromUser); req.setToUserId(wallet.getUserMember().getId());
-        req.setTransferContent(String.format("Payment Order with No: %s", order.getNo()));
-        try {
-            walletService.withdrawFromWalletToAnotherWallet(fromUser, wallet.getUserMember().getId(), order.totalPrice());
-            req.setTransactionStatus(TransactionStatus.SUCCESS);
-        } catch (ServiceException ex) {
-            req.setTransactionStatus(TransactionStatus.FAILED);
-        } finally {
-            this.transactionService.createTransaction(req);
-        }
 
+    @Override
+    public Object payment(OrderPaymentReqVO req) {
+        Order order = this.orderService.getOrderById(req.getOrderId());
+        if(!order.getUserMember().getId().equals(req.getFromUserId())) {
+            throw new RuntimeException(String.format("Order has id: %s not match with user has id: %s", order.getId(), req.getFromUserId()));
+        }
+        /**
+         * Khi thanh toan thi se chuyen truc tiep cho he thong(khong qua seller).
+         * He thong se danh gia va se chuyen cho seller sau.
+         */
+        Wallet wallet = walletService.getWalletByWalletType(WalletType.SYSTEM);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put(ORDER_ID, order.getId());
+        params.put(FROM_USER_ID, req.getFromUserId());
+        params.put(TO_USER_ID, wallet.getUserMember().getId());
+        params.put(CONTENT, req.getContent());
+
+        this.paymentChannel.doPayment(params);
     }
 }

@@ -11,4 +11,5 @@ public class TransactionCreateReqVO {
     private String no;
     private String transferContent;
     private TransactionStatus transactionStatus;
+    private String errorMessage;
 }
