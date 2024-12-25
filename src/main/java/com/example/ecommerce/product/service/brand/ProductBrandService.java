@@ -1,7 +1,7 @@
 package com.example.ecommerce.product.service.brand;
 
-import com.example.ecommerce.product.controller.brand.vo.ProductBrandCreateReqVO;
-import com.example.ecommerce.product.controller.brand.vo.ProductBrandUpdateReqVO;
+import com.example.ecommerce.product.controller.admin.brand.vo.ProductBrandCreateReqVO;
+import com.example.ecommerce.product.controller.admin.brand.vo.ProductBrandUpdateReqVO;
 import com.example.ecommerce.product.dal.dataobject.brand.ProductBrand;
 import org.springframework.web.multipart.MultipartFile;
 

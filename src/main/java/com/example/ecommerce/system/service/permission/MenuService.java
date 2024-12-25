@@ -1,7 +1,7 @@
 package com.example.ecommerce.system.service.permission;
 
-import com.example.ecommerce.system.controller.vo.permission.MenuCreateReqVO;
-import com.example.ecommerce.system.controller.vo.permission.MenuUpdateReqVO;
+import com.example.ecommerce.system.controller.admin.vo.permission.MenuCreateReqVO;
+import com.example.ecommerce.system.controller.admin.vo.permission.MenuUpdateReqVO;
 import com.example.ecommerce.system.dal.dataobject.permission.Menu;
 
 import java.util.Arrays;

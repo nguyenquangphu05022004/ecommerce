@@ -1,7 +1,7 @@
 package com.example.ecommerce.product.service.category;
 
-import com.example.ecommerce.product.controller.category.vo.ProductCategoryCreateReqVO;
-import com.example.ecommerce.product.controller.category.vo.ProductCategoryUpdateReqVO;
+import com.example.ecommerce.product.controller.admin.category.vo.ProductCategoryCreateReqVO;
+import com.example.ecommerce.product.controller.admin.category.vo.ProductCategoryUpdateReqVO;
 import com.example.ecommerce.product.dal.dataobject.category.ProductCategory;
 import org.springframework.web.multipart.MultipartFile;
 

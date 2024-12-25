@@ -2,7 +2,7 @@ package com.example.ecommerce.system.service.notify;
 
 import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.common.pojo.PageResult;
-import com.example.ecommerce.system.controller.notify.vo.message.NotifyMessagePageReqVO;
+import com.example.ecommerce.system.controller.admin.notify.vo.message.NotifyMessagePageReqVO;
 import com.example.ecommerce.system.dal.dataobject.notify.NotifyMessage;
 import com.example.ecommerce.system.dal.dataobject.notify.NotifyTemplate;
 

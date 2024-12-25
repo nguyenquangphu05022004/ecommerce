@@ -2,7 +2,7 @@ package com.example.ecommerce.product.service.comment;
 
 import com.example.ecommerce.TestBase;
 import com.example.ecommerce.frame.test.AssertUtils;
-import com.example.ecommerce.product.controller.comment.evaluation.vo.ProductEvaluationReqVO;
+import com.example.ecommerce.product.controller.admin.comment.evaluation.vo.ProductEvaluationReqVO;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductEvaluation;
 import com.example.ecommerce.product.dal.dataobject.properties.ProductProperty;
 import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;

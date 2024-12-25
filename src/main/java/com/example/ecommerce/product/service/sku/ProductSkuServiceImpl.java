@@ -4,7 +4,7 @@ import com.example.ecommerce.file.FileEntity;
 import com.example.ecommerce.file.FileStorageService;
 import com.example.ecommerce.file.Representation;
 import com.example.ecommerce.frame.common.collection.CollUtils;
-import com.example.ecommerce.product.controller.sku.vo.*;
+import com.example.ecommerce.product.controller.admin.sku.vo.*;
 import com.example.ecommerce.product.dal.dataobject.properties.ProductProperty;
 import com.example.ecommerce.product.dal.dataobject.properties.ProductPropertyValue;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;

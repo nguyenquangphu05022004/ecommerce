@@ -2,6 +2,7 @@ package com.example.ecommerce.payment.vo;
 
 import com.example.ecommerce.payment.constants.ChanelType;
 import com.example.ecommerce.payment.service.PaymentType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -11,10 +12,13 @@ public class PaymentReqVO {
      * @link: SecurityUtils.getLoginUserId()
      */
     @NotNull(message = "sender can't be null")
+    @Schema(description = "Nguoi gui", example = "2")
     private Long fromUserId;
     @NotNull(message = "chanel type can't be null")
+    @Schema(description = "Kenh thanh toan", example = "APP", requiredMode = Schema.RequiredMode.REQUIRED)
     private ChanelType chanelType;
 
+    @Schema(description = "Noi thanh chuyen khoan", example = "Thanh toan don hang")
     private String content;
 
 }

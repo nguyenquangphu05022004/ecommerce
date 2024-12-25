@@ -13,7 +13,7 @@ import com.example.ecommerce.product.dal.repository.property.ProductPropertyValu
 import com.example.ecommerce.product.dal.repository.sku.ProductSkuPropertyRepository;
 import com.example.ecommerce.product.dal.repository.sku.ProductSkuRepository;
 import com.example.ecommerce.product.dal.repository.spu.ProductSpuRepository;
-import com.example.ecommerce.system.controller.user.vo.SellerResVO;
+import com.example.ecommerce.system.controller.admin.user.vo.SellerResVO;
 import com.example.ecommerce.system.dal.dataobject.user.Seller;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.system.dal.repository.user.SellerRepository;

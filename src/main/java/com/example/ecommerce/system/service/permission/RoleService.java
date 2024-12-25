@@ -1,7 +1,7 @@
 package com.example.ecommerce.system.service.permission;
 
-import com.example.ecommerce.system.controller.vo.permission.RoleCreateReqVO;
-import com.example.ecommerce.system.controller.vo.permission.RoleUpdateReqVO;
+import com.example.ecommerce.system.controller.admin.vo.permission.RoleCreateReqVO;
+import com.example.ecommerce.system.controller.admin.vo.permission.RoleUpdateReqVO;
 import com.example.ecommerce.system.dal.dataobject.permission.Role;
 
 import java.util.Arrays;

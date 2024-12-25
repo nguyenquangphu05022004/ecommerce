@@ -2,7 +2,7 @@ package com.example.ecommerce.system.service.notify;
 
 import com.example.ecommerce.frame.common.exception.ServiceException;
 import com.example.ecommerce.frame.common.string.StringUtils;
-import com.example.ecommerce.system.controller.notify.vo.template.NotifyTemplateCreateReqVO;
+import com.example.ecommerce.system.controller.admin.notify.vo.template.NotifyTemplateCreateReqVO;
 import com.example.ecommerce.system.dal.dataobject.notify.NotifyTemplate;
 import com.example.ecommerce.system.dal.repository.notify.NotifyTemplateRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;

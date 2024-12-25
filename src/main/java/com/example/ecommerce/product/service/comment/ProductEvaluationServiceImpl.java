@@ -1,8 +1,7 @@
 package com.example.ecommerce.product.service.comment;
 
-import com.example.ecommerce.product.controller.comment.evaluation.vo.ProductEvaluationReqVO;
+import com.example.ecommerce.product.controller.admin.comment.evaluation.vo.ProductEvaluationReqVO;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductEvaluation;
-import com.example.ecommerce.product.dal.repository.comment.ProductCommentEvaluationRepository;
 import com.example.ecommerce.product.dal.repository.comment.ProductEvaluationRepository;
 import com.example.ecommerce.product.service.property.ProductPropertyService;
 import com.example.ecommerce.product.service.spu.ProductSpuService;

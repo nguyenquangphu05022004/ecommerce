@@ -1,8 +1,0 @@
-package com.example.ecommerce.product.controller.brand.vo;
-
-import lombok.Data;
-
-@Data
-public class ProductBrandUpdateReqVO extends ProductBrandBaseVO{
-    private Long id;
-}

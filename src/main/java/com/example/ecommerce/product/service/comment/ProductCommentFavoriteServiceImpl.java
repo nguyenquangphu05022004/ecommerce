@@ -1,7 +1,7 @@
 package com.example.ecommerce.product.service.comment;
 
 import com.example.ecommerce.frame.common.exception.ServiceException;
-import com.example.ecommerce.product.controller.comment.favorite.vo.ProductCommentFavoriteReqVO;
+import com.example.ecommerce.product.controller.admin.comment.favorite.vo.ProductCommentFavoriteReqVO;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductComment;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductCommentFavorite;
 import com.example.ecommerce.product.dal.repository.comment.ProductCommentFavoriteRepository;

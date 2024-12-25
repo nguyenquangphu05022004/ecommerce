@@ -1,6 +1,6 @@
 package com.example.ecommerce.realtime.controller.live.liveproduct.vo;
 
-import com.example.ecommerce.product.controller.spu.vo.ProductSpuResVO;
+import com.example.ecommerce.product.controller.admin.spu.vo.ProductSpuResVO;
 import lombok.Data;
 
 @Data

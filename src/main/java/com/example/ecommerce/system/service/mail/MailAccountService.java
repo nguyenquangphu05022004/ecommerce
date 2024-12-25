@@ -1,6 +1,6 @@
 package com.example.ecommerce.system.service.mail;
 
-import com.example.ecommerce.system.controller.mail.vo.account.MailAccountCreateReqVO;
+import com.example.ecommerce.system.controller.admin.mail.vo.account.MailAccountCreateReqVO;
 import com.example.ecommerce.system.dal.dataobject.mail.MailAccount;
 
 import java.util.List;

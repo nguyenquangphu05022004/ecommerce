@@ -1,6 +1,6 @@
 package com.example.ecommerce.product.service.property;
 
-import com.example.ecommerce.product.controller.property.vo.ProductPropertyValueReqVO;
+import com.example.ecommerce.product.controller.admin.property.vo.ProductPropertyValueReqVO;
 import com.example.ecommerce.product.dal.dataobject.properties.ProductProperty;
 import com.example.ecommerce.product.dal.dataobject.properties.ProductPropertyValue;
 import com.example.ecommerce.product.dal.repository.property.ProductPropertyValueRepository;

@@ -1,7 +1,6 @@
 package com.example.ecommerce.system.service.mail;
 
-import com.example.ecommerce.frame.common.pojo.PageResult;
-import com.example.ecommerce.system.controller.mail.vo.template.MailTemplateCreateReqVO;
+import com.example.ecommerce.system.controller.admin.mail.vo.template.MailTemplateCreateReqVO;
 import com.example.ecommerce.system.dal.dataobject.mail.MailTemplate;
 
 import java.util.List;

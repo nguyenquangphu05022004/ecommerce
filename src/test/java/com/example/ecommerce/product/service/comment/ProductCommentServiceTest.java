@@ -7,9 +7,9 @@ import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.frame.common.pojo.Pair;
 import com.example.ecommerce.frame.test.AssertUtils;
 import com.example.ecommerce.frame.test.RandomUtils;
-import com.example.ecommerce.product.controller.comment.vo.PagingProductCommentReqVO;
-import com.example.ecommerce.product.controller.comment.vo.ProductCommentCreateReqVO;
-import com.example.ecommerce.product.controller.comment.vo.ProductCommentUpdateReqVO;
+import com.example.ecommerce.product.controller.admin.comment.vo.PagingProductCommentReqVO;
+import com.example.ecommerce.product.controller.admin.comment.vo.ProductCommentCreateReqVO;
+import com.example.ecommerce.product.controller.admin.comment.vo.ProductCommentUpdateReqVO;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductComment;
 import com.example.ecommerce.product.dal.dataobject.properties.ProductProperty;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
@@ -26,9 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Import(ProductCommentServiceImpl.class)

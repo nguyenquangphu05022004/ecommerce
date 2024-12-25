@@ -1,6 +1,6 @@
 package com.example.ecommerce.trade.controller.cart.vo;
 
-import com.example.ecommerce.product.controller.sku.vo.ProductSkuTradeResVO;
+import com.example.ecommerce.product.controller.admin.sku.vo.ProductSkuTradeResVO;
 import com.example.ecommerce.trade.dal.dataobject.cart.Cart;
 import lombok.Data;
 

@@ -2,10 +2,8 @@ package com.example.ecommerce.system.service.user;
 
 import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.frame.common.pojo.PagingLimitation;
-import com.example.ecommerce.system.controller.user.vo.SellerCreateReqVO;
-import com.example.ecommerce.system.controller.user.vo.SellerDetailsRespVO;
+import com.example.ecommerce.system.controller.admin.user.vo.SellerDetailsRespVO;
 import com.example.ecommerce.system.dal.dataobject.user.Seller;
-import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.system.dal.repository.user.SellerRepository;
 import com.example.ecommerce.system.dal.repository.user.UserMemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
-import static com.example.ecommerce.system.enums.SysErrorCodeConstants.USER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor

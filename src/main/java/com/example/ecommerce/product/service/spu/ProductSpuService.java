@@ -1,10 +1,10 @@
 package com.example.ecommerce.product.service.spu;
 
 import com.example.ecommerce.frame.common.pojo.PageResult;
-import com.example.ecommerce.product.controller.spu.vo.ProductDetailsRespVO;
-import com.example.ecommerce.product.controller.spu.vo.ProductSpuCreateReqVO;
-import com.example.ecommerce.product.controller.spu.vo.ProductSpuSearchReqVO;
-import com.example.ecommerce.product.controller.spu.vo.ProductSpuUpdateBaseReqVO;
+import com.example.ecommerce.product.controller.admin.spu.vo.ProductDetailsRespVO;
+import com.example.ecommerce.product.controller.admin.spu.vo.ProductSpuCreateReqVO;
+import com.example.ecommerce.product.controller.admin.spu.vo.ProductSpuSearchReqVO;
+import com.example.ecommerce.product.controller.admin.spu.vo.ProductSpuUpdateBaseReqVO;
 import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
 
 public interface ProductSpuService {

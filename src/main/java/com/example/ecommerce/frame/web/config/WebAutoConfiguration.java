@@ -22,11 +22,11 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
     @Resource
     private WebProperties webProperties;
 
-    @Override
-    public void configurePathMatch(PathMatchConfigurer configurer) {
-        configurePathMatch(configurer, webProperties.getAdminApi());
-        configurePathMatch(configurer, webProperties.getAppApi());
-    }
+//    @Override
+//    public void configurePathMatch(PathMatchConfigurer configurer) {
+//        configurePathMatch(configurer, webProperties.getAdminApi());
+//        configurePathMatch(configurer, webProperties.getAppApi());
+//    }
 
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilterBean() {
@@ -40,11 +40,11 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
         return createFilterBean(new CorsFilter(source), WebFilterOrderEnum.CORS_FILTER);
     }
 
-    private void configurePathMatch(PathMatchConfigurer configurer, WebProperties.Api api) {
-        AntPathMatcher antPathMatcher = new AntPathMatcher(".");
-        configurer.addPathPrefix(api.getPrefix(), clazz -> clazz.isAnnotationPresent(RestController.class)
-                && antPathMatcher.match(api.getController(), clazz.getPackage().getName()));
-    }
+//    private void configurePathMatch(PathMatchConfigurer configurer, WebProperties.Api api) {
+//        AntPathMatcher antPathMatcher = new AntPathMatcher(".");
+//        configurer.addPathPrefix(api.getPrefix(), clazz -> clazz.isAnnotationPresent(RestController.class)
+//                && antPathMatcher.match(api.getController(), clazz.getPackage().getName()));
+//    }
 
 
     public static <T extends Filter> FilterRegistrationBean<T> createFilterBean(T filter, Integer order) {

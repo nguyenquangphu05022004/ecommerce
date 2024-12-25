@@ -23,7 +23,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String accessToken = SecurityUtils.obtainToken(request);
-
+        System.out.println("token: " + accessToken);
         AccessToken authAccessToken = authTokenService.getAccessToken(accessToken);
         if(authAccessToken != null && !DateTimeUtils.isExpired(authAccessToken.getExpires())) {
             SecurityUtils.setUserLogin(authAccessToken.getUserMember(), request);

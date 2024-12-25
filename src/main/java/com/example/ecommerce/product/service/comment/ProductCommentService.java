@@ -1,9 +1,9 @@
 package com.example.ecommerce.product.service.comment;
 
 import com.example.ecommerce.frame.common.pojo.PageResult;
-import com.example.ecommerce.product.controller.comment.vo.PagingProductCommentReqVO;
-import com.example.ecommerce.product.controller.comment.vo.ProductCommentCreateReqVO;
-import com.example.ecommerce.product.controller.comment.vo.ProductCommentUpdateReqVO;
+import com.example.ecommerce.product.controller.admin.comment.vo.PagingProductCommentReqVO;
+import com.example.ecommerce.product.controller.admin.comment.vo.ProductCommentCreateReqVO;
+import com.example.ecommerce.product.controller.admin.comment.vo.ProductCommentUpdateReqVO;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductComment;
 import org.springframework.web.multipart.MultipartFile;
 

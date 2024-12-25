@@ -1,7 +1,6 @@
 package com.example.ecommerce.product.service.comment;
 
-import com.example.ecommerce.product.controller.comment.favorite.vo.ProductCommentFavoriteReqVO;
-import com.example.ecommerce.product.dal.dataobject.comment.ProductCommentFavorite;
+import com.example.ecommerce.product.controller.admin.comment.favorite.vo.ProductCommentFavoriteReqVO;
 
 public interface ProductCommentFavoriteService {
     Integer likeComment(ProductCommentFavoriteReqVO reqVO);
