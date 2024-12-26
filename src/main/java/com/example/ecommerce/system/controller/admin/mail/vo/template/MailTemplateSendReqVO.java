@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.Map;
 
 @Data
-@Schema(description = "Gui email toi    nguoi dung - MailTemplateSendReqVO")
+@Schema(description = "Yeu cau gui mail - MailTemplateSendReqVO")
 public class MailTemplateSendReqVO {
     @NotNull
     @Schema(description = "Mau mail de gui toi customer, nhu la: Mau quen mat khau, dat hang", example = "1")

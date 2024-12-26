@@ -1,4 +1,4 @@
-package com.example.ecommerce.finance;
+package com.example.ecommerce.finance.enums;
 
 import com.example.ecommerce.frame.common.exception.ErrorCode;
 

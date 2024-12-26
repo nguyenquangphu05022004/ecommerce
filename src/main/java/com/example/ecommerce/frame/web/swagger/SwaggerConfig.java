@@ -8,26 +8,14 @@ import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import org.springdoc.core.customizers.OpenApiBuilderCustomizer;
-import org.springdoc.core.customizers.ServerBaseUrlCustomizer;
 import org.springdoc.core.models.GroupedOpenApi;
-import org.springdoc.core.properties.SpringDocConfigProperties;
-import org.springdoc.core.providers.JavadocProvider;
-import org.springdoc.core.service.OpenAPIService;
-import org.springdoc.core.service.SecurityService;
-import org.springdoc.core.utils.PropertyResolverUtils;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Configuration
 @EnableConfigurationProperties(SwaggerProperties.class)

@@ -1,4 +1,4 @@
-package com.example.ecommerce.payment.vo;
+package com.example.ecommerce.payment.controller.vo;
 
 import com.example.ecommerce.payment.constants.ChanelType;
 import com.example.ecommerce.payment.service.PaymentType;

@@ -12,8 +12,8 @@ public interface MailAccountService {
      * @param reqVO
      * @return
      */
-    MailAccount createMailAccount(Long userId, MailAccountCreateReqVO reqVO);
-    MailAccount updateMailAccount(Long userId, MailAccountCreateReqVO reqVO);
+    MailAccount createMailAccount(MailAccountCreateReqVO reqVO);
+    MailAccount updateMailAccount(MailAccountCreateReqVO reqVO);
     MailAccount getMailAccountByUserId(Long userId); //createdBy-owner
     MailAccount getMailAccountByUsername(String username);
     List<MailAccount> getListMailAccount();

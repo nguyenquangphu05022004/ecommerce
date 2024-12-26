@@ -1,6 +1,6 @@
 package com.example.ecommerce.payment.service;
 
-import com.example.ecommerce.payment.vo.TransferPaymentReqVO;
+import com.example.ecommerce.payment.controller.vo.TransferPaymentReqVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

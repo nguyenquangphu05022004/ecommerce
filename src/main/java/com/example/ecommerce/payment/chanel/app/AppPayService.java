@@ -1,10 +1,9 @@
 package com.example.ecommerce.payment.chanel.app;
 
-import com.example.ecommerce.finance.TransactionService;
-import com.example.ecommerce.finance.TransactionStatus;
-import com.example.ecommerce.finance.WalletService;
-import com.example.ecommerce.finance.vo.TransactionCreateReqVO;
-import com.example.ecommerce.frame.common.pojo.CommonResult;
+import com.example.ecommerce.finance.service.transaction.TransactionService;
+import com.example.ecommerce.finance.enums.TransactionStatus;
+import com.example.ecommerce.finance.service.wallet.WalletService;
+import com.example.ecommerce.finance.service.transaction.bo.TransactionCreateReqBO;
 import com.example.ecommerce.payment.chanel.PaymentChannel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ public class AppPayService implements PaymentChannel {
     private final TransactionService transactionService;
     @Override
     public Object doPayment(Map<String, Object> params) {
-        TransactionCreateReqVO req = new TransactionCreateReqVO();
+        TransactionCreateReqBO req = new TransactionCreateReqBO();
         req.setNo(System.currentTimeMillis() +"");
         req.setTransferContent((String) params.get(CONTENT));
         req.setToUserId((Long) params.get(TO_USER_ID));

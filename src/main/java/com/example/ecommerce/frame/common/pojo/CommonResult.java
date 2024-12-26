@@ -2,15 +2,20 @@ package com.example.ecommerce.frame.common.pojo;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.function.Function;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Schema(name = "Ket qua tra ve - CommonResult")
 public class CommonResult<T> {
+    @Schema(description = "Noi dung ve ket qua", example = "Lay danh sach san pham")
     private String message;
+    @Schema(description = "Code tra ve", example = "200")
     private Integer code;
+    @Schema(description = "Du lieu tra ve")
     private T data;
 
     private CommonResult(String message, Integer code, T data) {

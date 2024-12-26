@@ -1,4 +1,4 @@
-package com.example.ecommerce.payment.vo;
+package com.example.ecommerce.payment.controller.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;

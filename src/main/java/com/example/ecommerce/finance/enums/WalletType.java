@@ -1,4 +1,4 @@
-package com.example.ecommerce.finance;
+package com.example.ecommerce.finance.enums;
 
 public enum WalletType {
     USER_MEMBER, SYSTEM

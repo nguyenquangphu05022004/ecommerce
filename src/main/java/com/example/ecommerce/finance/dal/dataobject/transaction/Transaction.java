@@ -1,5 +1,6 @@
-package com.example.ecommerce.finance;
+package com.example.ecommerce.finance.dal.dataobject.transaction;
 
+import com.example.ecommerce.finance.enums.TransactionStatus;
 import com.example.ecommerce.frame.auditting.BaseEntity;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import jakarta.persistence.*;

@@ -1,5 +1,7 @@
 package com.example.ecommerce.system.service.mail;
 
+import com.example.ecommerce.frame.common.pojo.PageResult;
+import com.example.ecommerce.system.controller.admin.mail.vo.log.PageMailLogReqVO;
 import com.example.ecommerce.system.dal.dataobject.mail.MailAccount;
 import com.example.ecommerce.system.dal.dataobject.mail.MailLog;
 import com.example.ecommerce.system.dal.repository.mail.MailLogRepository;
@@ -36,6 +38,15 @@ public class MailLogServiceImpl implements MailLogService{
     public List<MailLog> getListMailLog(Long userId) {
         MailAccount mailAccount = this.mailAccountService.getMailAccountByUserId(userId);
         return this.mailLogRepository.findAllByFromMail(mailAccount.getUsername());
+    }
+
+    @Override
+    public PageResult<MailLog> getPageMailLog(PageMailLogReqVO req) {
+        return new PageResult<>(this.mailLogRepository.findAll(req.buildPageRequest()));
+    }
+    @Override
+    public PageResult<MailLog> getPageMailLogByUserId(Long userId, PageMailLogReqVO req) {
+        return new PageResult<>(this.mailLogRepository.findAllByCreatedBy(userId, req.buildPageRequest()));
     }
 
     @Override

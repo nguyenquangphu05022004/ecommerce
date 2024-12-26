@@ -1,14 +1,15 @@
 package com.example.ecommerce.payment.controller;
 
 import com.example.ecommerce.frame.common.pojo.CommonResult;
+import com.example.ecommerce.payment.controller.vo.OrderPaymentReqVO;
+import com.example.ecommerce.payment.controller.vo.PaymentReqVO;
+import com.example.ecommerce.payment.controller.vo.TransferPaymentReqVO;
 import com.example.ecommerce.payment.service.PaymentFactory;
 import com.example.ecommerce.payment.service.PaymentType;
-import com.example.ecommerce.payment.vo.OrderPaymentReqVO;
-import com.example.ecommerce.payment.vo.PaymentReqVO;
-import com.example.ecommerce.payment.vo.TransferPaymentReqVO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,19 +21,20 @@ import static com.example.ecommerce.payment.service.PaymentType.TRANSFER;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app-api/payment")
-@Tag("Payment")
+@Tag(name = "Thanh Toan - Payment")
 public class PaymentController {
     private final PaymentFactory paymentFactory;
 
     @PostMapping("/order")
     @Operation(summary = "Thanh toan don hang")
-
+    @ApiResponse(description = "Neu su dung VNPAY se tra ve data: String(Payment Gateway)(Trong CommonResult) nguoc lai Boolean")
     public CommonResult<?> payOrder(@RequestBody OrderPaymentReqVO req) {
         return doPayment(req, ORDER);
     }
 
     @PostMapping("/transfer")
     @Operation(summary = "Chuyen khoan giua cac user")
+    @ApiResponse(description = "Neu su dung VNPAY se tra ve data: String(Payment Gateway)(Trong CommonResult) nguoc lai Boolean")
     public CommonResult<?> transfer(@RequestBody TransferPaymentReqVO req) {
         return doPayment(req, TRANSFER);
     }

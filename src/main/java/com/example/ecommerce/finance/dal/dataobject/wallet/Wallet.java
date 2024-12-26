@@ -1,12 +1,13 @@
-package com.example.ecommerce.finance;
+package com.example.ecommerce.finance.dal.dataobject.wallet;
 
+import com.example.ecommerce.finance.enums.WalletType;
 import com.example.ecommerce.frame.auditting.BaseEntity;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
-import static com.example.ecommerce.finance.ErrorConstants.AMOUNT_NOT_ENOUGH;
+import static com.example.ecommerce.finance.enums.ErrorConstants.AMOUNT_NOT_ENOUGH;
 import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
 
 @Entity

@@ -1,10 +1,9 @@
 package com.example.ecommerce.payment.chanel.vnpay;
 
-import com.example.ecommerce.finance.Transaction;
-import com.example.ecommerce.finance.TransactionService;
-import com.example.ecommerce.finance.WalletService;
-import com.example.ecommerce.finance.vo.TransactionCreateReqVO;
-import com.example.ecommerce.frame.common.pojo.CommonResult;
+import com.example.ecommerce.finance.dal.dataobject.transaction.Transaction;
+import com.example.ecommerce.finance.service.transaction.TransactionService;
+import com.example.ecommerce.finance.service.wallet.WalletService;
+import com.example.ecommerce.finance.service.transaction.bo.TransactionCreateReqBO;
 import com.example.ecommerce.frame.common.servlet.ServletUtils;
 import com.example.ecommerce.payment.chanel.PaymentChannel;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.example.ecommerce.finance.TransactionStatus.*;
+import static com.example.ecommerce.finance.enums.TransactionStatus.*;
 import static com.example.ecommerce.payment.chanel.ParamEnum.*;
 import static com.example.ecommerce.payment.chanel.ParamEnum.AMOUNT;
 
@@ -29,7 +28,7 @@ public class VNPayService implements PaymentChannel {
     private final WalletService walletService;
     @Override
     public Object doPayment(Map<String, Object> params) {
-        TransactionCreateReqVO req = new TransactionCreateReqVO();
+        TransactionCreateReqBO req = new TransactionCreateReqBO();
         req.setNo(System.currentTimeMillis() +"");
         req.setTransferContent((String) params.get(CONTENT));
         req.setToUserId((Long) params.get(TO_USER_ID));

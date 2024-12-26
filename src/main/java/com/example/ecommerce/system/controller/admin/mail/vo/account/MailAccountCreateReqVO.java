@@ -10,4 +10,5 @@ public class MailAccountCreateReqVO {
     private String password;
     private Boolean auth = true;
     private Boolean starttlsEnable = true;
+    private Long userMemberId;
 }

@@ -19,19 +19,19 @@ public class MailAccountServiceImpl implements MailAccountService{
     private final MailAccountRepository mailAccountRepository;
     private final UserMemberService userMemberService;
     @Override
-    public MailAccount createMailAccount(Long userId, MailAccountCreateReqVO reqVO) {
+    public MailAccount createMailAccount(MailAccountCreateReqVO reqVO) {
         MailAccount mailAccount = MailAccount.builder().username(reqVO.getUsername())
                 .auth(reqVO.getAuth()).port(reqVO.getPort()).host(reqVO.getHost())
                 .password(reqVO.getPassword()).starttlsEnable(reqVO.getStarttlsEnable())
-                .userMember(this.userMemberService.getUserMemberById(userId))
+                .userMember(this.userMemberService.getUserMemberById(reqVO.getUserMemberId()))
                 .build();
         this.mailAccountRepository.save(mailAccount);
         return mailAccount;
     }
 
     @Override
-    public MailAccount updateMailAccount(Long userId, MailAccountCreateReqVO reqVO) {
-        MailAccount mailAccount = getMailAccountByUserId(userId);
+    public MailAccount updateMailAccount(MailAccountCreateReqVO reqVO) {
+        MailAccount mailAccount = getMailAccountByUserId(reqVO.getUserMemberId());
         mailAccount = mailAccount.toBuilder().username(reqVO.getUsername())
                 .auth(reqVO.getAuth()).port(reqVO.getPort()).host(reqVO.getHost())
                 .password(reqVO.getPassword()).starttlsEnable(reqVO.getStarttlsEnable())

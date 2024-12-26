@@ -21,5 +21,4 @@ public class MailLog extends BaseEntity {
     private String title;
     @Enumerated(EnumType.STRING)
     private SendMailStatus sendMailStatus;
-
 }

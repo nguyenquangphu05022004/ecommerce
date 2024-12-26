@@ -1,9 +1,9 @@
 package com.example.ecommerce.payment.service;
 
-import com.example.ecommerce.finance.Wallet;
-import com.example.ecommerce.finance.WalletService;
-import com.example.ecommerce.finance.WalletType;
-import com.example.ecommerce.payment.vo.OrderPaymentReqVO;
+import com.example.ecommerce.finance.dal.dataobject.wallet.Wallet;
+import com.example.ecommerce.finance.service.wallet.WalletService;
+import com.example.ecommerce.finance.enums.WalletType;
+import com.example.ecommerce.payment.controller.vo.OrderPaymentReqVO;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
 import com.example.ecommerce.trade.service.order.OrderService;
 import lombok.RequiredArgsConstructor;

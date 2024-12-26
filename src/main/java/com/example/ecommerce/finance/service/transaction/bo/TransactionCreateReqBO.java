@@ -1,10 +1,10 @@
-package com.example.ecommerce.finance.vo;
+package com.example.ecommerce.finance.service.transaction.bo;
 
-import com.example.ecommerce.finance.TransactionStatus;
+import com.example.ecommerce.finance.enums.TransactionStatus;
 import lombok.Data;
 
 @Data
-public class TransactionCreateReqVO {
+public class TransactionCreateReqBO {
     private Integer amountTransfer;
     private Long fromUserId;
     private Long toUserId;

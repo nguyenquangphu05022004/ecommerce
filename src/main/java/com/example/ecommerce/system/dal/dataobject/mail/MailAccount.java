@@ -15,6 +15,7 @@ import java.util.Properties;
 @Entity
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
+@Getter
 public class MailAccount extends BaseEntity {
 
     @ManyToOne
@@ -23,7 +24,7 @@ public class MailAccount extends BaseEntity {
 
     private String host;
     private Integer port;
-    @Getter
+
     @Column(unique = true)
     private String username;
     private String password;

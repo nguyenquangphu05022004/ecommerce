@@ -1,17 +1,23 @@
-package com.example.ecommerce.finance;
+package com.example.ecommerce.finance.service.wallet;
 
+import com.example.ecommerce.finance.controller.admin.wallet.vo.PageWalletReqVO;
+import com.example.ecommerce.finance.dal.dataobject.wallet.Wallet;
+import com.example.ecommerce.finance.dal.repo.wallet.WalletRepository;
+import com.example.ecommerce.finance.enums.WalletType;
 import com.example.ecommerce.frame.common.exception.ServiceException;
+import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.example.ecommerce.finance.ErrorConstants.WALLET_NOT_FOUND;
+import static com.example.ecommerce.finance.enums.ErrorConstants.WALLET_NOT_FOUND;
 import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
 
 @RequiredArgsConstructor
 @Service
-public class WalletServiceImpl implements WalletService{
+public class WalletServiceImpl implements WalletService {
     private final WalletRepository walletRepository;
     @Override
     public void topUpToWallet(Long userMemberId, Integer amount) {
@@ -58,5 +64,11 @@ public class WalletServiceImpl implements WalletService{
         return this.walletRepository.findAllByWalletType(walletType)
                 .stream().findFirst()
                 .orElseThrow(() -> exception(WALLET_NOT_FOUND));
+    }
+
+    @Override
+    public PageResult<Wallet> getPageWallet(PageWalletReqVO req) {
+        Page<Wallet> page = this.walletRepository.findAll(req.buildPageRequest());
+        return new PageResult<>(page);
     }
 }
