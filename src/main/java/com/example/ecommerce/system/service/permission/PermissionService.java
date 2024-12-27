@@ -3,19 +3,20 @@ package com.example.ecommerce.system.service.permission;
 import com.example.ecommerce.system.dal.dataobject.permission.MenuRole;
 import com.example.ecommerce.system.dal.dataobject.permission.Role;
 
+import java.util.Collection;
 import java.util.Set;
 
 public interface PermissionService {
 
 
-    void assignRolesForUser(Long[] roleIds, Long userId);
+    void assignRolesForUser(Collection<Long> roleIds, Long userId);
 
-    void assignMenusForRole(Long[] menuIds, Long roleId);
+    void assignMenusForRole(Collection<Long> menuIds, Long roleId);
 
 
-    void removeRoleFromUser(Long[] roleIds, Long userId);
+    void removeRoleFromUser(Collection<Long> roleIds, Long userId);
 
-    void removeMenuFromRole(Long[] menuIds, Long roleId);
+    void removeMenuFromRole(Collection<Long> menuIds, Long roleId);
 
     Set<Role> getListByUserId(Long userId);
 

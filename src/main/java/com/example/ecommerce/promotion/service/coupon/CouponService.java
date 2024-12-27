@@ -1,7 +1,7 @@
 package com.example.ecommerce.promotion.service.coupon;
 
 import com.example.ecommerce.frame.common.date.DateTimeUtils;
-import com.example.ecommerce.promotion.controller.coupon.CouponCreateReqVO;
+import com.example.ecommerce.promotion.controller.admin.coupon.CouponCreateReqVO;
 import com.example.ecommerce.promotion.dal.dataobject.coupon.Coupon;
 
 import java.util.List;

@@ -4,7 +4,6 @@ import com.example.ecommerce.frame.common.pojo.CommonResult;
 import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.system.controller.admin.mail.vo.log.MailLogRespVO;
 import com.example.ecommerce.system.controller.admin.mail.vo.log.PageMailLogReqVO;
-import com.example.ecommerce.system.dal.dataobject.mail.MailLog;
 import com.example.ecommerce.system.service.mail.MailLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

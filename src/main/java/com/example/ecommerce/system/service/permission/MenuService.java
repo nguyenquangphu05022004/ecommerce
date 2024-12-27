@@ -1,7 +1,9 @@
 package com.example.ecommerce.system.service.permission;
 
-import com.example.ecommerce.system.controller.admin.vo.permission.MenuCreateReqVO;
-import com.example.ecommerce.system.controller.admin.vo.permission.MenuUpdateReqVO;
+import com.example.ecommerce.frame.common.pojo.PageParam;
+import com.example.ecommerce.frame.common.pojo.PageResult;
+import com.example.ecommerce.system.controller.admin.permission.vo.menu.MenuCreateReqVO;
+import com.example.ecommerce.system.controller.admin.permission.vo.menu.MenuUpdateReqVO;
 import com.example.ecommerce.system.dal.dataobject.permission.Menu;
 
 import java.util.Arrays;
@@ -19,4 +21,5 @@ public interface MenuService {
         Arrays.stream(menuIds).forEach(this::deleteMenuById);
     }
 
+    PageResult<Menu> getPageMenu(PageParam pageParam);
 }

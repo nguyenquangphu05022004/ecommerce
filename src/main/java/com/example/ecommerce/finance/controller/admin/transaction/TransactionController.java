@@ -20,7 +20,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@Tag(name = "Giao Dich - Transaction")
+@Tag(name = "Transaction")
 @RequestMapping("/admin-api/finance/transactions")
 public class TransactionController {
     private final TransactionService transactionService;

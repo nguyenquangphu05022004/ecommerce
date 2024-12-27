@@ -1,7 +1,7 @@
 package com.example.ecommerce.promotion.service.coupon;
 
 import com.example.ecommerce.frame.test.RandomUtils;
-import com.example.ecommerce.promotion.controller.coupon.CouponCreateReqVO;
+import com.example.ecommerce.promotion.controller.admin.coupon.CouponCreateReqVO;
 import com.example.ecommerce.promotion.dal.dataobject.coupon.Coupon;
 import com.example.ecommerce.promotion.dal.repo.coupon.CouponRepository;
 import com.example.ecommerce.system.service.user.UserMemberService;

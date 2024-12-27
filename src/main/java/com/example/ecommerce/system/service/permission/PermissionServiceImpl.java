@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -20,22 +21,22 @@ public class PermissionServiceImpl implements PermissionService{
     private final RoleService roleService;
 
     @Override
-    public void assignRolesForUser(Long[] roleIds, Long userId) {
+    public void assignRolesForUser(Collection<Long> roleIds, Long userId) {
 
     }
 
     @Override
-    public void assignMenusForRole(Long[] menuIds, Long roleId) {
+    public void assignMenusForRole(Collection<Long> menuIds, Long roleId) {
 
     }
 
     @Override
-    public void removeRoleFromUser(Long[] roleIds, Long userId) {
+    public void removeRoleFromUser(Collection<Long> roleIds, Long userId) {
 
     }
 
     @Override
-    public void removeMenuFromRole(Long[] menuIds, Long roleId) {
+    public void removeMenuFromRole(Collection<Long> menuIds, Long roleId) {
 
     }
 

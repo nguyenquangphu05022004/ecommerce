@@ -1,8 +1,8 @@
 package com.example.ecommerce.system.service.notify;
 
 import com.example.ecommerce.frame.common.collection.CollUtils;
+import com.example.ecommerce.frame.common.pojo.PageParam;
 import com.example.ecommerce.frame.common.pojo.PageResult;
-import com.example.ecommerce.system.controller.admin.notify.vo.message.NotifyMessagePageReqVO;
 import com.example.ecommerce.system.dal.dataobject.notify.NotifyMessage;
 import com.example.ecommerce.system.dal.dataobject.notify.NotifyTemplate;
 
@@ -32,11 +32,14 @@ public interface NotifyMessageService {
 
     /**
      * Phan trang thong bao
-     * @param reqVO
+     *
+     * @param userId
+     * @param pageParam
      * @return
      */
-    PageResult<NotifyMessage> getNotifyMessagePage(NotifyMessagePageReqVO reqVO);
-    NotifyMessage getNotifyMessageById(Long id);
+    PageResult<NotifyMessage> getNotifyMessagePageByUserId(Long userId, PageParam pageParam);
+
+    NotifyMessage getNotifyMessageByIdAndUserId(Long notifyMessageId, Long userId);
 
     /**
      * Dem so luong thong bao chua doc
@@ -45,15 +48,10 @@ public interface NotifyMessageService {
      */
     Long getUnreadNotifyMessageCount(Long userId);
 
-    /**
-     * Update status thong bao cua nguoi dung
-     * @param notifyMessageId
-     * @param userId
-     */
-    void updateReadNotifyMessage(Long notifyMessageId, Long userId);
+
     default void updateReadNotifyMessage(Collection<Long> ids, Long userId) {
         if(!CollUtils.isEmpty(ids)) {
-            ids.forEach(id -> updateReadNotifyMessage(id, userId));
+            ids.forEach(id -> getNotifyMessageByIdAndUserId(id, userId));
         }
     }
 
@@ -63,4 +61,5 @@ public interface NotifyMessageService {
      */
     void updateReadAllNotifyMessage(Long userId);
 
+    void deleteNotifyMessage(Long notifyMessageId, Long userId);
 }

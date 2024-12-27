@@ -1,6 +1,5 @@
 package com.example.ecommerce.system.controller.admin.mail;
 
-import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.common.pojo.CommonResult;
 import com.example.ecommerce.system.controller.admin.mail.vo.account.MailAccountCreateReqVO;
 import com.example.ecommerce.system.controller.admin.mail.vo.account.MailAccountRespVO;

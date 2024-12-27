@@ -25,8 +25,7 @@ public class Discount extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PromotionDiscountTypeEnum discountType;
 
-    private Integer discountPrice;
-    private Integer discountPercent;
+    private Integer discountAmount;
 
     @ManyToOne
     @JoinColumn(name = "discount_activity_id")

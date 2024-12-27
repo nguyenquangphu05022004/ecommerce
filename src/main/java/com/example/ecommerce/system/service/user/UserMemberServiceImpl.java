@@ -2,6 +2,10 @@ package com.example.ecommerce.system.service.user;
 
 import com.example.ecommerce.frame.common.exception.ServiceException;
 import com.example.ecommerce.system.controller.admin.user.vo.*;
+import com.example.ecommerce.system.controller.app.user.vo.CustomerCreateReqVO;
+import com.example.ecommerce.system.controller.app.user.vo.UserMemberCreateReqVO;
+import com.example.ecommerce.system.controller.app.user.vo.UserMemberUpdatePasswordReqVO;
+import com.example.ecommerce.system.controller.app.user.vo.UserMemberUpdateReqVO;
 import com.example.ecommerce.system.dal.dataobject.user.Customer;
 import com.example.ecommerce.system.dal.dataobject.user.Seller;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;

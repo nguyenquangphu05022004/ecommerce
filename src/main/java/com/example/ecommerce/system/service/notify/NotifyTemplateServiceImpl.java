@@ -32,7 +32,13 @@ public class NotifyTemplateServiceImpl implements NotifyTemplateService{
 
     @Override
     public NotifyTemplate updateNotifyTemplate(NotifyTemplateCreateReqVO reqVO) {
-        return null;
+        NotifyTemplate template = getNotifyTemplateById(reqVO.getId()).toBuilder()
+                .content(reqVO.getContent())
+                .name(reqVO.getName())
+                .params(reqVO.getParams())
+                .build();
+        this.notifyTemplateRepository.save(template);
+        return template;
     }
 
     @Override
