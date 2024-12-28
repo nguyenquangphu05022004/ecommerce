@@ -17,8 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/admin-api/product/brands")
-@Tag(name = "Product Brand")
-@CrossOrigin("*")
+@Tag(name = "Admin_Brand")
 public class ProductBrandController {
     private final ProductBrandService productBrandService;
 

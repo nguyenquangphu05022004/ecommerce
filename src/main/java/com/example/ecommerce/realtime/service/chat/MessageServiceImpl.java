@@ -2,7 +2,7 @@ package com.example.ecommerce.realtime.service.chat;
 
 import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.common.collection.StreamUtils;
-import com.example.ecommerce.realtime.controller.chat.vo.MessageCreateReqVO;
+import com.example.ecommerce.realtime.controller.app.chat.vo.MessageCreateReqVO;
 import com.example.ecommerce.realtime.dal.dataobject.chat.Message;
 import com.example.ecommerce.realtime.dal.repo.chat.MessageRepository;
 import com.example.ecommerce.system.service.user.UserMemberService;

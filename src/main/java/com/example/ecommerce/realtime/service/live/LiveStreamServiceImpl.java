@@ -1,6 +1,6 @@
 package com.example.ecommerce.realtime.service.live;
 
-import com.example.ecommerce.realtime.controller.live.livestream.vo.LiveStreamCreateReqVO;
+import com.example.ecommerce.realtime.controller.admin.live.livestream.vo.LiveStreamCreateReqVO;
 import com.example.ecommerce.realtime.dal.dataobject.live.LiveStream;
 import com.example.ecommerce.realtime.dal.repo.live.LiveStreamRepository;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;

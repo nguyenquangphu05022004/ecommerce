@@ -47,7 +47,7 @@ public class ProductSpuController {
     public CommonResult<PageResult<ProductSpuResVO>> getListProductBySellerUserMemberId(
             @PathVariable("userMemberId") Long userMemberId,
             @RequestParam(value = "page", defaultValue = "1") int page) {
-        return CommonResult.success(productSpuService.getListProductSpuBySeller(userMemberId, page), ProductSpuResVO::new);
+        return CommonResult.success(productSpuService.getPageProductSpuByUserId(userMemberId, page), ProductSpuResVO::new);
     }
 
     @GetMapping("/{productSpuId}")

@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,6 +24,14 @@ public class DiscountController {
     @Operation(summary = "Tao giam gia san pham")
     public CommonResult<DiscountRespVO> createDiscountForProduct(@RequestBody DiscountCreateReqVO req) {
         Discount discount = this.discountService.createDiscount(req);
+        return CommonResult.success(discount, DiscountRespVO::new);
+    }
+
+    @PutMapping
+    @PreAuthorize("@ss.hasPermission('promotion-discount:update')")
+    @Operation(summary = "Cap nhat giam gia")
+    public CommonResult<DiscountRespVO> updateDiscountForProduct(@RequestBody DiscountCreateReqVO req) {
+        Discount discount = this.discountService.updateDiscount(req);
         return CommonResult.success(discount, DiscountRespVO::new);
     }
 

@@ -1,9 +1,7 @@
-package com.example.ecommerce.realtime.controller.chat.vo;
+package com.example.ecommerce.realtime.controller.app.chat.vo;
 
 import com.example.ecommerce.realtime.dal.dataobject.chat.Message;
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 

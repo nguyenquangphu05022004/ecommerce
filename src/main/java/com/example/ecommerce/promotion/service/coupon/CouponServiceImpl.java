@@ -1,11 +1,14 @@
 package com.example.ecommerce.promotion.service.coupon;
 
+import com.example.ecommerce.frame.common.pojo.PageParam;
+import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.frame.test.RandomUtils;
-import com.example.ecommerce.promotion.controller.admin.coupon.CouponCreateReqVO;
+import com.example.ecommerce.promotion.controller.admin.coupon.vo.CouponCreateReqVO;
 import com.example.ecommerce.promotion.dal.dataobject.coupon.Coupon;
 import com.example.ecommerce.promotion.dal.repo.coupon.CouponRepository;
 import com.example.ecommerce.system.service.user.UserMemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,8 +53,8 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public List<Coupon> getListCoupon(Long userId) {
-        return this.couponRepository.findAllByCreatedBy(userId);
+    public PageResult<Coupon> getPageCoupon(Long userId, PageParam req) {
+        return new PageResult<>(couponRepository.findAllByOwnerId(userId, req.buildPageRequest()));
     }
 
 }

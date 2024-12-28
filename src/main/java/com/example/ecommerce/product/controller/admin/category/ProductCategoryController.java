@@ -20,7 +20,7 @@ import static com.example.ecommerce.frame.common.pojo.CommonResult.success;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin-api/product/categories")
-@Tag(name = "Production - Category")
+@Tag(name = "Admin_Category")
 @CrossOrigin("*")
 public class ProductCategoryController {
     private final ProductCategoryService productCategoryService;

@@ -1,4 +1,4 @@
-package com.example.ecommerce.realtime.controller.live.livemessage.vo;
+package com.example.ecommerce.realtime.controller.admin.live.livemessage.vo;
 
 import com.example.ecommerce.system.controller.app.user.vo.UserMemberResVO;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.example.ecommerce.realtime.service.chat;
 
-import com.example.ecommerce.realtime.controller.chat.vo.MessageCreateReqVO;
+import com.example.ecommerce.realtime.controller.app.chat.vo.MessageCreateReqVO;
 import com.example.ecommerce.realtime.dal.dataobject.chat.Message;
 import org.springframework.scheduling.annotation.Async;
 

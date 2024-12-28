@@ -20,7 +20,7 @@ import static com.example.ecommerce.frame.security.core.utils.SecurityUtils.getL
 @RequiredArgsConstructor
 @RequestMapping("/app-api/system/users")
 @Tag(name = "APP_USER")
-public class UserMemberController {
+public class AppUserMemberController {
 
     private final UserMemberService userMemberService;
 

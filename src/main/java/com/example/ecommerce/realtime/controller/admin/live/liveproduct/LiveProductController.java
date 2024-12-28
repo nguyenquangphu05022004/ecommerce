@@ -1,4 +1,4 @@
-package com.example.ecommerce.realtime.controller.live.liveproduct;
+package com.example.ecommerce.realtime.controller.admin.live.liveproduct;
 
 public class LiveProductController {
 }

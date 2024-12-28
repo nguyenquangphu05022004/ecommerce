@@ -1,6 +1,5 @@
 package com.example.ecommerce.realtime.service.live;
 
-import com.example.ecommerce.realtime.controller.live.liveproduct.vo.LiveProductReqVO;
 import com.example.ecommerce.realtime.dal.dataobject.live.LiveProduct;
 import org.springframework.scheduling.annotation.Async;
 

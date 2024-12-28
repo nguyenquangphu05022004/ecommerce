@@ -1,7 +1,7 @@
 package com.example.ecommerce.realtime.service.chat;
 
-import com.example.ecommerce.realtime.controller.chat.vo.ConversationRespVO;
-import com.example.ecommerce.realtime.controller.chat.vo.ConversationSimpleRespVO;
+import com.example.ecommerce.realtime.controller.app.chat.vo.ConversationRespVO;
+import com.example.ecommerce.realtime.controller.app.chat.vo.ConversationSimpleRespVO;
 
 import java.util.List;
 

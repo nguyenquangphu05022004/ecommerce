@@ -2,7 +2,7 @@ package com.example.ecommerce.trade.controller.order.vo;
 
 import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.product.controller.admin.sku.vo.ProductSkuSimpleRespVO;
-import com.example.ecommerce.promotion.controller.admin.coupon.CouponRespVO;
+import com.example.ecommerce.promotion.controller.admin.coupon.vo.CouponRespVO;
 import com.example.ecommerce.system.controller.admin.user.vo.SellerResVO;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
 import com.example.ecommerce.trade.dal.dataobject.order.OrderItem;

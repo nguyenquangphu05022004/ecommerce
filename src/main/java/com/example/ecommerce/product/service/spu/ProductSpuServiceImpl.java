@@ -11,7 +11,7 @@ import com.example.ecommerce.product.controller.admin.category.vo.ProductCategor
 import com.example.ecommerce.product.controller.admin.sku.vo.ProductSkuTradeResVO;
 import com.example.ecommerce.product.controller.admin.spu.vo.ProductDetailsRespVO;
 import com.example.ecommerce.product.controller.admin.spu.vo.ProductSpuCreateReqVO;
-import com.example.ecommerce.product.controller.admin.spu.vo.ProductSpuSearchReqVO;
+import com.example.ecommerce.product.controller.admin.spu.vo.PageProductSpuReqVO;
 import com.example.ecommerce.product.controller.admin.spu.vo.ProductSpuUpdateBaseReqVO;
 import com.example.ecommerce.product.dal.dataobject.brand.ProductBrand;
 import com.example.ecommerce.product.dal.dataobject.category.ProductCategory;
@@ -69,10 +69,10 @@ public class ProductSpuServiceImpl implements ProductSpuService{
     }
 
     @Override
-    public PageResult<ProductSpu> searchProduct(ProductSpuSearchReqVO reqVO) {
+    public PageResult<ProductSpu> getPageProductSpu(PageProductSpuReqVO reqVO) {
         Specification<ProductSpu> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-          reqVO.getMap().entrySet().forEach(entry -> {
+          reqVO.getCondition().entrySet().forEach(entry -> {
               predicates.add(ProductSearchFactory.getInstance(entry.getKey()).search(root, criteriaBuilder, entry.getValue()));
           });
           Predicate res = null;
@@ -92,7 +92,7 @@ public class ProductSpuServiceImpl implements ProductSpuService{
 
 
     @Override
-    public PageResult<ProductSpu> getListProductSpuBySeller(Long userMemberId, int page) {
+    public PageResult<ProductSpu> getPageProductSpuByUserId(Long userMemberId, int page) {
         Page<ProductSpu> pageResult = this.productSpuRepository.findAllBySellerId(
                 userMemberId,
                 PageRequest.of(page - 1, PagingLimitation.PRODUCT_SPU_LIMIT));

@@ -11,5 +11,6 @@ public interface DiscountService {
     List<Discount> getListDiscount(Long userId);
 
     void deleteById(Long id);
-
+    Discount getDiscountById(Long id);
+    Discount updateDiscount(DiscountCreateReqVO req);
 }

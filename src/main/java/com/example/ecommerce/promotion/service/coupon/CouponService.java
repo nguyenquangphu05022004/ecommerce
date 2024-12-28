@@ -1,7 +1,9 @@
 package com.example.ecommerce.promotion.service.coupon;
 
 import com.example.ecommerce.frame.common.date.DateTimeUtils;
-import com.example.ecommerce.promotion.controller.admin.coupon.CouponCreateReqVO;
+import com.example.ecommerce.frame.common.pojo.PageParam;
+import com.example.ecommerce.frame.common.pojo.PageResult;
+import com.example.ecommerce.promotion.controller.admin.coupon.vo.CouponCreateReqVO;
 import com.example.ecommerce.promotion.dal.dataobject.coupon.Coupon;
 
 import java.util.List;
@@ -28,11 +30,6 @@ public interface CouponService {
 
     void revokeCoupon(Long id);
 
-    /**
-     * Lay phieu giam gia boi nguoi tao no
-     * @param userId: seller
-     * @return
-     */
-    List<Coupon> getListCoupon(Long userId);
 
+    PageResult<Coupon> getPageCoupon(Long userId, PageParam req);
 }

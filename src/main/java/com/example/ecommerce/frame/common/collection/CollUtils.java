@@ -1,6 +1,7 @@
 package com.example.ecommerce.frame.common.collection;
 
 import com.example.ecommerce.product.dal.dataobject.comment.ProductCommentFavorite;
+import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSkuProperty;
 import org.springframework.util.CollectionUtils;
 
@@ -59,5 +60,12 @@ public class CollUtils {
         return x2.stream().allMatch(x -> {
             return x1.contains(x);
         });
+    }
+
+    public static <T, S> S getFirst(Collection<T> objs, Function<T, S> func) {
+        if(isEmpty(objs)) {
+            return null;
+        }
+        return func.apply(objs.iterator().next());
     }
 }

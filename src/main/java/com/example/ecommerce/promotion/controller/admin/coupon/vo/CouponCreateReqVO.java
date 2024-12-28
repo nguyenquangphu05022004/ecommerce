@@ -1,4 +1,4 @@
-package com.example.ecommerce.promotion.controller.admin.coupon;
+package com.example.ecommerce.promotion.controller.admin.coupon.vo;
 
 import com.example.ecommerce.promotion.dal.enums.PromotionCouponScopeTypeEnum;
 import com.example.ecommerce.promotion.dal.enums.PromotionProductScopeEnum;
@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class CouponCreateReqVO {
+    private Long id;
     private String description;
     private Long ownerId;
     private String code;

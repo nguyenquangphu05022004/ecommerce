@@ -1,6 +1,10 @@
 package com.example.ecommerce.frame.common.object;
 
+import com.example.ecommerce.statistic.enums.FieldNameAnnotation;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 public class ObjectUtils {
@@ -27,5 +31,21 @@ public class ObjectUtils {
 //        }
 //        Constructor<T> constructor = clazz.getConstructor(classes);
 //        return constructor.newInstance(parameters);
+//    }
+
+//    /**
+//     *
+//     * @param object: current object
+//     * @param annotation: is marked on object field
+//     * @param value: value want to set for field in object
+//     */
+//    public static void setField(Object object, String fieldSummary, Object value) {
+////        Field[] fields = object.getClass().getDeclaredFields();
+////        for(Field field : fields) {
+////            A myAn = field.getAnnotation(annotation);
+////            if(myAn != null) {
+////                FieldNameAnnotation myAn1 = (FieldNameAnnotation) myAn;
+////            }
+////        }
 //    }
 }

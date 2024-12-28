@@ -1,4 +1,4 @@
-package com.example.ecommerce.realtime.controller.chat.vo;
+package com.example.ecommerce.realtime.controller.app.chat.vo;
 
 import lombok.Data;
 

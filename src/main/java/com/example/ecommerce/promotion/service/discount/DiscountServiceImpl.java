@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
+import static com.example.ecommerce.promotion.constants.ErrorConstants.DISCOUNT_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class DiscountServiceImpl implements DiscountService{
@@ -40,5 +43,23 @@ public class DiscountServiceImpl implements DiscountService{
     @Override
     public void deleteById(Long id) {
         this.discountRepository.deleteById(id);
+    }
+
+    @Override
+    public Discount getDiscountById(Long id) {
+        return this.discountRepository.findById(id)
+                .orElseThrow(() -> exception(DISCOUNT_NOT_FOUND));
+    }
+
+    @Override
+    public Discount updateDiscount(DiscountCreateReqVO req) {
+        Discount discount = getDiscountById(req.getId()).toBuilder()
+                .discountAmount(req.getDiscountAmount())
+                .discountType(req.getDiscountType())
+                .productSpu(ProductSpu.builder().id(req.getProductSpuId()).build())
+                .discountActivity(DiscountActivity.builder().id(req.getDiscountActivityId()).build())
+                .build();
+        this.discountRepository.save(discount);
+        return discount;
     }
 }

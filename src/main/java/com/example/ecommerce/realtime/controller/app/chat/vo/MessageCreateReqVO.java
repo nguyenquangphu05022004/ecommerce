@@ -1,4 +1,4 @@
-package com.example.ecommerce.realtime.controller.chat.vo;
+package com.example.ecommerce.realtime.controller.app.chat.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
