@@ -1,5 +1,6 @@
 package com.example.ecommerce.promotion.service.discount;
 
+import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
 import com.example.ecommerce.promotion.controller.admin.discount.vo.self.DiscountCreateReqVO;
 import com.example.ecommerce.promotion.dal.dataobject.discount.Discount;
@@ -19,14 +20,22 @@ public class DiscountServiceImpl implements DiscountService{
     private final DiscountRepository discountRepository;
     @Override
     public Discount createDiscount(DiscountCreateReqVO reqVO) {
-
+        List<Discount> discounts = getDiscountBySpuId(reqVO.getProductSpuId());
+        CollUtils.convertList(discounts, discount -> {
+            if(discount.getRevoke()) {
+                discount.setRevoke(true);
+            }
+            return discount;
+        });
         Discount discount = Discount.builder()
                 .discountActivity(DiscountActivity.builder().id(reqVO.getDiscountActivityId()).build())
                 .productSpu(ProductSpu.builder().id(reqVO.getProductSpuId()).build())
                 .discountType(reqVO.getDiscountType())
                 .discountAmount(reqVO.getDiscountAmount())
+                .revoke(false)
                 .build();
         this.discountRepository.save(discount);
+        this.discountRepository.saveAll(discounts);
         return discount;
     }
 
@@ -38,6 +47,12 @@ public class DiscountServiceImpl implements DiscountService{
     @Override
     public List<Discount> getListDiscount(Long userId) {
         return this.discountRepository.findAllByCreatedBy(userId);
+    }
+
+    @Override
+    public Discount getDiscountWasNotRevokedBySpuId(Long spuId) {
+        return this.discountRepository.findByProductSpuIdAndRevoke(spuId, false)
+                .orElse(null);
     }
 
     @Override

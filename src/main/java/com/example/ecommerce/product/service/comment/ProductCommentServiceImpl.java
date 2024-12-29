@@ -1,13 +1,13 @@
 package com.example.ecommerce.product.service.comment;
 
-import com.example.ecommerce.file.FileEntity;
-import com.example.ecommerce.file.FileStorageService;
 import com.example.ecommerce.frame.common.collection.MapUtils;
 import com.example.ecommerce.frame.common.exception.ServiceException;
+import com.example.ecommerce.frame.common.pojo.CommonResult;
+import com.example.ecommerce.frame.common.pojo.PageParam;
 import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.product.controller.admin.comment.vo.PagingProductCommentReqVO;
 import com.example.ecommerce.product.controller.admin.comment.vo.ProductCommentCreateReqVO;
-import com.example.ecommerce.product.controller.admin.comment.vo.ProductCommentUpdateReqVO;
+import com.example.ecommerce.product.controller.admin.comment.vo.ProductCommentResVO;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductComment;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductCommentEvaluation;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductCommentFavorite;
@@ -23,16 +23,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.ecommerce.file.Representation.COMMENT_IMAGE;
 import static com.example.ecommerce.frame.common.collection.CollUtils.convertList;
 import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
 import static com.example.ecommerce.frame.common.pojo.PagingLimitation.COMMENT_LIMIT;
 import static com.example.ecommerce.product.constants.ProductionErrorConstant.PRODUCT_COMMENT_NOT_FOUND;
+import static com.example.ecommerce.product.constants.ProductionErrorConstant.UPDATE_COMMENT_IS_DENIED;
 
 @Service
 @RequiredArgsConstructor
@@ -45,20 +44,20 @@ public class ProductCommentServiceImpl implements ProductCommentService{
     private final ProductSkuService productSkuService;
     private final UserMemberService userMemberService;
     private final ProductPropertyService productPropertyService;
-    private final FileStorageService fileStorageService;
     @Override
     @Transactional
-    public ProductComment createProductComment(ProductCommentCreateReqVO reqVO, List<MultipartFile> files) {
+    public ProductComment createProductComment(ProductCommentCreateReqVO reqVO) {
 
-        List<FileEntity> fileEntities = this.fileStorageService.saveAll(files, COMMENT_IMAGE);
         ProductComment productComment = ProductComment.builder()
                 .productSku(this.productSkuService.getProductSkuById(reqVO.getProductSkuId()))
                 .productSpu(this.productSpuService.getProductSpuById(reqVO.getProductSpuId()))
-                .rating(reqVO.getRating()).userMember(userMemberService.getUserMemberById(reqVO.getUserMemberId()))
-                .content(reqVO.getContent()).mediaList(fileEntities).build();
+                .rating(reqVO.getRating())
+                .userMember(userMemberService.getUserMemberById(reqVO.getUserMemberId()))
+                .content(reqVO.getContent())
+                .imageUrls(reqVO.getImageUrls()).build();
 
         this.productCommentRepository.save(productComment);
-        if(!MapUtils.isEmpty(reqVO.getMapProperties())) {
+        if(!MapUtils.isEmpty(reqVO.getEvaluations())) {
             List<ProductCommentEvaluation> productCommentEvaluations = saveAllProductCommentEvaluation(reqVO, productComment);
 
             productComment.setProductCommentEvaluations(productCommentEvaluations);
@@ -66,7 +65,7 @@ public class ProductCommentServiceImpl implements ProductCommentService{
         return productComment;
     }
     private List<ProductCommentEvaluation> saveAllProductCommentEvaluation(ProductCommentCreateReqVO reqVO, ProductComment productComment) {
-        List<ProductCommentEvaluation> productCommentEvaluations = convertList(reqVO.getMapProperties().entrySet(), entry -> {
+        List<ProductCommentEvaluation> productCommentEvaluations = convertList(reqVO.getEvaluations().entrySet(), entry -> {
             return ProductCommentEvaluation.builder().productComment(productComment)
                     .productProperty(productPropertyService.getById(entry.getKey()))
                     .propertyValue(entry.getValue()).build();
@@ -77,9 +76,13 @@ public class ProductCommentServiceImpl implements ProductCommentService{
 
     @Override
     @Transactional(rollbackFor = ServiceException.class)
-    public ProductComment updateProductComment(ProductCommentUpdateReqVO reqVO, List<MultipartFile> files) {
-        if(!MapUtils.isEmpty(reqVO.getMapProperties())) {
-            reqVO.getMapProperties().entrySet().forEach(entry -> {
+    public ProductComment updateProductComment(ProductCommentCreateReqVO reqVO) {
+        ProductComment productComment = getProductCommentById(reqVO.getId());
+        if(!productComment.getUserMember().getId().equals(reqVO.getUserMemberId())) {
+            throw exception(UPDATE_COMMENT_IS_DENIED);
+        }
+        if(!MapUtils.isEmpty(reqVO.getEvaluations())) {
+            reqVO.getEvaluations().entrySet().forEach(entry -> {
                 ProductCommentEvaluation productCommentEvaluation = this.productCommentEvaluationRepository
                         .findByProductCommentIdAndProductPropertyId(reqVO.getId(), entry.getKey())
                         .orElse(ProductCommentEvaluation.builder()
@@ -91,12 +94,8 @@ public class ProductCommentServiceImpl implements ProductCommentService{
                 this.productCommentEvaluationRepository.save(productCommentEvaluation);
             });
         }
-        /**
-         * Additional image/video
-         */
-        List<FileEntity> fileEntities = this.fileStorageService.saveAll(files, COMMENT_IMAGE);
-        ProductComment productComment = getProductCommentById(reqVO.getId()).toBuilder()
-                .mediaList(fileEntities).content(reqVO.getContent())
+        productComment = productComment.toBuilder()
+                .imageUrls(reqVO.getImageUrls()).content(reqVO.getContent())
                 .rating(reqVO.getRating()).build();
 
         this.productCommentRepository.save(productComment);
@@ -104,7 +103,7 @@ public class ProductCommentServiceImpl implements ProductCommentService{
     }
 
     @Override
-    public PageResult<ProductComment> getListProductCommentByProductSpu(PagingProductCommentReqVO reqVO) {
+    public PageResult<ProductComment> getPageCommentByProductSpuId(PagingProductCommentReqVO reqVO) {
         Page<ProductComment> pageProductComment = this.productCommentRepository.findAllByProductSpuId(
                 reqVO.getProductSpuId(),
                 PageRequest.of(reqVO.getCurrentPage() - 1, COMMENT_LIMIT)
@@ -113,7 +112,7 @@ public class ProductCommentServiceImpl implements ProductCommentService{
     }
 
     @Override
-    public PageResult<ProductComment> getListProductCommentByUserMemberId(Long userMemberId) {
+    public PageResult<ProductComment> getPageProductCommentByUserMemberId(Long userMemberId, PageParam req) {
         return null;
     }
 
@@ -142,5 +141,18 @@ public class ProductCommentServiceImpl implements ProductCommentService{
     public void delete(Long commentId) {
         this.productCommentEvaluationRepository.deleteAllByProductCommentId(commentId);
         this.productCommentRepository.deleteById(commentId);
+    }
+
+    @Override
+    public PageResult<ProductComment> getPageCommentByProductSpuId(Long spuId, PageParam req) {
+        Page<ProductComment> page = this.productCommentRepository.findAllByProductSpuId(spuId, req.buildPageRequest());
+        return new PageResult<>(page);
+    }
+
+    @Override
+    public boolean userHasLikeComment(Long userId, Long commentId) {
+        return productCommentFavoriteRepository
+                .findByProductCommentIdAndUserMemberId(commentId, userId)
+                .isPresent();
     }
 }

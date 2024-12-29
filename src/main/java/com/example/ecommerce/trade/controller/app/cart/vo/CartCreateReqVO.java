@@ -1,4 +1,4 @@
-package com.example.ecommerce.trade.controller.cart.vo;
+package com.example.ecommerce.trade.controller.app.cart.vo;
 
 import lombok.Data;
 

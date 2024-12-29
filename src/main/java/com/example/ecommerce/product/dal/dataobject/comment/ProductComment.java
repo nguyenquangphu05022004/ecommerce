@@ -1,7 +1,7 @@
 package com.example.ecommerce.product.dal.dataobject.comment;
 
-import com.example.ecommerce.file.FileEntity;
 import com.example.ecommerce.frame.auditting.BaseEntity;
+import com.example.ecommerce.frame.common.converter.JsonListConverter;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
 import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
@@ -27,8 +27,8 @@ public class ProductComment extends BaseEntity {
 
 //    private UserMemberType userMemberType;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<FileEntity> mediaList;
+    @Convert(converter = JsonListConverter.class)
+    private List<String> imageUrls;
 
     @ManyToOne
     @JoinColumn(name = "product_spu_id")

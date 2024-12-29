@@ -30,6 +30,12 @@ public interface ProductionErrorConstant {
      */
     ErrorCode SELLER_NOT_FOUND = new ErrorCode("Seller not found", NOT_FOUND.value());
     ErrorCode PRODUCT_COMMENT_NOT_FOUND = new ErrorCode("ProductComment not found", NOT_FOUND.value());
+    ErrorCode PRODUCT_EVALUATION_NOT_FOUND = new ErrorCode("Product Evaluation not found", NOT_FOUND.value());
     ErrorCode PRODUCT_PROPERTY_NOT_FOUND = new ErrorCode("ProductProperty not found", NOT_FOUND.value());
+    ErrorCode UPDATE_COMMENT_IS_DENIED = new ErrorCode("Create/Delete/Update comment is denied", BAD_REQUEST.value());
+    /**
+     * Property
+     */
+    ErrorCode PROPERTY_VALUE_NOT_FOUND = new ErrorCode("Property value not found", NOT_FOUND.value());
 
 }

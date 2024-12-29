@@ -37,4 +37,6 @@ public class ProductStatistic extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "product_spu_id", unique = true)
     private ProductSpu productSpu;
+
+
 }

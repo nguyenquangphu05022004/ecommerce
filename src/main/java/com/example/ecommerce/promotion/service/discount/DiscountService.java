@@ -10,6 +10,8 @@ public interface DiscountService {
     List<Discount> getDiscountBySpuId(Long spuId);
     List<Discount> getListDiscount(Long userId);
 
+    Discount getDiscountWasNotRevokedBySpuId(Long spuId);
+
     void deleteById(Long id);
     Discount getDiscountById(Long id);
     Discount updateDiscount(DiscountCreateReqVO req);

@@ -1,41 +1,36 @@
 package com.example.ecommerce.product.service.comment;
 
+import com.example.ecommerce.frame.common.pojo.CommonResult;
+import com.example.ecommerce.frame.common.pojo.PageParam;
 import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.product.controller.admin.comment.vo.PagingProductCommentReqVO;
 import com.example.ecommerce.product.controller.admin.comment.vo.ProductCommentCreateReqVO;
-import com.example.ecommerce.product.controller.admin.comment.vo.ProductCommentUpdateReqVO;
+import com.example.ecommerce.product.controller.admin.comment.vo.ProductCommentResVO;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductComment;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 public interface ProductCommentService {
     /**
      * Create comment
      */
-    ProductComment createProductComment(ProductCommentCreateReqVO reqVO, List<MultipartFile> files);
+    ProductComment createProductComment(ProductCommentCreateReqVO reqVO);
 
-    /**
-     * Update comment
-     * @param reqVO
-     * @param files
-     * @return
-     */
-    ProductComment updateProductComment(ProductCommentUpdateReqVO reqVO, List<MultipartFile> files);
+    ProductComment updateProductComment(ProductCommentCreateReqVO reqVO);
 
     /**
      * get list comment by product
      * @param reqVO
      * @return
      */
-    PageResult<ProductComment> getListProductCommentByProductSpu(PagingProductCommentReqVO reqVO);
+    PageResult<ProductComment> getPageCommentByProductSpuId(PagingProductCommentReqVO reqVO);
 
     /**
      * get list comment of specific user
+     *
      * @param userMemberId
+     * @param req
      * @return
      */
-    PageResult<ProductComment> getListProductCommentByUserMemberId(Long userMemberId);
+    PageResult<ProductComment> getPageProductCommentByUserMemberId(Long userMemberId, PageParam req);
 
     /**
      * Valid product comment
@@ -51,4 +46,8 @@ public interface ProductCommentService {
      */
     void delete(Long commentId);
 
+    PageResult<ProductComment> getPageCommentByProductSpuId(Long spuId, PageParam req);
+
+
+    boolean userHasLikeComment(Long userId, Long commentId);
 }

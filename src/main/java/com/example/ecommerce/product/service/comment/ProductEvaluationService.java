@@ -9,5 +9,7 @@ public interface ProductEvaluationService {
     ProductEvaluation createProductEvaluation(ProductEvaluationReqVO reqVO);
     List<ProductEvaluation> getAllProductEvaluationByProductSpuId(Long productSpuId);
 
-    void deleteProductEvaluation(Long productEvaluationId);
+    ProductEvaluation getEvaluationById(Long productEvaluationId);
+
+    ProductEvaluation updateEvaluation(ProductEvaluationReqVO req);
 }

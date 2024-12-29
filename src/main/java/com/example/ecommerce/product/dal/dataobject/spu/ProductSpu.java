@@ -27,6 +27,9 @@ public class ProductSpu extends BaseEntity {
     private Integer maxPrice;
     private Integer minPrice;
 
+    private String sendFrom;
+
+
     @ManyToOne
     @JoinColumn(name = "seller_id")
     private Seller seller;

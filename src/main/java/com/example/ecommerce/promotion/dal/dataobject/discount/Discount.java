@@ -31,4 +31,6 @@ public class Discount extends BaseEntity {
     @JoinColumn(name = "discount_activity_id")
     private DiscountActivity discountActivity;
 
+    private Boolean revoke;
+
 }

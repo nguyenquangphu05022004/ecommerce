@@ -1,4 +1,4 @@
-package com.example.ecommerce.trade.controller.order.vo;
+package com.example.ecommerce.trade.controller.app.order.vo;
 
 import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.common.date.DateTimeUtils;

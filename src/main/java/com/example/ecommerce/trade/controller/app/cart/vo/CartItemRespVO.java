@@ -1,4 +1,4 @@
-package com.example.ecommerce.trade.controller.cart.vo;
+package com.example.ecommerce.trade.controller.app.cart.vo;
 
 import com.example.ecommerce.product.controller.admin.sku.vo.ProductSkuTradeResVO;
 import com.example.ecommerce.trade.dal.dataobject.cart.Cart;

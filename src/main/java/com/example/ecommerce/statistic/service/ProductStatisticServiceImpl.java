@@ -1,5 +1,6 @@
 package com.example.ecommerce.statistic.service;
 
+import com.example.ecommerce.frame.common.object.ObjectUtils;
 import com.example.ecommerce.statistic.dal.dataobject.product.ProductStatistic;
 import com.example.ecommerce.statistic.dal.repo.product.ProductStatisticRepository;
 import com.example.ecommerce.statistic.enums.OperationType;
@@ -14,7 +15,9 @@ public class ProductStatisticServiceImpl implements ProductStatisticService {
     public void doUpdateProductStatistic(Long productId,
                                          OperationType operationType, String fieldName) {
         ProductStatistic productStatistic = getBySpuId(productId);
-//        ObjectUtils.setField(productStatistic, FieldNameAnnotation.class, 1);
+
+        int operand = 1 * (operationType == OperationType.ADD ? 1 : -1);
+        ObjectUtils.setField(productStatistic, fieldName, (Integer)ObjectUtils.getField(productStatistic, fieldName) * operand);
     }
 
     @Override

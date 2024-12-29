@@ -1,6 +1,6 @@
 package com.example.ecommerce.trade.service.order;
 
-import com.example.ecommerce.trade.controller.order.vo.OrderDetailsReqVO;
+import com.example.ecommerce.trade.controller.app.order.vo.OrderDetailsReqVO;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
 import com.example.ecommerce.trade.enums.OrderStatus;
 
@@ -15,4 +15,6 @@ public interface OrderService {
     void updatePreviousStatus(Long orderId);
     Order getOrderById(Long orderId);
     Order getOrderByUserIdAndOrderId(Long userId, Long orderId);
+
+    boolean userHasOrderProduct(Long userId, Long spuId);
 }

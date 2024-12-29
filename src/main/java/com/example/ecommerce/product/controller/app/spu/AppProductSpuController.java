@@ -1,6 +1,5 @@
 package com.example.ecommerce.product.controller.app.spu;
 
-import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.common.pojo.CommonResult;
 import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.product.controller.admin.spu.vo.PageProductSpuReqVO;
@@ -9,7 +8,6 @@ import com.example.ecommerce.product.controller.app.spu.vo.AppProductSpuSimpleRe
 import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
 import com.example.ecommerce.product.service.spu.ProductSpuService;
 import com.example.ecommerce.promotion.service.discount.DiscountService;
-import com.example.ecommerce.statistic.dal.dataobject.product.ProductStatistic;
 import com.example.ecommerce.statistic.enums.OperationType;
 import com.example.ecommerce.statistic.service.ProductStatisticService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,13 +33,11 @@ public class AppProductSpuController {
     ) {
         PageResult<ProductSpu> pageResult = productSpuService.getPageProductSpu(req);
         return CommonResult.success(pageResult, spu -> {
-            AppProductSpuSimpleRespVO appSimple = AppProductSpuSimpleRespVO.builder()
-                    .id(spu.getId()).minPrice(spu.getMinPrice()).maxPrice(spu.getMaxPrice())
-                    .imageUrl(CollUtils.getFirst(spu.getProductSkus(), sku -> sku.getImage()))
-                    .sold(productStatisticService.getProductStatistic(spu.getId()).getSold())
-                    .discount(null)
-                    .build();
-
+            AppProductSpuSimpleRespVO appSimple = new AppProductSpuSimpleRespVO(
+                    spu,
+                    discountService.getDiscountWasNotRevokedBySpuId(spu.getId()),
+                    productStatisticService.getProductStatistic(spu.getId())
+            );
             return appSimple;
         }, "");
     }
@@ -50,10 +46,16 @@ public class AppProductSpuController {
     @PermitAll
     @GetMapping("/{id}")
     public CommonResult<AppProductSpuDetailsRespVO> getDetailProductSpu(@PathVariable("id") Long id) {
-        ProductSpu productSpu = productSpuService.getProductSpuById(id);
-        ProductStatistic productStatistic = this.productStatisticService.getProductStatistic(id);
+        ProductSpu spu = productSpuService.getProductSpuById(id);
         this.productStatisticService.doUpdateProductStatistic(id, OperationType.ADD, "browseCount");
-        return null;
+
+        AppProductSpuDetailsRespVO spuDetails = new AppProductSpuDetailsRespVO(
+                spu,
+                discountService.getDiscountWasNotRevokedBySpuId(spu.getId()),
+                this.productStatisticService.getProductStatistic(id)
+        );
+
+        return CommonResult.success(spuDetails);
     }
 
 }

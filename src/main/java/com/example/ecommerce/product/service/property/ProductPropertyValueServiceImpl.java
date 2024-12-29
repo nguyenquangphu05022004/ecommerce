@@ -1,5 +1,7 @@
 package com.example.ecommerce.product.service.property;
 
+import com.example.ecommerce.frame.common.pojo.PageParam;
+import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.product.controller.admin.property.vo.ProductPropertyValueReqVO;
 import com.example.ecommerce.product.dal.dataobject.properties.ProductProperty;
 import com.example.ecommerce.product.dal.dataobject.properties.ProductPropertyValue;
@@ -7,7 +9,8 @@ import com.example.ecommerce.product.dal.repository.property.ProductPropertyValu
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
+import static com.example.ecommerce.product.constants.ProductionErrorConstant.PROPERTY_VALUE_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +18,10 @@ public class ProductPropertyValueServiceImpl implements ProductPropertyValueServ
     private final ProductPropertyValueRepository productPropertyValueRepository;
     @Override
     public ProductPropertyValue updateProductPropertyValue(ProductPropertyValueReqVO reqVO) {
-        return null;
+        ProductPropertyValue value = getValueById(reqVO.getId()).toBuilder()
+                .propertyValue(reqVO.getValue()).build();
+        this.productPropertyValueRepository.save(value);
+        return value;
     }
 
     @Override
@@ -28,7 +34,13 @@ public class ProductPropertyValueServiceImpl implements ProductPropertyValueServ
     }
 
     @Override
-    public List<ProductPropertyValue> getListProductPropertyValueByPropertyId(Long propertyId) {
-        return this.productPropertyValueRepository.findAllByProductPropertyId(propertyId);
+    public PageResult<ProductPropertyValue> getPagePropertyValueByPropertyId(Long propertyId, PageParam pageParam) {
+        return new PageResult<>(productPropertyValueRepository.findAllByProductPropertyId(propertyId, pageParam.buildPageRequest()));
+    }
+
+    @Override
+    public ProductPropertyValue getValueById(Long id) {
+        return this.productPropertyValueRepository.findById(id)
+                .orElseThrow(() -> exception(PROPERTY_VALUE_NOT_FOUND));
     }
 }

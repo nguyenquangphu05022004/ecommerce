@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class ProductEvaluationReqVO {
+    private Long id;
     private Long propertyId;
     private Long productSpuId;
 }

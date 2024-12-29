@@ -1,5 +1,6 @@
 package com.example.ecommerce.product.service.comment;
 
+import com.example.ecommerce.product.constants.ProductionErrorConstant;
 import com.example.ecommerce.product.controller.admin.comment.evaluation.vo.ProductEvaluationReqVO;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductEvaluation;
 import com.example.ecommerce.product.dal.repository.comment.ProductEvaluationRepository;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +37,18 @@ public class ProductEvaluationServiceImpl implements ProductEvaluationService{
     }
 
     @Override
-    public void deleteProductEvaluation(Long productEvaluationId) {
+    public ProductEvaluation getEvaluationById(Long productEvaluationId) {
+        return this.productEvaluationRepository.findById(productEvaluationId)
+                .orElseThrow(() -> exception(ProductionErrorConstant.PRODUCT_EVALUATION_NOT_FOUND));
+    }
 
+    @Override
+    public ProductEvaluation updateEvaluation(ProductEvaluationReqVO req) {
+        ProductEvaluation evaluation = getEvaluationById(req.getId())
+                .toBuilder().productProperty(productPropertyService.getById(req.getPropertyId()))
+                .productSpu(productSpuService.getProductSpuById(req.getProductSpuId()))
+                .build();
+        this.productEvaluationRepository.save(evaluation);
+        return evaluation;
     }
 }

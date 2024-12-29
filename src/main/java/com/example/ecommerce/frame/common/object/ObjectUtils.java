@@ -33,19 +33,18 @@ public class ObjectUtils {
 //        return constructor.newInstance(parameters);
 //    }
 
-//    /**
-//     *
-//     * @param object: current object
-//     * @param annotation: is marked on object field
-//     * @param value: value want to set for field in object
-//     */
-//    public static void setField(Object object, String fieldSummary, Object value) {
-////        Field[] fields = object.getClass().getDeclaredFields();
-////        for(Field field : fields) {
-////            A myAn = field.getAnnotation(annotation);
-////            if(myAn != null) {
-////                FieldNameAnnotation myAn1 = (FieldNameAnnotation) myAn;
-////            }
-////        }
-//    }
+    public static void setField(Object object, String field, Object value) {
+        try {
+            object.getClass().getDeclaredField(field).set(object, value);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static Object getField(Object object, String field) {
+        try {
+            return object.getClass().getDeclaredField(field).get(object);
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

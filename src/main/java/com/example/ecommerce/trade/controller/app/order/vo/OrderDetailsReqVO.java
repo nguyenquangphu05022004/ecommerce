@@ -1,4 +1,4 @@
-package com.example.ecommerce.trade.controller.order.vo;
+package com.example.ecommerce.trade.controller.app.order.vo;
 
 import com.example.ecommerce.trade.enums.PaymentMode;
 import lombok.Data;

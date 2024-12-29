@@ -1,18 +1,32 @@
 package com.example.ecommerce.product.controller.app.spu.vo;
 
+import com.example.ecommerce.frame.common.collection.CollUtils;
+import com.example.ecommerce.product.controller.admin.brand.vo.ProductBrandResVO;
+import com.example.ecommerce.product.controller.admin.category.vo.ProductCategoryResVO;
+import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
+import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
 import com.example.ecommerce.promotion.controller.admin.discount.vo.self.DiscountRespVO;
+import com.example.ecommerce.promotion.dal.dataobject.discount.Discount;
+import com.example.ecommerce.statistic.dal.dataobject.product.ProductStatistic;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jdk.jfr.Description;
-import lombok.Builder;
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
 public class AppProductSpuSimpleRespVO {
     private Long id;
     private Integer maxPrice;
     private Integer minPrice;
+    private String sendFrom;
+    @Schema(description = "The loai")
+    private ProductCategoryResVO category;
+    @Schema(description = "Thuong hieu")
+    private ProductBrandResVO brand;
 
     @Schema(description = "Anh ve san pham")
     private String imageUrl;
@@ -22,4 +36,16 @@ public class AppProductSpuSimpleRespVO {
 
     @Schema(description = "So luong san pham da ban")
     private Integer sold;
+
+
+    public AppProductSpuSimpleRespVO(ProductSpu spu, Discount discount, ProductStatistic statistic) {
+        this.id = spu.getId();
+        this.maxPrice = spu.getMaxPrice(); this.minPrice = spu.getMinPrice();
+        this.category = new ProductCategoryResVO(spu.getProductCategory());
+        this.brand = new ProductBrandResVO(spu.getProductBrand());
+        this.imageUrl = CollUtils.getFirst(spu.getProductSkus(), ProductSku::getImage);
+        this.discount = new DiscountRespVO(discount);
+        this.sold = statistic.getSold();
+        this.sendFrom = spu.getSendFrom();
+    }
 }

@@ -8,7 +8,7 @@ import com.example.ecommerce.promotion.dal.repo.coupon.CouponRepository;
 import com.example.ecommerce.promotion.service.coupon.CouponService;
 import com.example.ecommerce.system.dal.dataobject.user.Seller;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
-import com.example.ecommerce.trade.controller.order.vo.OrderDetailsReqVO;
+import com.example.ecommerce.trade.controller.app.order.vo.OrderDetailsReqVO;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
 import com.example.ecommerce.trade.dal.dataobject.order.OrderItem;
 import com.example.ecommerce.trade.dal.dataobject.order.OrderLineItem;
@@ -135,6 +135,11 @@ public class OrderServiceImpl implements OrderService{
     public Order getOrderByUserIdAndOrderId(Long userId, Long orderId) {
         return orderRepository.findByUserMemberIdAndId(userId, orderId)
                 .orElseThrow(() -> exception(ORDER_NOT_FOUND));
+    }
+
+    @Override
+    public boolean userHasOrderProduct(Long userId, Long spuId) {
+        return false;
     }
 
 

@@ -1,16 +1,13 @@
-package com.example.ecommerce.trade.controller.cart;
+package com.example.ecommerce.trade.controller.app.cart;
 
 import com.example.ecommerce.frame.common.pojo.CommonResult;
 import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
-import com.example.ecommerce.trade.controller.cart.vo.CartCreateReqVO;
-import com.example.ecommerce.trade.controller.cart.vo.CartListRespVO;
-import com.example.ecommerce.trade.controller.cart.vo.CartUpdateQuantityReqVO;
+import com.example.ecommerce.trade.controller.app.cart.vo.CartCreateReqVO;
+import com.example.ecommerce.trade.controller.app.cart.vo.CartListRespVO;
 import com.example.ecommerce.trade.service.cart.CartService;
 import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/app-api/trade/carts")

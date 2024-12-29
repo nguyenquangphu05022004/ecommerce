@@ -1,11 +1,11 @@
-package com.example.ecommerce.trade.controller.order;
+package com.example.ecommerce.trade.controller.app.order;
 
 import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.common.pojo.CommonResult;
 import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
-import com.example.ecommerce.trade.controller.order.vo.OrderDetailsReqVO;
-import com.example.ecommerce.trade.controller.order.vo.OrderDetailsRespVO;
-import com.example.ecommerce.trade.controller.order.vo.OrderSimpleRespVO;
+import com.example.ecommerce.trade.controller.app.order.vo.OrderDetailsReqVO;
+import com.example.ecommerce.trade.controller.app.order.vo.OrderDetailsRespVO;
+import com.example.ecommerce.trade.controller.app.order.vo.OrderSimpleRespVO;
 import com.example.ecommerce.trade.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

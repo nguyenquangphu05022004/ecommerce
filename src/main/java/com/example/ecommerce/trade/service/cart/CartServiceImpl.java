@@ -2,9 +2,9 @@ package com.example.ecommerce.trade.service.cart;
 
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
-import com.example.ecommerce.trade.controller.cart.vo.CartCreateReqVO;
-import com.example.ecommerce.trade.controller.cart.vo.CartListRespVO;
-import com.example.ecommerce.trade.controller.cart.vo.CartUpdateQuantityReqVO;
+import com.example.ecommerce.trade.controller.app.cart.vo.CartCreateReqVO;
+import com.example.ecommerce.trade.controller.app.cart.vo.CartListRespVO;
+import com.example.ecommerce.trade.controller.app.cart.vo.CartUpdateQuantityReqVO;
 import com.example.ecommerce.trade.dal.dataobject.cart.Cart;
 import com.example.ecommerce.trade.dal.repo.cart.CartRepository;
 import lombok.RequiredArgsConstructor;

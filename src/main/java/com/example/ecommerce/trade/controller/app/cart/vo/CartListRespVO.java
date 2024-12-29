@@ -1,4 +1,4 @@
-package com.example.ecommerce.trade.controller.cart.vo;
+package com.example.ecommerce.trade.controller.app.cart.vo;
 
 import com.example.ecommerce.frame.common.pojo.Pair;
 import com.example.ecommerce.system.controller.admin.user.vo.SellerResVO;
