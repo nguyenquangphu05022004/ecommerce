@@ -1,7 +1,6 @@
 package com.example.ecommerce.promotion.dal.dataobject.discount;
 
 import com.example.ecommerce.frame.auditting.BaseEntity;
-import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
 import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
 import com.example.ecommerce.promotion.dal.enums.PromotionDiscountTypeEnum;
 import jakarta.persistence.*;
@@ -31,6 +30,6 @@ public class Discount extends BaseEntity {
     @JoinColumn(name = "discount_activity_id")
     private DiscountActivity discountActivity;
 
-    private Boolean revoke;
+    private Boolean revoked;
 
 }

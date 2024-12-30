@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 @Schema(description = "Chat two user - Message Request")
 public class MessageCreateReqVO {
@@ -20,4 +22,8 @@ public class MessageCreateReqVO {
 
     @Schema(description = "reply message", example = "200")
     private Long replyMessageId;
+
+    private Map<String, Object> templateParams;
+    private Long messageTemplateId;
+
 }

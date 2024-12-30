@@ -1,6 +1,6 @@
 package com.example.ecommerce.realtime.service.live;
 
-import com.example.ecommerce.realtime.controller.admin.live.livemessage.vo.LiveCommentCreateReqVO;
+import com.example.ecommerce.realtime.controller.app.live.message.vo.LiveCommentCreateReqVO;
 import com.example.ecommerce.realtime.dal.dataobject.live.LiveComment;
 import com.example.ecommerce.realtime.dal.repo.live.LiveCommentRepository;
 import com.example.ecommerce.system.service.user.UserMemberService;

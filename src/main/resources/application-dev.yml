@@ -1,0 +1,25 @@
+
+
+web:
+  security:
+    path-ignores:
+      - /api/files
+  swagger:
+    title: Ung dung mua sam
+    description: Nhieu nguoi ban hang cung luc
+    author: Nguyen Quang Phu
+    version: 1.0
+    email: quangphu2050@gmail.com
+  web-socket:
+    endpoint: /ws
+    app-prefix: /app
+    broker-prefix: /topic
+    ui-domain: viosmash.site
+  auth:
+    access-token: 1440
+    refresh-toke: 1440
+  order:
+    approval-order: 8 #tu dong chap nhan order sau 8h ke tu luc dat hang
+    allow-comment: 1 #chi cho phep user comment trong vong 1 ngay ke tu luc nhan hang
+  logger:
+    delete-logger: 7 #tu dong xoa log tu 7 ngay truoc do

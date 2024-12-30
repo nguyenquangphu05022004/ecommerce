@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class FileEntity extends BaseEntity {
     private String originalName;
 
+    @Column(unique = true)
     private String path;
 
     @Enumerated(EnumType.STRING)

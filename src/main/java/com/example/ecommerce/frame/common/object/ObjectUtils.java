@@ -1,10 +1,6 @@
 package com.example.ecommerce.frame.common.object;
 
-import com.example.ecommerce.statistic.enums.FieldNameAnnotation;
-
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 public class ObjectUtils {

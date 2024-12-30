@@ -22,8 +22,8 @@ public class DiscountServiceImpl implements DiscountService{
     public Discount createDiscount(DiscountCreateReqVO reqVO) {
         List<Discount> discounts = getDiscountBySpuId(reqVO.getProductSpuId());
         CollUtils.convertList(discounts, discount -> {
-            if(discount.getRevoke()) {
-                discount.setRevoke(true);
+            if(discount.getRevoked()) {
+                discount.setRevoked(true);
             }
             return discount;
         });
@@ -32,7 +32,7 @@ public class DiscountServiceImpl implements DiscountService{
                 .productSpu(ProductSpu.builder().id(reqVO.getProductSpuId()).build())
                 .discountType(reqVO.getDiscountType())
                 .discountAmount(reqVO.getDiscountAmount())
-                .revoke(false)
+                .revoked(false)
                 .build();
         this.discountRepository.save(discount);
         this.discountRepository.saveAll(discounts);
@@ -51,7 +51,7 @@ public class DiscountServiceImpl implements DiscountService{
 
     @Override
     public Discount getDiscountWasNotRevokedBySpuId(Long spuId) {
-        return this.discountRepository.findByProductSpuIdAndRevoke(spuId, false)
+        return this.discountRepository.findByProductSpuIdAndRevoked(spuId, false)
                 .orElse(null);
     }
 

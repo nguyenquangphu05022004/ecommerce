@@ -20,10 +20,19 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class LiveProduct extends BaseEntity {
     @ManyToOne
-    @JoinColumn(name = "product_sku_id")
-    private ProductSku productSku;
+    @JoinColumn(name = "product_spu_id")
+    private ProductSpu productSpu;
 
+    /**
+     * Hien thi o khung hinh livestream.
+     * Moi san pham chi co the duoc hien thi 1 lan,
+     * theo thu tu cua nguoi livestream muon hien thi
+     */
     private Boolean display;
+
+    /**
+     * Hien thi o khung chat
+     */
     private Boolean pin;
 
     @ManyToOne

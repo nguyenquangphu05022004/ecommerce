@@ -7,7 +7,7 @@ import com.example.ecommerce.promotion.dal.dataobject.discount.Discount;
 import com.example.ecommerce.statistic.controller.product.vo.ProductStatisticSimpleRespVO;
 import com.example.ecommerce.statistic.dal.dataobject.product.ProductStatistic;
 import com.example.ecommerce.system.controller.admin.user.vo.SellerDetailsRespVO;
-import lombok.*;
+import lombok.Data;
 
 import java.util.List;
 

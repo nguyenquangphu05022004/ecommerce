@@ -1,4 +1,4 @@
-package com.example.ecommerce.realtime.controller.admin.live.liveproduct.vo;
+package com.example.ecommerce.realtime.controller.admin.live.product.vo;
 
 import lombok.Data;
 

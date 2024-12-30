@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 public class ProductStatisticSimpleRespVO {
-    private Long id;
     private Integer browseCount;
     private Integer sold;
+
     private Integer numFavorite;
     private Integer numComment;
 
@@ -18,7 +18,6 @@ public class ProductStatisticSimpleRespVO {
     private Integer numCancelOrdering;
 
     public ProductStatisticSimpleRespVO(ProductStatistic productStatistic) {
-        this.id = productStatistic.getId();
         this.browseCount = productStatistic.getBrowseCount();
         this.sold = productStatistic.getSold();
         this.numFavorite = productStatistic.getNumFavorite();
@@ -27,5 +26,4 @@ public class ProductStatisticSimpleRespVO {
         this.numOrdering = productStatistic.getNumOrdering();
         this.numCancelOrdering = productStatistic.getNumCancelOrdering();
     }
-
 }

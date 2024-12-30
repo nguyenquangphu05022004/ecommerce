@@ -2,6 +2,7 @@ package com.example.ecommerce.realtime.dal.dataobject.chat;
 
 import com.example.ecommerce.frame.auditting.BaseEntity;
 import com.example.ecommerce.frame.common.converter.JsonListConverter;
+import com.example.ecommerce.frame.common.converter.JsonMapConverter;
 import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "realtime_chat_message")
@@ -28,6 +30,13 @@ public class Message extends BaseEntity {
    private UserMember toUser;
 
    private Boolean readMessage;
+
+   @ManyToOne
+   @JoinColumn(name = "message_template_id")
+   private MessageTemplate messageTemplate;
+
+   @Convert(converter = JsonMapConverter.class)
+   private Map<String, Object> templateParams;
 
    @Convert(converter = JsonListConverter.class)
    private List<String> mediaUrls;

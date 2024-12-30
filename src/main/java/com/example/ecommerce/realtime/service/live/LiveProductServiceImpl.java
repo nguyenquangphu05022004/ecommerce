@@ -2,7 +2,9 @@ package com.example.ecommerce.realtime.service.live;
 
 import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
+import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
 import com.example.ecommerce.product.service.sku.ProductSkuService;
+import com.example.ecommerce.product.service.spu.ProductSpuService;
 import com.example.ecommerce.realtime.dal.dataobject.live.LiveProduct;
 import com.example.ecommerce.realtime.dal.repo.live.LiveProductRepository;
 import lombok.AllArgsConstructor;
@@ -18,13 +20,13 @@ import static com.example.ecommerce.realtime.constants.ErrorCodeConstants.LIVE_P
 @RequiredArgsConstructor
 public class LiveProductServiceImpl implements LiveProductService{
 
-    private final ProductSkuService productSkuService;
+    private final ProductSpuService productSpuService;
     private final LiveProductRepository liveProductRepository;
     @Override
     public void createLiveProduct(Long productSkuId) {
-        ProductSku productSku = this.productSkuService.getProductSkuById(productSkuId);
+        ProductSpu productSpu = this.productSpuService.getProductSpuById(productSkuId);
         LiveProduct liveProduct = LiveProduct.builder()
-                .productSku(productSku)
+                .productSpu(productSpu)
                 .pin(false).display(false)
                 .build();
 

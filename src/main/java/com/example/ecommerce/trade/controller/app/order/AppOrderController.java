@@ -17,7 +17,7 @@ import static com.example.ecommerce.frame.common.pojo.CommonResult.success;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app-api/trade/orders")
-public class OrderController {
+public class AppOrderController {
 
     private final OrderService orderService;
 

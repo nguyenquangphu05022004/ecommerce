@@ -31,6 +31,7 @@ public class ProductPropertyController {
     public CommonResult<ProductPropertyVO> createProperty(@RequestBody ProductPropertyVO req) {
         return success(this.productPropertyService.createProductProperty(req), ProductPropertyVO::new);
     }
+
     @PutMapping
     @Operation(summary = "Cap nhat property")
     @PreAuthorize("@ss.hasPermission('product-property:update')")
