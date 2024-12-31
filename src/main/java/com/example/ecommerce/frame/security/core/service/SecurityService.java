@@ -15,4 +15,7 @@ public class SecurityService {
 //        return this.permissionService.hasPermission(permission);
     }
 
+    public boolean hasRole(String role) {
+        return true;
+    }
 }

@@ -1,6 +1,9 @@
 package com.example.ecommerce.trade.service.order;
 
+import com.example.ecommerce.frame.common.collection.CollUtils;
+import com.example.ecommerce.frame.common.date.DateTimeUtils;
 import com.example.ecommerce.frame.common.exception.ServiceException;
+import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.frame.common.pojo.Pair;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
 import com.example.ecommerce.promotion.dal.dataobject.coupon.Coupon;
@@ -8,19 +11,24 @@ import com.example.ecommerce.promotion.dal.repo.coupon.CouponRepository;
 import com.example.ecommerce.promotion.service.coupon.CouponService;
 import com.example.ecommerce.system.dal.dataobject.user.Seller;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
+import com.example.ecommerce.trade.controller.admin.order.vo.self.PageOrderReqVO;
 import com.example.ecommerce.trade.controller.app.order.vo.OrderDetailsReqVO;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
 import com.example.ecommerce.trade.dal.dataobject.order.OrderItem;
 import com.example.ecommerce.trade.dal.dataobject.order.OrderLineItem;
+import com.example.ecommerce.trade.dal.dataobject.order.OrderLog;
+import com.example.ecommerce.trade.dal.repo.order.OrderLogRepository;
 import com.example.ecommerce.trade.enums.OrderStatus;
 import com.example.ecommerce.trade.dal.repo.order.OrderItemRepository;
 import com.example.ecommerce.trade.dal.repo.order.OrderLineItemRepository;
 import com.example.ecommerce.trade.dal.repo.order.OrderRepository;
+import com.example.ecommerce.trade.enums.PaymentStatus;
 import com.example.ecommerce.trade.service.cart.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +47,7 @@ public class OrderServiceImpl implements OrderService{
     private final OrderItemRepository orderItemRepository;
     private final OrderLineItemRepository orderLineItemRepository;
     private final CartService cartService;
+    private final OrderLogService orderLogService;
     private final CouponRepository couponRepository;
     private final CouponService couponService;
     @Override
@@ -47,9 +56,9 @@ public class OrderServiceImpl implements OrderService{
         Order order = Order.builder().orderStatus(OrderStatus.PENDING)
                 .no(System.currentTimeMillis() + "").paymentMode(reqVO.getPaymentMode())
                 .addressDetails(reqVO.getAddressDetails())
+                .paymentStatus(PaymentStatus.PROCESSING)
                 .userMember(UserMember.builder().id(reqVO.getUserId()).build())
                 .build();
-
         /**
          * Map seller wth coupon
          */
@@ -86,8 +95,15 @@ public class OrderServiceImpl implements OrderService{
 
             return orderLineItem;
         });
+
+        if(CollUtils.size(lineItems) > 1) {
+            order.setCombinationOfSellers(true);
+        }
         cartService.deleteAll(reqVO.getCartIds());
         this.orderRepository.save(order);
+        this.orderLogService.createOrderLog(order.getId(),
+                "Ban da dat hang vao luc: " + DateTimeUtils.format(LocalDateTime.now()),
+                null, OrderStatus.PENDING);
         this.orderLineItemRepository.saveAll(lineItems);
         convertList(lineItems, l -> this.orderItemRepository.saveAll(l.getItems()));
         convertList(couponMap.entrySet(), entry -> this.couponRepository.save(entry.getValue()));
@@ -116,13 +132,47 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public void updateNextStatus(Long orderId) {
+    public void updateNextStatus(Long orderId, String content) {
+        Order currentOrder = getOrderById(orderId);
+        OrderLog currentOrderLog = orderLogService.getLatestLogByOrderId(orderId);
+
+        OrderStatus currentStatus = currentOrder.getOrderStatus();
+
+        currentOrder.setOrderStatus(currentOrderLog.getNextStatus());
+
+        this.orderRepository.save(currentOrder);
+        this.orderLogService.createOrderLog(
+                orderId, content,
+                currentStatus, OrderStatus.next(currentOrder.getOrderStatus())
+        );
 
     }
 
     @Override
-    public void updatePreviousStatus(Long orderId) {
+    public void updatePreviousStatus(Long orderId, String content) {
+        Order currentOrder = getOrderById(orderId);
+        OrderLog currentOrderLog = orderLogService.getLatestLogByOrderId(orderId);
 
+        OrderStatus currentStatus = currentOrder.getOrderStatus();
+
+        currentOrder.setOrderStatus(currentOrderLog.getPreviousStatus());
+
+        this.orderRepository.save(currentOrder);
+        this.orderLogService.createOrderLog(
+                orderId, content,
+                OrderStatus.prev(currentOrder.getOrderStatus()), currentStatus
+        );
+    }
+
+    @Override
+    public void approvalOrder(Long orderId) {
+        Order order = getOrderById(orderId);
+        if(order.getOrderStatus() == OrderStatus.PENDING) {
+            updateNextStatus(orderId, "Order da duoc chap thuan");
+            /**
+             * Send notification over email, app to user
+             */
+        }
     }
 
     @Override
@@ -140,6 +190,11 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public boolean userHasOrderProduct(Long userId, Long spuId) {
         return false;
+    }
+
+    @Override
+    public PageResult<Order> getPageOrder(PageOrderReqVO req) {
+        return null;
     }
 
 

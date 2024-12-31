@@ -22,4 +22,22 @@ public enum OrderStatus {
             return new Pair<>(p.name(), p.value);
         }));
     }
+
+    public static OrderStatus next(OrderStatus status) {
+        return switch (status) {
+            case PENDING -> PROCESSING;
+            case CANCEL, DELIVERED -> null;
+            case PROCESSING -> DELIVERED;
+        };
+    }
+
+
+    public static OrderStatus prev(OrderStatus status) {
+        return switch (status) {
+            case PENDING, CANCEL -> null;
+            case PROCESSING -> PENDING;
+            case DELIVERED -> PROCESSING;
+        };
+    }
+
 }

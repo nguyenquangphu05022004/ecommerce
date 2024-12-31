@@ -32,4 +32,6 @@ public class OrderLineItem extends BaseEntity {
     @OneToMany(mappedBy = "orderLineItem")
     private List<OrderItem> items;
     private Boolean commentStatus;
+
+    private Boolean orderIsGranted;
 }

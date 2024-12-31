@@ -5,6 +5,7 @@ import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.trade.enums.OrderPlace;
 import com.example.ecommerce.trade.enums.OrderStatus;
 import com.example.ecommerce.trade.enums.PaymentMode;
+import com.example.ecommerce.trade.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +39,12 @@ public class Order extends BaseEntity {
     private PaymentMode paymentMode;
 
     @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+
+    @Enumerated(EnumType.STRING)
     private OrderPlace orderPlace;
+
+    private Boolean combinationOfSellers;
 
     public Integer totalPrice() {
         return 0;

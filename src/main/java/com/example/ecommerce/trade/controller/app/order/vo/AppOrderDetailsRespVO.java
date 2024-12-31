@@ -13,9 +13,9 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class OrderDetailsRespVO extends OrderSimpleRespVO{
+public class AppOrderDetailsRespVO extends AppOrderSimpleRespVO {
     private List<OrderLineItemRespVO> lineItems;
-    public OrderDetailsRespVO(Order order) {
+    public AppOrderDetailsRespVO(Order order) {
         super(order);
         this.lineItems = CollUtils.convertList(order.getLineItems(), OrderLineItemRespVO::new);
     }
