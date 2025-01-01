@@ -1,9 +1,9 @@
-package com.example.ecommerce.trade.controller.admin.order;
+package com.example.ecommerce.trade.controller.admin.order.self;
 
 import com.example.ecommerce.frame.common.pojo.CommonResult;
 import com.example.ecommerce.frame.common.pojo.PageResult;
-import com.example.ecommerce.trade.controller.admin.order.vo.self.OrderSimpleRespVO;
-import com.example.ecommerce.trade.controller.admin.order.vo.self.PageOrderReqVO;
+import com.example.ecommerce.trade.controller.admin.order.self.vo.OrderSimpleRespVO;
+import com.example.ecommerce.trade.controller.admin.order.self.vo.PageOrderReqVO;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
 import com.example.ecommerce.trade.service.order.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,11 +26,6 @@ public class OrderController {
         return CommonResult.success(pageOrder, OrderSimpleRespVO::new);
     }
 
-    @GetMapping("/my-orders")
-    @Operation(summary = "Lay danh sach don hang, customer da dat")
-    public CommonResult<PageResult<OrderSimpleRespVO>> getMyPageOrder(@RequestBody PageOrderReqVO req) {
-        return null;
-    }
 
     @PutMapping("/approval/{id}")
     @Operation(summary = "Chap thuan don hang")
@@ -51,5 +46,8 @@ public class OrderController {
         }
         return CommonResult.success(true);
     }
+
+
+
 
 }

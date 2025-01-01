@@ -21,12 +21,14 @@ public class AppOrderDetailsRespVO extends AppOrderSimpleRespVO {
     }
     @Data
     public static class OrderLineItemRespVO {
+        private Long id;
         private SellerResVO seller;
         private CouponRespVO coupon;
         private List<OrderItemRespVO> items;
         private Boolean commentStatus;
         public OrderLineItemRespVO(OrderLineItem orderLineItem) {
             this.seller = new SellerResVO(orderLineItem.getSeller());
+            this.id = orderLineItem.getId();
             this.coupon = orderLineItem.getCoupon() != null ? new CouponRespVO(orderLineItem.getCoupon()) : null;
             this.items = CollUtils.convertList(orderLineItem.getItems(), item -> new OrderItemRespVO(item));
             this.commentStatus = orderLineItem.getCommentStatus();
@@ -38,10 +40,11 @@ public class AppOrderDetailsRespVO extends AppOrderSimpleRespVO {
     public static class OrderItemRespVO {
         private ProductSkuSimpleRespVO product;
         private Integer quantity;
-
+        private Long id;
         public OrderItemRespVO(OrderItem orderItem) {
             this.product = new ProductSkuSimpleRespVO(orderItem.getProductSku());
             this.quantity = orderItem.getQuantity();
+            this.id = orderItem.getId();
         }
     }
 }

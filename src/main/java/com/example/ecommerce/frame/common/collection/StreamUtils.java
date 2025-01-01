@@ -14,9 +14,6 @@ public class StreamUtils {
         return t.stream().anyMatch(pre);
     }
 
-    public static <U> Stream<U> filterAndThen(Collection<U> t, Predicate<U> pre) {
-        return t.stream().filter(pre);
-    }
 
 
     public static<U> IntStream mapInt(Collection<U> t, ToIntFunction<U> fuc) {

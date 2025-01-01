@@ -14,6 +14,7 @@ public enum OrderStatus {
     PENDING("Chua xu ly"),
     CANCEL("Da huy"),
     PROCESSING("Dang xu ly"),
+    SHIPPED("Dang van chuyen"),
     DELIVERED("Da giao hang");
     @Getter
     private final String value;
@@ -26,8 +27,9 @@ public enum OrderStatus {
     public static OrderStatus next(OrderStatus status) {
         return switch (status) {
             case PENDING -> PROCESSING;
+            case SHIPPED -> DELIVERED;
             case CANCEL, DELIVERED -> null;
-            case PROCESSING -> DELIVERED;
+            case PROCESSING -> SHIPPED;
         };
     }
 
@@ -36,7 +38,8 @@ public enum OrderStatus {
         return switch (status) {
             case PENDING, CANCEL -> null;
             case PROCESSING -> PENDING;
-            case DELIVERED -> PROCESSING;
+            case SHIPPED -> PROCESSING;
+            case DELIVERED -> SHIPPED;
         };
     }
 

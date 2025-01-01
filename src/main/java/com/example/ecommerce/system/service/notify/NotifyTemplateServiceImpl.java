@@ -1,5 +1,6 @@
 package com.example.ecommerce.system.service.notify;
 
+import com.example.ecommerce.frame.common.exception.ExceptionMessage;
 import com.example.ecommerce.frame.common.exception.ServiceException;
 import com.example.ecommerce.frame.common.string.StringUtils;
 import com.example.ecommerce.system.controller.admin.notify.vo.template.NotifyTemplateCreateReqVO;
@@ -47,9 +48,15 @@ public class NotifyTemplateServiceImpl implements NotifyTemplateService{
     }
 
     @Override
-    public NotifyTemplate getNotifyTemplateById(Long id) {
+    public NotifyTemplate getNotifyTemplateById(@ExceptionMessage(message = "Not found template with id") Long id) {
         return this.notifyTemplateRepository.findById(id)
                 .orElseThrow(() -> exception(NOTIFY_TEMPLATE_NOT_FOUND));
+    }
+
+    @Override
+    public NotifyTemplate getNotifyTemplateByName(@ExceptionMessage(message = "Not found template name") String templateName) {
+        return this.notifyTemplateRepository.findByNameIgnoreCase(templateName)
+                .orElseThrow(() -> exception(NOTIFY_TEMPLATE_NOT_FOUND, templateName));
     }
 
 }

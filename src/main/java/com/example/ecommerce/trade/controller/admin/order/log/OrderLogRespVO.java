@@ -1,4 +1,4 @@
-package com.example.ecommerce.trade.controller.admin.order.vo.log;
+package com.example.ecommerce.trade.controller.admin.order.log;
 
 
 import com.example.ecommerce.frame.common.date.DateTimeUtils;

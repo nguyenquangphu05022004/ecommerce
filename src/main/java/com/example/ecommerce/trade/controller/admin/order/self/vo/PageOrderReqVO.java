@@ -1,4 +1,4 @@
-package com.example.ecommerce.trade.controller.admin.order.vo.self;
+package com.example.ecommerce.trade.controller.admin.order.self.vo;
 
 import com.example.ecommerce.frame.common.pojo.PageParam;
 import lombok.Data;

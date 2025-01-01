@@ -1,8 +1,5 @@
 package com.example.ecommerce.frame.common;
 
-import com.example.ecommerce.frame.common.exception.ServiceException;
-import org.springframework.http.HttpStatus;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 

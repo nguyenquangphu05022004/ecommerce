@@ -11,13 +11,13 @@ import com.example.ecommerce.promotion.dal.repo.coupon.CouponRepository;
 import com.example.ecommerce.promotion.service.coupon.CouponService;
 import com.example.ecommerce.system.dal.dataobject.user.Seller;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
-import com.example.ecommerce.trade.controller.admin.order.vo.self.PageOrderReqVO;
+import com.example.ecommerce.system.service.notify.NotifySendService;
+import com.example.ecommerce.trade.controller.admin.order.self.vo.PageOrderReqVO;
 import com.example.ecommerce.trade.controller.app.order.vo.OrderDetailsReqVO;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
 import com.example.ecommerce.trade.dal.dataobject.order.OrderItem;
 import com.example.ecommerce.trade.dal.dataobject.order.OrderLineItem;
 import com.example.ecommerce.trade.dal.dataobject.order.OrderLog;
-import com.example.ecommerce.trade.dal.repo.order.OrderLogRepository;
 import com.example.ecommerce.trade.enums.OrderStatus;
 import com.example.ecommerce.trade.dal.repo.order.OrderItemRepository;
 import com.example.ecommerce.trade.dal.repo.order.OrderLineItemRepository;
@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +47,7 @@ public class OrderServiceImpl implements OrderService{
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final OrderLineItemRepository orderLineItemRepository;
+    private final NotifySendService notifySendService;
     private final CartService cartService;
     private final OrderLogService orderLogService;
     private final CouponRepository couponRepository;
@@ -107,6 +109,8 @@ public class OrderServiceImpl implements OrderService{
         this.orderLineItemRepository.saveAll(lineItems);
         convertList(lineItems, l -> this.orderItemRepository.saveAll(l.getItems()));
         convertList(couponMap.entrySet(), entry -> this.couponRepository.save(entry.getValue()));
+
+        notifySendService.notifySingleMessage(reqVO.getUserId(), "create_order", buildProperties(order));
     }
 
     @Override
@@ -145,6 +149,8 @@ public class OrderServiceImpl implements OrderService{
                 orderId, content,
                 currentStatus, OrderStatus.next(currentOrder.getOrderStatus())
         );
+
+        notifySendService.notifySingleMessage(orderId, "update_order_status", buildProperties(currentOrder));
 
     }
 
@@ -197,5 +203,16 @@ public class OrderServiceImpl implements OrderService{
         return null;
     }
 
+
+    private Map<String, Object> buildProperties(Order order) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("orderId", order.getId());
+        properties.put("orderNo", order.getNo());
+        properties.put("totalProduct", order.totalProduct());
+        properties.put("totalPrice", order.totalPrice());
+        properties.put("createdDate", DateTimeUtils.format(order.getCreatedDate()));
+        properties.put("status", order.getOrderStatus().getValue());
+        return properties;
+    }
 
 }

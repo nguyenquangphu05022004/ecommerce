@@ -10,4 +10,6 @@ public interface NotifyTemplateService {
     NotifyTemplate updateNotifyTemplate(NotifyTemplateCreateReqVO reqVO);
     List<NotifyTemplate> getListNotifyTemplate();
     NotifyTemplate getNotifyTemplateById(Long id);
+
+    NotifyTemplate getNotifyTemplateByName(String templateName);
 }

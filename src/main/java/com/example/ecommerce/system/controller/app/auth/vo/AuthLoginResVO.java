@@ -1,4 +1,4 @@
-package com.example.ecommerce.system.controller.admin.auth.vo;
+package com.example.ecommerce.system.controller.app.auth.vo;
 
 import com.example.ecommerce.system.dal.dataobject.auth.AccessToken;
 import lombok.Data;

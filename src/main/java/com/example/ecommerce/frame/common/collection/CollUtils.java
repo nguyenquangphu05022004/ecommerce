@@ -1,14 +1,10 @@
 package com.example.ecommerce.frame.common.collection;
 
-import com.example.ecommerce.product.dal.dataobject.comment.ProductCommentFavorite;
-import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
-import com.example.ecommerce.product.dal.dataobject.sku.ProductSkuProperty;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CollUtils {
 
@@ -56,11 +52,6 @@ public class CollUtils {
         return collection.size();
     }
 
-    public static<U> boolean containsAll(Set<U> x1, Set<U> x2) {
-        return x2.stream().allMatch(x -> {
-            return x1.contains(x);
-        });
-    }
 
     public static <T, S> S getFirst(Collection<T> objs, Function<T, S> func) {
         if(isEmpty(objs)) {

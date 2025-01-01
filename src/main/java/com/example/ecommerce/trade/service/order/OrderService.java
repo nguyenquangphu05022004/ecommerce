@@ -1,7 +1,7 @@
 package com.example.ecommerce.trade.service.order;
 
 import com.example.ecommerce.frame.common.pojo.PageResult;
-import com.example.ecommerce.trade.controller.admin.order.vo.self.PageOrderReqVO;
+import com.example.ecommerce.trade.controller.admin.order.self.vo.PageOrderReqVO;
 import com.example.ecommerce.trade.controller.app.order.vo.OrderDetailsReqVO;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
 import com.example.ecommerce.trade.enums.OrderStatus;
@@ -21,6 +21,7 @@ public interface OrderService {
 
 
     PageResult<Order> getPageOrder(PageOrderReqVO req);
+
     void updateNextStatus(Long orderId, String content);
     void updatePreviousStatus(Long orderId, String content);
     void approvalOrder(Long orderId);

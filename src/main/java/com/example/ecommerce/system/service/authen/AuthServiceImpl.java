@@ -1,7 +1,7 @@
 package com.example.ecommerce.system.service.authen;
 
-import com.example.ecommerce.system.controller.admin.auth.vo.AuthLoginReqVO;
-import com.example.ecommerce.system.controller.admin.auth.vo.AuthLoginResVO;
+import com.example.ecommerce.system.controller.app.auth.vo.AuthLoginReqVO;
+import com.example.ecommerce.system.controller.app.auth.vo.AuthLoginResVO;
 import com.example.ecommerce.system.dal.dataobject.auth.AccessToken;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.system.service.user.UserMemberService;

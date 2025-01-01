@@ -24,6 +24,7 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name = "order_line_item_id")
     private OrderLineItem orderLineItem;
 
+
     @Transient
     public Integer totalPrice() {
         return productSku.getPrice() * quantity;

@@ -1,4 +1,4 @@
-package com.example.ecommerce.trade.controller.admin.order.vo.self;
+package com.example.ecommerce.trade.controller.admin.order.self.vo;
 
 import com.example.ecommerce.system.controller.app.user.vo.UserMemberResVO;
 import com.example.ecommerce.trade.controller.app.order.vo.AppOrderSimpleRespVO;

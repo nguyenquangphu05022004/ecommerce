@@ -1,4 +1,4 @@
-package com.example.ecommerce.trade.controller.admin.order.vo.self;
+package com.example.ecommerce.trade.controller.admin.order.self.vo;
 
 import com.example.ecommerce.trade.controller.app.order.vo.AppOrderDetailsRespVO;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;

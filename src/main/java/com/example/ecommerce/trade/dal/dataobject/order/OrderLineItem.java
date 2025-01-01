@@ -1,14 +1,13 @@
 package com.example.ecommerce.trade.dal.dataobject.order;
 
 import com.example.ecommerce.frame.auditting.BaseEntity;
+import com.example.ecommerce.frame.common.string.StringUtils;
 import com.example.ecommerce.promotion.dal.dataobject.coupon.Coupon;
 import com.example.ecommerce.system.dal.dataobject.user.Seller;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
@@ -34,4 +33,10 @@ public class OrderLineItem extends BaseEntity {
     private Boolean commentStatus;
 
     private Boolean orderIsGranted;
+    private Boolean itemsAreDeliveredToWareHouse;
+
+    @Transient
+    public String itemsName() {
+        return StringUtils.convertToString(items, item -> item.getProductSku().getProductSpu().getName(), ", ");
+    }
 }
