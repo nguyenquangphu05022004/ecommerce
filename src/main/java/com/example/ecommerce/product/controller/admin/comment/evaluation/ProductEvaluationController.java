@@ -2,6 +2,7 @@ package com.example.ecommerce.product.controller.admin.comment.evaluation;
 
 import com.example.ecommerce.frame.common.pojo.CommonResult;
 import com.example.ecommerce.product.controller.admin.comment.evaluation.vo.ProductEvaluationReqVO;
+import com.example.ecommerce.product.controller.admin.comment.evaluation.vo.ProductEvaluationResVO;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductEvaluation;
 import com.example.ecommerce.product.service.comment.ProductEvaluationService;
 import io.swagger.v3.oas.annotations.Operation;

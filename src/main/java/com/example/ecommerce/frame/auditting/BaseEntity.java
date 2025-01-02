@@ -50,6 +50,13 @@ public abstract class BaseEntity {
         return Objects.equals(id, that.id);
     }
 
+    public void setNull() {
+        this.createdBy = null;
+        this.modifiedBy = null;
+        this.modifiedDate = null;
+        this.createdDate = null;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);

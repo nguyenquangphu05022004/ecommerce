@@ -6,13 +6,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
 @Table(name = "sys_permission_menu_role")
 @Entity
+@SuperBuilder
 public class MenuRole extends BaseEntity {
 
     @ManyToOne

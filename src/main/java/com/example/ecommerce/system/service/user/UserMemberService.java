@@ -1,10 +1,13 @@
 package com.example.ecommerce.system.service.user;
 
+import com.example.ecommerce.frame.common.pojo.PageResult;
+import com.example.ecommerce.system.controller.admin.user.vo.PageUserReqVO;
 import com.example.ecommerce.system.controller.app.user.vo.CustomerCreateReqVO;
 import com.example.ecommerce.system.controller.admin.user.vo.SellerCreateReqVO;
 import com.example.ecommerce.system.controller.app.user.vo.UserMemberUpdatePasswordReqVO;
 import com.example.ecommerce.system.controller.app.user.vo.UserMemberUpdateReqVO;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
+import org.apache.catalina.User;
 
 public interface UserMemberService {
     UserMember createUserMember(CustomerCreateReqVO reqVO);
@@ -18,4 +21,6 @@ public interface UserMemberService {
     void updateStatusAccount(Long userId, boolean locked);
 
     void updateUserOnline(String username, boolean isOnline);
+
+    PageResult<UserMember> getPageUser(PageUserReqVO req);
 }

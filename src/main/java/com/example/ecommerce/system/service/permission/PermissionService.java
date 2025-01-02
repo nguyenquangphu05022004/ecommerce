@@ -1,5 +1,6 @@
 package com.example.ecommerce.system.service.permission;
 
+import com.example.ecommerce.system.dal.dataobject.permission.Menu;
 import com.example.ecommerce.system.dal.dataobject.permission.MenuRole;
 import com.example.ecommerce.system.dal.dataobject.permission.Role;
 
@@ -21,6 +22,8 @@ public interface PermissionService {
     Set<Role> getListByUserId(Long userId);
 
     Set<MenuRole> getListMenuRole();
+
+    Set<MenuRole> getListMenuRoleByMenuName(String menuName);
 
     /**
      * Permission co format la: [name_role:name_menu]

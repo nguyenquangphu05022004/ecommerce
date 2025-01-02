@@ -16,7 +16,7 @@ public interface RoleService {
 
     List<Role> getList();
 
-    List<Role> getAllByUserId(Long userId);
+    Role getRoleById(Long id);
 
     boolean hasRole(String role);
     boolean hasSuperAdmin(String role);

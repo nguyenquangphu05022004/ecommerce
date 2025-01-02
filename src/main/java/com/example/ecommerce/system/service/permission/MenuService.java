@@ -16,7 +16,7 @@ public interface MenuService {
 
     void deleteMenuById(Long menuId);
     List<Menu> getList();
-
+    Menu getMenuById(Long id);
     default void deleteAll(Long[] menuIds) {
         Arrays.stream(menuIds).forEach(this::deleteMenuById);
     }

@@ -59,4 +59,5 @@ public class CollUtils {
         }
         return func.apply(objs.iterator().next());
     }
+
 }

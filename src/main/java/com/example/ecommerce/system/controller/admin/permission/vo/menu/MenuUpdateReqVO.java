@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class MenuUpdateReqVO extends MenuCreateReqVO{
-
+    private Long id;
 }

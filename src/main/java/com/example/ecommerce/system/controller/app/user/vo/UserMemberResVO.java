@@ -10,7 +10,6 @@ public class UserMemberResVO {
     private String email;
     private String phoneNumber;
     private UserMember.Sex sex;
-
     public UserMemberResVO(UserMember userMember) {
         this.avatar = userMember.getAvatar();
         this.fullName = userMember.getFullName();

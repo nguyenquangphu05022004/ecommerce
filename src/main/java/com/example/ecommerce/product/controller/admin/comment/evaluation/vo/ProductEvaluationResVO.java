@@ -1,4 +1,4 @@
-package com.example.ecommerce.product.controller.admin.comment.evaluation;
+package com.example.ecommerce.product.controller.admin.comment.evaluation.vo;
 
 import com.example.ecommerce.product.controller.admin.property.vo.ProductPropertyVO;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductEvaluation;

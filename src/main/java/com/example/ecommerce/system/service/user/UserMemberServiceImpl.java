@@ -1,6 +1,7 @@
 package com.example.ecommerce.system.service.user;
 
 import com.example.ecommerce.frame.common.exception.ServiceException;
+import com.example.ecommerce.frame.common.pojo.PageResult;
 import com.example.ecommerce.system.controller.admin.user.vo.*;
 import com.example.ecommerce.system.controller.app.user.vo.CustomerCreateReqVO;
 import com.example.ecommerce.system.controller.app.user.vo.UserMemberCreateReqVO;
@@ -11,8 +12,11 @@ import com.example.ecommerce.system.dal.dataobject.user.Seller;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.system.dal.repository.user.CustomerRepository;
 import com.example.ecommerce.system.dal.repository.user.UserMemberRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,5 +105,30 @@ public class UserMemberServiceImpl implements UserMemberService{
         UserMember userMember = getUserMemberByUsername(username);
         userMember.setOnline(isOnline);
         this.userMemberRepository.save(userMember);
+    }
+
+    @Override
+    public PageResult<UserMember> getPageUser(PageUserReqVO req) {
+        Specification<UserMember> spec = (root, query, builder) -> {
+            Predicate predicate = null;
+            if(req.getStart() != null && req.getEnd() != null) {
+                predicate = andPredicate(
+                        predicate,
+                        builder.between(root.get("createdDate"), req.getStart(), req.getEnd()),
+                        builder);
+            }
+            if(req.getLocked() != null) {
+                predicate = andPredicate(predicate, builder.equal(root.get("locked"), req.getLocked()), builder);
+            }
+            return predicate;
+        };
+        return new PageResult<>(userMemberRepository.findAll(spec, req.buildPageRequest()));
+    }
+
+    private Predicate andPredicate(Predicate p1, Predicate p2, CriteriaBuilder c) {
+        if(p1 == null) {
+            return p2;
+        }
+        return c.and(p1, p2);
     }
 }
