@@ -13,6 +13,6 @@ public interface OrderLogService {
     void deleteOrderLog(Long id);
 
     @Async
-    OrderLog createOrderLog(Long orderId, String content, OrderStatus prev, OrderStatus next);
+    void createOrderLog(Long orderId, String content, OrderStatus prev, OrderStatus next);
 
 }

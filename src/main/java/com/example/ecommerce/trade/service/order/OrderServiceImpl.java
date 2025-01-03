@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService{
     private final CouponService couponService;
     @Override
     @Transactional(rollbackFor = ServiceException.class)
-    public void createOrder(OrderDetailsReqVO reqVO) {
+    public Long createOrder(OrderDetailsReqVO reqVO) {
         Order order = Order.builder().orderStatus(OrderStatus.PENDING)
                 .no(System.currentTimeMillis() + "").paymentMode(reqVO.getPaymentMode())
                 .addressDetails(reqVO.getAddressDetails())
@@ -111,6 +111,7 @@ public class OrderServiceImpl implements OrderService{
         convertList(couponMap.entrySet(), entry -> this.couponRepository.save(entry.getValue()));
 
         notifySendService.notifySingleMessage(reqVO.getUserId(), "create_order", buildProperties(order));
+        return order.getId();
     }
 
     @Override

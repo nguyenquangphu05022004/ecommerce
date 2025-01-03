@@ -30,11 +30,11 @@ public class NotifySendServiceImpl implements NotifySendService{
 
     @Override
     @OperationLog(operationType = OperationType.CREATE, logArgs = true)
-    public NotifyMessage notifySingleMessage(Long userId, String templateName,
-                                             Map<String, Object> templateParams) {
+    public void notifySingleMessage(Long userId, String templateName,
+                                    Map<String, Object> templateParams) {
         NotifyTemplate notifyTemplate = this.notifyTemplateService.getNotifyTemplateByName(templateName);
         validTemplateParams(notifyTemplate, templateParams);
-        return notifyMessageService.createNotifyMessage(userId, notifyTemplate, templateParams);
+        notifyMessageService.createNotifyMessage(userId, notifyTemplate, templateParams);
     }
 
 

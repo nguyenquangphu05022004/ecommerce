@@ -28,7 +28,7 @@ public class OrderLogServiceImpl implements OrderLogService{
     }
 
     @Override
-    public OrderLog createOrderLog(Long orderId, String content, OrderStatus prev, OrderStatus next) {
-        return null;
+    public void createOrderLog(Long orderId, String content, OrderStatus prev, OrderStatus next) {
+        System.out.println("-------------------------------------order log--------------");
     }
 }

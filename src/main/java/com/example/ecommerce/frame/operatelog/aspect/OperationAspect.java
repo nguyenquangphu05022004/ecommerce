@@ -25,7 +25,7 @@ import static com.example.ecommerce.frame.security.core.utils.SecurityUtils.getL
 @RequiredArgsConstructor
 public class OperationAspect {
 
-    private OperationLoggerService operationLoggerService;
+    private final OperationLoggerService operationLoggerService;
 
     @Around("@annotation(operationLog)")
     public Object operationLog(ProceedingJoinPoint joinPoint, OperationLog operationLog) throws Throwable {

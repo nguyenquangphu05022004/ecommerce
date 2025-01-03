@@ -74,7 +74,6 @@ class SellerFavoriteServiceImplTest extends TestBase {
         Seller seller = RandomUtils.randomPojo(Seller.class, s -> {
             s.setId(null);
             s.setProductSpus(null);
-            s.setUserMember(userMember);
         });
         this.sellerRepository.save(seller);
         return seller;

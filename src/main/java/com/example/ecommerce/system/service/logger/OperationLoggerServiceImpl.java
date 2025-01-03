@@ -27,6 +27,7 @@ public class OperationLoggerServiceImpl implements OperationLoggerService{
 
     @Override
     public void createOperationLogger(OperationLoggerDto dto) {
+
         OperationLogger operationLogger = OperationLogger.builder()
                 .userAgent(dto.getUserAgent()).username(dto.getUsername())
                 .operationType(dto.getOperationType()).ipAddress(dto.getIpAddress())

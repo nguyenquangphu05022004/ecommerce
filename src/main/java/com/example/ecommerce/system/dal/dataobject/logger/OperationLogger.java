@@ -6,14 +6,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
 @Table(name = "sys_logger_operation")
 @Getter
+@NoArgsConstructor
 @Builder
+@AllArgsConstructor
 public class OperationLogger extends BaseEntity {
     private String username;
     private String ipAddress;

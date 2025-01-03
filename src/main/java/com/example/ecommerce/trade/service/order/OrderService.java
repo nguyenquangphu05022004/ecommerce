@@ -9,7 +9,7 @@ import com.example.ecommerce.trade.enums.OrderStatus;
 import java.util.List;
 
 public interface OrderService {
-    void createOrder(OrderDetailsReqVO reqVO);
+    Long createOrder(OrderDetailsReqVO reqVO);
     void cancelOrder(Long userId, Long orderId);
     List<Order> getAllListOrder(Long userId);
     List<Order> getAllListOrderByStatus(Long userId, OrderStatus orderStatus);

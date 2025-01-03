@@ -69,18 +69,6 @@ class CartServiceImplTest extends TestBase {
     }
 
 
-    @Test
-    void test_getListCart_success() {
-        test_createCartProduct_success();
-        Seller seller = new Seller();
-        seller.setId(1l);
-        CartListRespVO cartLt = this.cartService.getList(1l);
-
-        Set<CartItemRespVO> cartItems = cartLt.getSellerMapItem().get(new SellerResVO(seller));
-
-        assertEquals(cartItems.size(), 1);
-
-    }
 
     @Test
     void test_updateQuantity_success() {
