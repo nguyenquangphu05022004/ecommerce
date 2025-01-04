@@ -54,10 +54,6 @@ public class AppProductCommentController {
     @PostMapping
     @Operation(summary = "Tao comment")
     public CommonResult<AppProductCommentRespVO> createProductComment(@RequestBody ProductCommentCreateReqVO req) {
-        req.setUserMemberId(SecurityUtils.getLoginUserMemberId());
-        if(!orderService.userHasOrderProduct(req.getUserMemberId(), req.getProductSpuId())) {
-            throw exception(UPDATE_COMMENT_IS_DENIED);
-        }
         ProductComment productComment = productCommentService.createProductComment(req);
         statisticService.doUpdateProductStatistic(req.getProductSpuId(), OperationType.ADD, "numComment");
         return CommonResult.success(productComment,AppProductCommentRespVO::new);

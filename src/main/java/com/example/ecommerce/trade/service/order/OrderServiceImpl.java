@@ -24,7 +24,11 @@ import com.example.ecommerce.trade.dal.repo.order.OrderLineItemRepository;
 import com.example.ecommerce.trade.dal.repo.order.OrderRepository;
 import com.example.ecommerce.trade.enums.PaymentStatus;
 import com.example.ecommerce.trade.service.cart.CartService;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,13 +107,13 @@ public class OrderServiceImpl implements OrderService{
         }
         cartService.deleteAll(reqVO.getCartIds());
         this.orderRepository.save(order);
-        this.orderLogService.createOrderLog(order.getId(),
-                "Ban da dat hang vao luc: " + DateTimeUtils.format(LocalDateTime.now()),
-                null, OrderStatus.PENDING);
         this.orderLineItemRepository.saveAll(lineItems);
         convertList(lineItems, l -> this.orderItemRepository.saveAll(l.getItems()));
         convertList(couponMap.entrySet(), entry -> this.couponRepository.save(entry.getValue()));
 
+        this.orderLogService.createOrderLog(order.getId(),
+                "Ban da dat hang vao luc: " + DateTimeUtils.format(LocalDateTime.now()),
+                null, OrderStatus.PROCESSING);
         notifySendService.notifySingleMessage(reqVO.getUserId(), "create_order", buildProperties(order));
         return order.getId();
     }
@@ -194,14 +198,60 @@ public class OrderServiceImpl implements OrderService{
                 .orElseThrow(() -> exception(ORDER_NOT_FOUND));
     }
 
-    @Override
-    public boolean userHasOrderProduct(Long userId, Long spuId) {
-        return false;
-    }
 
     @Override
     public PageResult<Order> getPageOrder(PageOrderReqVO req) {
-        return null;
+        Specification<Order> spec = (root, query, builder) -> {
+            Predicate predicate = null;
+            if(req.getStart() != null && req.getEnd() != null) {
+                predicate = updatePredicate(
+                        builder.between(root.get("createdDate"), req.getStart(), req.getEnd()),
+                        builder, predicate, "and");
+            }
+            if(req.getCombinationOfSellers() != null) {
+                predicate = updatePredicate(
+                        builder.equal(root.get("combinationOfSellers"), req.getCombinationOfSellers()),
+                        builder, predicate, "and");
+            }
+            if(req.getOrderStatus() != null) {
+                predicate = updatePredicate(
+                        builder.equal(root.get("orderStatus"), req.getOrderStatus()),
+                        builder, predicate, "and");
+            }
+            if(req.getPaymentMode() != null) {
+                predicate = updatePredicate(
+                        builder.equal(root.get("paymentMode"), req.getPaymentMode()),
+                        builder, predicate, "and");
+            }
+            if(req.getOrderPlace() != null) {
+                predicate = updatePredicate(
+                        builder.equal(root.get("orderPlace"), req.getOrderPlace()),
+                        builder, predicate, "and");
+            }
+            if(req.getPaymentStatus() != null) {
+                predicate = updatePredicate(
+                        builder.equal(root.get("paymentStatus"), req.getPaymentStatus()),
+                        builder, predicate, "and");
+            }
+            return predicate;
+        };
+        Page<Order> pageOrder = this.orderRepository.findAll(spec, req.buildPageRequest());
+        return new PageResult<>(pageOrder);
+    }
+
+    private Predicate updatePredicate(Predicate newPredicate,
+                                      CriteriaBuilder builder,
+                                      Predicate oldPredicate,
+                                      String type) {
+        System.out.println("--------------------------------------------");
+        System.out.println("------------------------------------------");
+        if(oldPredicate == null) {
+            return newPredicate;
+        }
+        if(type.equals("and")) {
+            return builder.and(oldPredicate, newPredicate);
+        }
+        return builder.or(oldPredicate, newPredicate);
     }
 
 

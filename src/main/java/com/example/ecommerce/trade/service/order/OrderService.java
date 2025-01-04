@@ -17,7 +17,6 @@ public interface OrderService {
     Order getOrderById(Long orderId);
     Order getOrderByUserIdAndOrderId(Long userId, Long orderId);
 
-    boolean userHasOrderProduct(Long userId, Long spuId);
 
 
     PageResult<Order> getPageOrder(PageOrderReqVO req);

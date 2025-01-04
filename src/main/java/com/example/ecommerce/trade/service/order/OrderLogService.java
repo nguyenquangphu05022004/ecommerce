@@ -12,7 +12,7 @@ public interface OrderLogService {
     OrderLog getLatestLogByOrderId(Long orderId);
     void deleteOrderLog(Long id);
 
-    @Async
+
     void createOrderLog(Long orderId, String content, OrderStatus prev, OrderStatus next);
 
 }
