@@ -27,7 +27,7 @@ public class AppProductSpuController {
 
     @Operation(summary = "Lay danh sach product spu, chia trang")
     @PermitAll
-    @GetMapping
+    @PostMapping
     public CommonResult<PageResult<AppProductSpuSimpleRespVO>> getPageProductSpu(
             @RequestBody PageProductSpuReqVO req
     ) {

@@ -16,6 +16,7 @@ import java.util.Set;
 @SuperBuilder(toBuilder = true)
 @Setter
 public class ProductCategory extends BaseEntity {
+    @Column(unique = true)
     private String name;
     @OneToMany(mappedBy = "categoryParent")
     private Set<ProductCategory> children;

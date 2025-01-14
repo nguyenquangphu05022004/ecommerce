@@ -31,20 +31,23 @@ public class OrderLineItemServiceImpl implements OrderLineItemService{
         orderLineItem.setOrderIsGranted(granted);
         this.orderLineItemRepository.save(orderLineItem);
 
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("orderId", orderLineItem.getOrder().getId());
-        properties.put("orderNo", orderLineItem.getOrder().getNo());
-        properties.put("orderLineItemId", orderLineItem.getId());
-        properties.put("itemsName", orderLineItem.itemsName());
+        if(granted) {
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("orderId", orderLineItem.getOrder().getId());
+            properties.put("orderNo", orderLineItem.getOrder().getNo());
+            properties.put("orderLineItemId", orderLineItem.getId());
+            properties.put("itemsName", orderLineItem.itemsName());
 
-        /**
-         * Send to seller
-         */
-        notifySendService.notifySingleMessage(
-                orderLineItem.getSeller().getId(),
-                "update_item_granted",
-                properties
-        );
+            /**
+             * Send to seller
+             */
+            notifySendService.notifySingleMessage(
+                    orderLineItem.getSeller().getId(),
+                    "update_items_granted",
+                    properties
+            );
+        }
+
         return orderLineItem;
     }
 
@@ -52,7 +55,10 @@ public class OrderLineItemServiceImpl implements OrderLineItemService{
     @Override
     public PageResult<OrderLineItem> getPageOrderLineItem(PageOrderLineItemReqVO req) {
         Specification<OrderLineItem> spec =(root, query, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.between(root.get("createdDate"), req.getStart(), req.getEnd());
+            Predicate predicate = null;
+            if(req.getStart() != null && req.getEnd() != null) {
+                predicate = criteriaBuilder.between(root.get("createdDate"), req.getStart(), req.getEnd());
+            }
             if(req.getOrderStatus() != null) {
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("order").get("orderStatus"), req.getOrderStatus()));
             }

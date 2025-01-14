@@ -72,9 +72,11 @@ public class ProductSpuServiceImpl implements ProductSpuService{
     public PageResult<ProductSpu> getPageProductSpu(PageProductSpuReqVO reqVO) {
         Specification<ProductSpu> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-          reqVO.getCondition().entrySet().forEach(entry -> {
-              predicates.add(ProductSearchFactory.getInstance(entry.getKey()).search(root, criteriaBuilder, entry.getValue()));
-          });
+          if(!MapUtils.isEmpty(reqVO.getCondition())) {
+              reqVO.getCondition().entrySet().forEach(entry -> {
+                  predicates.add(ProductSearchFactory.getInstance(entry.getKey()).search(root, criteriaBuilder, entry.getValue()));
+              });
+          }
           Predicate res = null;
           for(Predicate p : predicates) {
               res = (res == null) ? p : criteriaBuilder.and(res, p);

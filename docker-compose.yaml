@@ -5,14 +5,11 @@ services:
     volumes:
       - mydata:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: irohas2004
-
+      MYSQL_ROOT_PASSWORD: root
   ecommerce-app:
-    image: irohas2004/ecommerce:latest
-    volumes:
-      - uploadsImage:/app/src/main/resources/static/uploads
+    image: mahiru050204/ecommerce_v5:1.0
     ports:
-      - 8081:8081
+      - 80:8081
   phpmyadmin:
     image: phpmyadmin
     ports:
@@ -22,5 +19,4 @@ services:
     depends_on:
       - mysql_db
 volumes:
-  mydata:
   uploadsImage:

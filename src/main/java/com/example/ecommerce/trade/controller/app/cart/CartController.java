@@ -3,11 +3,13 @@ package com.example.ecommerce.trade.controller.app.cart;
 import com.example.ecommerce.frame.common.pojo.CommonResult;
 import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
 import com.example.ecommerce.trade.controller.app.cart.vo.CartCreateReqVO;
-import com.example.ecommerce.trade.controller.app.cart.vo.CartListRespVO;
+import com.example.ecommerce.trade.controller.app.cart.vo.CartRespVO;
 import com.example.ecommerce.trade.service.cart.CartService;
 import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/app-api/trade/carts")
@@ -26,9 +28,8 @@ public class CartController {
 
     @GetMapping
     @PermitAll
-    public CommonResult<CartListRespVO> getListCart() {
-        CartListRespVO cartServiceList = this.cartService.getList(SecurityUtils.getLoginUserMemberId());
-        return CommonResult.success(cartServiceList);
+    public CommonResult<List<CartRespVO>> getListCart() {
+        return CommonResult.success(this.cartService.getList(SecurityUtils.getLoginUserMemberId()));
     }
 //    @PutMapping
 //    @PermitAll

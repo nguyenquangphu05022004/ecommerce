@@ -1,18 +1,23 @@
 package com.example.ecommerce.trade.service.cart;
 
+import com.example.ecommerce.frame.common.collection.CollUtils;
+import com.example.ecommerce.frame.common.pojo.Pair;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
+import com.example.ecommerce.system.controller.admin.user.vo.SellerResVO;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.trade.controller.app.cart.vo.CartCreateReqVO;
-import com.example.ecommerce.trade.controller.app.cart.vo.CartListRespVO;
+import com.example.ecommerce.trade.controller.app.cart.vo.CartItemRespVO;
+import com.example.ecommerce.trade.controller.app.cart.vo.CartRespVO;
 import com.example.ecommerce.trade.controller.app.cart.vo.CartUpdateQuantityReqVO;
 import com.example.ecommerce.trade.dal.dataobject.cart.Cart;
 import com.example.ecommerce.trade.dal.repo.cart.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import static com.example.ecommerce.frame.common.collection.CollUtils.convertSet;
+import static com.example.ecommerce.frame.common.collection.MapUtils.convertToMapSet;
 import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
 import static com.example.ecommerce.trade.enums.ErrorConstants.CART_NOT_FOUND;
 
@@ -38,9 +43,18 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public CartListRespVO getList(Long userId) {
+    public List<CartRespVO> getList(Long userId) {
         List<Cart> carts = this.cartRepository.findAllByUserMemberId(userId);
-        return new CartListRespVO(carts);
+        Map<SellerResVO, Set<CartItemRespVO>> sellerMapSetCart = convertToMapSet(convertSet(carts, cart -> {
+            return new Pair<>(
+                    new SellerResVO(cart.getProductSku().getProductSpu().getSeller()),
+                    new CartItemRespVO(cart)
+            );
+        }));
+
+        return new ArrayList<>(CollUtils.convertSet(sellerMapSetCart, (sellerResVO, cartItemRespVOS) -> {
+            return Set.of(new CartRespVO(sellerResVO, cartItemRespVOS));
+        }));
     }
 
     @Override

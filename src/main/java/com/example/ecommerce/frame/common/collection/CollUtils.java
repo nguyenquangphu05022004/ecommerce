@@ -22,6 +22,17 @@ public class CollUtils {
     }
 
 
+    public static  <U> Set<U> convertSet(Collection<Collection<U>> coll) {
+        if(isEmpty(coll)) {
+            return Collections.emptySet();
+        }
+        Set<U> set = new HashSet<>();
+        coll.forEach(col -> {
+            set.addAll(col);
+        });
+        return set;
+    }
+
     public static  <U, T> Set<T> convertSet(Collection<U> coll, Function<U, T> func) {
         if(isEmpty(coll)) {
             return Collections.emptySet();

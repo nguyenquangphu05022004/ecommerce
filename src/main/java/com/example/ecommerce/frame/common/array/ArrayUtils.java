@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public class ArrayUtils {
     public static <T> T[] toArray(Class<T> clazz, Collection<T> coll) {
-        T[] t = (T[]) Array.newInstance(clazz, coll.size());
+        T[] t = (T[]) Array.newInstance(clazz, CollUtils.size(coll));
         if(CollUtils.isEmpty(coll)) {
             return t;
         }

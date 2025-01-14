@@ -1,6 +1,7 @@
 package com.example.ecommerce.product.controller.app.spu.vo;
 
 import com.example.ecommerce.frame.common.collection.CollUtils;
+import com.example.ecommerce.frame.common.object.ObjectUtils;
 import com.example.ecommerce.product.controller.admin.brand.vo.ProductBrandResVO;
 import com.example.ecommerce.product.controller.admin.category.vo.ProductCategoryResVO;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
@@ -14,12 +15,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static com.example.ecommerce.frame.common.object.ObjectUtils.*;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 public class AppProductSpuSimpleRespVO {
     private Long id;
+    private String name;
     private Integer maxPrice;
     private Integer minPrice;
     private String sendFrom;
@@ -40,12 +44,14 @@ public class AppProductSpuSimpleRespVO {
 
     public AppProductSpuSimpleRespVO(ProductSpu spu, Discount discount, ProductStatistic statistic) {
         this.id = spu.getId();
-        this.maxPrice = spu.getMaxPrice(); this.minPrice = spu.getMinPrice();
-        this.category = new ProductCategoryResVO(spu.getProductCategory());
-        this.brand = new ProductBrandResVO(spu.getProductBrand());
+        this.name = spu.getName();
+        this.maxPrice = spu.getMaxPrice();
+        this.minPrice = spu.getMinPrice();
+        this.category = get(spu.getProductCategory(), ProductCategoryResVO::new);
+        this.brand = get(spu.getProductBrand(), ProductBrandResVO::new);
         this.imageUrl = CollUtils.getFirst(spu.getProductSkus(), ProductSku::getImage);
-        this.discount = new DiscountRespVO(discount);
-        this.sold = statistic.getSold();
+        this.discount = get(discount, DiscountRespVO::new);
+        this.sold = get(statistic, s -> s.getSold());
         this.sendFrom = spu.getSendFrom();
     }
 }

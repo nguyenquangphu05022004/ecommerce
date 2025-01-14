@@ -2,10 +2,17 @@ package com.example.ecommerce.frame.common.object;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Function;
 
 public class ObjectUtils {
 
 
+    public static <T, U> U get(T t, Function<T, U> func) {
+        if(t == null) {
+            return null;
+        }
+        return func.apply(t);
+    }
     public static <T> T init(Class<T> clazz)  {
         try {
             Constructor<T> constructor = clazz.getConstructor(new Class[]{});

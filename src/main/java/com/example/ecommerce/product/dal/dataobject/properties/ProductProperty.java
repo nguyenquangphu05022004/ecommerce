@@ -22,7 +22,6 @@ public class ProductProperty extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProductPropertyType productPropertyType;
     public static enum ProductPropertyType {
-        SPU,
         SKU,
         EVALUATION
     }

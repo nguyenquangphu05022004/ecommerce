@@ -64,6 +64,10 @@ public class SecurityConfig {
 //                    .requestMatchers(PATCH, ArrayUtils.toArray(String.class, mapUrls.get(PATCH))).permitAll()
 //                    .requestMatchers(DELETE, ArrayUtils.toArray(String.class, mapUrls.get(DELETE))).permitAll()
 //                    .requestMatchers(HEAD, ArrayUtils.toArray(String.class, mapUrls.get(HEAD))).permitAll()
+//                    .requestMatchers("/swagger-ui/**")
+//                    .permitAll()
+//                    .requestMatchers("/v3/api-docs*/**")
+//                    .permitAll()
 //                    .anyRequest().authenticated();
 //         });
          return httpSecurity.build();

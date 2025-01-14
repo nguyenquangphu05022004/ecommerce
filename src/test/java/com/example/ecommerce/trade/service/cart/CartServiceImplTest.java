@@ -13,14 +13,11 @@ import com.example.ecommerce.product.dal.repository.property.ProductPropertyValu
 import com.example.ecommerce.product.dal.repository.sku.ProductSkuPropertyRepository;
 import com.example.ecommerce.product.dal.repository.sku.ProductSkuRepository;
 import com.example.ecommerce.product.dal.repository.spu.ProductSpuRepository;
-import com.example.ecommerce.system.controller.admin.user.vo.SellerResVO;
 import com.example.ecommerce.system.dal.dataobject.user.Seller;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.system.dal.repository.user.SellerRepository;
 import com.example.ecommerce.system.dal.repository.user.UserMemberRepository;
 import com.example.ecommerce.trade.controller.app.cart.vo.CartCreateReqVO;
-import com.example.ecommerce.trade.controller.app.cart.vo.CartItemRespVO;
-import com.example.ecommerce.trade.controller.app.cart.vo.CartListRespVO;
 import com.example.ecommerce.trade.controller.app.cart.vo.CartUpdateQuantityReqVO;
 import com.example.ecommerce.trade.dal.dataobject.cart.Cart;
 import com.example.ecommerce.trade.dal.repo.cart.CartRepository;
@@ -28,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

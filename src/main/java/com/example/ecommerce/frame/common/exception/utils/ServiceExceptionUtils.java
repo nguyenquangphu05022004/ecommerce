@@ -30,7 +30,7 @@ public class ServiceExceptionUtils {
             }
         }
         if(!MapUtils.isEmpty(map)) {
-            messageException = messageException + "\n" + JsonUtils.write(map);
+            messageException += messageException + "\n" + JsonUtils.write(map);
         }
         return new ServiceException(messageException, errorCode.getCode());
     }

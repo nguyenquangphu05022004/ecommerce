@@ -54,7 +54,8 @@ public class NotifyTemplateServiceImpl implements NotifyTemplateService{
     }
 
     @Override
-    public NotifyTemplate getNotifyTemplateByName(@ExceptionMessage(message = "Not found template name") String templateName) {
+    public NotifyTemplate getNotifyTemplateByName(String templateName) {
+        @ExceptionMessage(message = "Not found template name") String name = templateName;
         return this.notifyTemplateRepository.findByNameIgnoreCase(templateName)
                 .orElseThrow(() -> exception(NOTIFY_TEMPLATE_NOT_FOUND, templateName));
     }
