@@ -1,6 +1,7 @@
 package com.example.ecommerce.trade.service.cart;
 
 import com.example.ecommerce.frame.common.collection.CollUtils;
+import com.example.ecommerce.frame.common.object.ObjectUtils;
 import com.example.ecommerce.frame.common.pojo.Pair;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
 import com.example.ecommerce.system.controller.admin.user.vo.SellerResVO;
@@ -47,7 +48,7 @@ public class CartServiceImpl implements CartService{
         List<Cart> carts = this.cartRepository.findAllByUserMemberId(userId);
         Map<SellerResVO, Set<CartItemRespVO>> sellerMapSetCart = convertToMapSet(convertSet(carts, cart -> {
             return new Pair<>(
-                    new SellerResVO(cart.getProductSku().getProductSpu().getSeller()),
+                    ObjectUtils.get(cart.getProductSku().getProductSpu().getSeller(), SellerResVO::new),
                     new CartItemRespVO(cart)
             );
         }));

@@ -15,6 +15,8 @@ import com.example.ecommerce.product.dal.repository.property.ProductPropertyValu
 import com.example.ecommerce.product.dal.repository.sku.ProductSkuPropertyRepository;
 import com.example.ecommerce.product.dal.repository.sku.ProductSkuRepository;
 import com.example.ecommerce.product.dal.repository.spu.ProductSpuRepository;
+import com.example.ecommerce.system.dal.dataobject.user.Seller;
+import com.example.ecommerce.system.dal.repository.user.SellerRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -34,15 +36,17 @@ public class ProductInit {
     private final ProductPropertyRepository productPropertyRepository;
     private final ProductPropertyValueRepository productPropertyValueRepository;
     private final ProductSkuPropertyRepository skuPropertyRepository;
+    private final SellerRepository sellerRepository;
     @PostConstruct
     public void initProduct() {
-        initCategory();
-        initBrand();
-        initProperty();
-        initProperty();
-        initPropertyValue();
-        initSpu();
-        initSku();
+//        initSeller();
+//        initCategory();
+//        initBrand();
+//        initProperty();
+//        initProperty();
+//        initPropertyValue();
+//        initSpu();
+//        initSku();
     }
     private void initBrand() {
         if(CollUtils.size(productBrandRepository.findAll()) == 0) {
@@ -92,12 +96,13 @@ public class ProductInit {
         if(CollUtils.size(spuRepository.findAll()) == 0) {
             List<ProductSpu> spu = List.of(
                     ProductSpu.builder()
-                            .name("Liverpool T-Shirt")
+                            .name("Man United T-Shirt")
                             .productBrand(ProductBrand.builder().id(1L).build())
                             .enable(true).maxPrice(700_000).minPrice(600_000)
-                            .description("This is T-shirt for liverpool player")
+                            .description("This is T-shirt for man united player")
                             .productCategory(categoryRepository.findByName("Clothes").get())
                             .sendFrom("Ha Noi")
+                            .seller(Seller.builder().id(2l).build())
                             .build()
             );
             spuRepository.saveAll(spu);
@@ -105,10 +110,10 @@ public class ProductInit {
     }
     private void initSku() {
         if(CollUtils.size(skuRepository.findAll()) == 0) {
-            ProductSku sku1 = ProductSku.builder().productSpu(ProductSpu.builder().id(1L).build())
+            ProductSku sku1 = ProductSku.builder().productSpu(ProductSpu.builder().id(2l).build())
                     .price(620_000).quantity(100)
                     .build();
-            ProductSku sku2 = ProductSku.builder().productSpu(ProductSpu.builder().id(1L).build())
+            ProductSku sku2 = ProductSku.builder().productSpu(ProductSpu.builder().id(2l).build())
                     .price(600_000).quantity(55)
                     .build();
             skuRepository.save(sku1);
@@ -163,6 +168,22 @@ public class ProductInit {
                     ProductPropertyValue.builder().propertyValue("XL")
                             .productProperty(ProductProperty.builder().id(1L).build()).build()
             ));
+        }
+    }
+    private void initSeller() {
+        if(CollUtils.size(sellerRepository.findAll()) == 0) {
+            Seller seller = Seller.builder()
+                    .shopName("Shop Test1")
+                    .avatar("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcb8I77Ue_XQcR3jbnDvni5lReEJ6njFPaWw&s")
+                    .shopImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcb8I77Ue_XQcR3jbnDvni5lReEJ6njFPaWw&s")
+                    .build();
+            Seller seller1 = Seller.builder()
+                    .shopName("Test Shop2")
+                    .avatar("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcb8I77Ue_XQcR3jbnDvni5lReEJ6njFPaWw&s")
+                    .shopImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcb8I77Ue_XQcR3jbnDvni5lReEJ6njFPaWw&s")
+                    .build();
+            sellerRepository.save(seller);
+            sellerRepository.save(seller1);
         }
     }
 }

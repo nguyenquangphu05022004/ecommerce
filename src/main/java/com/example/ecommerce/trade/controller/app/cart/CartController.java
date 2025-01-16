@@ -19,7 +19,6 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping
-    @PermitAll
     public CommonResult<Boolean> createCart(@RequestBody CartCreateReqVO req) {
         //create cart
         cartService.createCartProduct(SecurityUtils.getLoginUserMemberId(), req);
@@ -27,7 +26,6 @@ public class CartController {
     }
 
     @GetMapping
-    @PermitAll
     public CommonResult<List<CartRespVO>> getListCart() {
         return CommonResult.success(this.cartService.getList(SecurityUtils.getLoginUserMemberId()));
     }
@@ -39,7 +37,6 @@ public class CartController {
 //    }
 
     @DeleteMapping("/{cartId}")
-    @PermitAll
     public CommonResult<Boolean> deleteCart(@PathVariable("cartId") Long cartId) {
         //delete
         return CommonResult.success(true);

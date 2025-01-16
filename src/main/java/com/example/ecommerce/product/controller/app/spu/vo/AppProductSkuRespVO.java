@@ -9,6 +9,7 @@ import java.util.List;
 
 @Getter
 public class AppProductSkuRespVO {
+    private Long id;
     private Integer price;
     private String imageUrl;
     private Integer inStock;
@@ -19,6 +20,7 @@ public class AppProductSkuRespVO {
         this.price = sku.getPrice();
         this.imageUrl = sku.getImage();
         this.inStock = sku.getQuantity();
+        this.id = sku.getId();
         this.properties = CollUtils.convertList(sku.getProductSkuProperties(), ProductSkuPropertyResVO::new);
     }
 }

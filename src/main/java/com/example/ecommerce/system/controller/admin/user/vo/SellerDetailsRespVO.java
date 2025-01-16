@@ -4,15 +4,16 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor
+@Setter
 public class SellerDetailsRespVO extends SellerResVO{
-    private Integer numComment;
-    private Integer numProduct;
+    private int numComment;
+    private int numProduct;
     /**
      * Tinh theo thang
      */
-    private Integer joined;
+    private int joined;
 
-    private Integer numFollow;
+    private int numFollow;
 
-    private Integer replyPercent;
+    private int replyPercent;
 }

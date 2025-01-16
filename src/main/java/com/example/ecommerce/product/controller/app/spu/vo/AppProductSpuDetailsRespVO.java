@@ -2,6 +2,7 @@ package com.example.ecommerce.product.controller.app.spu.vo;
 
 import com.example.ecommerce.frame.common.collection.MapUtils;
 import com.example.ecommerce.frame.common.collection.StreamUtils;
+import com.example.ecommerce.frame.common.date.DateTimeUtils;
 import com.example.ecommerce.frame.common.json.JsonUtils;
 import com.example.ecommerce.frame.common.object.ObjectUtils;
 import com.example.ecommerce.frame.common.pojo.Pair;
@@ -43,7 +44,13 @@ public class AppProductSpuDetailsRespVO extends AppProductSpuSimpleRespVO{
         super(spu, discount, statistic);
         this.sliders = convertList(spu.getProductSkus(), ProductSku::getImage);
         this.statistic = ObjectUtils.get(statistic, ProductStatisticSimpleRespVO::new);
-        this.seller = null;
+        this.seller = ObjectUtils.get(spu.getSeller(), seller -> {
+            SellerDetailsRespVO res = new SellerDetailsRespVO();
+            res.setId(seller.getId()); res.setShopImage(seller.getShopImage());
+            res.setShopName(seller.getShopName()); res.setNumProduct(seller.getProductSpus().size());
+            res.setJoined(seller.getCreatedDate().getYear());
+            return res;
+        });
 //        this.skus = CollUtils.convertList(spu.getProductSkus(), AppProductSkuRespVO::new);
         this.properties = getAllPropertyOfSku(spu.getProductSkus());
         this.description = spu.getDescription();
