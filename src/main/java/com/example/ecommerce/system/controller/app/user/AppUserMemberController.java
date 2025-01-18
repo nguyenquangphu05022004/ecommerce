@@ -1,10 +1,8 @@
 package com.example.ecommerce.system.controller.app.user;
 
 import com.example.ecommerce.frame.common.pojo.CommonResult;
-import com.example.ecommerce.system.controller.app.user.vo.CustomerCreateReqVO;
-import com.example.ecommerce.system.controller.app.user.vo.UserMemberResVO;
-import com.example.ecommerce.system.controller.app.user.vo.UserMemberUpdatePasswordReqVO;
-import com.example.ecommerce.system.controller.app.user.vo.UserMemberUpdateReqVO;
+import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
+import com.example.ecommerce.system.controller.app.user.vo.*;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.system.service.user.UserMemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,5 +50,7 @@ public class AppUserMemberController {
         UserMember userMember = userMemberService.getUserMemberById(getLoginUserMemberId());
         return success(userMember, UserMemberResVO::new);
     }
+
+
 
 }

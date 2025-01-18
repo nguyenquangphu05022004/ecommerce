@@ -7,7 +7,6 @@ import com.example.ecommerce.system.controller.admin.user.vo.SellerCreateReqVO;
 import com.example.ecommerce.system.controller.app.user.vo.UserMemberUpdatePasswordReqVO;
 import com.example.ecommerce.system.controller.app.user.vo.UserMemberUpdateReqVO;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
-import org.apache.catalina.User;
 
 public interface UserMemberService {
     UserMember createUserMember(CustomerCreateReqVO reqVO);

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class AppCouponController {
     private final CouponService couponService;
 
-    @GetMapping("/user/{userId}")
+    @PostMapping("/user")
     @Operation(summary = "Lay danh sach nguoi tao phieu giam gia, chia trang")
     public CommonResult<PageResult<CouponRespVO>> getPageCouponByUserId(
             @RequestBody AppPageCouponReqVO req

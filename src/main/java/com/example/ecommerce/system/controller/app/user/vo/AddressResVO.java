@@ -7,17 +7,24 @@ import lombok.Data;
 public class AddressResVO {
     private Long id;
     private Boolean defaultAddress;
-    private String district;
-    private String province;
     private String city;
-    private String details;
+    private String district;
+    private String commune;
+
+    private String detailAddress;
+
+    private String fullName;
+    private String phoneNumber;
+
 
     public AddressResVO(Address address) {
         this.id = address.getId();
         this.defaultAddress = address.getDefaultAddress();
         this.district = address.getDistrict();
-        this.province = address.getProvince();
         this.city = address.getCity();
-        this.details = address.getDetails();
+        this.commune = address.getCommune();
+        this.detailAddress = address.getDetailAddress();
+        this.fullName = address.getFullName();
+        this.phoneNumber = address.getPhoneNumber();
     }
 }

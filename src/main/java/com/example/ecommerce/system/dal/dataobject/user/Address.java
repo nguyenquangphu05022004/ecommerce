@@ -4,20 +4,29 @@ import com.example.ecommerce.frame.auditting.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Data
-@NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 @Table(name = "sys_address")
 @Entity
+@Getter
+@Setter
 public class Address extends BaseEntity {
     private Boolean defaultAddress;
-    private String district;
-    private String province;
+
     private String city;
-    private String details;
+    private String district;
+    private String commune;
+
+    private String detailAddress;
+
+    private String fullName;
+    private String phoneNumber;
+
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserMember user;
@@ -25,6 +34,6 @@ public class Address extends BaseEntity {
     @Transient
     @JsonIgnore
     public String detailAddress() {
-        return details +", " + district + ", " + city + ", " + province;
+      return detailAddress + ", " + commune + ", " + district + ", " + city;
     }
 }

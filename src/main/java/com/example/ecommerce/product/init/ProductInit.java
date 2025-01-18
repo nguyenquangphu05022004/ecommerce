@@ -96,12 +96,12 @@ public class ProductInit {
         if(CollUtils.size(spuRepository.findAll()) == 0) {
             List<ProductSpu> spu = List.of(
                     ProductSpu.builder()
-                            .name("Man United T-Shirt")
+                            .name("Quan jean")
                             .productBrand(ProductBrand.builder().id(1L).build())
-                            .enable(true).maxPrice(700_000).minPrice(600_000)
-                            .description("This is T-shirt for man united player")
+                            .enable(true).maxPrice(250_000).minPrice(150_000)
+                            .description("Quan jean")
                             .productCategory(categoryRepository.findByName("Clothes").get())
-                            .sendFrom("Ha Noi")
+                            .sendFrom("TP.HCM")
                             .seller(Seller.builder().id(2l).build())
                             .build()
             );
@@ -110,10 +110,10 @@ public class ProductInit {
     }
     private void initSku() {
         if(CollUtils.size(skuRepository.findAll()) == 0) {
-            ProductSku sku1 = ProductSku.builder().productSpu(ProductSpu.builder().id(2l).build())
+            ProductSku sku1 = ProductSku.builder().productSpu(ProductSpu.builder().id(3l).build())
                     .price(620_000).quantity(100)
                     .build();
-            ProductSku sku2 = ProductSku.builder().productSpu(ProductSpu.builder().id(2l).build())
+            ProductSku sku2 = ProductSku.builder().productSpu(ProductSpu.builder().id(3l).build())
                     .price(600_000).quantity(55)
                     .build();
             skuRepository.save(sku1);
