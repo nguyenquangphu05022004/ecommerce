@@ -5,6 +5,7 @@ import com.example.ecommerce.frame.auditting.BaseEntity;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import static com.example.ecommerce.finance.enums.ErrorConstants.AMOUNT_NOT_ENOUGH;
@@ -14,6 +15,7 @@ import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptio
 @Table(name = "finance_wallet")
 @SuperBuilder(toBuilder = true)
 @Getter
+@NoArgsConstructor
 public class Wallet extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_member_id", unique = true)

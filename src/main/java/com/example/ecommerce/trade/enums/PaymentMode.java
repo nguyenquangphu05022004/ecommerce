@@ -9,12 +9,14 @@ import lombok.Getter;
 import java.util.Arrays;
 import java.util.Map;
 
+@Getter
 @AllArgsConstructor
 public enum PaymentMode {
     BANK("Ngan hang"),
-    RECEIPT("Khi nhan hang");
-    @Getter
+    RECEIPT("Khi nhan hang"),
+    APP("Ung dung");
     private final String type;
+
 
     public static Map<String, String> getMap() {
         return MapUtils.convertToMap(CollUtils.convertList(Arrays.asList(PaymentMode.values()), p -> {

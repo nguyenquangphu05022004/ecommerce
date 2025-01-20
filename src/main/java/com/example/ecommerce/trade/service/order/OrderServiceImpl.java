@@ -33,10 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.example.ecommerce.frame.common.collection.CollUtils.convertList;
 import static com.example.ecommerce.frame.common.collection.CollUtils.convertSet;
@@ -63,7 +60,8 @@ public class OrderServiceImpl implements OrderService{
                 .no(System.currentTimeMillis() + "").paymentMode(reqVO.getPaymentMode())
                 .addressDetails(reqVO.getAddressDetails())
                 .paymentStatus(PaymentStatus.PROCESSING)
-                .userMember(UserMember.builder().id(reqVO.getUserId()).build())
+                .combinationOfSellers(false)
+                .userMember(UserMember.builder().id(reqVO.getUserMemberId()).build())
                 .build();
         /**
          * Map seller wth coupon
@@ -114,7 +112,7 @@ public class OrderServiceImpl implements OrderService{
         this.orderLogService.createOrderLog(order.getId(),
                 "Ban da dat hang vao luc: " + DateTimeUtils.format(LocalDateTime.now()),
                 null, OrderStatus.PROCESSING);
-        notifySendService.notifySingleMessage(reqVO.getUserId(), "create_order", buildProperties(order));
+        notifySendService.notifySingleMessage(reqVO.getUserMemberId(), "create_order", buildProperties(order));
         return order.getId();
     }
 

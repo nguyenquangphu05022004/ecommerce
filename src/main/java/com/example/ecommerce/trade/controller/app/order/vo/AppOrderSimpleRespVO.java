@@ -1,6 +1,7 @@
 package com.example.ecommerce.trade.controller.app.order.vo;
 
 import com.example.ecommerce.frame.common.date.DateTimeUtils;
+import com.example.ecommerce.frame.common.object.ObjectUtils;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
 import lombok.Data;
 
@@ -27,10 +28,14 @@ public class AppOrderSimpleRespVO {
         this.totalProduct = order.totalProduct();
         this.orderStatus = order.getOrderStatus().getValue();
         this.createdDate = DateTimeUtils.format(order.getCreatedDate());
-        this.combinationShop = order.getCombinationOfSellers();
+        this.combinationShop = order.getCombinationOfSellers() != null;
         this.products = convertToString(order.getLineItems(), lineItem -> {
-            String productNames = convertToString(lineItem.getItems(), item -> item.getProductSku().getProductSpu().getName(), ", ");
-            return lineItem.getSeller().getShopName() + ": " + productNames;
-        }, "\n");
+            String productNames = convertToString(lineItem.getItems(), item -> {
+                String properties = convertToString(item.getProductSku().getProductSkuProperties(),
+                        property -> property.getProductPropertyValue().getPropertyValue(), "-");
+                return item.getProductSku().getProductSpu().getName() + "(" + properties + ")";
+            }, ", ");
+            return "-<b style='color:red'>" + lineItem.getSeller().getShopName() + "</b>: " + productNames;
+        }, "<br/>");
     }
 }

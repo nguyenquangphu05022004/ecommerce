@@ -3,9 +3,9 @@ package com.example.ecommerce.trade.controller.app.order;
 import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.common.pojo.CommonResult;
 import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
-import com.example.ecommerce.trade.controller.app.order.vo.OrderDetailsReqVO;
 import com.example.ecommerce.trade.controller.app.order.vo.AppOrderDetailsRespVO;
 import com.example.ecommerce.trade.controller.app.order.vo.AppOrderSimpleRespVO;
+import com.example.ecommerce.trade.controller.app.order.vo.OrderDetailsReqVO;
 import com.example.ecommerce.trade.service.order.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,9 @@ public class AppOrderController {
 
     @PostMapping
     @Operation(summary = "Dat hang")
-    public void createOrder(OrderDetailsReqVO req) {
+    public CommonResult<Boolean> createOrder(@RequestBody OrderDetailsReqVO req) {
         this.orderService.createOrder(req);
+        return success(true);
     }
     @GetMapping("/my-orders")
     public CommonResult<List<AppOrderSimpleRespVO>> getMyListOrder() {
@@ -36,7 +37,7 @@ public class AppOrderController {
     @Operation(summary = "Chi tiet don hang")
     public CommonResult<AppOrderDetailsRespVO> getOrderDetails(@PathVariable("id") Long id) {
         return success(new AppOrderDetailsRespVO(orderService.getOrderByUserIdAndOrderId(
-                 SecurityUtils.getLoginUserMemberId(), id
+                SecurityUtils.getLoginUserMemberId(), id
         )));
     }
     @PutMapping("/cancel/{id}")

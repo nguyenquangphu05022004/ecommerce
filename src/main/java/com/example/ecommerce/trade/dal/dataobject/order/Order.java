@@ -1,6 +1,7 @@
 package com.example.ecommerce.trade.dal.dataobject.order;
 
 import com.example.ecommerce.frame.auditting.BaseEntity;
+import com.example.ecommerce.frame.common.collection.StreamUtils;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.trade.enums.OrderPlace;
 import com.example.ecommerce.trade.enums.OrderStatus;
@@ -47,10 +48,14 @@ public class Order extends BaseEntity {
     private Boolean combinationOfSellers;
 
     public Integer totalPrice() {
-        return 0;
+        return StreamUtils.mapInt(lineItems, lineItem -> {
+            return StreamUtils.mapInt(lineItem.getItems(), OrderItem::totalPrice).sum();
+        }).sum();
     }
 
     public Integer totalProduct() {
-        return 0;
+        return StreamUtils.mapInt(lineItems, lineItem -> {
+            return lineItem.getItems().size();
+        }).sum();
     }
 }

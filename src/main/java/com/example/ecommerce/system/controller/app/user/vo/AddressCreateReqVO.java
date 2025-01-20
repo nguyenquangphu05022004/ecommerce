@@ -18,3 +18,4 @@ public class AddressCreateReqVO {
     private Long userMemberId = SecurityUtils.getLoginUserMemberId();
 
 }
+    

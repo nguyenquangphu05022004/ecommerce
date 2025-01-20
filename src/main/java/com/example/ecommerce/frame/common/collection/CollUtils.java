@@ -28,7 +28,9 @@ public class CollUtils {
         }
         Set<U> set = new HashSet<>();
         coll.forEach(col -> {
-            set.addAll(col);
+            if(!isEmpty(col)) {
+                set.addAll(col);
+            }
         });
         return set;
     }

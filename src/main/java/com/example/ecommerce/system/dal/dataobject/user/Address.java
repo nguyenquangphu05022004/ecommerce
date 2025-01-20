@@ -3,7 +3,6 @@ package com.example.ecommerce.system.dal.dataobject.user;
 import com.example.ecommerce.frame.auditting.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Address extends BaseEntity {
     private Boolean defaultAddress;
 
@@ -33,7 +33,7 @@ public class Address extends BaseEntity {
 
     @Transient
     @JsonIgnore
-    public String detailAddress() {
+    public String fullAddress() {
       return detailAddress + ", " + commune + ", " + district + ", " + city;
     }
 }

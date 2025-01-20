@@ -16,6 +16,8 @@ public class AddressResVO {
     private String fullName;
     private String phoneNumber;
 
+    private String fullAddress;
+
 
     public AddressResVO(Address address) {
         this.id = address.getId();
@@ -26,5 +28,6 @@ public class AddressResVO {
         this.detailAddress = address.getDetailAddress();
         this.fullName = address.getFullName();
         this.phoneNumber = address.getPhoneNumber();
+        this.fullAddress = address.fullAddress();
     }
 }
