@@ -5,6 +5,7 @@ import com.example.ecommerce.trade.controller.admin.order.self.vo.PageOrderReqVO
 import com.example.ecommerce.trade.controller.app.order.vo.OrderDetailsReqVO;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
 import com.example.ecommerce.trade.enums.OrderStatus;
+import com.example.ecommerce.trade.enums.PaymentStatus;
 
 import java.util.List;
 
@@ -25,4 +26,5 @@ public interface OrderService {
     void updatePreviousStatus(Long orderId, String content);
     void approvalOrder(Long orderId);
 
+    void updatePaymentStatus(Long orderId, PaymentStatus paymentStatus);
 }

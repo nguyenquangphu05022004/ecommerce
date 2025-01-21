@@ -2,7 +2,9 @@ package com.example.ecommerce.trade.controller.app.order.vo;
 
 import com.example.ecommerce.frame.common.date.DateTimeUtils;
 import com.example.ecommerce.frame.common.object.ObjectUtils;
+import com.example.ecommerce.frame.common.pojo.Pair;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
+import com.example.ecommerce.trade.enums.PaymentMode;
 import lombok.Data;
 
 import static com.example.ecommerce.frame.common.string.StringUtils.convertToString;
@@ -17,12 +19,12 @@ public class AppOrderSimpleRespVO {
     private Boolean combinationShop;
     private String products;
     private String addressDetails;
-    private String paymentMode;
-    private String paymentStatus;
+    private PaymentMode paymentMode;
+    private Pair<String,String> paymentStatus;
     public AppOrderSimpleRespVO(Order order) {
         this.id = order.getId();
-        this.paymentStatus = order.getPaymentStatus().name();
-        this.paymentMode = order.getPaymentMode().getType();
+        this.paymentStatus = new Pair<>(order.getPaymentStatus().name(), order.getPaymentStatus().getValue());
+        this.paymentMode = order.getPaymentMode();
         this.addressDetails = order.getAddressDetails();
         this.totalPrice = order.totalPrice();
         this.totalProduct = order.totalProduct();

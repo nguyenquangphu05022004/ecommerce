@@ -38,7 +38,8 @@ public class PaymentOrderService extends PaymentService<OrderPaymentReqVO>{
         params.put(FROM_USER_ID, req.getFromUserId());
         params.put(TO_USER_ID, wallet.getUserMember().getId());
         params.put(CONTENT, req.getContent());
-
+        params.put(AMOUNT, order.totalPrice());
         return this.paymentChannel.doPayment(params);
+
     }
 }

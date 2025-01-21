@@ -2,6 +2,7 @@ package com.example.ecommerce.finance.controller.admin.transaction.vo;
 
 import com.example.ecommerce.finance.dal.dataobject.transaction.Transaction;
 import com.example.ecommerce.finance.enums.TransactionStatus;
+import com.example.ecommerce.frame.common.date.DateTimeUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
@@ -18,6 +19,7 @@ public class TransactionRespVO {
     private String toUsername;
     @Schema(description = "Ma code")
     private String no;
+    private String createdDate;
 
     @Schema(description = "Noi dung chuyen khoan")
     private String transferContent;
@@ -29,6 +31,7 @@ public class TransactionRespVO {
 
     public TransactionRespVO(Transaction transaction) {
         this.id = transaction.getId();
+        this.createdDate = DateTimeUtils.format(transaction.getCreatedDate());
         this.amountTransfer = transaction.getAmountTransfer();
         this.fromUsername = transaction.getFromUser().getUsername();
         this.toUsername = transaction.getToUser().getUsername();

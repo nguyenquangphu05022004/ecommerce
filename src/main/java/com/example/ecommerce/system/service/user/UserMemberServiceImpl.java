@@ -9,6 +9,7 @@ import com.example.ecommerce.system.dal.dataobject.user.Seller;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.system.dal.repository.user.CustomerRepository;
 import com.example.ecommerce.system.dal.repository.user.UserMemberRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -127,5 +128,19 @@ public class UserMemberServiceImpl implements UserMemberService{
             return p2;
         }
         return c.and(p1, p2);
+    }
+
+
+@PostConstruct
+    void initAdminUser() {
+       if(userMemberRepository.findByUsernameIgnoreCase("admin").isEmpty()) {
+           UserMember userMember = UserMember.builder()
+                   .sex(UserMember.Sex.MALE)
+                   .email("admin@gmail.com").locked(false)
+                   .firstName("admin").lastName("admin")
+                   .username("admin").password(passwordEncoder.encode("admin"))
+                   .build();
+           userMemberRepository.save(userMember);
+       }
     }
 }

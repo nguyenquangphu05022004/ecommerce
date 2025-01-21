@@ -11,10 +11,7 @@ import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,14 +29,14 @@ public class TransactionController {
         return CommonResult.success(CollUtils.convertList(transaction, TransactionRespVO::new));
     }
 
-    @GetMapping("/page")
+    @PostMapping("/page")
     @Operation(summary = "Lay toan bo cac giao dich cua cac user, phan chia trang")
     public CommonResult<PageResult<TransactionRespVO>> getPageTransaction(@RequestBody PageTransactionReqVO req) {
         PageResult<Transaction> transaction = this.transactionService.getPageTransaction(req);
         return CommonResult.success(transaction, TransactionRespVO::new);
     }
 
-    @GetMapping("/my-transactions/page")
+    @PostMapping("/my-page")
     @Operation(summary = "Lay toan bo cac giao dich cua user hien tai, phan chia trang")
     public CommonResult<PageResult<TransactionRespVO>> getMyPageTransaction(@RequestBody PageTransactionReqVO req) {
         PageResult<Transaction> transaction = this.transactionService.getPageTransactionByUser(SecurityUtils.getLoginUserMemberId(), req);

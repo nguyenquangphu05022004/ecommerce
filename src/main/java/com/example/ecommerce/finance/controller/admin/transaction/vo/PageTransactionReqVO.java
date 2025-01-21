@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 public class PageTransactionReqVO extends PageParam {
 
     @Schema(description = "Tim kiem tu ngay", example = "05-02-2004")
-    private LocalDateTime startDateTime;
+    private LocalDateTime startDateTime =LocalDateTime.now().minusDays(7);
     @Schema(description = "Tim kiem den ngay", example = "20-02-2004")
-    private LocalDateTime endDateTime;
+    private LocalDateTime endDateTime = LocalDateTime.now();
 
 }

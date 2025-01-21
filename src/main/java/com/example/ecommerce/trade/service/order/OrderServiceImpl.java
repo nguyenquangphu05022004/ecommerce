@@ -185,6 +185,13 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
+    public void updatePaymentStatus(Long orderId, PaymentStatus paymentStatus) {
+        Order order = getOrderById(orderId);
+        order.setPaymentStatus(paymentStatus);
+        orderRepository.save(order);
+    }
+
+    @Override
     public Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> exception(ORDER_NOT_FOUND));
