@@ -1,6 +1,10 @@
 
 
 web:
+  ui:
+    local-domain: http://localhost:5173
+    prod-domain: viosmash.site
+    wallet-path: /my-wallet
   security:
     path-ignores:
       - /api/files

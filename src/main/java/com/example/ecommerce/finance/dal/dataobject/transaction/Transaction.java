@@ -1,8 +1,11 @@
 package com.example.ecommerce.finance.dal.dataobject.transaction;
 
 import com.example.ecommerce.finance.enums.TransactionStatus;
+import com.example.ecommerce.finance.service.payment.PaymentType;
+import com.example.ecommerce.finance.service.payment.chanel.PaymentChannel;
 import com.example.ecommerce.frame.auditting.BaseEntity;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
+import com.example.ecommerce.trade.enums.PaymentMode;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,4 +31,7 @@ public class Transaction extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private TransactionStatus transactionStatus;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentMode paymentMode;
 }

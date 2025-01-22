@@ -9,11 +9,14 @@ public class ProductSkuSimpleRespVO {
     private Integer price;
     private String image;
     private Integer quantity;
-
+    private String name;
+    private String properties;
     public ProductSkuSimpleRespVO(ProductSku sku) {
         this.id = sku.getId();
         this.price = sku.getPrice();
         this.image = sku.getImage();
         this.quantity = sku.getQuantity();
+        this.name = sku.getProductSpu().getName();
+        this.properties = sku.toProperties();
     }
 }

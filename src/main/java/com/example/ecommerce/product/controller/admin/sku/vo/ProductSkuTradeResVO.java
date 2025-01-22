@@ -33,7 +33,7 @@ public class ProductSkuTradeResVO {
         this.image = sku.getImage();
         this.price = sku.getPrice();
         this.quantity = sku.getQuantity();
-        this.properties = StringUtils.convertToString(sku.getProductSkuProperties(), s -> s.getProductPropertyValue().getPropertyValue(), ", ");
+        this.properties = sku.toProperties();
         this.propertiesMap = ProductSkuTradeResVO.mapProperties(sku);
     }
 

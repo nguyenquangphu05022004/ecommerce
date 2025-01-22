@@ -1,6 +1,7 @@
 package com.example.ecommerce.trade.dal.dataobject.order;
 
 import com.example.ecommerce.frame.auditting.BaseEntity;
+import com.example.ecommerce.frame.common.collection.StreamUtils;
 import com.example.ecommerce.frame.common.string.StringUtils;
 import com.example.ecommerce.promotion.dal.dataobject.coupon.Coupon;
 import com.example.ecommerce.system.dal.dataobject.user.Seller;
@@ -38,5 +39,9 @@ public class OrderLineItem extends BaseEntity {
     @Transient
     public String itemsName() {
         return StringUtils.convertToString(items, item -> item.getProductSku().getProductSpu().getName(), ", ");
+    }
+
+    public Integer totalPrice() {
+        return StreamUtils.mapInt(items, OrderItem::totalPrice).sum();
     }
 }

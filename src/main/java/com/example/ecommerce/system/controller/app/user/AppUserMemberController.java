@@ -2,6 +2,7 @@ package com.example.ecommerce.system.controller.app.user;
 
 import com.example.ecommerce.frame.common.pojo.CommonResult;
 import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
+import com.example.ecommerce.system.controller.admin.user.vo.SellerDetailsRespVO;
 import com.example.ecommerce.system.controller.app.user.vo.*;
 import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.system.service.user.UserMemberService;
@@ -29,6 +30,8 @@ public class AppUserMemberController {
         this.userMemberService.createUserMember(reqVO);
         return success(true);
     }
+
+
 
     @PutMapping("/profile")
     @Operation(summary = "Cap nhap thong tin")

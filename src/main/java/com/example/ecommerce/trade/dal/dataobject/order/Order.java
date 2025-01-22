@@ -48,9 +48,7 @@ public class Order extends BaseEntity {
     private Boolean combinationOfSellers;
 
     public Integer totalPrice() {
-        return StreamUtils.mapInt(lineItems, lineItem -> {
-            return StreamUtils.mapInt(lineItem.getItems(), OrderItem::totalPrice).sum();
-        }).sum();
+        return StreamUtils.mapInt(lineItems, OrderLineItem::totalPrice).sum();
     }
 
     public Integer totalProduct() {

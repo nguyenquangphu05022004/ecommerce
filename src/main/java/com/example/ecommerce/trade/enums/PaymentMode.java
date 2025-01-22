@@ -12,9 +12,9 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public enum PaymentMode {
-    BANK("Ngan hang"),
-    RECEIPT("Khi nhan hang"),
-    APP("Ung dung");
+    BANK("Ngân hàng"),
+    RECEIPT("Nhận hàng"),
+    APP("Ứng dụng");
     private final String type;
 
 

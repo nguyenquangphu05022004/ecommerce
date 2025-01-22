@@ -48,6 +48,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .toUser(userMemberService.getUserMemberById(req.getToUserId()))
                 .transactionStatus(req.getTransactionStatus())
                 .errorMessage(req.getErrorMessage())
+                .paymentMode(req.getPaymentMode())
                 .build();
         this.transactionRepository.save(transaction);
         return transaction.getId();

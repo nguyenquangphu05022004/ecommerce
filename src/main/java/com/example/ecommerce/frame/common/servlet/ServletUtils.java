@@ -30,6 +30,11 @@ public class ServletUtils {
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         return baseUrl;
     }
+    public static String getBaseUrl(String param) {
+        HttpServletRequest request = getRequest();
+        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        return baseUrl;
+    }
 
     public static String getUserAgent(HttpServletRequest request) {
         String ua = request.getHeader("User-Agent");

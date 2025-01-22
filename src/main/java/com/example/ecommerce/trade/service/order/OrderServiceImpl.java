@@ -110,7 +110,7 @@ public class OrderServiceImpl implements OrderService{
         convertList(couponMap.entrySet(), entry -> this.couponRepository.save(entry.getValue()));
 
         this.orderLogService.createOrderLog(order.getId(),
-                "Ban da dat hang vao luc: " + DateTimeUtils.format(LocalDateTime.now()),
+                "Đơn hàng đã được đặt thành công, bạn sẽ được xử lý sớm. Sau 8h kể từ khi bạn đặt hàng thì bạn có thể hủy nó đi, sau khi đơn được xử lý thì không thể hủy được nữa.",
                 null, OrderStatus.PROCESSING);
         notifySendService.notifySingleMessage(reqVO.getUserMemberId(), "create_order", buildProperties(order));
         return order.getId();

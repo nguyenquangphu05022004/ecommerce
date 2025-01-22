@@ -4,6 +4,7 @@ import com.example.ecommerce.frame.common.date.DateTimeUtils;
 import com.example.ecommerce.frame.common.object.ObjectUtils;
 import com.example.ecommerce.frame.common.pojo.Pair;
 import com.example.ecommerce.trade.dal.dataobject.order.Order;
+import com.example.ecommerce.trade.enums.OrderStatus;
 import com.example.ecommerce.trade.enums.PaymentMode;
 import lombok.Data;
 
@@ -14,7 +15,7 @@ public class AppOrderSimpleRespVO {
     private Long id;
     private Integer totalPrice;
     private Integer totalProduct;
-    private String orderStatus;
+    private Pair<OrderStatus, Pair<String, Integer>> orderStatus;
     private String createdDate;
     private Boolean combinationShop;
     private String products;
@@ -28,7 +29,10 @@ public class AppOrderSimpleRespVO {
         this.addressDetails = order.getAddressDetails();
         this.totalPrice = order.totalPrice();
         this.totalProduct = order.totalProduct();
-        this.orderStatus = order.getOrderStatus().getValue();
+        this.orderStatus =new Pair<>(order.getOrderStatus(), new Pair<>(
+                order.getOrderStatus().getValue(),
+                order.getOrderStatus().getProgress()
+        ));
         this.createdDate = DateTimeUtils.format(order.getCreatedDate());
         this.combinationShop = order.getCombinationOfSellers() != null;
         this.products = convertToString(order.getLineItems(), lineItem -> {

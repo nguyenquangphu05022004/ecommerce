@@ -6,6 +6,7 @@ import com.example.ecommerce.finance.service.wallet.WalletService;
 import com.example.ecommerce.finance.service.transaction.bo.TransactionCreateReqBO;
 import com.example.ecommerce.finance.service.payment.chanel.PaymentChannel;
 import com.example.ecommerce.frame.common.exception.ServiceException;
+import com.example.ecommerce.trade.enums.PaymentMode;
 import com.example.ecommerce.trade.enums.PaymentStatus;
 import com.example.ecommerce.trade.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class AppPayService implements PaymentChannel {
         req.setToUserId((Long) params.get(TO_USER_ID));
         req.setFromUserId((Long) params.get(FROM_USER_ID));
         req.setAmountTransfer((Integer) params.get(AMOUNT));
+        req.setPaymentMode(PaymentMode.APP);
         Long orderId = (Long) params.get(ORDER_ID);
         try {
             walletService.withdrawFromWalletToAnotherWallet(

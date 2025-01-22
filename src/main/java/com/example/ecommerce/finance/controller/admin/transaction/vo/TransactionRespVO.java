@@ -29,6 +29,8 @@ public class TransactionRespVO {
     @Schema(description = "Tranf thai cua giao dich")
     private TransactionStatus transactionStatus;
 
+    private String paymentMode;
+
     public TransactionRespVO(Transaction transaction) {
         this.id = transaction.getId();
         this.createdDate = DateTimeUtils.format(transaction.getCreatedDate());
@@ -39,6 +41,7 @@ public class TransactionRespVO {
         this.transferContent = transaction.getTransferContent();
         this.errorMessage = transaction.getErrorMessage();
         this.transactionStatus = transaction.getTransactionStatus();
+        this.paymentMode = transaction.getPaymentMode().getType();
     }
 
 }

@@ -10,14 +10,16 @@ import java.util.Arrays;
 import java.util.Map;
 
 @AllArgsConstructor
+@Getter
 public enum OrderStatus {
-    PENDING("Chua xu ly"),
-    CANCEL("Da huy"),
-    PROCESSING("Dang xu ly"),
-    SHIPPED("Dang van chuyen"),
-    DELIVERED("Da giao hang");
-    @Getter
+    PENDING("Chờ xử lý", 25),
+    CANCEL("Đã bị hủy", 0),
+    PROCESSING("Đang xử lý", 50),
+    SHIPPED("Đang vận chuyển", 75),
+    DELIVERED("Đã giao hàng", 100);
+
     private final String value;
+    private final Integer progress;
     public static Map<String, String> getOrderStatusMap() {
         return MapUtils.convertToMap(CollUtils.convertList(Arrays.asList(OrderStatus.values()), p -> {
             return new Pair<>(p.name(), p.value);

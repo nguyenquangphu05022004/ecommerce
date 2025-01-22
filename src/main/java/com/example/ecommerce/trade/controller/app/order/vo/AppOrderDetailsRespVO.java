@@ -26,12 +26,14 @@ public class AppOrderDetailsRespVO extends AppOrderSimpleRespVO {
         private CouponRespVO coupon;
         private List<OrderItemRespVO> items;
         private Boolean commentStatus;
+        private Integer totalPrice;
         public OrderLineItemRespVO(OrderLineItem orderLineItem) {
             this.seller = new SellerResVO(orderLineItem.getSeller());
             this.id = orderLineItem.getId();
             this.coupon = orderLineItem.getCoupon() != null ? new CouponRespVO(orderLineItem.getCoupon()) : null;
             this.items = CollUtils.convertList(orderLineItem.getItems(), item -> new OrderItemRespVO(item));
             this.commentStatus = orderLineItem.getCommentStatus();
+            this.totalPrice = orderLineItem.totalPrice();
         }
 
     }

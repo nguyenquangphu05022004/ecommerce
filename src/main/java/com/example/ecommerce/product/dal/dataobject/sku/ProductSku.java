@@ -1,6 +1,7 @@
 package com.example.ecommerce.product.dal.dataobject.sku;
 
 import com.example.ecommerce.frame.auditting.BaseEntity;
+import com.example.ecommerce.frame.common.string.StringUtils;
 import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -26,4 +27,9 @@ public class ProductSku extends BaseEntity {
     private Integer quantity;
     @OneToMany(mappedBy = "productSku")
     private Set<ProductSkuProperty> productSkuProperties;
+
+
+    public String toProperties() {
+        return StringUtils.convertToString(productSkuProperties, s -> s.getProductPropertyValue().getPropertyValue(), ", ");
+    }
 }

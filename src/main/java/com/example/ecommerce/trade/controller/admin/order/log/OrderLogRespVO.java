@@ -16,7 +16,7 @@ public class OrderLogRespVO {
         this.id = orderLog.getId();
         this.createdDate = DateTimeUtils.format(orderLog.getCreatedDate());
         this.content = orderLog.getContent();
-        this.prevOrderStatus = orderLog.getPreviousStatus().getValue();
-        this.nextOrderStatus = orderLog.getNextStatus().getValue();
+        this.prevOrderStatus = orderLog.getPreviousStatus() == null ? "" : orderLog.getPreviousStatus().getValue();
+        this.nextOrderStatus = orderLog.getNextStatus() == null ? "" : orderLog.getNextStatus().getValue();
     }
 }

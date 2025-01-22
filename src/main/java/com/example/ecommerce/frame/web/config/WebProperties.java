@@ -11,6 +11,9 @@ public class WebProperties {
     private Api adminApi = new Api("/admin-api", "**.controller.admin.**");
     private Api appApi = new Api("/app-api","**.controller.app.**");
     private UI adminUi;
+    private String localDomain;
+    private String prodDomain;
+    private String walletPath;
 
     @Data
     @AllArgsConstructor

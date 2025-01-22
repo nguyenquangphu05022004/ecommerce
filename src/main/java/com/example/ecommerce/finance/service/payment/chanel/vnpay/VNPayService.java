@@ -1,11 +1,14 @@
 package com.example.ecommerce.finance.service.payment.chanel.vnpay;
 
 import com.example.ecommerce.finance.dal.dataobject.transaction.Transaction;
-import com.example.ecommerce.finance.service.transaction.TransactionService;
-import com.example.ecommerce.finance.service.wallet.WalletService;
-import com.example.ecommerce.finance.service.transaction.bo.TransactionCreateReqBO;
-import com.example.ecommerce.frame.common.servlet.ServletUtils;
 import com.example.ecommerce.finance.service.payment.chanel.PaymentChannel;
+import com.example.ecommerce.finance.service.transaction.TransactionService;
+import com.example.ecommerce.finance.service.transaction.bo.TransactionCreateReqBO;
+import com.example.ecommerce.finance.service.wallet.WalletService;
+import com.example.ecommerce.frame.common.servlet.ServletUtils;
+import com.example.ecommerce.trade.enums.PaymentMode;
+import com.example.ecommerce.trade.enums.PaymentStatus;
+import com.example.ecommerce.trade.service.order.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,9 +19,8 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.example.ecommerce.finance.enums.TransactionStatus.*;
 import static com.example.ecommerce.finance.enums.ParamEnum.*;
-import static com.example.ecommerce.finance.enums.ParamEnum.AMOUNT;
+import static com.example.ecommerce.finance.enums.TransactionStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ public class VNPayService implements PaymentChannel {
 
     private final TransactionService transactionService;
     private final WalletService walletService;
+    private final OrderService orderService;
     @Override
     public Object doPayment(Map<String, Object> params) {
         TransactionCreateReqBO req = new TransactionCreateReqBO();
@@ -35,17 +38,22 @@ public class VNPayService implements PaymentChannel {
         req.setFromUserId((Long) params.get(FROM_USER_ID));
         req.setAmountTransfer((Integer) params.get(AMOUNT));
         req.setTransactionStatus(PROCESSING);
+        req.setPaymentMode(PaymentMode.BANK);
         Long transactionId = this.transactionService.createTransaction(req);
 
         String urlVNPay = createOrder(req.getAmountTransfer(),
                 req.getTransferContent(),
-                ServletUtils.getBaseUrl(), transactionId);
+                ServletUtils.getBaseUrl(), transactionId,
+                (Long) params.get(ORDER_ID));
 
         return urlVNPay;
 
     }
 
-    private String createOrder(int total, String orderInfor, String urlReturn, Long transactionId){
+    private String createOrder(int total, String orderInfor,
+                               String urlReturn,
+                               Long transactionId,
+                               Long orderId){
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
@@ -59,7 +67,6 @@ public class VNPayService implements PaymentChannel {
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
         vnp_Params.put("vnp_Amount", String.valueOf(total*100));
         vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put(TRANSACTION_ID, transactionId.toString());
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.put("vnp_OrderInfo", orderInfor);
         vnp_Params.put("vnp_OrderType", orderType);
@@ -68,6 +75,8 @@ public class VNPayService implements PaymentChannel {
         vnp_Params.put("vnp_Locale", locate);
 
         urlReturn += VNPayConfig.vnp_Returnurl;
+        urlReturn += "?" + TRANSACTION_ID + "=" + transactionId;
+        urlReturn += "&" + ORDER_ID + "=" + orderId;
         vnp_Params.put("vnp_ReturnUrl", urlReturn);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
@@ -110,6 +119,7 @@ public class VNPayService implements PaymentChannel {
         String queryUrl = query.toString();
         String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.vnp_HashSecret, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
         return paymentUrl;
     }
@@ -119,15 +129,16 @@ public class VNPayService implements PaymentChannel {
         for (Enumeration params = request.getParameterNames(); params.hasMoreElements();) {
             String fieldName = null;
             String fieldValue = null;
-            try {
-                fieldName = URLEncoder.encode((String) params.nextElement(), StandardCharsets.US_ASCII.toString());
-                fieldValue = URLEncoder.encode(request.getParameter(fieldName), StandardCharsets.US_ASCII.toString());
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                fields.put(fieldName, fieldValue);
-            }
+                try {
+                    fieldName = URLEncoder.encode((String) params.nextElement(), StandardCharsets.US_ASCII.toString());
+                    fieldValue = URLEncoder.encode(request.getParameter(fieldName), StandardCharsets.US_ASCII.toString());
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                if (!fieldName.equals(TRANSACTION_ID) && !fieldName.equals(ORDER_ID)
+                        && (fieldValue != null) && (fieldValue.length() > 0)) {
+                    fields.put(fieldName, fieldValue);
+                }
         }
 
         String vnp_SecureHash = request.getParameter("vnp_SecureHash");
@@ -143,6 +154,7 @@ public class VNPayService implements PaymentChannel {
             if ("00".equals(request.getParameter("vnp_TransactionStatus"))) {
                 Transaction transaction = this.transactionService.getTransactionById(transactionId);
                 walletService.topUpToWallet(transaction.getToUser().getId(), transaction.getAmountTransfer());
+                orderService.updatePaymentStatus(Long.parseLong(request.getParameter(ORDER_ID)), PaymentStatus.SUCCESS);
                 this.transactionService.updateTransactionStatus(transactionId, SUCCESS);
                 return;
                 //return 1;
