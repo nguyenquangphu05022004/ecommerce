@@ -263,11 +263,8 @@ public class OrderServiceImpl implements OrderService{
     private Map<String, Object> buildProperties(Order order) {
         Map<String, Object> properties = new HashMap<>();
         properties.put("orderId", order.getId());
-        properties.put("orderNo", order.getNo());
-        properties.put("totalProduct", order.totalProduct());
-        properties.put("totalPrice", order.totalPrice());
-        properties.put("createdDate", DateTimeUtils.format(order.getCreatedDate()));
-        properties.put("status", order.getOrderStatus().getValue());
+        properties.put("timeLine", DateTimeUtils.format(order.getCreatedDate()));
+        properties.put("productNames", "test");
         return properties;
     }
 

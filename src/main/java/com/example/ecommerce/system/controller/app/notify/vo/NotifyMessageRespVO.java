@@ -9,8 +9,6 @@ import lombok.Data;
 public class NotifyMessageRespVO {
     @Schema(description = "id")
     private Long id;
-    @Schema(description = "Ten thong bao")
-    private String nameNotify;
     @Schema(description = "Noi dung thong bao")
     private String content;
     @Schema(description = "Trang thai doc thong bao")

@@ -83,7 +83,7 @@ public class ProductSpuServiceImpl implements ProductSpuService{
           }
           return res;
         };
-        Pageable pageable = PageRequest.of(reqVO.getPage() - 1, PagingLimitation.PRODUCT_SPU_LIMIT);
+            Pageable pageable = PageRequest.of(reqVO.getPage() - 1, PagingLimitation.PRODUCT_SPU_LIMIT);
         Page<ProductSpu> paging = this.productSpuRepository.findAll(spec, pageable);
         List<ProductSpu> productSpus = new ArrayList<>(paging.getContent());
         if(reqVO.isSort()) {

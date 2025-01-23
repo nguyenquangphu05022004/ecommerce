@@ -63,7 +63,7 @@ class OrderServiceTest extends TestBase {
         Cart cart = cartRepository.save(cart(sku, member));
 
         OrderDetailsReqVO req = RandomUtils.randomPojo(OrderDetailsReqVO.class, r -> {
-            r.setCouponIds(null); r.setUserId(member.getId()); r.setCartIds(Set.of(cart.getId()));
+            r.setCouponIds(null); r.setUserMemberId(member.getId()); r.setCartIds(List.of(cart.getId()));
         });
         Long orderId = orderService.createOrder(req);
         try {

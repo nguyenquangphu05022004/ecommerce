@@ -39,7 +39,7 @@ public interface NotifyMessageService {
      */
     PageResult<NotifyMessage> getNotifyMessagePageByUserId(Long userId, PageParam pageParam);
 
-    NotifyMessage getNotifyMessageByIdAndUserId(Long notifyMessageId, Long userId);
+    NotifyMessage getNotifyMessageById(Long notifyMessageId);
 
     /**
      * Dem so luong thong bao chua doc
@@ -49,9 +49,9 @@ public interface NotifyMessageService {
     Long getUnreadNotifyMessageCount(Long userId);
 
 
-    default void updateReadNotifyMessage(Collection<Long> ids, Long userId) {
+    default void updateReadNotifyMessage(Collection<Long> ids) {
         if(!CollUtils.isEmpty(ids)) {
-            ids.forEach(id -> getNotifyMessageByIdAndUserId(id, userId));
+            ids.forEach(this::getNotifyMessageById);
         }
     }
 

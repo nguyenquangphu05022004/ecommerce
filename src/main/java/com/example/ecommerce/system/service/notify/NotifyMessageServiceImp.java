@@ -51,8 +51,8 @@ public class NotifyMessageServiceImp implements NotifyMessageService{
 
 
     @Override
-    public NotifyMessage getNotifyMessageByIdAndUserId(Long notifyMessageId, Long userId) {
-        NotifyMessage notifyMessage = this.notifyMessageRepository.findAllByUserMemberIdAndId(userId, notifyMessageId)
+    public NotifyMessage getNotifyMessageById(Long notifyMessageId) {
+        NotifyMessage notifyMessage = this.notifyMessageRepository.findById(notifyMessageId)
                 .orElseThrow(() -> exception(NOTIFY_MESSAGE_NOT_FOUND));
         if(!notifyMessage.getReadStatus()) {
             notifyMessage.markAsRead();

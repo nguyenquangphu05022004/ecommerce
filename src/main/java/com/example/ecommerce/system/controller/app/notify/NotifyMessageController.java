@@ -22,8 +22,8 @@ public class NotifyMessageController {
     private final NotifyMessageService notifyMessageService;
 
     @Operation(summary = "Lay toan bo thong bao cua user hien tai, phan chia trang")
-    @GetMapping("/my-notify/page")
-    public CommonResult<PageResult<NotifyMessageRespVO>> getMyPageNotifyMessage(@RequestParam PageParam req) {
+    @PostMapping("/my-notify/page")
+    public CommonResult<PageResult<NotifyMessageRespVO>> getMyPageNotifyMessage(@RequestBody PageParam req) {
         PageResult<NotifyMessage> pageResult = this.notifyMessageService.getNotifyMessagePageByUserId(
                 SecurityUtils.getLoginUserMemberId(),
                 req
@@ -34,7 +34,7 @@ public class NotifyMessageController {
     @Operation(summary = "Lay thong bao theo id")
     @GetMapping("/{id}")
     public CommonResult<NotifyMessageRespVO> getNotifyMessageById(@PathVariable("id") Long id) {
-        return success(notifyMessageService.getNotifyMessageByIdAndUserId(id, SecurityUtils.getLoginUserMemberId()), NotifyMessageRespVO::new);
+        return success(notifyMessageService.getNotifyMessageById(id), NotifyMessageRespVO::new);
     }
 
     @Operation(summary = "Xoa thong bao")
@@ -42,5 +42,11 @@ public class NotifyMessageController {
     public CommonResult<Boolean> deleteNotifyMessage(@PathVariable("id") Long id) {
         notifyMessageService.deleteNotifyMessage(id, SecurityUtils.getLoginUserMemberId());
         return success(true);
+    }
+
+    @Operation(summary = "Dem so luong notify message chua doc cua user")
+    @GetMapping("/unread/count")
+    public CommonResult<Long> getUnreadNotifyMessageCount() {
+        return success(notifyMessageService.getUnreadNotifyMessageCount(SecurityUtils.getLoginUserMemberId()));
     }
 }
