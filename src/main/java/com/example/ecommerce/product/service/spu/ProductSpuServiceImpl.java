@@ -13,11 +13,15 @@ import com.example.ecommerce.product.controller.admin.spu.vo.ProductDetailsRespV
 import com.example.ecommerce.product.controller.admin.spu.vo.ProductSpuCreateReqVO;
 import com.example.ecommerce.product.controller.admin.spu.vo.PageProductSpuReqVO;
 import com.example.ecommerce.product.controller.admin.spu.vo.ProductSpuUpdateBaseReqVO;
+import com.example.ecommerce.product.controller.admin.spu.vo.info.ProductSpuInfoCreateReqVO;
+import com.example.ecommerce.product.controller.admin.spu.vo.info.ProductSpuInfoRespVO;
 import com.example.ecommerce.product.dal.dataobject.brand.ProductBrand;
 import com.example.ecommerce.product.dal.dataobject.category.ProductCategory;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductComment;
 import com.example.ecommerce.product.dal.dataobject.favorite.ProductFavorite;
+import com.example.ecommerce.product.dal.dataobject.properties.ProductProperty;
 import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
+import com.example.ecommerce.product.dal.dataobject.spu.ProductSpuInfo;
 import com.example.ecommerce.product.dal.repository.comment.ProductCommentRepository;
 import com.example.ecommerce.product.dal.repository.favorite.ProductFavoriteRepository;
 import com.example.ecommerce.product.dal.repository.spu.ProductSpuRepository;
@@ -48,7 +52,6 @@ public class ProductSpuServiceImpl implements ProductSpuService{
     private final ProductCommentRepository commentRepository;
     private final ProductFavoriteRepository productFavoriteRepository;
     private final UserMemberService userMemberService;
-
     @Override
     public ProductSpu createProductSpu(ProductSpuCreateReqVO reqVO) {
         UserMember userMember = userMemberService.getUserMemberById(reqVO.getUserId());
@@ -118,6 +121,7 @@ public class ProductSpuServiceImpl implements ProductSpuService{
                 .name(productSpu.getName()).maxPrice(productSpu.getMaxPrice())
                 .minPrice(productSpu.getMinPrice()).numComment(CollUtils.size(comments))
                 .productCategory(new ProductCategoryResVO(productSpu.getProductCategory()))
+                .spuInfos(CollUtils.convertList(productSpu.getProductSpuInfos(), ProductSpuInfoRespVO::new))
                 .productBrand(new ProductBrandResVO(productSpu.getProductBrand()))
                 .sliders(CollUtils.convertSet(productSpu.getProductSkus(), sku -> sku.getImage()))
                 .availableStock(StreamUtils.mapInt(productSpu.getProductSkus(), sku -> sku.getQuantity()).sum())
@@ -125,6 +129,25 @@ public class ProductSpuServiceImpl implements ProductSpuService{
                 .numFavorite(CollUtils.size(productFavorites)).numSold(0)
                 .properties(MapUtils.convertMap(ProductSkuTradeResVO.mapProperties(productSpu.getProductSkus()), k -> k.getId() + "_" + k.getName() ))
                 .build();
+    }
+
+    @Override
+    public ProductSpuInfo addProductInfo(ProductSpuInfoCreateReqVO req) {
+        ProductSpu productSpu = getProductSpuById(req.getSpuId());
+        ProductSpuInfo productInfo = ProductSpuInfo.builder().value(req.getValue())
+                .property(ProductProperty.builder().id(req.getPropertyId()).build())
+                .build();
+       productSpu.addProductInfo(productInfo);
+
+       productSpuRepository.save(productSpu);
+
+       return productInfo;
+    }
+
+    @Override
+    public void removeProductInfo(Long spuId, Long productInfoId) {
+        ProductSpu productSpu = getProductSpuById(spuId);
+        CollUtils.removeIf(productSpu.getProductSpuInfos(), info -> info.getId().equals(productInfoId));
     }
 }
 

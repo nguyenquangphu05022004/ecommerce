@@ -4,6 +4,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class CollUtils {
@@ -13,6 +14,12 @@ public class CollUtils {
             return true;
         }
         return false;
+    }
+
+    public static<T> void removeIf(Collection<T> coll, Predicate<T> pre) {
+        if(!isEmpty(coll)) {
+            coll.removeIf(pre);
+        }
     }
     public static  <U, T>  List<T> convertList(Collection<U> coll, Function<U, T> func) {
         if(isEmpty(coll)) {

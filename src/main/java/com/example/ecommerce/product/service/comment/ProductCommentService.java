@@ -50,4 +50,5 @@ public interface ProductCommentService {
 
 
     boolean userHasLikeComment(Long userId, Long commentId);
+    boolean userHasComment(Long userId, Long productSpuId);
 }

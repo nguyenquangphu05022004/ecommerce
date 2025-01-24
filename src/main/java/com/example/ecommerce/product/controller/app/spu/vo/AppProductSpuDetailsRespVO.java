@@ -1,5 +1,6 @@
 package com.example.ecommerce.product.controller.app.spu.vo;
 
+import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.common.collection.MapUtils;
 import com.example.ecommerce.frame.common.collection.StreamUtils;
 import com.example.ecommerce.frame.common.date.DateTimeUtils;
@@ -8,6 +9,7 @@ import com.example.ecommerce.frame.common.object.ObjectUtils;
 import com.example.ecommerce.frame.common.pojo.Pair;
 import com.example.ecommerce.product.controller.admin.property.vo.ProductPropertyVO;
 import com.example.ecommerce.product.controller.admin.property.vo.ProductPropertyValueResVO;
+import com.example.ecommerce.product.controller.admin.spu.vo.info.ProductSpuInfoRespVO;
 import com.example.ecommerce.product.dal.dataobject.properties.ProductProperty;
 import com.example.ecommerce.product.dal.dataobject.properties.ProductPropertyValue;
 import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
@@ -36,7 +38,7 @@ public class AppProductSpuDetailsRespVO extends AppProductSpuSimpleRespVO{
     private SellerDetailsRespVO seller;
 //    private List<AppProductSkuRespVO> skus;
     private String description;
-
+    private List<ProductSpuInfoRespVO> spuInfos;
     private Set<Pair<ProductPropertyVO, Set<ProductPropertyValueResVO>>> properties;
     private Set<Pair<Long, AppProductSkuRespVO>> skus;
 
@@ -51,6 +53,7 @@ public class AppProductSpuDetailsRespVO extends AppProductSpuSimpleRespVO{
             res.setJoined(seller.getCreatedDate().getYear());
             return res;
         });
+        this.spuInfos = CollUtils.convertList(spu.getProductSpuInfos(), ProductSpuInfoRespVO::new);
 //        this.skus = CollUtils.convertList(spu.getProductSkus(), AppProductSkuRespVO::new);
         this.properties = getAllPropertyOfSku(spu.getProductSkus());
         this.description = spu.getDescription();

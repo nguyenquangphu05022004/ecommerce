@@ -8,6 +8,8 @@ import com.example.ecommerce.product.controller.admin.spu.vo.ProductDetailsRespV
 import com.example.ecommerce.product.controller.admin.spu.vo.ProductSpuCreateReqVO;
 import com.example.ecommerce.product.controller.admin.spu.vo.ProductSpuResVO;
 import com.example.ecommerce.product.controller.admin.spu.vo.ProductSpuUpdateBaseReqVO;
+import com.example.ecommerce.product.controller.admin.spu.vo.info.ProductSpuInfoCreateReqVO;
+import com.example.ecommerce.product.dal.dataobject.spu.ProductSpuInfo;
 import com.example.ecommerce.product.service.spu.ProductSpuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,7 +24,6 @@ import static com.example.ecommerce.frame.common.pojo.CommonResult.success;
 @RequiredArgsConstructor
 @RequestMapping("/admin-api/product/spus")
 @Tag(name = "Product SPU")
-@CrossOrigin("*")
 public class ProductSpuController {
     private final ProductSpuService productSpuService;
 
@@ -57,4 +58,19 @@ public class ProductSpuController {
         return CommonResult.success(productSpuService.getDetailsProduct(productSpuId));
     }
 
+
+    @PostMapping("/info")
+    @Operation(summary = "them thong tin chi tiet ve san pham")
+    public CommonResult<Boolean> addProductSpuInfo(@RequestBody ProductSpuInfoCreateReqVO req) {
+        productSpuService.addProductInfo(req);
+        return success(true);
+    }
+
+    @DeleteMapping("/info")
+    @Operation(summary = "xoa thong tin chi tiet ve san pham")
+    public CommonResult<Boolean> removeSpuInfo(@RequestParam("spuId") Long spuId,
+                                               @RequestParam("spuInfoId") Long spuInfoId) {
+        productSpuService.removeProductInfo(spuId, spuInfoId);
+        return success(true);
+    }
 }

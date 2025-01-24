@@ -30,8 +30,7 @@ import java.util.Optional;
 import static com.example.ecommerce.frame.common.collection.CollUtils.convertList;
 import static com.example.ecommerce.frame.common.exception.utils.ServiceExceptionUtils.exception;
 import static com.example.ecommerce.frame.common.pojo.PagingLimitation.COMMENT_LIMIT;
-import static com.example.ecommerce.product.constants.ProductionErrorConstant.PRODUCT_COMMENT_NOT_FOUND;
-import static com.example.ecommerce.product.constants.ProductionErrorConstant.UPDATE_COMMENT_IS_DENIED;
+import static com.example.ecommerce.product.constants.ProductionErrorConstant.*;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +47,9 @@ public class ProductCommentServiceImpl implements ProductCommentService{
     @Transactional
     public ProductComment createProductComment(ProductCommentCreateReqVO reqVO) {
 
+        if(userHasComment(reqVO.getUserMemberId(), reqVO.getProductSpuId())) {
+            throw exception(YOUR_COMMENT_EXISTS);
+        }
         ProductComment productComment = ProductComment.builder()
                 .productSku(this.productSkuService.getProductSkuById(reqVO.getProductSkuId()))
                 .productSpu(this.productSpuService.getProductSpuById(reqVO.getProductSpuId()))
@@ -154,5 +156,10 @@ public class ProductCommentServiceImpl implements ProductCommentService{
         return productCommentFavoriteRepository
                 .findByProductCommentIdAndUserMemberId(commentId, userId)
                 .isPresent();
+    }
+
+    @Override
+    public boolean userHasComment(Long userId, Long productSpuId) {
+        return this.productCommentRepository.findByUserMemberIdAndProductSpuId(userId, productSpuId).isPresent();
     }
 }

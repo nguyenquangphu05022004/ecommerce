@@ -33,6 +33,7 @@ public interface ProductionErrorConstant {
     ErrorCode PRODUCT_EVALUATION_NOT_FOUND = new ErrorCode("Product Evaluation not found", NOT_FOUND.value());
     ErrorCode PRODUCT_PROPERTY_NOT_FOUND = new ErrorCode("ProductProperty not found", NOT_FOUND.value());
     ErrorCode UPDATE_COMMENT_IS_DENIED = new ErrorCode("Create/Delete/Update comment is denied", BAD_REQUEST.value());
+    ErrorCode YOUR_COMMENT_EXISTS = new ErrorCode("Your comment to product exists", BAD_REQUEST.value());
     /**
      * Property
      */

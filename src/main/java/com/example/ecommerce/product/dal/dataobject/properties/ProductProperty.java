@@ -23,7 +23,8 @@ public class ProductProperty extends BaseEntity {
     private ProductPropertyType productPropertyType;
     public static enum ProductPropertyType {
         SKU,
-        EVALUATION
+        EVALUATION,
+        SPU
     }
 
 }

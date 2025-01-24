@@ -1,6 +1,7 @@
 package com.example.ecommerce.product.dal.dataobject.spu;
 
 import com.example.ecommerce.frame.auditting.BaseEntity;
+import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.product.dal.dataobject.brand.ProductBrand;
 import com.example.ecommerce.product.dal.dataobject.category.ProductCategory;
 import com.example.ecommerce.product.dal.dataobject.comment.ProductComment;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,5 +58,17 @@ public class ProductSpu extends BaseEntity {
      */
     @OneToMany(mappedBy = "productSpu")
     private Set<ProductSku> productSkus;
+
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<ProductSpuInfo> productSpuInfos;
+
+
+    public void addProductInfo(ProductSpuInfo info) {
+        if(CollUtils.isEmpty(productSkus)) {
+            productSpuInfos = new HashSet<>();
+        }
+        productSpuInfos.add(info);
+    }
 
 }
