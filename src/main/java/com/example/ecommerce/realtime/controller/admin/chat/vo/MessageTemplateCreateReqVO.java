@@ -1,4 +1,10 @@
 package com.example.ecommerce.realtime.controller.admin.chat.vo;
 
-public class MessageTemplateCreateReqVO extends MessageTemplateRespVO{
+import lombok.Data;
+
+@Data
+public class MessageTemplateCreateReqVO {
+    private Long id;
+    private String name;
+    private String content;
 }

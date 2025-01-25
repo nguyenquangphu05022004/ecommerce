@@ -74,4 +74,14 @@ public class MessageServiceImpl implements MessageService{
         this.messageRepository.save(message);
         //using websocket send to client
     }
+
+    @Override
+    public Message getLatestMessageBetweenTwoUsers(Long userOne, Long userTwo) {
+        return null;
+    }
+
+    @Override
+    public void deleteAllMessage(Long fromUserId, Long toUserId) {
+
+    }
 }

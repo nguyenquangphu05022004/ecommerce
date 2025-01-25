@@ -1,5 +1,6 @@
 package com.example.ecommerce.realtime.controller.app.chat.vo;
 
+import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +13,7 @@ import java.util.Map;
 public class MessageCreateReqVO {
     @Schema(description = "send from user", example = "100")
     @NotNull(message = "fromUserId can't null")
-    private Long fromUserId;
+    private Long fromUserId = SecurityUtils.getLoginUserMemberId();
     @Schema(description = "user receive message", example = "100")
     @NotNull(message = "toUserId can't null")
     private Long toUserId;

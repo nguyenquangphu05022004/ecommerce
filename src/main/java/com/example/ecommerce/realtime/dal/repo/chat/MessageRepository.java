@@ -1,11 +1,12 @@
 package com.example.ecommerce.realtime.dal.repo.chat;
 
 import com.example.ecommerce.realtime.dal.dataobject.chat.Message;
-import io.lettuce.core.dynamic.annotation.Param;
+
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -24,19 +25,23 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findAllMessageBetweenTwoUsers(@Param("fromUserId") Long fromUserId,
                                                 @Param("toUserId") Long toUserId);
 
+    @Query(value = "delete from realtime_chat_message c where (c.from_user_id = :userOne and c.to_user_id = :userTwo) " +
+            "or (c.from_user_id = :userTwo and c.to_user_id = :userOne)", nativeQuery = true)
+    @Modifying
+    void deleteAllMessage(@Param("userOne") Long userOne,@Param("userTwo") Long userTwo);
     /**
      *
-     * @param fromUserId:1
+     * @param userId:1
      * @return [
      *     [3, 2], //-> with userId: 3 -> user1 has 2 messages unread;
      *     [100, 6] //-> with userId: 100 -> user1 has 100 messages unread;
      * ]
      */
-    @Query(value = "select m.to_user_id, count(c.*)\n" +
+    @Query(value = "select m.from_user_id, count(m.*)\n" +
             "from realtime_chat_message m\n" +
-            "where m.from_user_id = :fromUserId and c.read_message = false\n" +
-            "group by m.to_user_id", nativeQuery = true)
-    List<Object[]> countUnreadMessageFromUserId(@Param("fromUserId") Long fromUserId);
+            "where m.to_user_id = :userId and m.read_message = false\n" +
+            "group by m.from_user_id", nativeQuery = true)
+    List<Object[]> countUnreadMessageFromUserId(@Param("userId") Long userId);
 
 
     /**

@@ -8,5 +8,5 @@ import java.util.List;
 public interface MessageTemplateService {
     MessageTemplate createMessageTemplate(MessageTemplateCreateReqVO req);
     List<MessageTemplate> getListMessageTemplate();
-    MessageTemplate updateMessageTemplate(MessageTemplateCreateReqVO req);
+    MessageTemplate getTemplateById(Long templateId);
 }

@@ -20,4 +20,7 @@ public interface MessageService {
 
     void revokeMessage(Long msgId);
 
+    Message getLatestMessageBetweenTwoUsers(Long userOne, Long userTwo);
+
+    void deleteAllMessage(Long fromUserId, Long toUserId);
 }
