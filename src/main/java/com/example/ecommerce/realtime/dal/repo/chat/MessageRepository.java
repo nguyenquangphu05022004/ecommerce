@@ -37,11 +37,11 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
      *     [100, 6] //-> with userId: 100 -> user1 has 100 messages unread;
      * ]
      */
-    @Query(value = "select m.from_user_id, count(m.*)\n" +
+    @Query(value = "select m.from_user_id, count(m.id)\n" +
             "from realtime_chat_message m\n" +
-            "where m.to_user_id = :userId and m.read_message = false\n" +
+            "where m.to_user_id = :userId and (m.read_message = false or m.read_message is null)\n" +
             "group by m.from_user_id", nativeQuery = true)
-    List<Object[]> countUnreadMessageFromUserId(@Param("userId") Long userId);
+    List<Object[]> countUnreadMessage(@Param("userId") Long userId);
 
 
     /**

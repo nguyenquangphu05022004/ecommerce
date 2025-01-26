@@ -1,10 +1,12 @@
 package com.example.ecommerce.realtime.controller.app.chat;
 
+import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.common.pojo.CommonResult;
 import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
 import com.example.ecommerce.realtime.controller.app.chat.vo.MessageCreateReqVO;
 import com.example.ecommerce.realtime.controller.app.chat.vo.MessageRespVO;
 import com.example.ecommerce.realtime.controller.app.chat.vo.user.ChatUserRespVO;
+import com.example.ecommerce.realtime.dal.dataobject.chat.Message;
 import com.example.ecommerce.realtime.service.chat.ChatUserService;
 import com.example.ecommerce.realtime.service.chat.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,17 +25,27 @@ import static com.example.ecommerce.frame.common.pojo.CommonResult.success;
 public class MessageController {
 
     private final MessageService messageService;
-    private final ChatUserService chatUserService;
     @PostMapping
     @Operation(summary = "Tao message cho user")
     public CommonResult<MessageRespVO> createMessage(@RequestBody MessageCreateReqVO req) {
-        return success(new MessageRespVO(this.messageService.createMessage(req)));
+        return success(this.messageService.createMessage(req), MessageRespVO::new);
     }
 
     @GetMapping
-    @Operation(summary = "lay danh sach cuoc tro chuyen cua user hien tai")
-    public CommonResult<List<ChatUserRespVO>> getAllConversation() {
-        return success(chatUserService.getListChat(SecurityUtils.getLoginUserMemberId()));
+    @Operation(summary = "Lấy danh sách tin nhắn giữa 2 người dùng")
+    public CommonResult<List<MessageRespVO>> getListMessageBetweenTwoUsers(@RequestParam("toUserId") Long toUserId) {
+        List<Message> messages = messageService.getListMessageBetweenTwoUsers(SecurityUtils.getLoginUserMemberId(), toUserId);
+        return success(CollUtils.convertList(messages, MessageRespVO::new));
     }
+
+    @GetMapping("/count-unread-message")
+    @Operation(summary = "Lấy số lượng tin nhắn chưa đọc")
+    public CommonResult<Long> getTotalUnreadMessageFromUser() {
+        Long totalUnreadMessage = messageService.getTotalUnreadMessageFromUserId(SecurityUtils.getLoginUserMemberId());
+        return success(totalUnreadMessage);
+    }
+
+
+
 
 }

@@ -27,12 +27,14 @@ public class ChatUserServiceImpl implements ChatUserService {
     public List<ChatUserRespVO> getListChat(Long userId) {
         List<ChatUserRespVO> chatUsers = CollUtils.convertList(chatUserRepository.findAllChatUser(userId), chatUser -> {
             ChatUserRespVO c = new ChatUserRespVO();
-            c.setUserId(chatUser.getUserChat().getId()); c.setUserAvatar(chatUser.getUserChat().getAvatar());
-            c.setOnline(chatUser.getUserChat().getOnline()); c.setUserFullName(chatUser.getUserChat().getFullName());
-            c.setId(c.getId()); c.setNumberUnreadMessage(0);
+            c.setUserId(chatUser.getUserChat().getId());
+            c.setUserAvatar(chatUser.getUserChat().getAvatar());
+            c.setOnline(chatUser.getUserChat().getOnline());
+            c.setUserFullName(chatUser.getUserChat().getFullName());
+            c.setId(chatUser.getId()); c.setNumberUnreadMessage(0L);
             return c;
         });
-        List<Object[]> objects = messageRepository.countUnreadMessageFromUserId(userId);
+        List<Object[]> objects = messageRepository.countUnreadMessage(userId);
 
         Map<Long, ChatUserRespVO> chatUserIdMapChatUser = MapUtils.convertToMap(CollUtils.convertList(chatUsers, chatUser -> {
             return new Pair<>(chatUser.getUserId(), chatUser);
@@ -40,8 +42,9 @@ public class ChatUserServiceImpl implements ChatUserService {
 
         if(!MapUtils.isEmpty(chatUserIdMapChatUser)) {
             CollUtils.convertList(objects, objs -> {
-                if(chatUserIdMapChatUser.containsKey((Long) objs[0])) {
-                    chatUserIdMapChatUser.get((Long) objs[0]).setNumberUnreadMessage((Integer) objs[1]);
+                Long toUserId = (long)objs[0];
+                if(chatUserIdMapChatUser.containsKey(toUserId)) {
+                    chatUserIdMapChatUser.get(toUserId).setNumberUnreadMessage((long)objs[1]);
                 };
                 return null;
             });
@@ -56,5 +59,10 @@ public class ChatUserServiceImpl implements ChatUserService {
                 .orElseThrow(() -> exception(CHAT_BETWEEN_USER_IS_NOT_ESTABLISHED));
         messageRepository.deleteAllMessage(chatUser.getUserOne().getId(), chatUser.getUserTwo().getId());
         this.chatUserRepository.delete(chatUser);
+    }
+
+    @Override
+    public ChatUser getChatByTwoUser(Long fromUserId, Long toUserId) {
+        return this.chatUserRepository.findChatBetweenUsers(fromUserId, toUserId);
     }
 }

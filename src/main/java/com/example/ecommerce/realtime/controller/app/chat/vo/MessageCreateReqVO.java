@@ -11,11 +11,12 @@ import java.util.Map;
 @Data
 @Schema(description = "Chat two user - Message Request")
 public class MessageCreateReqVO {
+
+
     @Schema(description = "send from user", example = "100")
-    @NotNull(message = "fromUserId can't null")
     private Long fromUserId = SecurityUtils.getLoginUserMemberId();
+
     @Schema(description = "user receive message", example = "100")
-    @NotNull(message = "toUserId can't null")
     private Long toUserId;
 
     @NotEmpty

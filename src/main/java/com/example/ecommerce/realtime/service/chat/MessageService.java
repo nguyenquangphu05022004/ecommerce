@@ -13,7 +13,7 @@ public interface MessageService {
 
     Message getMessageById(Long id);
 
-    int getTotalUnreadMessageFromUserId(Long fromUserId);
+    Long getTotalUnreadMessageFromUserId(Long fromUserId);
 
     @Async
     void updateMessageStatusFromReadMessages(Long fromUserId, Long toUserId);

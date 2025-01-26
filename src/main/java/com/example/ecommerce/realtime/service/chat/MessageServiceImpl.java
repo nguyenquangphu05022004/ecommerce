@@ -3,10 +3,15 @@ package com.example.ecommerce.realtime.service.chat;
 import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.common.collection.StreamUtils;
 import com.example.ecommerce.realtime.controller.app.chat.vo.MessageCreateReqVO;
+import com.example.ecommerce.realtime.controller.app.chat.vo.MessageRespVO;
+import com.example.ecommerce.realtime.dal.dataobject.chat.ChatUser;
 import com.example.ecommerce.realtime.dal.dataobject.chat.Message;
+import com.example.ecommerce.realtime.dal.repo.chat.ChatUserRepository;
 import com.example.ecommerce.realtime.dal.repo.chat.MessageRepository;
+import com.example.ecommerce.system.dal.dataobject.user.UserMember;
 import com.example.ecommerce.system.service.user.UserMemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -22,21 +27,26 @@ public class MessageServiceImpl implements MessageService{
 
     private final UserMemberService userMemberService;
     private final MessageRepository messageRepository;
-
+    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final ChatUserRepository chatUserRepository;
     @Override
     public Message createMessage(MessageCreateReqVO req) {
+        UserMember fromUser = userMemberService.getUserMemberById(req.getFromUserId());
+        UserMember toUser = userMemberService.getUserMemberById(req.getToUserId());
         Message message = Message.builder()
                 .readMessage(false).content(req.getContent())
-                .fromUser(userMemberService.getUserMemberById(req.getFromUserId()))
-                .toUser(userMemberService.getUserMemberById(req.getToUserId()))
+                .fromUser(fromUser)
+                .toUser(toUser)
                 .revokeMessage(false)
                 .build();
-        try {
+        if(req.getReplyMessageId() != null) {
             message.setReplyMessage(getMessageById(req.getReplyMessageId()));
-        } finally {
-            message.setReplyMessage(null);
         }
         this.messageRepository.save(message);
+        simpMessagingTemplate.convertAndSend(
+                String.format("/topic/private/chat/user/%d", req.getToUserId()),
+                new MessageRespVO(message)
+        );
         return message;
     }
 
@@ -56,10 +66,10 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public int getTotalUnreadMessageFromUserId(Long fromUserId) {
-        List<Object[]> objects = this.messageRepository.countUnreadMessageFromUserId(fromUserId);
-        if(CollUtils.isEmpty(objects)) return 0;
-        return StreamUtils.mapInt(objects, arr -> (int) arr[1]).sum();
+    public Long getTotalUnreadMessageFromUserId(Long fromUserId) {
+        List<Object[]> objects = this.messageRepository.countUnreadMessage(fromUserId);
+        if(CollUtils.isEmpty(objects)) return 0L;
+        return StreamUtils.mapLong(objects, arr -> (Long) arr[1]).sum();
     }
 
     @Override
