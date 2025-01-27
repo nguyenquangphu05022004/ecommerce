@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -26,8 +28,8 @@ public class LiveStream extends BaseEntity {
     private UserMember hostOwner;
 
     private Integer totalView;
-    private Integer totalViewLive;
+    private LocalDateTime startDate;
 
-    private Boolean started;
 
+    private Boolean isClosed;
 }

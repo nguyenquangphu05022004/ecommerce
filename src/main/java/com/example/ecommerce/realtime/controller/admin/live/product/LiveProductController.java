@@ -1,6 +1,7 @@
 package com.example.ecommerce.realtime.controller.admin.live.product;
 
 import com.example.ecommerce.frame.common.pojo.CommonResult;
+import com.example.ecommerce.realtime.controller.admin.live.product.vo.LiveProductReqVO;
 import com.example.ecommerce.realtime.controller.admin.live.product.vo.LiveProductResVO;
 import com.example.ecommerce.realtime.service.live.LiveProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,8 +26,8 @@ public class LiveProductController {
     @PostMapping
     @Operation(summary = "San pham khi live")
     @PreAuthorize("@ss.hasPermission('realtime-live-product:update')")
-    public CommonResult<Boolean> createLiveProduct(@RequestParam("productSpuId") Long spuId) {
-        liveProductService.createLiveProduct(spuId);
+    public CommonResult<Boolean> createLiveProduct(@RequestBody LiveProductReqVO req) {
+        liveProductService.createLiveProduct(req);
         return success(true);
     }
 

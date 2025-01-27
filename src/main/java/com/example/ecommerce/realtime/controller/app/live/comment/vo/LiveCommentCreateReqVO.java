@@ -1,4 +1,4 @@
-package com.example.ecommerce.realtime.controller.app.live.message.vo;
+package com.example.ecommerce.realtime.controller.app.live.comment.vo;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +10,6 @@ public class LiveCommentCreateReqVO {
     private Long liveStreamId;
     @NotEmpty(message = "content can't empty")
     private String content;
-
+    private Boolean pin;
     private Long userId;
-    private Long liveMessageParentId;
 }

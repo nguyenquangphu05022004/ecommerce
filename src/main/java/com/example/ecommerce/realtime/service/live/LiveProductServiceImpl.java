@@ -5,7 +5,9 @@ import com.example.ecommerce.product.dal.dataobject.sku.ProductSku;
 import com.example.ecommerce.product.dal.dataobject.spu.ProductSpu;
 import com.example.ecommerce.product.service.sku.ProductSkuService;
 import com.example.ecommerce.product.service.spu.ProductSpuService;
+import com.example.ecommerce.realtime.controller.admin.live.product.vo.LiveProductReqVO;
 import com.example.ecommerce.realtime.dal.dataobject.live.LiveProduct;
+import com.example.ecommerce.realtime.dal.dataobject.live.LiveStream;
 import com.example.ecommerce.realtime.dal.repo.live.LiveProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +25,10 @@ public class LiveProductServiceImpl implements LiveProductService{
     private final ProductSpuService productSpuService;
     private final LiveProductRepository liveProductRepository;
     @Override
-    public void createLiveProduct(Long productSkuId) {
-        ProductSpu productSpu = this.productSpuService.getProductSpuById(productSkuId);
+    public void createLiveProduct(LiveProductReqVO req) {
         LiveProduct liveProduct = LiveProduct.builder()
-                .productSpu(productSpu)
+                .productSpu(ProductSpu.builder().id(req.getProductSpuId()).build())
+                .liveStream(LiveStream.builder().id(req.getLivestreamId()).build())
                 .pin(false).display(false)
                 .build();
 

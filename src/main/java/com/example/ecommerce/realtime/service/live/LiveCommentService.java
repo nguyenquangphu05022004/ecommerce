@@ -1,6 +1,6 @@
 package com.example.ecommerce.realtime.service.live;
 
-import com.example.ecommerce.realtime.controller.app.live.message.vo.LiveCommentCreateReqVO;
+import com.example.ecommerce.realtime.controller.app.live.comment.vo.LiveCommentCreateReqVO;
 import com.example.ecommerce.realtime.dal.dataobject.live.LiveComment;
 
 import java.util.List;
@@ -14,4 +14,6 @@ public interface LiveCommentService {
     int likeMessage(Long id, Boolean inc);
 
     LiveComment getLiveCommentById(Long id);
+
+    void pinComment(Long commentId, Boolean isPin);
 }

@@ -35,6 +35,9 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
+    public BaseEntity(Long id) {
+        this.id = id;
+    }
     public BaseEntity(Long id, Long createdBy, Long modifiedBy, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.createdBy = createdBy;

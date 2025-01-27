@@ -1,7 +1,8 @@
 package com.example.ecommerce.realtime.service.live;
 
-import com.example.ecommerce.realtime.controller.app.live.message.vo.LiveCommentCreateReqVO;
+import com.example.ecommerce.realtime.controller.app.live.comment.vo.LiveCommentCreateReqVO;
 import com.example.ecommerce.realtime.dal.dataobject.live.LiveComment;
+import com.example.ecommerce.realtime.dal.dataobject.live.LiveStream;
 import com.example.ecommerce.realtime.dal.repo.live.LiveCommentRepository;
 import com.example.ecommerce.system.service.user.UserMemberService;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,14 @@ import static com.example.ecommerce.realtime.constants.ErrorCodeConstants.LIVE_C
 public class LiveCommentServiceImpl implements LiveCommentService{
     private final LiveCommentRepository liveCommentRepository;
     private final UserMemberService userMemberService;
-    private final LiveStreamService liveStreamService;
     @Override
     public LiveComment createComment(LiveCommentCreateReqVO reqVO) {
 
         LiveComment liveComment = LiveComment.builder()
                 .content(reqVO.getContent()).likeComment(0)
+                .liveStream(LiveStream.builder().id(reqVO.getLiveStreamId()).build())
                 .userMember(this.userMemberService.getUserMemberById(reqVO.getUserId()))
-                .liveStream(liveStreamService.getLiveStreamById(reqVO.getLiveStreamId()))
+                .isPinned(reqVO.getPin())
                 .build();
         this.liveCommentRepository.save(liveComment);
 
@@ -48,8 +49,7 @@ public class LiveCommentServiceImpl implements LiveCommentService{
 
     @Override
     public void deleteMessage(Long id) {
-        //delete reply comment
-        //delete its comment
+        liveCommentRepository.deleteById(id);
     }
 
     @Override
@@ -68,5 +68,10 @@ public class LiveCommentServiceImpl implements LiveCommentService{
     public LiveComment getLiveCommentById(Long id) {
         return this.liveCommentRepository.findById(id)
                 .orElseThrow(() -> exception(LIVE_COMMENT_NOT_FOUND));
+    }
+
+    @Override
+    public void pinComment(Long commentId, Boolean isPin) {
+        this.liveCommentRepository.updateIsPinned(commentId, isPin);
     }
 }

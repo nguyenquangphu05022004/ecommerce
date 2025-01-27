@@ -20,9 +20,7 @@ public class LiveComment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_member_id")
     private UserMember userMember;
-    @ManyToOne
-    @JoinColumn(name = "reply_live_comment")
-    private LiveComment replyLiveComment;
+
 
     private Integer likeComment;
 
@@ -32,5 +30,6 @@ public class LiveComment extends BaseEntity {
     @JoinColumn(name = "livestream_id")
     private LiveStream liveStream;
 
+    private Boolean isPinned;
 
 }
