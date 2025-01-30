@@ -51,7 +51,7 @@ public class AppProductSpuSimpleRespVO {
         this.brand = get(spu.getProductBrand(), ProductBrandResVO::new);
         this.imageUrl = CollUtils.getFirst(spu.getProductSkus(), ProductSku::getImage);
         this.discount = get(discount, DiscountRespVO::new);
-        this.sold = get(statistic, s -> s.getSold());
+        this.sold = get(statistic, ProductStatistic::getSold);
         this.sendFrom = spu.getSendFrom();
     }
 }

@@ -1,9 +1,14 @@
 package com.example.ecommerce.realtime.controller.app.live.livestream;
 
+import com.example.ecommerce.frame.common.collection.CollUtils;
 import com.example.ecommerce.frame.common.pojo.CommonResult;
+import com.example.ecommerce.realtime.controller.admin.live.product.vo.LiveProductResVO;
 import com.example.ecommerce.realtime.controller.app.live.livestream.vo.LiveStreamCreateReqVO;
+import com.example.ecommerce.realtime.controller.app.live.livestream.vo.LivestreamDetailRespVO;
 import com.example.ecommerce.realtime.controller.app.live.livestream.vo.LivestreamRespVO;
+import com.example.ecommerce.realtime.dal.dataobject.live.LiveProduct;
 import com.example.ecommerce.realtime.dal.dataobject.live.LiveStream;
+import com.example.ecommerce.realtime.service.live.LiveProductService;
 import com.example.ecommerce.realtime.service.live.LiveStreamService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +22,7 @@ import java.util.List;
 @RequestMapping("/app-api/realtime/livestreams")
 public class LivestreamController {
     private final LiveStreamService liveStreamService;
-
+    private final LiveProductService liveProductService;
     @PostMapping
     @Operation(summary = "Tạo sự kiện livestream")
     @PreAuthorize("@ss.hasPermission('realtime-livestream:update')")
@@ -33,9 +38,13 @@ public class LivestreamController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Lấy thông tin về phiên live")
-    public CommonResult<LivestreamRespVO> getLivestream(@PathVariable("id") Long id) {
+    public CommonResult<LivestreamDetailRespVO> getLivestream(@PathVariable("id") Long id) {
         LiveStream liveStream = liveStreamService.getLiveStreamById(id);
-        return CommonResult.success(liveStream,LivestreamRespVO::new);
+        List<LiveProduct> liveProducts = liveProductService.getListLiveProductByLiveStreamId(id);
+
+        LivestreamDetailRespVO live = new LivestreamDetailRespVO(liveStream);
+        live.setLiveProducts(CollUtils.convertList(liveProducts, LiveProductResVO::new));
+        return CommonResult.success(live);
     }
 
     @DeleteMapping("/{id}")

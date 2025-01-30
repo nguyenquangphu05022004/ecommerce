@@ -61,6 +61,7 @@ public class OrderServiceImpl implements OrderService{
                 .addressDetails(reqVO.getAddressDetails())
                 .paymentStatus(PaymentStatus.PROCESSING)
                 .combinationOfSellers(false)
+                .orderPlace(reqVO.getOrderPlace())
                 .userMember(UserMember.builder().id(reqVO.getUserMemberId()).build())
                 .build();
         /**

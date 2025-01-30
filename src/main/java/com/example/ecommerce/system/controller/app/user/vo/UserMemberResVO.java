@@ -13,12 +13,14 @@ public class UserMemberResVO {
     private String email;
     private String phoneNumber;
     private UserMember.Sex sex;
+    private Boolean isSeller;
     public UserMemberResVO(UserMember userMember) {
         this.avatar = userMember.getAvatar();
         this.fullName = userMember.getFullName();
         this.email = userMember.getEmail();
         this.phoneNumber = userMember.getPhoneNumber();
         this.sex = userMember.getSex();
-        this.aliasName = (userMember instanceof Seller) ? ((Seller)userMember).getShopName() : "";
+        this.isSeller = (userMember instanceof Seller);
+        this.aliasName = isSeller ? ((Seller)userMember).getShopName() : "";
     }
 }

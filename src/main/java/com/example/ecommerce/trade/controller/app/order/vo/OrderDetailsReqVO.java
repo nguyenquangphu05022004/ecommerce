@@ -1,6 +1,7 @@
 package com.example.ecommerce.trade.controller.app.order.vo;
 
 import com.example.ecommerce.frame.security.core.utils.SecurityUtils;
+import com.example.ecommerce.trade.enums.OrderPlace;
 import com.example.ecommerce.trade.enums.PaymentMode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -20,6 +21,5 @@ public class OrderDetailsReqVO {
     private List<Long> couponIds;
     private PaymentMode paymentMode;
     private String addressDetails;
-
-
+    private OrderPlace orderPlace;
 }

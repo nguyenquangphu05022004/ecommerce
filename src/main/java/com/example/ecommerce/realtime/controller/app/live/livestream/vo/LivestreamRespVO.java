@@ -18,6 +18,7 @@ public class LivestreamRespVO {
     private Integer totalView;
     private String startDate;
     private Boolean started;
+    private Boolean isClosed;
 
     public LivestreamRespVO(LiveStream liveStream) {
         this.id = liveStream.getId();
@@ -25,8 +26,9 @@ public class LivestreamRespVO {
         this.hostOwner = new UserMemberResVO(liveStream.getHostOwner());
         this.totalView = liveStream.getTotalView();
         this.started = ObjectUtils.get(liveStream.getStartDate(), t -> {
-            return t.isAfter(LocalDateTime.now());
+            return LocalDateTime.now().isAfter(t);
         });
+        this.isClosed = liveStream.getIsClosed();
         this.startDate = ObjectUtils.get(liveStream.getStartDate(), DateTimeUtils::format);
     }
 }

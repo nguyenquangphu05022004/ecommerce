@@ -1,11 +1,14 @@
 package com.example.ecommerce.realtime.service.live;
 
+import com.example.ecommerce.realtime.controller.app.chat.vo.MessageRespVO;
 import com.example.ecommerce.realtime.controller.app.live.comment.vo.LiveCommentCreateReqVO;
+import com.example.ecommerce.realtime.controller.app.live.comment.vo.LiveCommentRespVO;
 import com.example.ecommerce.realtime.dal.dataobject.live.LiveComment;
 import com.example.ecommerce.realtime.dal.dataobject.live.LiveStream;
 import com.example.ecommerce.realtime.dal.repo.live.LiveCommentRepository;
 import com.example.ecommerce.system.service.user.UserMemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -20,16 +23,21 @@ import static com.example.ecommerce.realtime.constants.ErrorCodeConstants.LIVE_C
 public class LiveCommentServiceImpl implements LiveCommentService{
     private final LiveCommentRepository liveCommentRepository;
     private final UserMemberService userMemberService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
     @Override
     public LiveComment createComment(LiveCommentCreateReqVO reqVO) {
 
         LiveComment liveComment = LiveComment.builder()
                 .content(reqVO.getContent()).likeComment(0)
-                .liveStream(LiveStream.builder().id(reqVO.getLiveStreamId()).build())
+                .liveStream(LiveStream.builder().id(reqVO.getLivestreamId()).build())
                 .userMember(this.userMemberService.getUserMemberById(reqVO.getUserId()))
                 .isPinned(reqVO.getPin())
                 .build();
         this.liveCommentRepository.save(liveComment);
+
+        simpMessagingTemplate.convertAndSend(
+                "/topic/livestream/" + reqVO.getLivestreamId(),
+                new LiveCommentRespVO(liveComment));
 
         return liveComment;
     }
